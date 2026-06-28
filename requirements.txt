@@ -1,0 +1,8 @@
+# Project-wide Python dependencies for the unified router and its downstream scripts
+
+pandas>=2.0
+numpy>=1.9
+tqdm>=4.0
+scikit-learn>=1.0
+matplotlib>=3.0
+seaborn>=0.12
