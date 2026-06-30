@@ -10,7 +10,8 @@ CliniCause is a reproducible research pipeline for causal analysis of irregular 
 
 - [router.py](router.py): orchestrates the full pipeline
 - [SCRIPTS.md](SCRIPTS.md): minimal usage examples and flag reference
-- [requirements.txt](requirements.txt): project-level Python dependencies
+- [requirements-router.txt](requirements-router.txt): lightweight router-side dependencies
+- [requirements-full.txt](requirements-full.txt): full stack dependencies for the thesis repository plus STraTS
 - [causal-irregular-time-series](causal-irregular-time-series): thesis preprocessing, tagging, decision-tree plotting, and downstream causal analysis
 - [STraTS](STraTS): model training, evaluation, and prediction export
 
@@ -29,7 +30,13 @@ Create and activate a Python environment, then install dependencies:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-router.txt
+```
+
+For a full end-to-end run that executes the thesis pipeline plus STraTS, install the full stack instead:
+
+```bash
+pip install -r requirements-full.txt
 ```
 
 On Windows PowerShell, use:
@@ -37,7 +44,13 @@ On Windows PowerShell, use:
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r requirements-router.txt
+```
+
+For a full run on Windows:
+
+```powershell
+pip install -r requirements-full.txt
 ```
 
 ## Architecture

@@ -405,14 +405,15 @@ def validate_strats_pickle(path: Path) -> tuple[bool, str]:
     except Exception as exc:  # pragma: no cover - runtime path validation
         return False, f"failed to load STraTS pickle {path}: {exc}"
     if isinstance(payload, dict):
-        required_keys = {"data", "oc", "train_ids", "val_ids", "test_ids"}
-        missing = required_keys - set(payload.keys())
-        if missing:
-            return False, f"STraTS pickle {path} is missing keys: {sorted(missing)}"
-        return True, "ok"
-    if isinstance(payload, (list, tuple)) and len(payload) == 5:
-        return True, "ok"
-    return False, f"STraTS pickle {path} had unsupported payload shape"
+        return False, f"STraTS pickle {path} used unsupported dict format; expected a 5-item list/tuple"
+    if not isinstance(payload, (list, tuple)) or len(payload) != 5:
+        return False, f"STraTS pickle {path} had unsupported payload shape: expected 5 items"
+    data, oc, train_ids, val_ids, test_ids = payload
+    if data is None or oc is None:
+        return False, f"STraTS pickle {path} has missing data/oc payloads"
+    if not isinstance(train_ids, (list, tuple)) or not isinstance(val_ids, (list, tuple)) or not isinstance(test_ids, (list, tuple)):
+        return False, f"STraTS pickle {path} has non-list train/val/test ids"
+    return True, "ok"
 
 
 def build_strats_pickle(dataset: str, thesis_pickle_path: Path, strats_pickle_path: Path, seed: int) -> None:
@@ -439,13 +440,7 @@ def build_strats_pickle(dataset: str, thesis_pickle_path: Path, strats_pickle_pa
     test_ids = shuffled[train_n + val_n:train_n + val_n + test_n]
     if not train_ids or not val_ids or not test_ids:
         raise ValueError(f"Generated empty split for dataset {dataset}")
-    payload = {
-        "data": ts,
-        "oc": oc,
-        "train_ids": train_ids,
-        "val_ids": val_ids,
-        "test_ids": test_ids,
-    }
+    payload = [ts, oc, train_ids, val_ids, test_ids]
     with strats_pickle_path.open("wb") as handle:
         pickle.dump(payload, handle)
 
@@ -467,7 +462,7 @@ def link_or_copy(src: Path, dst: Path, overwrite: bool = False) -> None:
             shutil.copy2(src, dst)
 
 
-def run_command(command: list[str], cwd: Path, log_path: Path, dry_run: bool = False) -> None:
+def run_command(command: list[str], cwd: Path, log_path: Path, dry_run: bool = False, env: dict[str, str] | None = None) -> None:
     compact = shlex.join(command)
     print(f"[router] DRY RUN: would run command: {compact}") if dry_run else print(f"[router] Running: {compact}")
     ensure_directory(log_path.parent)
@@ -483,6 +478,7 @@ def run_command(command: list[str], cwd: Path, log_path: Path, dry_run: bool = F
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True,
+            env=env,
         )
         assert process.stdout is not None
         for line in process.stdout:
@@ -511,9 +507,9 @@ def run_preprocessing(dataset: str, context: RouterContext) -> None:
         str(raw_data_path),
         "--output-path",
         str(dataset_paths.thesis_processed_pkl),
-        "--processed-dir",
-        str(dataset_paths.thesis_processed_pkl.parent),
     ]
+    if dataset == "physionet":
+        command.extend(["--processed-dir", str(dataset_paths.thesis_processed_pkl.parent)])
     if context.args.dry_run:
         run_command(command, context.thesis_repo_root, log_path, dry_run=True)
         return
@@ -550,11 +546,15 @@ def run_tagging(dataset: str, context: RouterContext) -> None:
             str(dataset_paths.rule_latent_tags_csv.parent),
         ]
     log_path = build_stage_log_path(context.run_dir, "tagging", dataset)
+    with dataset_paths.resolved_config_csv.open("r", encoding="utf-8") as handle:
+        config_row = next(csv.DictReader(handle))
+    latent_order = [item for item in json.loads(config_row.get("LATENT_ORDER", "[]")) if item]
     if context.args.dry_run:
         run_command(command, context.thesis_repo_root, log_path, dry_run=True)
         return
-    if context.args.skip_existing and validate_latent_tags_csv(dataset_paths.rule_latent_tags_csv, ["LAT_CHRONIC_BASELINE_RISK", "LAT_GLOBAL_SEVERITY"])[0]:
+    if context.args.skip_existing and validate_latent_tags_csv(dataset_paths.rule_latent_tags_csv, latent_order)[0]:
         print(f"[router] Skipping tagging for {dataset} because output already exists and passed validation.")
+        update_manifest(context, "tagging", "skipped", {"dataset": dataset, "reason": "skip-existing validation passed", "path": str(dataset_paths.rule_latent_tags_csv)})
         return
     run_command(command, context.thesis_repo_root, log_path)
 
@@ -614,6 +614,10 @@ def validate_strats_inputs(context: RouterContext) -> None:
 
 
 def run_strats_script(context: RouterContext) -> None:
+    if context.args.run_strats is False:
+        print("[router] Skipping STraTS execution because --run-strats false was provided.")
+        update_manifest(context, "run-strats", "skipped", {"reason": "--run-strats false"})
+        return
     validate_strats_inputs(context)
     script_path = Path(context.args.strats_script_path)
     if not script_path.is_absolute():
@@ -622,10 +626,11 @@ def run_strats_script(context: RouterContext) -> None:
         raise FileNotFoundError(f"STraTS script not found: {script_path}")
     log_path = build_stage_log_path(context.run_dir, "run_strats")
     command = ["bash", str(script_path)]
+    env = {**os.environ, "PYTHON": str(context.args.python_executable), "DATASET_SCOPE": ",".join(sorted(context.datasets.keys()))}
     if context.args.dry_run:
-        run_command(command, context.strats_repo_root, log_path, dry_run=True)
+        run_command(command, context.strats_repo_root, log_path, dry_run=True, env=env)
         return
-    run_command(command, context.strats_repo_root, log_path)
+    run_command(command, context.strats_repo_root, log_path, env=env)
 
 
 def collect_strats_outputs(context: RouterContext) -> None:
@@ -646,7 +651,8 @@ def collect_strats_outputs(context: RouterContext) -> None:
             ("sand", "predicted_latent_tags_sand_mimic.csv"),
         ],
     }
-    for dataset, pairs in predictions.items():
+    for dataset in context.datasets:
+        pairs = predictions[dataset]
         for model_name, filename in pairs:
             src = context.strats_repo_root / "outputs" / filename
             dst = context.datasets[dataset].predicted_raw_dir / f"{model_name}.csv"
@@ -678,6 +684,8 @@ def normalize_prediction_csvs(context: RouterContext) -> None:
             df = pd.read_csv(src_path)
             if "ts_id" not in df.columns:
                 raise ValueError(f"Missing ts_id in {src_path}")
+            if df["ts_id"].duplicated().any():
+                raise ValueError(f"Duplicate ts_id values found in {src_path}")
             df = df[["ts_id"] + [col for col in df.columns if col != "ts_id" and not col.endswith("_prob")]]
             for col in [c for c in df.columns if c != "ts_id"]:
                 values = pd.to_numeric(df[col], errors="coerce")
@@ -746,10 +754,29 @@ def validate_context(context: RouterContext) -> None:
             raise FileNotFoundError(f"Resolved config missing: {dataset_paths.resolved_config_csv}")
         if not dataset_paths.config_csv.exists():
             raise FileNotFoundError(f"Source config missing: {dataset_paths.config_csv}")
+        if "preprocessing" in context.args.stages:
+            raw_value = getattr(context.args, f"{dataset}_raw_data_path", None)
+            if raw_value in (None, "", ".", "./", ".\\"):
+                raise FileNotFoundError(f"Raw data path for {dataset} is required when preprocessing is selected; received {raw_value!r}")
+            raw_path = Path(raw_value).expanduser().resolve()
+            if not raw_path.exists() or not raw_path.is_dir():
+                raise FileNotFoundError(f"Raw data path for {dataset} is required when preprocessing is selected, but was missing or invalid: {raw_path}")
         if not (context.thesis_repo_root / "main.py").exists():
             raise FileNotFoundError(f"Thesis main.py not found at {context.thesis_repo_root / 'main.py'}")
-        if not (context.strats_repo_root / "run_full_main.sh").exists():
-            raise FileNotFoundError(f"STraTS runner not found at {context.strats_repo_root / 'run_full_main.sh'}")
+        if not (context.thesis_repo_root / "src" / "preprocess_physionet_2012.py").exists():
+            raise FileNotFoundError(f"PhysioNet preprocessing script not found at {context.thesis_repo_root / 'src' / 'preprocess_physionet_2012.py'}")
+        if not (context.thesis_repo_root / "src" / "preprocess_mimic_iii_large.py").exists():
+            raise FileNotFoundError(f"MIMIC preprocessing script not found at {context.thesis_repo_root / 'src' / 'preprocess_mimic_iii_large.py'}")
+    if not (context.strats_repo_root / "run_full_main.sh").exists():
+        raise FileNotFoundError(f"STraTS runner not found at {context.strats_repo_root / 'run_full_main.sh'}")
+    if "run-strats" in context.args.stages or "collect-strats" in context.args.stages:
+        validate_strats_inputs(context)
+    if "prepare-strats" not in context.args.stages and ("run-strats" in context.args.stages or "collect-strats" in context.args.stages):
+        for dataset in context.datasets:
+            rule_target = context.strats_repo_root / "data" / f"{dataset}_latent_tags.csv"
+            processed_target = context.strats_repo_root / "data" / "processed" / f"{context.datasets[dataset].strats_dataset}.pkl"
+            if not rule_target.exists() or not processed_target.exists():
+                raise FileNotFoundError(f"STraTS input files are missing for {dataset}; run prepare-strats first or use --prepare-strats in stages: {rule_target} or {processed_target}")
 
 
 def execute_plan(context: RouterContext) -> None:

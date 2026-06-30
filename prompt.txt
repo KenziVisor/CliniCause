@@ -1,967 +1,131 @@
-Implement a Python orchestration router for the unified thesis pipeline.
-
-Very important:
-Do NOT run anything after implementing.
-Do NOT try to execute the router.
-Do NOT try to run preprocessing, tagging, STraTS, or thesis main locally.
-The datasets are not saved locally on this machine.
-I will run the pipeline later on a remote server where the datasets exist.
-
-Your task is only to implement the router code and supporting helpers.
-Do not validate by running the actual pipeline.
-Only use static reasoning, code structure, and lightweight syntax-safe implementation.
-
-We have two repositories:
-
-causal-irregular-time-series
-This is the thesis repository. It owns:
-preprocessing
-rule-based latent variable tagging
-decision tree plotting
-thesis main causal pipeline
-STraTS
-This is the STraTS fork. It owns:
-training/evaluating sequence models: STraTS, GRU, GRU-D, TCN, SAND
-exporting predicted latent tags
-
-Important:
-Do NOT run STraTS/src/main.py directly from the router.
-
-The router must run the existing STraTS shell script:
-
-run_full_main.sh
-
-That script internally does:
-
-cd src/
-
-Therefore, the router must execute the script with cwd equal to the STraTS repository root.
-
-Correct behavior:
-
-cwd = <strats_repo_root>
-command = ["bash", "run_full_main.sh"]
-
-Do not run it from the thesis repo root.
-Do not run it from runs/<run_id>.
-Do not rewrite the script paths.
-Instead, prepare the files in the exact locations that the script already expects.
-
-Create a Python router, for example:
-
-router.py
-
-The router should orchestrate the full pipeline:
-
-preprocessing
-→ tagging latent variables
-→ decision trees plot
-→ prepare STraTS filesystem
-→ run STraTS script
-→ collect STraTS outputs
-→ normalize prediction CSVs
-→ thesis main
-
-The router is responsible for connecting the thesis repo artifacts to the STraTS repo filesystem and then collecting STraTS outputs back into the run directory.
-
-Do not execute the pipeline after implementation.
-
-Do not run commands such as:
-
-python router.py ...
-bash run_full_main.sh
-python src/preprocess_...
-python src/tagging_...
-python main.py
-
-The data is not available locally.
-The router will be executed later on a remote server.
-
-It is okay to write code that would run those commands later.
-It is not okay to run those commands now.
-
-If you want to check syntax, prefer not to run anything. If you must, only use a lightweight compile check that does not import project data or execute pipeline logic, but avoid even that unless necessary.
-
-The router must print meaningful progress messages between phases.
-
-Add clear phase-level prints, not noisy line-by-line spam.
-
-Use prints like:
-
-[router] Starting unified run: <run_id>
-[router] Selected datasets: physionet, mimic
-[router] Run directory: <path>
-
-[router] === Stage 1/8: preprocessing ===
-[router] Preprocessing PhysioNet...
-[router] Preprocessing MIMIC...
-[router] Finished preprocessing.
-
-[router] === Stage 2/8: rule-based latent tagging ===
-[router] Tagging latent variables for PhysioNet...
-[router] Tagging latent variables for MIMIC...
-[router] Finished latent tagging.
-
-[router] === Stage 3/8: decision tree plots ===
-[router] Plotting decision trees for PhysioNet...
-[router] Plotting decision trees for MIMIC...
-[router] Finished decision tree plots.
-
-[router] === Stage 4/8: preparing STraTS filesystem ===
-[router] Copying latent tags into STraTS/data...
-[router] Building STraTS-compatible processed pickles...
-[router] Finished preparing STraTS filesystem.
-
-[router] === Stage 5/8: running STraTS script ===
-[router] Running STraTS script from cwd=<strats_repo_root>
-[router] This may take a long time on the remote server.
-[router] Finished STraTS script.
-
-[router] === Stage 6/8: collecting STraTS outputs ===
-[router] Collecting raw prediction CSVs...
-[router] Finished collecting STraTS outputs.
-
-[router] === Stage 7/8: normalizing prediction CSVs ===
-[router] Normalizing model predictions into voter CSVs...
-[router] Finished normalizing predictions.
-
-[router] === Stage 8/8: thesis main ===
-[router] Running thesis main for PhysioNet...
-[router] Running thesis main for MIMIC...
-[router] Finished thesis main.
-
-[router] Unified run completed successfully.
-[router] Manifest: <path>
-[router] Outputs: <path>
-
-Also print useful skip/dry-run messages:
-
-[router] DRY RUN: would run command: ...
-[router] Skipping preprocessing for physionet because output already exists and passed validation.
-[router] Validation failed: missing STraTS input file: ...
-
-Do not print full dataframes.
-Do not print sensitive data.
-Do not print huge command outputs to stdout; write subprocess stdout/stderr to log files.
-
-Implement argparse flags for the router itself.
-
-Required flags:
-
---dataset {physionet,mimic,both}
-
-Which dataset to run.
-If "both", run preprocessing/tagging/plots for both datasets and prepare both datasets for STraTS.
-
-Important:
-The current run_full_main.sh script runs both PhysioNet and MIMIC internally.
-Therefore, for --run-strats true, the safest mode is --dataset both.
-If --dataset is physionet or mimic and run-strats is requested, fail clearly unless --allow-existing-strats-inputs is provided and the other dataset files already exist in the STraTS repo.
-
---run-id <str>
-
-Logical run id for the unified run directory.
-Example:
-  exp_001
-  debug_physionet
-  full_run_2026_06_28
-
---output-root <path>
-
-Root directory for reproducible outputs.
-Default:
-  runs
-
---thesis-repo-root <path>
-
-Path to causal-irregular-time-series repo root.
-Default:
-  current working directory
-
---strats-repo-root <path>
-
-Path to STraTS repo root.
-Required unless --run-strats false and no STraTS stages are requested.
-
---strats-script-path <path>
-
-Path to STraTS shell runner relative to strats repo root or absolute.
-Default:
-  run_full_main.sh
-
---stages <comma-separated-list>
-
-Which stages to run.
-
-Supported values:
-  preprocessing
-  tagging
-  trees
-  prepare-strats
-  run-strats
-  collect-strats
-  normalize-predictions
-  thesis-main
-  all
-
-Default:
-  all
-
-Convenience behavior:
-
-If --stages all:
-run all stages in this order:
-preprocessing
-tagging
-trees
-prepare-strats
-run-strats
-collect-strats
-normalize-predictions
-thesis-main
-
-Optional dataset input flags:
-
---physionet-raw-data-path <path>
---mimic-raw-data-path <path>
-
-Raw data roots.
-Required if running preprocessing for the corresponding dataset.
-Do not require them if preprocessing is skipped and the processed pickle already exists.
-
-Optional config flags:
-
---physionet-config-csv <path>
---mimic-config-csv <path>
-
-If omitted, use the thesis repo defaults:
-  configs/physionet-global-variables.csv
-  configs/mimic-global-variables.csv
-
---cate-model {CausalForest,LinearDML,CausalPFN}
-
-Override MODEL_TYPE for the thesis main stage.
-Implement this by creating a resolved config CSV under:
-
-  runs/<run_id>/config/<dataset>_resolved_config.csv
-
-Do not edit the source config.
-
---down-sample {true,false}
-
-Optional override for DOWN_SAMPLE.
-If provided, write it into the resolved config CSV.
-
---trials <int>
-
-Optional override for TRIALS.
-If provided, write it into the resolved config CSV.
-
---use-expanded-safe-confounders {true,false}
-
-Optional override for USE_EXPANDED_SAFE_CONFOUNDERS.
-If provided, write it into the resolved config CSV.
-
---seed <int>
-
-Seed used by router-generated deterministic splits for STraTS-compatible pickles.
-Default:
-  use SEED from resolved config if available, otherwise 42.
-
-Optional behavior flags:
-
---overwrite
-
-Allow replacing existing stage directories and generated files.
-
---dry-run
-
-Print commands and planned file operations without executing them.
-
---validate-only
-
-Validate paths, dataset mapping, stage dependencies, and planned inputs/outputs, then exit.
-
---skip-existing
-
-If a required output already exists and passes basic validation, skip that stage.
-
---python-executable <path>
-
-Python executable to use for thesis scripts.
-Default:
-  sys.executable
-
---verbose
-
-Print detailed stage information.
-
---allow-existing-strats-inputs
-
-Allow run-strats even when the current router run did not produce both datasets, as long as the required STraTS input files already exist under:
-  <strats_repo_root>/data/
-  <strats_repo_root>/data/processed/
-
-STraTS behavior flag:
-
---run-strats {true,false}
-
-Whether to actually run the STraTS shell script.
-Default:
-  true if stage run-strats or all is requested.
-
-Important:
-Do not expose all STraTS model hyperparameters through the router yet.
-The current STraTS shell script hardcodes TRAIN_FRAC, RUN_ID, hid_dim, num_layers, num_heads, dropout, lr, max_epochs, output_dir, save_pred_csv_path, etc.
-The router should treat run_full_main.sh as a black-box STraTS runner for now.
-
-The router must maintain three dataset naming conventions.
-
-Router / thesis dataset names:
-
-physionet
-mimic
-
-STraTS dataset names:
-
-physionet -> physionet_2012
-mimic -> mimic_iii
-
-Thesis config paths:
-
-physionet -> causal-irregular-time-series/configs/physionet-global-variables.csv
-mimic -> causal-irregular-time-series/configs/mimic-global-variables.csv
-
-Thesis preprocessing scripts:
-
-physionet -> src/preprocess_physionet_2012.py
-mimic -> src/preprocess_mimic_iii_large.py
-
-Thesis tagging scripts:
-
-physionet -> src/tagging_latent_variables_physionet.py
-mimic -> src/tagging_latent_variables_mimiciii.py
-
-The causal graph and downstream thesis main should remain delegated to thesis main.py.
-
-For a run id:
-
-runs/<run_id>/
-
-Create this structure:
-
-runs/<run_id>/
-├── config/
-│ ├── router_args.json
-│ ├── physionet_resolved_config.csv
-│ ├── mimic_resolved_config.csv
-│ └── manifest.json
-│
-├── logs/
-│ ├── preprocessing_physionet.log
-│ ├── preprocessing_mimic.log
-│ ├── tagging_physionet.log
-│ ├── tagging_mimic.log
-│ ├── trees_physionet.log
-│ ├── trees_mimic.log
-│ ├── prepare_strats.log
-│ ├── run_strats.log
-│ ├── collect_strats.log
-│ ├── normalize_predictions.log
-│ ├── thesis_main_physionet.log
-│ └── thesis_main_mimic.log
-│
-├── preprocessing/
-│ ├── physionet_ts_oc_ids.pkl
-│ ├── mimic_ts_oc_ids.pkl
-│ └── strats/
-│ ├── physionet_2012.pkl
-│ └── mimic_iii.pkl
-│
-├── latent_tags/
-│ ├── rules/
-│ │ ├── physionet/
-│ │ │ ├── latent_tags.csv
-│ │ │ └── latent_decision_trees.pkl
-│ │ └── mimic/
-│ │ ├── latent_tags.csv
-│ │ └── latent_decision_trees.pkl
-│ │
-│ ├── predicted_raw/
-│ │ ├── physionet/
-│ │ │ ├── strats.csv
-│ │ │ ├── gru.csv
-│ │ │ ├── grud.csv
-│ │ │ ├── tcn.csv
-│ │ │ └── sand.csv
-│ │ └── mimic/
-│ │ ├── strats.csv
-│ │ ├── gru.csv
-│ │ ├── grud.csv
-│ │ ├── tcn.csv
-│ │ └── sand.csv
-│ │
-│ └── voters/
-│ ├── physionet/
-│ │ ├── rules.csv
-│ │ ├── strats.csv
-│ │ ├── gru.csv
-│ │ ├── grud.csv
-│ │ ├── tcn.csv
-│ │ └── sand.csv
-│ └── mimic/
-│ ├── rules.csv
-│ ├── strats.csv
-│ ├── gru.csv
-│ ├── grud.csv
-│ ├── tcn.csv
-│ └── sand.csv
-│
-├── decision_tree_plots/
-│ ├── physionet/
-│ └── mimic/
-│
-└── thesis_main/
-├── physionet/
-└── mimic/
-
-For dataset=physionet:
-
-Run from thesis repo root:
-
-python src/preprocess_physionet_2012.py
---dataset-config-csv runs/<run_id>/config/physionet_resolved_config.csv
---raw-data-path <physionet_raw_data_path>
---output-path runs/<run_id>/preprocessing/physionet_ts_oc_ids.pkl
---processed-dir runs/<run_id>/preprocessing
-
-For dataset=mimic:
-
-Run from thesis repo root:
-
-python src/preprocess_mimic_iii_large.py
---dataset-config-csv runs/<run_id>/config/mimic_resolved_config.csv
---raw-data-path <mimic_raw_data_path>
---output-path runs/<run_id>/preprocessing/mimic_ts_oc_ids.pkl
-
-Expected output format from thesis preprocessing:
-
-[ts, oc, ts_ids]
-
-Validate after preprocessing:
-
-output pickle exists
-it can be loaded
-it contains exactly 3 objects
-ts has columns: ts_id, minute, variable, value
-oc has ts_id and the configured outcome column
-ts_ids is non-empty
-
-For dataset=physionet:
-
-Run from thesis repo root:
-
-python src/tagging_latent_variables_physionet.py
---dataset-config-csv runs/<run_id>/config/physionet_resolved_config.csv
---pkl-path runs/<run_id>/preprocessing/physionet_ts_oc_ids.pkl
---output-csv-path runs/<run_id>/latent_tags/rules/physionet/latent_tags.csv
-
-PhysioNet script writes its tree pickle as:
-
-<output_csv_path with .csv replaced by _trees.pkl>
-
-After it runs, normalize/copy/register:
-
-runs/<run_id>/latent_tags/rules/physionet/latent_tags_trees.pkl
-
-as:
-
-runs/<run_id>/latent_tags/rules/physionet/latent_decision_trees.pkl
-
-For dataset=mimic:
-
-Run from thesis repo root:
-
-python src/tagging_latent_variables_mimiciii.py
---dataset-config-csv runs/<run_id>/config/mimic_resolved_config.csv
---pkl_path runs/<run_id>/preprocessing/mimic_ts_oc_ids.pkl
---output_dir runs/<run_id>/latent_tags/rules/mimic/
-
-MIMIC already writes:
-
-latent_tags.csv
-latent_decision_trees.pkl
-
-Validate after tagging:
-
-latent_tags.csv exists
-contains ts_id
-contains at least one latent column
-no duplicated ts_id values
-tree pickle exists
-
-For each dataset:
-
-Run from thesis repo root:
-
-python src/decision_trees_plot.py
---dataset <physionet|mimic>
---dataset-config-csv runs/<run_id>/config/<dataset>_resolved_config.csv
---pickle-path runs/<run_id>/latent_tags/rules/<dataset>/latent_decision_trees.pkl
---output-dir runs/<run_id>/decision_tree_plots/<dataset>/
---format png
---overwrite
-
-Validate:
-
-output dir exists
-at least one .png file exists unless --plot-only produced none intentionally
-
-This stage bridges the thesis artifacts into the STraTS repo layout.
-
-The current STraTS script expects files relative to STraTS/src because it cd's into src.
-
-Therefore prepare:
-
-<strats_repo_root>/data/
-<strats_repo_root>/data/processed/
-<strats_repo_root>/outputs/
-
-Copy or symlink rule-based latent tags:
-
-runs/<run_id>/latent_tags/rules/physionet/latent_tags.csv
--> <strats_repo_root>/data/physionet_latent_tags.csv
-
-runs/<run_id>/latent_tags/rules/mimic/latent_tags.csv
--> <strats_repo_root>/data/mimic_latent_tags.csv
-
-Prepare STraTS processed pickles.
-
-STraTS Dataset expects:
-
-[data, oc, train_ids, val_ids, test_ids]
-
-But thesis preprocessing produces:
-
-[ts, oc, ts_ids]
-
-Implement a conversion function:
-
-build_strats_pickle(dataset, thesis_pickle_path, output_pickle_path, seed)
-
-For PhysioNet:
-
-input:
-runs/<run_id>/preprocessing/physionet_ts_oc_ids.pkl
-
-output:
-runs/<run_id>/preprocessing/strats/physionet_2012.pkl
-
-then copy/symlink to:
-<strats_repo_root>/data/processed/physionet_2012.pkl
-
-For MIMIC:
-
-input:
-runs/<run_id>/preprocessing/mimic_ts_oc_ids.pkl
-
-output:
-runs/<run_id>/preprocessing/strats/mimic_iii.pkl
-
-then copy/symlink to:
-<strats_repo_root>/data/processed/mimic_iii.pkl
-
-Splitting policy:
-Since the thesis pickle only has ts_ids, generate deterministic train/val/test splits.
-
-Use seed from resolved config SEED if available, otherwise router --seed or 42.
-
-Default split:
-train: 64%
-val: 16%
-test: 20%
-
-Important:
-
-Preserve ts_id canonicalization as strings where needed.
-Ensure train_ids, val_ids, test_ids are subsets of ts.ts_id.
-Ensure no overlap between splits.
-Ensure all split arrays are non-empty.
-
-The generated STraTS pickle should contain:
-
-data = ts
-oc = oc
-train_ids = train_ids
-val_ids = val_ids
-test_ids = test_ids
-
-Save:
-
-runs/<run_id>/preprocessing/strats/<strats_dataset_name>.pkl
-
-Then copy/symlink into:
-
-<strats_repo_root>/data/processed/<strats_dataset_name>.pkl
-
-Validation:
-
-<strats_repo_root>/data/processed/physionet_2012.pkl exists if running PhysioNet/STraTS
-<strats_repo_root>/data/processed/mimic_iii.pkl exists if running MIMIC/STraTS
-<strats_repo_root>/data/physionet_latent_tags.csv exists if script will run PhysioNet
-<strats_repo_root>/data/mimic_latent_tags.csv exists if script will run MIMIC
-
-Important edge:
-The current run_full_main.sh runs both PhysioNet and MIMIC sections.
-Therefore before running the script, validate that both datasets' STraTS inputs exist.
-
-If router --dataset is not both and --run-strats true, either:
-
-fail with a clear message saying the current STraTS script requires both datasets, or
-allow running only if --allow-existing-strats-inputs is provided and the missing dataset inputs already exist in <strats_repo_root>/data and <strats_repo_root>/data/processed.
-
-Prefer failing clearly unless --allow-existing-strats-inputs is provided.
-
-Do not call STraTS/src/main.py directly.
-
-Run:
-
-command = ["bash", <script_name>]
-cwd = <strats_repo_root>
-
-If strats_script_path is absolute:
-
-command = ["bash", strats_script_path]
-cwd = <strats_repo_root>
-
-If strats_script_path is relative:
-
-command = ["bash", strats_script_path]
-cwd = <strats_repo_root>
-
-Log stdout/stderr to:
-
-runs/<run_id>/logs/run_strats.log
-
-Validate after completion:
-
-process return code is 0
-expected predicted CSVs exist under <strats_repo_root>/outputs
-
-Expected PhysioNet outputs:
-
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_strats.csv
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_gru.csv
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_grud.csv
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_tcn.csv
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_sand.csv
-
-Expected MIMIC outputs:
-
-<strats_repo_root>/outputs/predicted_latent_tags_strats_mimic.csv
-<strats_repo_root>/outputs/predicted_latent_tags_gru_mimic.csv
-<strats_repo_root>/outputs/predicted_latent_tags_grud_mimic.csv
-<strats_repo_root>/outputs/predicted_latent_tags_tcn_mimic.csv
-<strats_repo_root>/outputs/predicted_latent_tags_sand_mimic.csv
-
-Copy outputs from STraTS repo into run directory.
-
-PhysioNet mapping:
-
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_strats.csv
--> runs/<run_id>/latent_tags/predicted_raw/physionet/strats.csv
-
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_gru.csv
--> runs/<run_id>/latent_tags/predicted_raw/physionet/gru.csv
-
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_grud.csv
--> runs/<run_id>/latent_tags/predicted_raw/physionet/grud.csv
-
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_tcn.csv
--> runs/<run_id>/latent_tags/predicted_raw/physionet/tcn.csv
-
-<strats_repo_root>/outputs/predicted_physionet_latent_tags_sand.csv
--> runs/<run_id>/latent_tags/predicted_raw/physionet/sand.csv
-
-MIMIC mapping:
-
-<strats_repo_root>/outputs/predicted_latent_tags_strats_mimic.csv
--> runs/<run_id>/latent_tags/predicted_raw/mimic/strats.csv
-
-<strats_repo_root>/outputs/predicted_latent_tags_gru_mimic.csv
--> runs/<run_id>/latent_tags/predicted_raw/mimic/gru.csv
-
-<strats_repo_root>/outputs/predicted_latent_tags_grud_mimic.csv
--> runs/<run_id>/latent_tags/predicted_raw/mimic/grud.csv
-
-<strats_repo_root>/outputs/predicted_latent_tags_tcn_mimic.csv
--> runs/<run_id>/latent_tags/predicted_raw/mimic/tcn.csv
-
-<strats_repo_root>/outputs/predicted_latent_tags_sand_mimic.csv
--> runs/<run_id>/latent_tags/predicted_raw/mimic/sand.csv
-
-Validate:
-
-copied files exist
-each CSV has ts_id
-each CSV has at least one non-probability latent column or probability columns from which binary columns already exist
-
-Create voter CSVs for thesis majority vote.
-
-For each dataset/model raw prediction CSV:
-
-Input:
-
-runs/<run_id>/latent_tags/predicted_raw/<dataset>/<model>.csv
-
-Output:
-
-runs/<run_id>/latent_tags/voters/<dataset>/<model>.csv
-
-Normalization rule:
-
-Keep column "ts_id"
-Drop any column ending with "_prob"
-Keep binary latent columns
-Ensure all latent values are 0/1 integers
-Preserve only columns that are in LATENT_ORDER from the resolved dataset config, if possible
-If some LATENT_ORDER columns are missing, fail clearly and report missing columns
-
-Also copy rule-based tags as a voter:
-
-runs/<run_id>/latent_tags/rules/<dataset>/latent_tags.csv
--> runs/<run_id>/latent_tags/voters/<dataset>/rules.csv
-
-The voters dir should contain:
-
-rules.csv
-strats.csv
-gru.csv
-grud.csv
-tcn.csv
-sand.csv
-
-If some model output is missing because script was modified or model failed, fail clearly unless an optional future flag --allow-missing-voters is implemented.
-
-Run the existing thesis main.py.
-
-For PhysioNet:
-
-python main.py
---dataset physionet
---dataset-config-csv runs/<run_id>/config/physionet_resolved_config.csv
---latent-tags-dir runs/<run_id>/latent_tags/voters/physionet/
---dataset-pkl-path runs/<run_id>/preprocessing/physionet_ts_oc_ids.pkl
---output-dir runs/<run_id>/thesis_main/physionet/
---model-type <cate_model if provided>
-
-For MIMIC:
-
-python main.py
---dataset mimic
---dataset-config-csv runs/<run_id>/config/mimic_resolved_config.csv
---latent-tags-dir runs/<run_id>/latent_tags/voters/mimic/
---dataset-pkl-path runs/<run_id>/preprocessing/mimic_ts_oc_ids.pkl
---output-dir runs/<run_id>/thesis_main/mimic/
---model-type <cate_model if provided>
-
-Run from thesis repo root.
-
-Validate:
-
-thesis main exits with code 0
-runs/<run_id>/thesis_main/<dataset>/run_summary.json exists
-
-At the start of the router:
-
-Load source config CSV for each dataset that will run.
-
-Create resolved config CSV under:
-
-runs/<run_id>/config/<dataset>_resolved_config.csv
-
-Apply optional router overrides:
-cate-model -> MODEL_TYPE
-down-sample -> DOWN_SAMPLE
-trials -> TRIALS
-use-expanded-safe-confounders -> USE_EXPANDED_SAFE_CONFOUNDERS
-Do not modify the source config files.
-
-Also save:
-
-runs/<run_id>/config/router_args.json
-
-At the end and after each stage, update:
-
-runs/<run_id>/config/manifest.json
-
-Manifest should include:
-
-run_id
-created_at
-thesis_repo_root
-strats_repo_root
-datasets
-stage statuses
-commands run
-important input/output paths
-failure details if any
-
-Implement a helper:
-
-run_command(command, cwd, log_path, dry_run=False)
-
-It should:
-
-print the command in a compact readable way
-write command header to log
-stream or capture stdout/stderr into log
-raise a clear exception on non-zero exit
-include cwd in the log
-
-Do not silently continue on failed stages unless skip-existing applies to already valid outputs.
-
-Important:
-Even though the helper supports running commands, do not call it during implementation/testing.
-The router will use it later on the remote server.
-
-Use pathlib.Path everywhere.
-
-Convert all paths to absolute paths internally.
-
-When passing paths to scripts, pass absolute paths except where the STraTS script already hardcodes relative paths.
-
-For STraTS script:
-
-Do not rewrite paths inside the script.
-Prepare the filesystem so the script's relative paths work.
-Run from cwd=<strats_repo_root>.
-
-If run directory exists:
-
-If --overwrite is false, do not delete existing directories.
-If a stage wants to write into a non-empty output dir and --overwrite is false, fail clearly.
-If --skip-existing is true and outputs validate, skip that stage.
-
-For STraTS repo data/outputs:
-Be careful: these are shared mutable locations.
-
-Before overwriting:
-
-If --overwrite is false and target file exists, either keep it if it matches expected source or fail clearly.
-Prefer copying run-specific generated files into STraTS paths only during prepare-strats.
-Record every copied/symlinked path in manifest.
-
-Use a clean Python structure:
-
-router.py
-
-Suggested functions:
-
-parse_args()
-resolve_paths(args)
-selected_datasets(args)
-create_run_dirs(context)
-resolve_dataset_config(dataset, args, context)
-run_preprocessing(dataset, context)
-run_tagging(dataset, context)
-run_tree_plots(dataset, context)
-build_strats_pickle(dataset, thesis_pickle_path, strats_pickle_path, seed)
-prepare_strats_filesystem(context)
-run_strats_script(context)
-collect_strats_outputs(context)
-normalize_prediction_csvs(context)
-run_thesis_main(dataset, context)
-validate_thesis_pickle(path, dataset_config)
-validate_latent_tags_csv(path, latent_order)
-validate_strats_pickle(path)
-update_manifest(context, stage, status, details)
-
-Prefer dataclasses for context:
-
-@dataclass
-class DatasetPaths:
-dataset: str
-thesis_dataset: str
-strats_dataset: str
-config_csv: Path
-resolved_config_csv: Path
-thesis_processed_pkl: Path
-strats_processed_pkl: Path
-rule_latent_tags_csv: Path
-rule_decision_trees_pkl: Path
-tree_plots_dir: Path
-predicted_raw_dir: Path
-voters_dir: Path
-thesis_main_output_dir: Path
-
-@dataclass
-class RouterContext:
-run_id: str
-run_dir: Path
-thesis_repo_root: Path
-strats_repo_root: Path
-logs_dir: Path
-datasets: dict[str, DatasetPaths]
-args: argparse.Namespace
-
-Do not rewrite thesis main.py.
-Do not rewrite STraTS main.py.
-Do not change run_full_main.sh paths.
-Do not change the model hyperparameters inside run_full_main.sh.
-Do not add new dependencies unless necessary.
-Do not run the pipeline locally.
-
-The router should integrate the existing scripts as they are.
-
-Example full run on the remote server later:
-
-python router.py
---dataset both
---run-id full_001
---output-root runs
---thesis-repo-root .
---strats-repo-root ../STraTS
---physionet-raw-data-path ../../physionet2012
---mimic-raw-data-path ../mimiciii
---cate-model CausalForest
---down-sample false
---trials 10
---stages all
---overwrite
-
-Example dry run:
-
-python router.py
---dataset both
---run-id dry_001
---strats-repo-root ../STraTS
---stages all
---dry-run
-
-Example run only thesis main after artifacts already exist:
-
-python router.py
---dataset physionet
---run-id full_001
---strats-repo-root ../STraTS
---stages thesis-main
-
-Example run STraTS only after preprocessing/tagging already exists:
-
-python router.py
---dataset both
---run-id full_001
---strats-repo-root ../STraTS
---stages prepare-strats,run-strats,collect-strats,normalize-predictions
---allow-existing-strats-inputs
-
-When finished, print a compact summary:
-
-run directory
-completed stages
-key outputs:
-latent voters dir
-STraTS raw predictions dir
-thesis main output dir
-manifest path
+You are working in the unified repository `CliniCause`, which orchestrates two sibling repositories: `causal-irregular-time-series` and my forked `STraTS`.
+
+Goal: fix the integration so the unified router is safe to run on the server. Do not run the full heavy pipeline. Make code changes only, plus lightweight validation where possible.
+
+Context:
+`CliniCause/router.py` is the top-level orchestrator. It should support this pipeline:
+
+1. preprocessing
+2. tagging latent variables
+3. decision-tree plots
+4. prepare STraTS inputs
+5. run STraTS
+6. collect STraTS predictions
+7. normalize prediction/voter CSVs
+8. thesis main pipeline
+
+Fix all integration blockers below.
+
+Required fixes:
+
+1. Fix MIMIC preprocessing argument mismatch.
+   Currently `router.py` passes `--processed-dir` to both PhysioNet and MIMIC preprocessing. `preprocess_physionet_2012.py` supports it, but `preprocess_mimic_iii_large.py` does not.
+   Change `router.py` so `--processed-dir` is passed only to PhysioNet, or add proper support to the MIMIC preprocessing script. Prefer the minimal safe router-side fix.
+
+2. Fix STraTS processed pickle format.
+   `router.py` currently builds the STraTS pickle as a dict:
+   `{"data": ts, "oc": oc, "train_ids": ..., "val_ids": ..., "test_ids": ...}`.
+   But STraTS expects:
+   `data, oc, train_ids, val_ids, test_ids = pickle.load(...)`.
+   Change `build_strats_pickle()` to serialize a 5-item list/tuple:
+   `[ts, oc, train_ids, val_ids, test_ids]`.
+   Update `validate_strats_pickle()` so it rejects dicts and validates the actual STraTS-compatible 5-item structure.
+
+3. Fix PhysioNet decision-tree pickle path.
+   The router expects `latent_decision_trees.pkl`, but the PhysioNet tagger writes `latent_tags_trees.pkl` because it derives the tree path from `output_csv_path.replace(".csv", "_trees.pkl")`.
+   Standardize this. Prefer making the PhysioNet tagger write `latent_decision_trees.pkl` in the same directory as `latent_tags.csv`, or update the router’s PhysioNet-specific path. The final result must make the `trees` stage work for both datasets.
+
+4. Make `--run-strats false` actually skip STraTS execution.
+   Currently it only affects validation but `run_strats_script()` can still execute the bash script.
+   If `context.args.run_strats` is false, the router must print a clear skip message and return without running STraTS.
+
+5. Fix single-dataset behavior.
+   `run_full_main.sh` currently runs both datasets unconditionally, and `collect_strats_outputs()` loops over both datasets unconditionally.
+   Make the unified router respect `--dataset physionet`, `--dataset mimic`, and `--dataset both`.
+   At minimum:
+
+* `collect_strats_outputs()` must iterate only over `context.datasets`.
+* STraTS execution must not require inputs for a dataset that was not selected.
+  Prefer adding dataset-aware STraTS runner support, for example by allowing the router to pass selected dataset(s) to a script or by creating separate STraTS scripts/functions for PhysioNet and MIMIC.
+  Do not break the full `both` run.
+
+6. Fix STraTS training/export checkpoint logic.
+   The current STraTS bash script trains models into auto-generated output directories but exports predictions from different generic directories with `--max_epochs 0`. This can export random/untrained predictions if no checkpoint exists in the export directory.
+   Ensure each model’s export uses the trained checkpoint from the same run.
+   Acceptable solution:
+
+* For each dataset/model, define a stable `output_dir`.
+* Train with that `--output_dir`.
+* Export with the same `--output_dir`, `--max_epochs 0`, and load the trained checkpoint if needed.
+* For STRATS, distinguish pretrain and finetune correctly: finetune should load the pretrain checkpoint, and export should use the finetuned model checkpoint, not only the pretrain checkpoint.
+  Make sure GRU, GRUD, TCN, SAND, and STRATS all export trained predictions.
+
+7. Make STraTS use the router’s Python executable.
+   The router has `--python-executable`, but `run_full_main.sh` uses plain `python`.
+   Update the STraTS script to use `${PYTHON:-python}` and update `router.py` so when it launches the STraTS bash script it passes an environment variable `PYTHON=<context.args.python_executable>`.
+   If needed, extend `run_command()` to accept an optional `env` dict.
+
+8. Improve raw data validation.
+   If the selected stages include `preprocessing`, require the relevant raw data path explicitly:
+
+* `--physionet-raw-data-path` for PhysioNet
+* `--mimic-raw-data-path` for MIMIC
+  Do not treat empty string/current directory as valid.
+  Fail early with a clear error message.
+
+9. Improve `--validate-only`.
+   `--validate-only` should not only check that top-level scripts exist. It should also validate selected-stage prerequisites as much as possible without running heavy computation:
+
+* selected raw data paths are present if preprocessing is selected
+* dataset config files exist and load
+* expected child scripts exist
+* STraTS runner exists if STraTS is selected
+* STraTS input files exist if running only later stages without `prepare-strats`
+* stage selection and dataset selection are coherent
+  Do not load huge raw datasets in validation.
+
+10. Improve `--skip-existing` validation.
+    When skipping existing tagging outputs, validate against the full `LATENT_ORDER` from the resolved dataset config, not hard-coded columns.
+    For normalized voter CSVs, ensure all required latent columns exist, are binary, and `ts_id` is present and unique.
+
+11. Update requirements/docs.
+    The top-level `requirements.txt` is too small for a full run.
+    Do one of:
+
+* create `requirements-router.txt` for the lightweight router and `requirements-full.txt` that references/combines the thesis and STraTS dependencies, or
+* update README/SCRIPTS clearly explaining that full runs require installing both child repositories’ requirements.
+  Prefer the clear two-file approach if practical.
+
+12. Make logs/manifests useful.
+    Keep or improve the existing manifest/log behavior.
+    When a stage is skipped because of `--run-strats false`, `--skip-existing`, or dataset selection, record a clear status/reason in the manifest if that is currently supported.
+
+Important constraints:
+
+* Do not run the full pipeline.
+* Do not require access to the real raw datasets to complete the code changes.
+* Preserve existing CLI names where possible.
+* Keep the router simple and explicit.
+* Prefer clear failures over silent fallbacks.
+* Avoid changing scientific logic unless needed for integration correctness.
+* Make the code robust for Linux server execution.
+* Do not over-engineer.
+
+After making the changes, perform lightweight checks only:
+
+* `python -m py_compile router.py`
+* If possible, `python router.py --help`
+* If possible, run `--validate-only` or `--dry-run` with dummy paths only where it does not require real data.
+* Inspect that the STraTS script uses `${PYTHON:-python}` consistently.
+* Inspect that train/export output directories are consistent.
+
+Return:
+
+1. A concise summary of files changed.
+2. A list of the integration bugs fixed.
+3. Exact commands I should run on the server for:
+
+   * validation/dry-run
+   * front-half run up to `prepare-strats`
+   * full run
+4. Any remaining assumptions or TODOs.
