@@ -496,7 +496,9 @@ def run_preprocessing(dataset: str, context: RouterContext) -> None:
     script_path = context.thesis_repo_root / script_name
     log_path = build_stage_log_path(context.run_dir, "preprocessing", dataset)
     raw_data_path = Path(getattr(context.args, f"{dataset}_raw_data_path") or "")
-    if not raw_data_path.exists():
+    if raw_data_path == Path("."):
+        raise FileNotFoundError(f"Raw data path for {dataset} is missing: {raw_data_path}")
+    if not context.args.dry_run and not raw_data_path.exists():
         raise FileNotFoundError(f"Raw data path for {dataset} is missing: {raw_data_path}")
     command = [
         context.args.python_executable,
@@ -585,6 +587,9 @@ def run_tree_plots(dataset: str, context: RouterContext) -> None:
 
 
 def prepare_strats_filesystem(context: RouterContext) -> None:
+    if context.args.dry_run:
+        print("[router] DRY RUN: would prepare STraTS filesystem.")
+        return
     print("[router] Preparing STraTS filesystem.")
     ensure_directory(context.strats_repo_root / "data" / "processed")
     ensure_directory(context.strats_repo_root / "outputs")
@@ -618,7 +623,8 @@ def run_strats_script(context: RouterContext) -> None:
         print("[router] Skipping STraTS execution because --run-strats false was provided.")
         update_manifest(context, "run-strats", "skipped", {"reason": "--run-strats false"})
         return
-    validate_strats_inputs(context)
+    if not context.args.dry_run:
+        validate_strats_inputs(context)
     script_path = Path(context.args.strats_script_path)
     if not script_path.is_absolute():
         script_path = (context.strats_repo_root / script_path).resolve()
@@ -634,6 +640,9 @@ def run_strats_script(context: RouterContext) -> None:
 
 
 def collect_strats_outputs(context: RouterContext) -> None:
+    if context.args.dry_run:
+        print("[router] DRY RUN: would collect raw prediction CSVs.")
+        return
     print("[router] Collecting raw prediction CSVs.")
     predictions = {
         "physionet": [
@@ -663,6 +672,9 @@ def collect_strats_outputs(context: RouterContext) -> None:
 
 
 def normalize_prediction_csvs(context: RouterContext) -> None:
+    if context.args.dry_run:
+        print("[router] DRY RUN: would normalize prediction CSVs.")
+        return
     import pandas as pd
 
     for dataset in context.datasets:
@@ -748,6 +760,7 @@ def create_run_dirs(context: RouterContext) -> None:
 
 
 def validate_context(context: RouterContext) -> None:
+    preview_mode = context.args.dry_run or context.args.validate_only
     for dataset in context.datasets:
         dataset_paths = context.datasets[dataset]
         if not dataset_paths.resolved_config_csv.exists():
@@ -759,7 +772,7 @@ def validate_context(context: RouterContext) -> None:
             if raw_value in (None, "", ".", "./", ".\\"):
                 raise FileNotFoundError(f"Raw data path for {dataset} is required when preprocessing is selected; received {raw_value!r}")
             raw_path = Path(raw_value).expanduser().resolve()
-            if not raw_path.exists() or not raw_path.is_dir():
+            if not preview_mode and (not raw_path.exists() or not raw_path.is_dir()):
                 raise FileNotFoundError(f"Raw data path for {dataset} is required when preprocessing is selected, but was missing or invalid: {raw_path}")
         if not (context.thesis_repo_root / "main.py").exists():
             raise FileNotFoundError(f"Thesis main.py not found at {context.thesis_repo_root / 'main.py'}")
@@ -769,9 +782,9 @@ def validate_context(context: RouterContext) -> None:
             raise FileNotFoundError(f"MIMIC preprocessing script not found at {context.thesis_repo_root / 'src' / 'preprocess_mimic_iii_large.py'}")
     if not (context.strats_repo_root / "run_full_main.sh").exists():
         raise FileNotFoundError(f"STraTS runner not found at {context.strats_repo_root / 'run_full_main.sh'}")
-    if "run-strats" in context.args.stages or "collect-strats" in context.args.stages:
+    if ("run-strats" in context.args.stages or "collect-strats" in context.args.stages) and not preview_mode:
         validate_strats_inputs(context)
-    if "prepare-strats" not in context.args.stages and ("run-strats" in context.args.stages or "collect-strats" in context.args.stages):
+    if "prepare-strats" not in context.args.stages and ("run-strats" in context.args.stages or "collect-strats" in context.args.stages) and not preview_mode:
         for dataset in context.datasets:
             rule_target = context.strats_repo_root / "data" / f"{dataset}_latent_tags.csv"
             processed_target = context.strats_repo_root / "data" / "processed" / f"{context.datasets[dataset].strats_dataset}.pkl"

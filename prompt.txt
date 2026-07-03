@@ -1,131 +1,190 @@
-You are working in the unified repository `CliniCause`, which orchestrates two sibling repositories: `causal-irregular-time-series` and my forked `STraTS`.
+You are working on the GitHub repository **CliniCause**, a unified repository for the thesis causal pipeline and the STraTS fork.
 
-Goal: fix the integration so the unified router is safe to run on the server. Do not run the full heavy pipeline. Make code changes only, plus lightweight validation where possible.
+Goal: perform a high-level health check that the codebase is not broken, **without assuming access to the real datasets** and without running the full pipeline end-to-end.
 
-Context:
-`CliniCause/router.py` is the top-level orchestrator. It should support this pipeline:
+Important constraint:
+You cannot validate scientific correctness or full runtime correctness because the data is unavailable. Your job is to verify that the repository is structurally coherent, importable, configurable, and that every pipeline stage has a minimal “does not immediately break” check.
 
-1. preprocessing
-2. tagging latent variables
-3. decision-tree plots
-4. prepare STraTS inputs
-5. run STraTS
-6. collect STraTS predictions
-7. normalize prediction/voter CSVs
-8. thesis main pipeline
+Work in a loop:
 
-Fix all integration blockers below.
+1. Inspect the repository structure and identify the intended pipeline stages.
+2. For each stage, define the weakest meaningful check that can run without real data.
+3. Run the check.
+4. If it fails, fix the cause.
+5. After fixing, rerun the failed check.
+6. Then rerun all earlier checks that could have been affected.
+7. Continue until all checks pass.
+8. At the end, report exactly what was checked, what was fixed, what was not possible to check without data, and what assumptions remain.
 
-Required fixes:
+Expected pipeline order:
 
-1. Fix MIMIC preprocessing argument mismatch.
-   Currently `router.py` passes `--processed-dir` to both PhysioNet and MIMIC preprocessing. `preprocess_physionet_2012.py` supports it, but `preprocess_mimic_iii_large.py` does not.
-   Change `router.py` so `--processed-dir` is passed only to PhysioNet, or add proper support to the MIMIC preprocessing script. Prefer the minimal safe router-side fix.
+1. Preprocessing
+2. Latent-variable tagging
+3. Decision-tree plot / visualization
+4. STraTS representation / model stage
+5. Thesis main causal pipeline
 
-2. Fix STraTS processed pickle format.
-   `router.py` currently builds the STraTS pickle as a dict:
-   `{"data": ts, "oc": oc, "train_ids": ..., "val_ids": ..., "test_ids": ...}`.
-   But STraTS expects:
-   `data, oc, train_ids, val_ids, test_ids = pickle.load(...)`.
-   Change `build_strats_pickle()` to serialize a 5-item list/tuple:
-   `[ts, oc, train_ids, val_ids, test_ids]`.
-   Update `validate_strats_pickle()` so it rejects dicts and validates the actual STraTS-compatible 5-item structure.
+Start by mapping the actual files/scripts to these stages. Do not invent new architecture unless necessary. Prefer small fixes over refactors.
 
-3. Fix PhysioNet decision-tree pickle path.
-   The router expects `latent_decision_trees.pkl`, but the PhysioNet tagger writes `latent_tags_trees.pkl` because it derives the tree path from `output_csv_path.replace(".csv", "_trees.pkl")`.
-   Standardize this. Prefer making the PhysioNet tagger write `latent_decision_trees.pkl` in the same directory as `latent_tags.csv`, or update the router’s PhysioNet-specific path. The final result must make the `trees` stage work for both datasets.
+Minimum checks to perform:
 
-4. Make `--run-strats false` actually skip STraTS execution.
-   Currently it only affects validation but `run_strats_script()` can still execute the bash script.
-   If `context.args.run_strats` is false, the router must print a clear skip message and return without running STraTS.
+A. Repository structure check
 
-5. Fix single-dataset behavior.
-   `run_full_main.sh` currently runs both datasets unconditionally, and `collect_strats_outputs()` loops over both datasets unconditionally.
-   Make the unified router respect `--dataset physionet`, `--dataset mimic`, and `--dataset both`.
-   At minimum:
+* Verify that the expected top-level entry points exist.
+* Locate `router.py`, thesis-side scripts, STraTS-side scripts, configs, README/SCRIPTS docs if present.
+* Verify that paths referenced by `router.py` actually exist.
+* Verify that shell scripts referenced by the router exist and are executable or at least syntactically valid.
 
-* `collect_strats_outputs()` must iterate only over `context.datasets`.
-* STraTS execution must not require inputs for a dataset that was not selected.
-  Prefer adding dataset-aware STraTS runner support, for example by allowing the router to pass selected dataset(s) to a script or by creating separate STraTS scripts/functions for PhysioNet and MIMIC.
-  Do not break the full `both` run.
+B. Python import / syntax check
 
-6. Fix STraTS training/export checkpoint logic.
-   The current STraTS bash script trains models into auto-generated output directories but exports predictions from different generic directories with `--max_epochs 0`. This can export random/untrained predictions if no checkpoint exists in the export directory.
-   Ensure each model’s export uses the trained checkpoint from the same run.
-   Acceptable solution:
+* Run Python compile checks over the repository, excluding data, outputs, runs, checkpoints, virtual environments, caches, and large generated folders.
+* Try importing key modules where safe.
+* Do not import modules that immediately require real data at import time; if that happens, fix the module so data access happens inside `main()` / runtime functions, not during import.
 
-* For each dataset/model, define a stable `output_dir`.
-* Train with that `--output_dir`.
-* Export with the same `--output_dir`, `--max_epochs 0`, and load the trained checkpoint if needed.
-* For STRATS, distinguish pretrain and finetune correctly: finetune should load the pretrain checkpoint, and export should use the finetuned model checkpoint, not only the pretrain checkpoint.
-  Make sure GRU, GRUD, TCN, SAND, and STRATS all export trained predictions.
+Suggested checks:
 
-7. Make STraTS use the router’s Python executable.
-   The router has `--python-executable`, but `run_full_main.sh` uses plain `python`.
-   Update the STraTS script to use `${PYTHON:-python}` and update `router.py` so when it launches the STraTS bash script it passes an environment variable `PYTHON=<context.args.python_executable>`.
-   If needed, extend `run_command()` to accept an optional `env` dict.
+* `python -m compileall ...`
+* targeted imports for router and core modules
+* check that each script has a usable `main` guard where appropriate
 
-8. Improve raw data validation.
-   If the selected stages include `preprocessing`, require the relevant raw data path explicitly:
+C. Router check
 
-* `--physionet-raw-data-path` for PhysioNet
-* `--mimic-raw-data-path` for MIMIC
-  Do not treat empty string/current directory as valid.
-  Fail early with a clear error message.
+* Inspect `router.py`.
+* Verify that CLI flags are parsed correctly.
+* Verify that each stage can be selected independently.
+* Verify that dataset-related flags are passed consistently.
+* Verify that paths passed from the router match the actual script interfaces.
+* Verify that dry-run behavior exists or add a minimal dry-run mode if missing.
+* Dry-run mode should print the resolved commands/stages without requiring data.
 
-9. Improve `--validate-only`.
-   `--validate-only` should not only check that top-level scripts exist. It should also validate selected-stage prerequisites as much as possible without running heavy computation:
+D. Config check
 
-* selected raw data paths are present if preprocessing is selected
-* dataset config files exist and load
-* expected child scripts exist
-* STraTS runner exists if STraTS is selected
-* STraTS input files exist if running only later stages without `prepare-strats`
-* stage selection and dataset selection are coherent
-  Do not load huge raw datasets in validation.
+* Validate that config files exist.
+* Validate that CSV/config readers use existing column names.
+* Validate that required keys are documented or checked explicitly.
+* If configs contain paths to data, the code should fail gracefully with a clear message, not with a cryptic stack trace.
+* Add validation helpers if needed, but keep them small.
 
-10. Improve `--skip-existing` validation.
-    When skipping existing tagging outputs, validate against the full `LATENT_ORDER` from the resolved dataset config, not hard-coded columns.
-    For normalized voter CSVs, ensure all required latent columns exist, are binary, and `ts_id` is present and unique.
+E. Preprocessing stage check
 
-11. Update requirements/docs.
-    The top-level `requirements.txt` is too small for a full run.
-    Do one of:
+* Do not require real PhysioNet or MIMIC data.
+* Verify that the preprocessing script can show help / parse args.
+* Verify that required input paths are validated before heavy logic starts.
+* If possible, add a `--dry-run` or `--validate-only` path that checks arguments and prints planned outputs.
+* The check passes if the script can be invoked in dry-run/validate mode and fails gracefully when data is missing.
 
-* create `requirements-router.txt` for the lightweight router and `requirements-full.txt` that references/combines the thesis and STraTS dependencies, or
-* update README/SCRIPTS clearly explaining that full runs require installing both child repositories’ requirements.
-  Prefer the clear two-file approach if practical.
+F. Latent-variable tagging check
 
-12. Make logs/manifests useful.
-    Keep or improve the existing manifest/log behavior.
-    When a stage is skipped because of `--run-strats false`, `--skip-existing`, or dataset selection, record a clear status/reason in the manifest if that is currently supported.
+* Verify both PhysioNet and MIMIC tagging entry points.
+* Pay attention to inconsistent argument naming, e.g. `--pkl-path` vs `--pkl_path`, and make sure the router calls the correct interface.
+* Verify that output paths are constructed consistently.
+* Verify that decision-tree/rule dictionaries are created only after input validation.
+* The check passes if each tagging script can parse args and perform dry-run/validation without real data.
 
-Important constraints:
+G. Decision-tree plot / visualization check
 
-* Do not run the full pipeline.
-* Do not require access to the real raw datasets to complete the code changes.
-* Preserve existing CLI names where possible.
-* Keep the router simple and explicit.
-* Prefer clear failures over silent fallbacks.
-* Avoid changing scientific logic unless needed for integration correctness.
-* Make the code robust for Linux server execution.
-* Do not over-engineer.
+* Verify that the plotting script can locate its expected inputs through arguments/config.
+* It should fail gracefully if the required latent-tag outputs are missing.
+* Check that output directories are created safely.
+* Avoid requiring actual plots to be generated without input data.
+* The check passes if CLI/config validation works and missing-input errors are clear.
 
-After making the changes, perform lightweight checks only:
+H. STraTS stage check
 
-* `python -m py_compile router.py`
-* If possible, `python router.py --help`
-* If possible, run `--validate-only` or `--dry-run` with dummy paths only where it does not require real data.
-* Inspect that the STraTS script uses `${PYTHON:-python}` consistently.
-* Inspect that train/export output directories are consistent.
+* Inspect STraTS shell scripts and Python entry points.
+* Specifically check bash syntax with something like `bash -n`.
+* Fix any broken `if/fi`, quoting, path, or argument-passing issues.
+* Verify that STraTS scripts do not assume they are always launched from a specific working directory unless documented or enforced.
+* Verify that the router passes the minimal required variables into STraTS.
+* The check passes if shell syntax is valid and dry-run/argument validation works without data.
 
-Return:
+I. Thesis main causal pipeline check
 
-1. A concise summary of files changed.
-2. A list of the integration bugs fixed.
-3. Exact commands I should run on the server for:
+* Verify that the main thesis entry point is invoked the intended way, preferably through existing scripts such as `scripts/run_main.sh` if that is the current contract.
+* Verify that model/dataset/downsample/config flags are wired correctly.
+* Verify that missing-data errors are explicit and early.
+* Do not try to run the actual estimators without data.
+* The check passes if the main script can parse/validate configuration and fail gracefully before data-dependent execution.
 
-   * validation/dry-run
-   * front-half run up to `prepare-strats`
-   * full run
-4. Any remaining assumptions or TODOs.
+J. Shell script check
+
+* Run syntax checks on all relevant `.sh` files:
+
+  * `bash -n script.sh`
+* Check that scripts use safe path handling.
+* Check that scripts do not silently continue after critical failures.
+* Prefer `set -euo pipefail` where safe, but avoid breaking scripts that intentionally allow optional commands.
+
+K. Documentation consistency check
+
+* Compare README/SCRIPTS examples against actual commands.
+* Fix outdated commands only if clearly wrong.
+* Make sure the documented pipeline order matches the router.
+* Add a short “health check without data” section if missing.
+
+Required loop behavior:
+For every failed check:
+
+1. Identify the smallest root cause.
+2. Patch it.
+3. Rerun the failed check.
+4. Rerun any earlier checks that may be affected.
+5. Continue.
+
+Do not stop after the first fix. The task is complete only when the high-level no-data health-check loop passes.
+
+Do not:
+
+* Download datasets.
+* Add fake clinical data unless a tiny synthetic smoke test already fits naturally and safely.
+* Refactor the whole repository.
+* Change scientific logic unless required to prevent obvious breakage.
+* Hide failures by catching all exceptions.
+* Make the router silently skip stages unless explicitly requested through flags.
+* Claim the full pipeline works without data.
+
+Preferred final output:
+Write a concise report, either in the Codex response or in a file such as `HEALTH_CHECK_REPORT.md`, containing:
+
+1. Summary
+
+* Overall status: pass / partial pass / fail.
+* What can be verified without data.
+* What cannot be verified without data.
+
+2. Checks performed
+   For each stage:
+
+* command/check used
+* result
+* files touched, if any
+
+3. Fixes made
+
+* file
+* problem
+* fix
+* why this is safe
+
+4. Remaining risks
+
+* data-dependent failures
+* estimator/runtime failures
+* environment-specific issues
+* external dependency issues
+
+5. Suggested next step
+
+* the minimal command to run once data is available
+* the minimal command to run a single stage
+* the minimal command to run the no-data health check again
+
+Acceptance criteria:
+
+* Python syntax checks pass.
+* Bash syntax checks pass.
+* Router dry-run/validation works.
+* Each pipeline stage has at least one no-data check.
+* Missing-data failures are clear and early.
+* README/SCRIPTS are not obviously inconsistent with the router.
+* Final report clearly separates “verified” from “not verified”.

@@ -34,6 +34,30 @@ class RouterParsingTests(unittest.TestCase):
         normalized = router.normalize_stage_list("preprocessing,tagging")
         self.assertEqual(normalized, ["preprocessing", "tagging"])
 
+    def test_dry_run_flag_is_parsed(self):
+        args = router.parse_args([
+            "--dataset", "physionet",
+            "--run-id", "dryrun_test",
+            "--stages", "preprocessing",
+            "--thesis-repo-root", str(Path(".").resolve()),
+            "--strats-repo-root", str(Path(".").resolve()),
+            "--dry-run",
+        ])
+        self.assertTrue(args.dry_run)
+        self.assertFalse(args.validate_only)
+
+    def test_validate_only_flag_is_parsed(self):
+        args = router.parse_args([
+            "--dataset", "mimic",
+            "--run-id", "validate_test",
+            "--stages", "preprocessing",
+            "--thesis-repo-root", str(Path(".").resolve()),
+            "--strats-repo-root", str(Path(".").resolve()),
+            "--validate-only",
+        ])
+        self.assertTrue(args.validate_only)
+        self.assertFalse(args.dry_run)
+
 
 if __name__ == "__main__":
     unittest.main()
