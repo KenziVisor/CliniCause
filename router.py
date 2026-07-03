@@ -759,6 +759,33 @@ def create_run_dirs(context: RouterContext) -> None:
         ensure_directory(dataset_path.thesis_main_output_dir)
 
 
+def stage_index(stages: Iterable[str], name: str) -> int | None:
+    stage_names = list(stages)
+    try:
+        return stage_names.index(name)
+    except ValueError:
+        return None
+
+
+def stage_is_before(stages: Iterable[str], earlier: str, later: str) -> bool:
+    earlier_index = stage_index(stages, earlier)
+    later_index = stage_index(stages, later)
+    return earlier_index is not None and later_index is not None and earlier_index < later_index
+
+
+def should_validate_existing_strats_inputs(context: RouterContext) -> bool:
+    preview_mode = context.args.dry_run or context.args.validate_only
+    if preview_mode:
+        return False
+    stages = list(getattr(context.args, "stages", []))
+    needs_strats_execution = any(stage in stages for stage in {"run-strats", "collect-strats"})
+    if not needs_strats_execution:
+        return False
+    if stage_is_before(stages, "prepare-strats", "run-strats") or stage_is_before(stages, "prepare-strats", "collect-strats"):
+        return False
+    return True
+
+
 def validate_context(context: RouterContext) -> None:
     preview_mode = context.args.dry_run or context.args.validate_only
     for dataset in context.datasets:
@@ -782,14 +809,8 @@ def validate_context(context: RouterContext) -> None:
             raise FileNotFoundError(f"MIMIC preprocessing script not found at {context.thesis_repo_root / 'src' / 'preprocess_mimic_iii_large.py'}")
     if not (context.strats_repo_root / "run_full_main.sh").exists():
         raise FileNotFoundError(f"STraTS runner not found at {context.strats_repo_root / 'run_full_main.sh'}")
-    if ("run-strats" in context.args.stages or "collect-strats" in context.args.stages) and not preview_mode:
+    if should_validate_existing_strats_inputs(context):
         validate_strats_inputs(context)
-    if "prepare-strats" not in context.args.stages and ("run-strats" in context.args.stages or "collect-strats" in context.args.stages) and not preview_mode:
-        for dataset in context.datasets:
-            rule_target = context.strats_repo_root / "data" / f"{dataset}_latent_tags.csv"
-            processed_target = context.strats_repo_root / "data" / "processed" / f"{context.datasets[dataset].strats_dataset}.pkl"
-            if not rule_target.exists() or not processed_target.exists():
-                raise FileNotFoundError(f"STraTS input files are missing for {dataset}; run prepare-strats first or use --prepare-strats in stages: {rule_target} or {processed_target}")
 
 
 def execute_plan(context: RouterContext) -> None:

@@ -2,6 +2,7 @@ import importlib.util
 import sys
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 
 spec = importlib.util.spec_from_file_location("router", Path(__file__).resolve().parents[1] / "router.py")
@@ -57,6 +58,30 @@ class RouterParsingTests(unittest.TestCase):
         ])
         self.assertTrue(args.validate_only)
         self.assertFalse(args.dry_run)
+
+    def test_should_validate_existing_strats_inputs_when_prepare_runs_before_run_strats(self):
+        context = SimpleNamespace(args=SimpleNamespace(
+            stages=["preprocessing", "tagging", "trees", "prepare-strats", "run-strats"],
+            dry_run=False,
+            validate_only=False,
+        ))
+        self.assertFalse(router.should_validate_existing_strats_inputs(context))
+
+    def test_should_validate_existing_strats_inputs_when_prepare_is_absent(self):
+        context = SimpleNamespace(args=SimpleNamespace(
+            stages=["run-strats"],
+            dry_run=False,
+            validate_only=False,
+        ))
+        self.assertTrue(router.should_validate_existing_strats_inputs(context))
+
+    def test_should_validate_existing_strats_inputs_skips_dry_run(self):
+        context = SimpleNamespace(args=SimpleNamespace(
+            stages=["run-strats"],
+            dry_run=True,
+            validate_only=False,
+        ))
+        self.assertFalse(router.should_validate_existing_strats_inputs(context))
 
 
 if __name__ == "__main__":
