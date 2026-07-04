@@ -107,6 +107,8 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--allow-existing-strats-inputs", action="store_true")
     parser.add_argument("--run-strats", default=None, type=parse_bool)
+    parser.add_argument("--preprocess-chunksize", type=int, default=500000)
+    parser.add_argument("--tmp-dir", default=None)
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     stages = normalize_stage_list(args.stages)
@@ -487,6 +489,11 @@ def run_command(command: list[str], cwd: Path, log_path: Path, dry_run: bool = F
                 handle.write("\n")
         return_code = process.wait()
         if return_code != 0:
+            if return_code == -9:
+                raise RuntimeError(
+                    f"Command was killed by SIGKILL (exit code -9), likely OOM / Slurm memory limit. "
+                    f"Command: {compact}\nLog: {log_path}\nSuggested checks: seff <jobid>; sacct -j <jobid> --format=JobID,State,ExitCode,Elapsed,MaxRSS,ReqMem"
+                )
             raise RuntimeError(f"Command failed with exit code {return_code}: {compact}")
 
 
@@ -509,7 +516,11 @@ def run_preprocessing(dataset: str, context: RouterContext) -> None:
         str(raw_data_path),
         "--output-path",
         str(dataset_paths.thesis_processed_pkl),
+        "--chunksize",
+        str(context.args.preprocess_chunksize),
     ]
+    if context.args.tmp_dir:
+        command.extend(["--tmp-dir", str(Path(context.args.tmp_dir).expanduser().resolve())])
     if dataset == "physionet":
         command.extend(["--processed-dir", str(dataset_paths.thesis_processed_pkl.parent)])
     if context.args.dry_run:

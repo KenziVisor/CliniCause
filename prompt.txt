@@ -1,190 +1,363 @@
-You are working on the GitHub repository **CliniCause**, a unified repository for the thesis causal pipeline and the STraTS fork.
+We are debugging the thesis repository and specifically the MIMIC preprocessing stage launched through router.py.
 
-Goal: perform a high-level health check that the codebase is not broken, **without assuming access to the real datasets** and without running the full pipeline end-to-end.
+Problem:
+router.py runs src/preprocess_mimic_iii_large.py for MIMIC preprocessing. Under a 29G Slurm memory limit, the preprocessing subprocess is killed with return code -9/SIGKILL. This is likely OOM, not a Python exception.
 
-Important constraint:
-You cannot validate scientific correctness or full runtime correctness because the data is unavailable. Your job is to verify that the repository is structurally coherent, importable, configurable, and that every pipeline stage has a minimal “does not immediately break” check.
+Important context:
+- Git history shows that chunksize=10000000 was already present from the initial MIMIC preprocessing implementation, so there may not be an older smaller chunksize to restore.
+- The real problem is not only the large chunksize. The current script reads CHARTEVENTS in chunks but appends all filtered chunks to `ch`, then does `pd.concat(ch)`, so it still materializes a huge filtered CHARTEVENTS dataframe.
+- LABEVENTS and other large MIMIC tables may also be materialized too aggressively.
+- The code repeatedly does `events = pd.concat([events, new_df])` on a growing dataframe, which increases peak memory.
+- We want preprocessing to actually run under 29G, not skip preprocessing or reuse an existing artifact.
 
-Work in a loop:
+Agent/subtask coordination note:
+If your environment supports subagents or parallel task decomposition, use them carefully.
 
-1. Inspect the repository structure and identify the intended pipeline stages.
-2. For each stage, define the weakest meaningful check that can run without real data.
-3. Run the check.
-4. If it fails, fix the cause.
-5. After fixing, rerun the failed check.
-6. Then rerun all earlier checks that could have been affected.
-7. Continue until all checks pass.
-8. At the end, report exactly what was checked, what was fixed, what was not possible to check without data, and what assumptions remain.
+Do not let multiple agents edit the same file concurrently.
+The main orchestrator must own the final plan, final code integration, and semantic decisions.
 
-Expected pipeline order:
+Recommended subtask split:
 
-1. Preprocessing
-2. Latent-variable tagging
-3. Decision-tree plot / visualization
-4. STraTS representation / model stage
-5. Thesis main causal pipeline
+1. Flow auditor, read-only:
+   - Inspect router.py and src/preprocess_mimic_iii_large.py.
+   - Document the current preprocessing flow.
+   - List all large tables, all current concat/materialization points, all median-based rules, all cohort filters, and all output invariants.
+   - Do not edit files.
 
-Start by mapping the actual files/scripts to these stages. Do not invent new architecture unless necessary. Prefer small fixes over refactors.
+2. Semantics/invariants auditor, read-only:
+   - Identify what must remain identical to preserve the old dataset.
+   - Pay special attention to global medians, ICU stay assignment, duplicate aggregation, Age/Gender rows, cohort filters, and ts/oc/ts_ids construction.
+   - Do not edit files.
 
-Minimum checks to perform:
+3. Implementation worker A:
+   - Add CLI controls: --chunksize, --tmp-dir, --keep-intermediates, --max-debug-chunks.
+   - Add memory logging.
+   - Add safe tmp-output behavior.
+   - Keep the script runnable.
 
-A. Repository structure check
+4. Implementation worker B:
+   - Refactor CHARTEVENTS and LABEVENTS into disk-backed shards.
+   - Do not change downstream semantics.
+   - Do not implement per-chunk medians.
 
-* Verify that the expected top-level entry points exist.
-* Locate `router.py`, thesis-side scripts, STraTS-side scripts, configs, README/SCRIPTS docs if present.
-* Verify that paths referenced by `router.py` actually exist.
-* Verify that shell scripts referenced by the router exist and are executable or at least syntactically valid.
+5. Implementation worker C:
+   - Refactor INPUTEVENTS / OUTPUTEVENTS and medication/input extraction into shard-based processing.
+   - Preserve all item IDs, ranges, unit conversions, variable names, and median replacement logic.
 
-B. Python import / syntax check
+6. Validation worker:
+   - Implement semantic artifact comparison:
+     old [ts, oc, ts_ids] vs new [ts, oc, ts_ids].
+   - Compare normalized DataFrames, not pickle bytes.
+   - Report row counts, missing/extra ts_ids, variables, max numeric difference, and example mismatches.
 
-* Run Python compile checks over the repository, excluding data, outputs, runs, checkpoints, virtual environments, caches, and large generated folders.
-* Try importing key modules where safe.
-* Do not import modules that immediately require real data at import time; if that happens, fix the module so data access happens inside `main()` / runtime functions, not during import.
+7. Router worker:
+   - Update router.py to pass --preprocess-chunksize / --chunksize.
+   - Improve return code -9 handling with a clear SIGKILL/OOM message.
 
-Suggested checks:
+Rules:
+- Work sequentially unless the subtasks are read-only.
+- After each implementation stage, run py_compile.
+- After each implementation stage, summarize exactly what changed and what invariants were preserved.
+- The orchestrator must review all changes before moving to the next stage.
+- Do not merge a subtask if it changes preprocessing semantics without explicitly explaining and justifying it.
 
-* `python -m compileall ...`
-* targeted imports for router and core modules
-* check that each script has a usable `main` guard where appropriate
+Goal:
+Refactor MIMIC preprocessing to be memory-safe / disk-backed while preserving the final dataset semantics.
 
-C. Router check
+Execution note:
+Do this refactor incrementally, not as one huge rewrite.
 
-* Inspect `router.py`.
-* Verify that CLI flags are parsed correctly.
-* Verify that each stage can be selected independently.
-* Verify that dataset-related flags are passed consistently.
-* Verify that paths passed from the router match the actual script interfaces.
-* Verify that dry-run behavior exists or add a minimal dry-run mode if missing.
-* Dry-run mode should print the resolved commands/stages without requiring data.
+Recommended order:
+1. First inspect and document the current flow.
+2. Then refactor only CHARTEVENTS and LABEVENTS into disk-backed shards.
+3. Add memory logging and --chunksize / --tmp-dir controls.
+4. Run py_compile and a tiny --max-debug-chunks test.
+5. Only after that, continue to INPUTEVENTS / OUTPUTEVENTS.
+6. Finally implement shard-based timeline alignment, aggregation, and semantic comparison.
 
-D. Config check
+At each stage, keep the script runnable. Do not make a massive all-at-once change that leaves the repository in a broken intermediate state.
 
-* Validate that config files exist.
-* Validate that CSV/config readers use existing column names.
-* Validate that required keys are documented or checked explicitly.
-* If configs contain paths to data, the code should fail gracefully with a clear message, not with a cryptic stack trace.
-* Add validation helpers if needed, but keep them small.
+Strict output contract:
+The final output file must remain a pickle containing exactly:
 
-E. Preprocessing stage check
+    [ts, oc, ts_ids]
 
-* Do not require real PhysioNet or MIMIC data.
-* Verify that the preprocessing script can show help / parse args.
-* Verify that required input paths are validated before heavy logic starts.
-* If possible, add a `--dry-run` or `--validate-only` path that checks arguments and prints planned outputs.
-* The check passes if the script can be invoked in dry-run/validate mode and fails gracefully when data is missing.
+with the same logical schema expected by preprocess_mimic_iii_large_contract.py:
 
-F. Latent-variable tagging check
+    ts columns: ["ts_id", "minute", "variable", "value"]
+    oc columns: ["ts_id", "length_of_stay", "in_hospital_mortality", "subset"]
+    ts_ids: sorted list of canonical stay IDs
 
-* Verify both PhysioNet and MIMIC tagging entry points.
-* Pay attention to inconsistent argument naming, e.g. `--pkl-path` vs `--pkl_path`, and make sure the router calls the correct interface.
-* Verify that output paths are constructed consistently.
-* Verify that decision-tree/rule dictionaries are created only after input validation.
-* The check passes if each tagging script can parse args and perform dry-run/validation without real data.
+Do not change downstream filenames/schema except respecting existing --output-path.
+Do not break router.py expectations.
 
-G. Decision-tree plot / visualization check
+Important semantic constraints:
+The streamed/refactored preprocessing must produce the same dataset logically as the current full-memory implementation.
 
-* Verify that the plotting script can locate its expected inputs through arguments/config.
-* It should fail gracefully if the required latent-tag outputs are missing.
-* Check that output directories are created safely.
-* Avoid requiring actual plots to be generated without input data.
-* The check passes if CLI/config validation works and missing-input errors are clear.
+Do NOT introduce these semantic changes:
+- Do not compute median per chunk if the old code computed median over the full relevant dataframe.
+- Do not compute mean-of-means during aggregation unless counts are preserved.
+- Do not replace `groupby(...).mean()` with an inequivalent operation.
+- Do not change cohort filters.
+- Do not change ICU stay assignment semantics for events missing ICUSTAY_ID.
+- Do not drop events earlier unless this is logically equivalent to the current code.
+- Do not change variable names, unit conversions, valid ranges, or outlier replacement logic.
 
-H. STraTS stage check
+High-level implementation plan:
 
-* Inspect STraTS shell scripts and Python entry points.
-* Specifically check bash syntax with something like `bash -n`.
-* Fix any broken `if/fi`, quoting, path, or argument-passing issues.
-* Verify that STraTS scripts do not assume they are always launched from a specific working directory unless documented or enforced.
-* Verify that the router passes the minimal required variables into STraTS.
-* The check passes if shell syntax is valid and dry-run/argument validation works without data.
+1. Inspect current flow first
+   - Read router.py and src/preprocess_mimic_iii_large.py.
+   - Identify how router.py calls preprocessing.
+   - Identify all large raw tables read by preprocess_mimic_iii_large.py.
+   - Identify where `ch`, `la`, `ie`, `oe`, and `events` are materialized.
+   - Identify all places where median-based outlier replacement is used.
 
-I. Thesis main causal pipeline check
+2. Add CLI controls to src/preprocess_mimic_iii_large.py
+   Add:
+   - --chunksize, default 500000
+   - --tmp-dir, default to a directory next to the output path, e.g. <output_dir>/preprocess_mimic_tmp
+   - --keep-intermediates
+   - --max-debug-chunks, optional, default None, for tiny structural test runs
 
-* Verify that the main thesis entry point is invoked the intended way, preferably through existing scripts such as `scripts/run_main.sh` if that is the current contract.
-* Verify that model/dataset/downsample/config flags are wired correctly.
-* Verify that missing-data errors are explicit and early.
-* Do not try to run the actual estimators without data.
-* The check passes if the main script can parse/validate configuration and fail gracefully before data-dependent execution.
+   At startup, print:
+   - raw data path
+   - output path
+   - chunksize
+   - tmp dir
+   - whether keep-intermediates is enabled
+   - max-debug-chunks if set
 
-J. Shell script check
+3. Add safe memory logging
+   Add a helper such as log_memory(label).
+   Use psutil if available. If psutil is not installed, skip gracefully.
+   Log memory after:
+   - ICU/patient load
+   - raw filtering pass
+   - median/statistics pass
+   - event transformation pass
+   - ICU alignment
+   - final aggregation
+   - serialization
 
-* Run syntax checks on all relevant `.sh` files:
+4. Refactor away from full raw-table materialization
+   The current pattern:
 
-  * `bash -n script.sh`
-* Check that scripts use safe path handling.
-* Check that scripts do not silently continue after critical failures.
-* Prefer `set -euo pipefail` where safe, but avoid breaking scripts that intentionally allow optional commands.
+       ch = []
+       for chunk in read_csv(..., chunksize=...):
+           ...
+           ch.append(chunk)
+       ch = pd.concat(ch)
 
-K. Documentation consistency check
+   must be removed.
 
-* Compare README/SCRIPTS examples against actual commands.
-* Fix outdated commands only if clearly wrong.
-* Make sure the documented pipeline order matches the router.
-* Add a short “health check without data” section if missing.
+   Instead:
+   - Read raw tables in chunks.
+   - Filter each chunk early.
+   - Write filtered/intermediate shards to disk under --tmp-dir.
+   - Never keep the full filtered CHARTEVENTS/LABEVENTS/INPUTEVENTS/OUTPUTEVENTS dataframe in memory.
 
-Required loop behavior:
-For every failed check:
+5. Early filtering rules
+   For each raw table, keep only needed columns and filter as early as possible.
 
-1. Identify the smallest root cause.
-2. Patch it.
-3. Rerun the failed check.
-4. Rerun any earlier checks that may be affected.
-5. Continue.
+   CHARTEVENTS:
+   - use columns: HADM_ID, ICUSTAY_ID, ITEMID, CHARTTIME, VALUE, VALUENUM, VALUEUOM, ERROR
+   - keep rows where ICUSTAY_ID is in adult ICU stays
+   - ERROR != 1
+   - CHARTTIME not null
+   - not both VALUE and VALUENUM null
+   - ITEMID is in the union of all CHARTEVENTS item IDs used by the feature extraction logic
+   - add TABLE="chart"
 
-Do not stop after the first fix. The task is complete only when the high-level no-data health-check loop passes.
+   LABEVENTS:
+   - read in chunks too
+   - use columns: HADM_ID, ITEMID, CHARTTIME, VALUE, VALUENUM, VALUEUOM
+   - keep HADM_ID in retained admissions
+   - CHARTTIME not null
+   - not both VALUE and VALUENUM null
+   - ITEMID is in the union of all LABEVENTS item IDs used by feature extraction
+   - add ICUSTAY_ID=np.nan
+   - add TABLE="lab"
 
-Do not:
+   INPUTEVENTS_CV / INPUTEVENTS_MV / OUTPUTEVENTS:
+   - apply equivalent early filtering using the current code’s columns and item IDs
+   - keep only the columns required downstream
+   - normalize columns to the event schema as early as possible when safe:
+     HADM_ID, ICUSTAY_ID, CHARTTIME, ITEMID, VALUE, VALUENUM, VALUEUOM, TABLE
 
-* Download datasets.
-* Add fake clinical data unless a tiny synthetic smoke test already fits naturally and safely.
-* Refactor the whole repository.
-* Change scientific logic unless required to prevent obvious breakage.
-* Hide failures by catching all exceptions.
-* Make the router silently skip stages unless explicitly requested through flags.
-* Claim the full pipeline works without data.
+6. Feature extraction structure
+   Where reasonable, move item IDs and extraction rules into structured definitions so extraction is less duplicated.
+   For example:
+   - feature name
+   - source table(s)
+   - item IDs
+   - valid range
+   - unit conversion
+   - median replacement behavior
+   - output unit
 
-Preferred final output:
-Write a concise report, either in the Codex response or in a file such as `HEALTH_CHECK_REPORT.md`, containing:
+   Do not over-engineer if it risks changing behavior. Correctness and low memory are more important than elegance.
 
-1. Summary
+7. Global median/statistics pass
+   For every feature where the current code uses a median to replace invalid/outlier values:
+   - compute the median globally across all relevant filtered shards
+   - do not compute median per chunk
+   - store medians in a dictionary
+   - log feature name, valid count, and median value
 
-* Overall status: pass / partial pass / fail.
-* What can be verified without data.
-* What cannot be verified without data.
+   This may require a two-pass flow:
+   - pass A: collect valid values for median computation from shards
+   - pass B: transform shards using the global medians
 
-2. Checks performed
-   For each stage:
+   Use memory-safe accumulation. If a feature has many values, do not keep all raw values if avoidable; but correctness is more important. If exact median requires collecting values, collect only that feature’s numeric values, not entire raw rows. If exact median is still too large, write values to temporary shard files and compute median from those.
 
-* command/check used
-* result
-* files touched, if any
+8. Transformation pass
+   Read filtered shards one at a time.
+   Apply the same transformations as the old code:
+   - same ITEMID mapping
+   - same feature names
+   - same unit conversions
+   - same outlier rules
+   - same median replacement
+   - same VALUEUOM assignment
+   - same handling of VALUE / VALUENUM
 
-3. Fixes made
+   Output transformed event shards with only the columns needed downstream:
 
-* file
-* problem
-* fix
-* why this is safe
+       HADM_ID, ICUSTAY_ID, CHARTTIME, VALUENUM, TABLE, NAME
 
-4. Remaining risks
+   Avoid `events = pd.concat([events, ...])` on a growing dataframe.
+   Prefer writing transformed event shards to disk.
 
-* data-dependent failures
-* estimator/runtime failures
-* environment-specific issues
-* external dependency issues
+9. ICU stay assignment
+   The current code assigns missing ICUSTAY_ID by HADM_ID and CHARTTIME:
+   for each event with missing ICUSTAY_ID, assign the ICU stay from the same HADM_ID where:
 
-5. Suggested next step
+       INTIME <= CHARTTIME <= OUTTIME
 
-* the minimal command to run once data is available
-* the minimal command to run a single stage
-* the minimal command to run the no-data health check again
+   Preserve this logic.
+
+   But do it shard-by-shard:
+   - Build a small ICU interval lookup from the ICU table.
+   - For each transformed event shard:
+     - assign missing ICUSTAY_ID using the same rule
+     - drop rows that cannot be assigned
+     - write aligned shard back to disk
+
+   Avoid merging the entire events dataframe with all ICU intervals at once.
+
+10. Timeline conversion and cohort filtering
+   Preserve the existing cohort logic:
+   - ICU stay lasted at least 24h
+   - patient alive for at least 24h from INTIME, or DEATHTIME is null
+   - ICU stay has at least one event in the first 24h
+   - keep only events belonging to final retained ICU stays
+
+   Implement this in a memory-safe way:
+   - Compute rel_charttime/minute per shard by joining to a small ICUSTAY_ID -> INTIME mapping.
+   - Determine final eligible ICU stays.
+   - Filter shards by final eligible ICU stays.
+   - Add Age and Gender static rows at minute=0 exactly as the current code does.
+
+11. Final aggregation
+   The current final canonicalization uses groupby over:
+
+       ["ts_id", "minute", "variable"]
+
+   and computes mean value.
+
+   For memory safety, use map-reduce:
+   - Per shard:
+     - rename columns to ts_id/minute/variable/value
+     - group by ["ts_id", "minute", "variable"]
+     - compute sum and count
+     - write aggregate shard
+   - Final:
+     - concatenate aggregate shards
+     - group by ["ts_id", "minute", "variable"]
+     - sum the sums and counts
+     - compute value = total_sum / total_count
+
+   This preserves exact mean semantics and avoids mean-of-means.
+
+   Then build:
+   - ts
+   - ts_ids
+   - oc
+
+   using preprocess_mimic_iii_large_contract.py where possible.
+
+12. Validation and semantic comparison
+   Add a helper script or function, e.g.:
+
+       scripts/compare_mimic_processed_artifacts.py
+
+   It should compare an old baseline artifact and a new streamed artifact semantically, not byte-by-byte.
+
+   It should:
+   - load both pickle files as [ts, oc, ts_ids]
+   - normalize ts:
+     - sort by ["ts_id", "minute", "variable"]
+     - reset_index(drop=True)
+     - normalize dtypes according to preprocess_mimic_iii_large_contract.py
+   - normalize oc:
+     - sort by ["ts_id"]
+     - reset_index(drop=True)
+     - normalize dtypes
+   - compare ts_ids exactly
+   - compare columns exactly
+   - compare row counts
+   - compare variables
+   - compare missing/extra ts_ids
+   - compare numeric values with tight tolerance, e.g. rtol=1e-9, atol=1e-12
+   - report max absolute value difference
+   - print first few mismatching rows if any
+
+   Important:
+   - Do not require pickle files to be byte-identical.
+   - Require the dataframes/lists to be semantically equivalent.
+
+13. router.py changes
+   Update router.py so that:
+   - it exposes --preprocess-chunksize, default 500000
+   - it passes --chunksize <value> to src/preprocess_mimic_iii_large.py for MIMIC preprocessing
+   - it optionally passes --tmp-dir if router has a run-specific tmp directory
+   - if preprocessing subprocess returns -9, raise a clear error:
+     "Child process was killed by SIGKILL, likely OOM / Slurm memory limit."
+   - include the command, log path, and suggest:
+     seff <jobid>
+     sacct -j <jobid> --format=JobID,State,ExitCode,Elapsed,MaxRSS,ReqMem
+
+14. Cleanup behavior
+   - If --keep-intermediates is false, remove tmp-dir at the end of a successful run.
+   - If preprocessing fails, keep tmp-dir for debugging and print its path.
+   - Never delete the final output artifact unless the run succeeds and writes a valid replacement.
+   - Prefer writing to a temporary output file and atomically renaming to --output-path after validation succeeds.
+
+15. Tests / checks to run
+   Run:
+
+       python -m py_compile router.py src/preprocess_mimic_iii_large.py src/preprocess_mimic_iii_large_contract.py
+
+   If available, run:
+
+       python src/preprocess_mimic_iii_large.py --validate-config-only
+
+   Run a tiny structural debug run if raw data is available:
+
+       python src/preprocess_mimic_iii_large.py \
+         --raw-data-path <path-to-mimic> \
+         --output-path <debug-output.pkl> \
+         --chunksize 50000 \
+         --max-debug-chunks 1 \
+         --keep-intermediates
+
+   The debug run does not prove full semantic equality, but it must prove the refactored pipeline executes structurally.
 
 Acceptance criteria:
-
-* Python syntax checks pass.
-* Bash syntax checks pass.
-* Router dry-run/validation works.
-* Each pipeline stage has at least one no-data check.
-* Missing-data failures are clear and early.
-* README/SCRIPTS are not obviously inconsistent with the router.
-* Final report clearly separates “verified” from “not verified”.
+- MIMIC preprocessing no longer materializes full CHARTEVENTS/LABEVENTS/INPUTEVENTS/OUTPUTEVENTS raw dataframes in memory.
+- The pipeline can run with bounded memory by using shards under --tmp-dir.
+- Final output is still exactly [ts, oc, ts_ids].
+- The contract validation passes.
+- router.py can pass chunksize and reports SIGKILL/OOM clearly.
+- No semantic shortcuts such as per-chunk median or mean-of-means are introduced.
+- A semantic comparison tool exists to compare old vs new artifacts.

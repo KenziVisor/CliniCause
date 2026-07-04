@@ -59,6 +59,19 @@ class RouterParsingTests(unittest.TestCase):
         self.assertTrue(args.validate_only)
         self.assertFalse(args.dry_run)
 
+    def test_preprocess_chunk_size_and_tmp_dir_are_parsed(self):
+        args = router.parse_args([
+            "--dataset", "mimic",
+            "--run-id", "chunk_test",
+            "--stages", "preprocessing",
+            "--thesis-repo-root", str(Path(".").resolve()),
+            "--strats-repo-root", str(Path(".").resolve()),
+            "--preprocess-chunksize", "12345",
+            "--tmp-dir", "/tmp/mimic-preprocess",
+        ])
+        self.assertEqual(args.preprocess_chunksize, 12345)
+        self.assertEqual(args.tmp_dir, "/tmp/mimic-preprocess")
+
     def test_should_validate_existing_strats_inputs_when_prepare_runs_before_run_strats(self):
         context = SimpleNamespace(args=SimpleNamespace(
             stages=["preprocessing", "tagging", "trees", "prepare-strats", "run-strats"],
