@@ -72,6 +72,49 @@ class RouterParsingTests(unittest.TestCase):
         self.assertEqual(args.preprocess_chunksize, 12345)
         self.assertEqual(args.tmp_dir, "/tmp/mimic-preprocess")
 
+    def test_build_preprocessing_command_for_physionet_does_not_pass_chunksize(self):
+        context = SimpleNamespace(
+            args=SimpleNamespace(
+                python_executable="python",
+                preprocess_chunksize=500000,
+                tmp_dir="/tmp/preprocess",
+                dry_run=False,
+                skip_existing=False,
+            ),
+            thesis_repo_root=Path("."),
+            datasets={
+                "physionet": SimpleNamespace(
+                    resolved_config_csv=Path("config.csv"),
+                    thesis_processed_pkl=Path("out.pkl"),
+                )
+            },
+        )
+        command = router.build_preprocessing_command("physionet", context)
+        self.assertIn("--processed-dir", command)
+        self.assertNotIn("--chunksize", command)
+
+    def test_build_preprocessing_command_for_mimic_passes_chunksize(self):
+        context = SimpleNamespace(
+            args=SimpleNamespace(
+                python_executable="python",
+                preprocess_chunksize=500000,
+                tmp_dir="/tmp/preprocess",
+                dry_run=False,
+                skip_existing=False,
+            ),
+            thesis_repo_root=Path("."),
+            datasets={
+                "mimic": SimpleNamespace(
+                    resolved_config_csv=Path("config.csv"),
+                    thesis_processed_pkl=Path("out.pkl"),
+                )
+            },
+        )
+        command = router.build_preprocessing_command("mimic", context)
+        self.assertIn("--chunksize", command)
+        self.assertIn("500000", command)
+        self.assertIn("--tmp-dir", command)
+
     def test_should_validate_existing_strats_inputs_when_prepare_runs_before_run_strats(self):
         context = SimpleNamespace(args=SimpleNamespace(
             stages=["preprocessing", "tagging", "trees", "prepare-strats", "run-strats"],

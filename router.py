@@ -497,16 +497,19 @@ def run_command(command: list[str], cwd: Path, log_path: Path, dry_run: bool = F
             raise RuntimeError(f"Command failed with exit code {return_code}: {compact}")
 
 
-def run_preprocessing(dataset: str, context: RouterContext) -> None:
+def resolve_dataset_raw_data_path(dataset: str, context: RouterContext) -> Path:
+    raw_value = getattr(context.args, f"{dataset}_raw_data_path", None)
+    if raw_value in (None, "", ".", "./", ".\\"):
+        return Path("")
+    return Path(raw_value).expanduser()
+
+
+def build_preprocessing_command(dataset: str, context: RouterContext) -> list[str]:
     dataset_paths = context.datasets[dataset]
     script_name = "src/preprocess_physionet_2012.py" if dataset == "physionet" else "src/preprocess_mimic_iii_large.py"
     script_path = context.thesis_repo_root / script_name
-    log_path = build_stage_log_path(context.run_dir, "preprocessing", dataset)
-    raw_data_path = Path(getattr(context.args, f"{dataset}_raw_data_path") or "")
-    if raw_data_path == Path("."):
-        raise FileNotFoundError(f"Raw data path for {dataset} is missing: {raw_data_path}")
-    if not context.args.dry_run and not raw_data_path.exists():
-        raise FileNotFoundError(f"Raw data path for {dataset} is missing: {raw_data_path}")
+    raw_data_path = resolve_dataset_raw_data_path(dataset, context)
+
     command = [
         context.args.python_executable,
         str(script_path),
@@ -516,13 +519,26 @@ def run_preprocessing(dataset: str, context: RouterContext) -> None:
         str(raw_data_path),
         "--output-path",
         str(dataset_paths.thesis_processed_pkl),
-        "--chunksize",
-        str(context.args.preprocess_chunksize),
     ]
-    if context.args.tmp_dir:
-        command.extend(["--tmp-dir", str(Path(context.args.tmp_dir).expanduser().resolve())])
     if dataset == "physionet":
         command.extend(["--processed-dir", str(dataset_paths.thesis_processed_pkl.parent)])
+    else:
+        command.extend(["--chunksize", str(context.args.preprocess_chunksize)])
+        if context.args.tmp_dir:
+            command.extend(["--tmp-dir", str(Path(context.args.tmp_dir).expanduser().resolve())])
+    return command
+
+
+def run_preprocessing(dataset: str, context: RouterContext) -> None:
+    dataset_paths = context.datasets[dataset]
+    log_path = build_stage_log_path(context.run_dir, "preprocessing", dataset)
+    raw_data_path = resolve_dataset_raw_data_path(dataset, context)
+    if raw_data_path == Path(".") or raw_data_path == Path(""):
+        raise FileNotFoundError(f"Raw data path for {dataset} is missing: {raw_data_path}")
+    if not context.args.dry_run and not raw_data_path.exists():
+        raise FileNotFoundError(f"Raw data path for {dataset} is missing: {raw_data_path}")
+    command = build_preprocessing_command(dataset, context)
+    print(f"[router] preprocessing dataset={dataset} command={shlex.join(command)}")
     if context.args.dry_run:
         run_command(command, context.thesis_repo_root, log_path, dry_run=True)
         return
