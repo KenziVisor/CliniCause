@@ -1,0 +1,618 @@
+Thesis Context Dump
+===================
+
+This file is a working context dump for future thesis-related conversations.
+It is not official thesis writing. It summarizes the important current understanding
+of the thesis, research direction, codebase, pipeline, contributions, and open risks.
+
+Core Thesis Summary
+-------------------
+
+The thesis is about causal inference on irregular clinical time-series data,
+mainly using PhysioNet 2012 and MIMIC-III-style ICU data.
+
+The central idea is not simply to predict mortality from time series. Instead,
+the thesis builds an end-to-end pipeline that connects:
+
+1. Irregular clinical time-series preprocessing.
+2. Construction of clinically meaningful latent binary variables.
+3. Causal DAG construction using observed variables, metadata, and latent variables.
+4. Treatment-specific causal effect estimation.
+5. Validation and sensitivity analysis.
+
+The thesis should be presented as an end-to-end methodological pipeline rather
+than as a claim that definitive medical causal effects were discovered.
+
+Possible Core Research Question
+-------------------------------
+
+Can we build a clinically meaningful causal-inference pipeline for irregular ICU
+time-series data by first extracting/interpreting latent patient states, then
+using those states inside a DAG-based causal effect estimation framework?
+
+Main conceptual layers:
+
+- Time-series data: PhysioNet 2012 / MIMIC-III ICU measurements.
+- Latent clinical states: Binary proxy variables such as organ-failure, shock,
+  or inflammation states.
+- DAG: Explicit domain-informed causal assumptions between metadata, measurements,
+  latent states, treatments, and mortality.
+- Causal estimation: ATE/CATE estimation for selected latent/treatment variables.
+- Validation: Sensitivity analysis, permutation tests, matching baselines, and
+  falsification/refutation ideas.
+
+Main Datasets
+-------------
+
+PhysioNet 2012
+~~~~~~~~~~~~~~
+
+PhysioNet 2012 is the main initial dataset. Raw irregular ICU time-series files
+are preprocessed into a usable pickle format. It includes patient-level time-series
+measurements, metadata, and mortality outcome.
+
+Important script:
+
+- preprocess_physionet_2012.py
+
+PhysioNet is also the dataset where STraTS and other time-series models were
+adapted to predict latent tag vectors instead of only mortality.
+
+MIMIC-III
+~~~~~~~~~
+
+MIMIC-III is the larger and more realistic extension. There are preprocessing
+scripts for it and a separate causal graph.
+
+Important scripts:
+
+- preprocess_mimic_iii_large.py
+- preprocess_mimic_iii_large_contract.py
+- mimiciii_causal_graph.py
+
+A recurring technical issue is the ID mismatch:
+
+- STraTS / time-series model pipeline often expects ts_id.
+- MIMIC-style clinical pipeline often uses icustay_id.
+
+This must be normalized carefully so downstream scripts do not silently mismatch
+patients.
+
+Pipeline Architecture
+---------------------
+
+The working thesis pipeline:
+
+Raw irregular ICU data
+    -> Preprocessing
+    -> Latent clinical tag construction
+    -> Clinical causal DAG construction
+    -> Backdoor/confounder selection
+    -> ATE/CATE estimation
+    -> Validation / sensitivity analysis / robustness checks
+
+Each stage produces artifacts consumed by the next stage.
+
+Latent Clinical Variables
+-------------------------
+
+A major thesis contribution is the creation of clinically meaningful binary
+latent variables from irregular time-series measurements.
+
+These are not true hidden medical states in a formal medical sense. They should
+be framed as clinically inspired proxy labels or latent tags based on clinical
+reasoning and rule-based definitions.
+
+Examples of latent variables:
+
+- Shock: Hemodynamic instability / circulatory failure proxy.
+- RespFail: Respiratory failure proxy.
+- RenalFail: Kidney failure proxy.
+- HepFail: Liver failure proxy.
+- HemeFail: Hematologic failure proxy.
+- Inflam: Inflammation / infection-like proxy.
+
+Important script family:
+
+- tagging_latent_variables.py
+- tagging_latent_variables*.py
+
+The taggers are rule-based trees / threshold systems. There was also exploration
+of optimized thresholds, likely from an Optuna-style search, stored in something
+like:
+
+- optimal_thresholds.txt
+
+There was also a DOWN_SAMPLE option, where label-0 examples can be downsampled
+to balance against label-1 examples per latent/treatment.
+
+Important framing:
+
+The latent tags are clinically inspired proxy states, not ground-truth diagnoses.
+
+STraTS and Latent Prediction
+----------------------------
+
+Another major part of the project is adapting STraTS, originally a time-series
+transformer for clinical data, from mortality prediction to multi-label latent
+tag prediction.
+
+Original STraTS direction:
+
+- irregular time series -> mortality label
+
+Adapted thesis direction:
+
+- irregular time series -> latent clinical tag vector
+
+This required modifying places in the code that assumed:
+
+- target = scalar binary mortality
+
+into:
+
+- target = vector of latent labels
+
+Important areas requiring changes:
+
+- Dataset loading: Load latent CSV and align IDs.
+- Model output: Output vector, not scalar.
+- Loss: Multi-label binary loss.
+- Evaluation: Per-label metrics, not one mortality AUROC only.
+- Prediction export: Export patient-level latent vector predictions.
+- Train/validation split: Preserve correct alignment between time series and
+  latent labels.
+
+The same idea was expanded beyond STraTS to other models:
+
+- GRU
+- GRU-D
+- TCN
+- InterpNet
+- SAND
+
+These models should also support latent vector prediction and produce comparable
+training/evaluation outputs.
+
+Majority Vote Latent Layer
+--------------------------
+
+There was a planned or discussed majority-vote layer that combines latent
+predictions/tags from multiple sources.
+
+Possible voters:
+
+- Rule-based clinical tagger.
+- STraTS.
+- TCN.
+- GRU.
+- GRU-D.
+- Possibly SAND / InterpNet.
+
+The majority vote should align patients by ID, not just assume identical row
+order.
+
+Important design issue:
+
+Some taggers may output fewer patients than the original dataset. For example,
+the clinical tagger might filter down to around 7,993 rows from 11,988 PhysioNet
+patients. Therefore, the majority-vote script must handle partial overlap robustly.
+
+Desired script:
+
+- majority_vote_latents.py
+
+Tie-breaking idea:
+
+- ties resolve to 1
+
+This matters especially if there is an even number of voters.
+
+Causal DAG Construction
+-----------------------
+
+The thesis uses domain-informed causal DAGs for clinical variables.
+
+Important scripts:
+
+- physionet2012_causal_graph.py
+- mimiciii_causal_graph.py
+
+The DAG includes several node types:
+
+- Metadata: Age, ICU type, gender, admission-related variables.
+- Observed measurements: Lab and vital variables.
+- Latent variables: Shock, RespFail, RenalFail, etc.
+- Outcome: In-hospital mortality.
+- Treatments / causal variables: Treatment-specific latent or clinical states.
+
+The DAG is used to select confounders for each treatment/outcome pair, usually
+via backdoor adjustment logic.
+
+Important thesis framing:
+
+The DAG is manually/domain-informed, not learned automatically as a definitive
+causal graph.
+
+The thesis should not claim that the DAG is medically complete or perfectly
+correct. It should be presented as an explicit causal assumption layer.
+
+Causal Estimation
+-----------------
+
+The main causal estimation script is:
+
+- cate_estimation.py
+
+The goal is to estimate treatment-specific effects, especially:
+
+- ATE
+- CATE
+
+Methods used or discussed:
+
+- CausalForestDML
+- LinearDML
+- DoWhy
+- EconML
+- Possibly DoubleML-style sensitivity logic
+
+The treatment variable is often one latent clinical tag, and the outcome is
+mortality.
+
+Simplified conceptual structure:
+
+- Treatment T = selected latent variable.
+- Outcome Y = mortality.
+- Confounders X/W = DAG-derived adjustment set.
+- Estimator = CausalForestDML or LinearDML.
+- Output = ATE/CATE distribution and summaries.
+
+There was a model selector / global configuration to switch between:
+
+- CausalForest
+- LinearDML
+
+Outputs are saved per treatment, including numeric summaries and model pickles.
+
+Example output structure:
+
+CATE_RESULTS_DIR/
+    treatment_name/
+        treatment_name_model.pkl
+        summaries / plots / estimates
+
+Validation and Robustness
+-------------------------
+
+Validation is one of the most important thesis sections.
+
+The thesis should avoid overclaiming medical causality. Instead, it should show
+that the pipeline is methodologically reasonable and robust under several sanity
+checks.
+
+1. Permutation Tests
+~~~~~~~~~~~~~~~~~~~~
+
+Important script:
+
+- permutation_test.py
+
+Idea:
+
+Randomly permute treatment labels or latent labels. If the causal signal
+disappears or becomes near-zero, that supports the claim that the observed
+effects are not just artifacts of the estimator.
+
+Expected result:
+
+- Real labels -> meaningful effect pattern.
+- Permuted labels -> near-zero / noisy effect.
+
+2. Matching Baseline
+~~~~~~~~~~~~~~~~~~~~
+
+Important script:
+
+- matching_causal_effect.py
+
+This is a simpler, more interpretable baseline, possibly using matching with
+Hamming distance across binary latent/confounder vectors.
+
+Purpose:
+
+Compare DML/CausalForest results to a simpler matching-based causal baseline.
+
+3. Sensitivity Analysis
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Important script:
+
+- analyze_cate_results.py
+
+This script is meant to analyze saved models/results and extract robustness or
+sensitivity diagnostics.
+
+Concepts discussed:
+
+- RV
+- robustness value
+- cf_y
+- cf_t / cf_d
+- benchmark confounder sensitivity
+
+Important methodological insight:
+
+When using a benchmark confounder for sensitivity analysis, the residualization
+step should exclude the benchmarked confounder from the adjustment set. Otherwise,
+the benchmark can be incorrectly controlled away.
+
+4. Falsification / Refutation Tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There was interest in DoWhy-style refuters and falsification tests.
+
+Possible test types:
+
+- Placebo treatment: Check if a fake treatment creates a fake effect.
+- Random common cause: See how stable the estimate is.
+- Data subset refuter: Check if the result holds across subsets.
+- Permutation: Destroy signal and expect effect to vanish.
+
+Important Scripts and Components
+--------------------------------
+
+Current mental map of the repository:
+
+- preprocess_physionet_2012.py:
+  Preprocess PhysioNet 2012 raw data.
+
+- preprocess_mimic_iii_large.py:
+  Preprocess larger MIMIC-III data.
+
+- preprocess_mimic_iii_large_contract.py:
+  Contract/compatibility version for MIMIC.
+
+- tagging_latent_variables.py:
+  Rule-based latent tag construction.
+
+- tagging_latent_variables*.py:
+  Dataset-specific or variant latent taggers.
+
+- physionet2012_causal_graph.py:
+  Build PhysioNet causal DAG.
+
+- mimiciii_causal_graph.py:
+  Build MIMIC causal DAG.
+
+- cate_estimation.py:
+  Main ATE/CATE estimation pipeline.
+
+- analyze_cate_results.py:
+  Post-hoc analysis and sensitivity.
+
+- permutation_test.py:
+  Permutation validation.
+
+- matching_causal_effect.py:
+  Matching-based causal baseline.
+
+- STraTS repo modifications:
+  Predict latent vectors from irregular time series.
+
+- majority_vote_latents.py:
+  Planned/desired voting over latent tag sources.
+
+Main Thesis Contributions
+-------------------------
+
+Current contribution framing:
+
+1. Latent clinical tag dataset:
+   Construction of clinically meaningful binary latent variables from irregular
+   ICU time series.
+
+2. End-to-end causal pipeline:
+   Connection of preprocessing, latent tagging, DAG construction, confounder
+   selection, and causal estimation.
+
+3. DAG-informed adjustment:
+   Use of explicit causal assumptions to select confounders instead of blindly
+   controlling for everything.
+
+4. Model-based latent prediction:
+   Adaptation of STraTS and other time-series models to predict latent clinical
+   state vectors.
+
+5. Robustness framework:
+   Validation using permutation tests, matching baselines, and sensitivity
+   analysis.
+
+6. Practical software artifact:
+   A reproducible research codebase with scripts for PhysioNet and MIMIC-style
+   data.
+
+Best concise phrasing:
+
+The thesis proposes and evaluates a methodological framework for combining
+irregular clinical time-series modeling with causal inference through clinically
+meaningful latent state representations and DAG-guided effect estimation.
+
+What the Thesis Should Not Overclaim
+------------------------------------
+
+Avoid claiming:
+
+- "We discovered true causal medical effects."
+  Better: "We estimate effects under explicit assumptions."
+
+- "The latent variables are true diagnoses."
+  Better: "The latent variables are clinically inspired proxy states."
+
+- "The DAG is the real clinical causal graph."
+  Better: "The DAG encodes domain-informed causal assumptions."
+
+- "The model proves treatment effectiveness."
+  Better: "The pipeline produces treatment-specific estimates subject to
+  robustness checks."
+
+- "Mortality effects are medically actionable."
+  Better: "The results demonstrate methodological feasibility and signal
+  consistency."
+
+Current Research Story
+----------------------
+
+A strong thesis narrative:
+
+ICU time-series data is irregular, high-dimensional, sparse, and clinically
+complex. Direct causal inference on raw measurements is difficult because the
+variables are noisy, temporally sparse, and not always clinically interpretable.
+
+Instead of estimating causal effects directly from raw time-series measurements,
+the thesis introduces an intermediate representation: binary latent clinical
+states.
+
+These latent states serve two purposes:
+
+1. They make the patient state more clinically interpretable.
+2. They provide structured variables that can be inserted into a causal graph and
+   used for downstream causal effect estimation.
+
+Using a manually/domain-informed DAG, the pipeline selects adjustment sets and
+estimates treatment-specific effects using modern causal ML methods such as
+CausalForestDML and LinearDML.
+
+Finally, the work evaluates whether estimated effects are stable, meaningful,
+and non-random using permutation tests, matching baselines, and sensitivity
+analysis.
+
+Current Open Technical Concerns
+-------------------------------
+
+Recurring risks:
+
+- Scalar target assumptions in STraTS:
+  Many scripts originally assume one mortality label, not a latent vector.
+
+- ID alignment:
+  ts_id vs icustay_id mismatches can silently corrupt merges.
+
+- Latent label validity:
+  Rule-based tags must be framed as proxies, not ground truth.
+
+- DAG assumptions:
+  The causal conclusions depend heavily on DAG correctness.
+
+- Confounder selection:
+  Need to avoid conditioning on colliders or mediators.
+
+- Sensitivity analysis correctness:
+  Benchmark residualization must be done carefully.
+
+- MIMIC compatibility:
+  PhysioNet pipeline may not transfer cleanly without contracts.
+
+- Evaluation plots:
+  Some non-STraTS models had empty or incorrect learning curves.
+
+- Majority voting:
+  Must handle missing patients and row-order mismatches correctly.
+
+Possible Thesis Titles
+----------------------
+
+Direct:
+
+- Causal Inference on Irregular Clinical Time Series Using Latent Clinical State
+  Representations
+
+Methodological:
+
+- A DAG-Guided Framework for Causal Effect Estimation in Irregular ICU Time
+  Series
+
+ML + causality:
+
+- Combining Time-Series Representation Learning and Causal Inference for ICU
+  Patient Trajectories
+
+Conservative:
+
+- A Pipeline for Latent-State Construction and Causal Effect Estimation in
+  Clinical Time-Series Data
+
+Favorite working title:
+
+- Causal Inference on Irregular Clinical Time Series Using Clinically Meaningful
+  Latent State Representations
+
+Possible Abstract Skeleton
+--------------------------
+
+Irregular ICU time-series data presents challenges for causal inference due to
+sparsity, temporal irregularity, high dimensionality, and limited interpretability
+of raw measurements.
+
+This thesis proposes an end-to-end framework that transforms irregular clinical
+time series into clinically meaningful binary latent state representations,
+integrates these representations into domain-informed causal graphs, and estimates
+treatment-specific causal effects using DAG-guided adjustment and causal
+machine-learning estimators.
+
+The framework is evaluated on PhysioNet 2012 and extended toward MIMIC-III-style
+data. Validation includes permutation tests, matching-based baselines, and
+sensitivity analysis to assess robustness under explicit causal assumptions.
+
+The goal is not to establish definitive medical treatment recommendations, but
+to demonstrate a reproducible methodological pipeline for combining time-series
+modeling, latent clinical representation, and causal inference in ICU data.
+
+Compact Summary
+---------------
+
+- Thesis domain:
+  Causal inference on irregular ICU clinical time series.
+
+- Main datasets:
+  PhysioNet 2012 and MIMIC-III-style data.
+
+- Main outcome:
+  Mortality / in-hospital mortality.
+
+- Key intermediate object:
+  Binary latent clinical tags.
+
+- Latent tag source:
+  Rule-based clinical thresholds, later model-predicted tags.
+
+- Time-series models:
+  STraTS, GRU, GRU-D, TCN, InterpNet, SAND.
+
+- Causal graph:
+  Domain-informed DAG with metadata, observed variables, latents, and outcome.
+
+- Estimators:
+  CausalForestDML, LinearDML, DoWhy/EconML tooling.
+
+- Main estimates:
+  ATE and CATE per treatment/latent variable.
+
+- Validation:
+  Permutation tests, matching baseline, sensitivity analysis, refuters.
+
+- Main contribution:
+  End-to-end pipeline combining latent clinical representation with DAG-guided
+  causal inference.
+
+- Main caution:
+  Do not overclaim medical causal truth; estimates depend on assumptions.
+
+One-Sentence Summary
+--------------------
+
+The thesis is an end-to-end framework for turning irregular ICU time-series data
+into clinically meaningful latent state variables, inserting those variables into
+a domain-informed causal DAG, and estimating treatment-specific causal effects
+with modern causal ML methods, while validating robustness through permutation,
+matching, and sensitivity analyses.

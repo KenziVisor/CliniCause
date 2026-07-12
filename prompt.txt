@@ -1,363 +1,757 @@
-We are debugging the thesis repository and specifically the MIMIC preprocessing stage launched through router.py.
+You are working inside the local `clinicause` repository.
 
-Problem:
-router.py runs src/preprocess_mimic_iii_large.py for MIMIC preprocessing. Under a 29G Slurm memory limit, the preprocessing subprocess is killed with return code -9/SIGKILL. This is likely OOM, not a Python exception.
+Your task is to reorganize and complete the thesis literature corpus located under:
 
-Important context:
-- Git history shows that chunksize=10000000 was already present from the initial MIMIC preprocessing implementation, so there may not be an older smaller chunksize to restore.
-- The real problem is not only the large chunksize. The current script reads CHARTEVENTS in chunks but appends all filtered chunks to `ch`, then does `pd.concat(ch)`, so it still materializes a huge filtered CHARTEVENTS dataframe.
-- LABEVENTS and other large MIMIC tables may also be materialized too aggressively.
-- The code repeatedly does `events = pd.concat([events, new_df])` on a growing dataframe, which increases peak memory.
-- We want preprocessing to actually run under 29G, not skip preprocessing or reuse an existing artifact.
+`thesis-writing/literature/`
 
-Agent/subtask coordination note:
-If your environment supports subagents or parallel task decomposition, use them carefully.
+This is a literature-maintenance task only. Do not modify thesis prose, experimental code, datasets, model outputs, or any files outside `thesis-writing/literature/`.
 
-Do not let multiple agents edit the same file concurrently.
-The main orchestrator must own the final plan, final code integration, and semantic decisions.
+## Objective
 
-Recommended subtask split:
+Turn the current literature directory into a clean, reproducible corpus with:
 
-1. Flow auditor, read-only:
-   - Inspect router.py and src/preprocess_mimic_iii_large.py.
-   - Document the current preprocessing flow.
-   - List all large tables, all current concat/materialization points, all median-based rules, all cohort filters, and all output invariants.
-   - Do not edit files.
+1. One directory for core papers.
+2. One directory for optional/background papers.
+3. One canonical BibTeX database.
+4. One canonical metadata catalog.
+5. Consistent semantic PDF filenames.
+6. Valid PDFs for all newly required papers.
+7. No duplicate metadata, BibTeX entries, checksums, manifests, or README files.
 
-2. Semantics/invariants auditor, read-only:
-   - Identify what must remain identical to preserve the old dataset.
-   - Pay special attention to global medians, ICU stay assignment, duplicate aggregation, Age/Gender rows, cohort filters, and ts/oc/ts_ids construction.
-   - Do not edit files.
+Do not commit or push the changes.
 
-3. Implementation worker A:
-   - Add CLI controls: --chunksize, --tmp-dir, --keep-intermediates, --max-debug-chunks.
-   - Add memory logging.
-   - Add safe tmp-output behavior.
-   - Keep the script runnable.
+---
 
-4. Implementation worker B:
-   - Refactor CHARTEVENTS and LABEVENTS into disk-backed shards.
-   - Do not change downstream semantics.
-   - Do not implement per-chunk medians.
+# 1. Inspect before modifying
 
-5. Implementation worker C:
-   - Refactor INPUTEVENTS / OUTPUTEVENTS and medication/input extraction into shard-based processing.
-   - Preserve all item IDs, ranges, unit conversions, variable names, and median replacement logic.
+First inspect the current contents of:
 
-6. Validation worker:
-   - Implement semantic artifact comparison:
-     old [ts, oc, ts_ids] vs new [ts, oc, ts_ids].
-   - Compare normalized DataFrames, not pickle bytes.
-   - Report row counts, missing/extra ts_ids, variables, max numeric difference, and example mismatches.
+* `thesis-writing/literature/papers/`
+* `thesis-writing/literature/optional/`
+* all metadata files currently stored in `thesis-writing/literature/`
 
-7. Router worker:
-   - Update router.py to pass --preprocess-chunksize / --chunksize.
-   - Improve return code -9 handling with a clear SIGKILL/OOM message.
+The current metadata is expected to include some or all of:
+
+* `README.txt`
+* `README_filter_decisions.md`
+* `filter_decisions.csv`
+* `literature_phase1.bib`
+* `manifest.md`
+* `references.bib`
+* `thesis_filtered_papers_roles.md`
+* `MANIFEST_sha256.txt`
+
+Before changing anything:
+
+1. Inventory every PDF.
+2. Extract or inspect each PDF’s title, authors, and year.
+3. Record its current filename and SHA-256 hash.
+4. Parse all existing BibTeX entries.
+5. Detect duplicate citation keys, duplicate titles, duplicate DOIs, and byte-identical PDFs.
+6. Confirm that `references.bib` already contains the 29 existing unique papers before adding anything.
+7. Do not assume that two similarly named PDFs are duplicates; compare hashes, titles, and publication details.
+
+Use the current files as source material, but do not preserve their duplicated structure.
+
+---
+
+# 2. Final directory structure
+
+The final structure must be:
+
+```text
+thesis-writing/literature/
+├── README.md
+├── papers/
+│   └── core PDF files only
+├── optional/
+│   └── optional/background PDF files only
+└── metadata/
+    ├── references.bib
+    ├── catalog.csv
+    └── checksums.sha256
+```
+
+Do not create another nested `literature/literature` directory.
+
+After all information has been safely merged and validated, remove the obsolete root-level metadata files listed above. Their useful content must first be preserved in the new canonical files.
+
+Git history is sufficient provenance; do not retain duplicate “legacy” metadata files merely as backups.
+
+---
+
+# 3. Move these existing papers to `optional/`
+
+Move the following five papers out of `papers/` and into `optional/`.
+
+Rename them using the exact target filenames below.
+
+### 3.1 Epidemiological E-value perspective
+
+Current file:
+
+`01_sensitivity_evalue_unmeasured_confounding_vanderweele_ding_2017.pdf`
+
+Target:
+
+`optional/sensitivity_evalue_vanderweele_ding_2017.pdf`
+
+Reason:
+
+Useful epidemiological sensitivity-analysis background, but it is not the direct methodological basis of the implemented robustness-value analysis.
+
+### 3.2 General sensitivity bounds
+
+Current file:
+
+`02_sensitivity_without_assumptions_ding_vanderweele_2016.pdf`
+
+Target:
+
+`optional/sensitivity_bounds_ding_vanderweele_2016.pdf`
+
+Reason:
+
+Useful technical background, but less directly aligned with the implemented `RV`, `cf_y`, and `cf_t`/`cf_d` workflow than omitted-variable-bias sensitivity methods.
+
+### 3.3 Marginal structural models
+
+Current file:
+
+`05_method_marginal_structural_models_iptw_robins_hernan_brumback_2000.pdf`
+
+Target:
+
+`optional/causal_marginal_structural_models_robins_et_al_2000.pdf`
+
+Reason:
+
+Important for time-varying treatment-confounder feedback, but the current thesis implementation primarily performs point/binary exposure estimation rather than a full longitudinal marginal structural model.
+
+### 3.4 Early InterpNet workshop version
+
+Current file:
+
+`08_model_irregular_clinical_timeseries_interpnet_shukla_marlin_2018.pdf`
+
+Target:
+
+`optional/model_interpnet_workshop_shukla_marlin_2018.pdf`
+
+Reason:
+
+This is an earlier workshop version. The ICLR 2019 Interpolation-Prediction Networks paper remains the canonical core citation.
+
+### 3.5 General personalized evidence-based medicine review
+
+Current file:
+
+`16_review_personalized_ebm_hte_kent_steyerberg_2018.pdf`
+
+Target:
+
+`optional/review_personalized_ebm_hte_kent_et_al_2018.pdf`
+
+Reason:
+
+Good conceptual background, but substantially overlaps with the more directly relevant EHR, ICU, and modern HTE reviews.
+
+Keep both the Lipkovich 2024 and Curth 2024 papers in the core corpus for now. They serve different roles: one is a methods tutorial and the other focuses on identification and validation challenges.
+
+Optional papers must remain in the canonical BibTeX file and catalog, marked as optional. Do not delete them.
+
+---
+
+# 4. Download and add these 11 core papers
+
+For every paper below:
+
+1. Search by exact title and authors.
+2. Verify bibliographic metadata against an authoritative source.
+3. Download a lawful publicly accessible PDF.
+4. Prefer sources in this order:
+
+   * official publisher open-access PDF;
+   * official journal or conference repository;
+   * official guideline organization;
+   * arXiv;
+   * author or university institutional repository.
+5. Do not use Sci-Hub, shadow libraries, suspicious mirrors, or copyright-bypassing services.
+6. Verify that the downloaded file begins with the PDF magic bytes `%PDF`.
+7. Run `pdfinfo` and extract the first page with `pdftotext`.
+8. Confirm that the title and authors inside the PDF match the requested paper.
+9. Reject HTML error pages, login pages, supplementary files, slide decks, abstracts without the paper, and unrelated papers.
+10. Store the successful source URL and access date in `catalog.csv`.
+11. Add a complete, normalized BibTeX entry.
+12. Save the PDF using the exact filename specified below.
+
+When both a final peer-reviewed version and a preprint exist, prefer the final version. If the final version is not lawfully downloadable, use the author manuscript or preprint, but record the relationship in `notes`.
+
+## 4.1 Well-defined causal interventions
+
+Paper:
+
+Hernán and Taubman, “Does Obesity Shorten Life? The Importance of Well-Defined Interventions to Answer Causal Questions,” 2008.
+
+Target filename:
+
+`papers/causal_well_defined_interventions_hernan_taubman_2008.pdf`
+
+Role:
+
+Supports the distinction between an intervention/treatment and a derived clinical state or exposure. This is essential because variables such as Shock, RespFail, and RenalFail may not represent directly manipulable treatments.
+
+Suggested citation key:
+
+`hernan_taubman_2008_well_defined_interventions`
+
+## 4.2 Omitted-variable-bias sensitivity analysis
+
+Paper:
+
+Cinelli and Hazlett, “Making Sense of Sensitivity: Extending Omitted Variable Bias,” 2020.
+
+Target filename:
+
+`papers/sensitivity_omitted_variable_bias_cinelli_hazlett_2020.pdf`
+
+Role:
+
+Direct methodological foundation for robustness values and benchmark-confounder sensitivity analysis.
+
+Suggested citation key:
+
+`cinelli_hazlett_2020_sensitivity`
+
+## 4.3 Omitted-variable bias in causal machine learning
+
+Paper:
+
+Chernozhukov, Cinelli, Newey, Sharma, and Syrgkanis, “Long Story Short: Omitted Variable Bias in Causal Machine Learning.”
+
+Use the final published version if available; otherwise use the latest official author version.
+
+Target filename:
+
+`papers/sensitivity_ovb_causal_ml_chernozhukov_et_al_2026.pdf`
+
+Role:
+
+Connects omitted-variable sensitivity analysis directly to causal machine-learning estimators and the EconML-style workflow.
+
+Suggested citation key:
+
+`chernozhukov_et_al_2026_ovb_causal_ml`
+
+## 4.4 SOFA organ-dysfunction definition
+
+Paper:
+
+Vincent et al., “The SOFA (Sepsis-related Organ Failure Assessment) Score to Describe Organ Dysfunction/Failure,” 1996.
+
+Target filename:
+
+`papers/clinical_sofa_vincent_et_al_1996.pdf`
+
+Role:
+
+Provides clinical grounding for organ-dysfunction proxies and the interpretation of several derived clinical state tags.
+
+Suggested citation key:
+
+`vincent_et_al_1996_sofa`
+
+## 4.5 Acute kidney injury definition
+
+Document:
+
+Kidney Disease: Improving Global Outcomes Acute Kidney Injury Work Group, “KDIGO Clinical Practice Guideline for Acute Kidney Injury,” 2012.
+
+Download the official guideline PDF, not a short commentary about the guideline.
+
+Target filename:
+
+`papers/clinical_kdigo_acute_kidney_injury_2012.pdf`
+
+Role:
+
+Provides clinical grounding for renal-failure or acute-kidney-injury proxy rules based on creatinine and/or urine output.
+
+Suggested citation key:
+
+`kdigo_2012_acute_kidney_injury`
+
+## 4.6 Berlin definition of ARDS
+
+Paper:
+
+ARDS Definition Task Force / Ranieri et al., “Acute Respiratory Distress Syndrome: The Berlin Definition,” 2012.
+
+Target filename:
+
+`papers/clinical_ards_berlin_definition_ranieri_et_al_2012.pdf`
+
+Role:
+
+Provides clinical grounding for respiratory-failure rules when the implemented variables approximate oxygenation, ventilation, or ARDS criteria.
+
+Suggested citation key:
+
+`ranieri_et_al_2012_berlin_ards`
+
+## 4.7 ISTH disseminated intravascular coagulation criteria
+
+Paper:
+
+Taylor et al., “Towards Definition, Clinical and Laboratory Criteria, and a Scoring System for Disseminated Intravascular Coagulation,” 2001.
+
+Target filename:
+
+`papers/clinical_dic_isth_taylor_et_al_2001.pdf`
+
+Role:
+
+Provides clinical grounding for hematologic/coagulation-failure proxies when the rules use platelets or coagulation-related measurements.
+
+Suggested citation key:
+
+`taylor_et_al_2001_isth_dic`
+
+## 4.8 Weak supervision and label aggregation
+
+Paper:
+
+Ratner et al., “Snorkel: Rapid Training Data Creation with Weak Supervision.”
+
+Prefer the final journal version; use the official preprint only when necessary.
+
+Target filename:
+
+`papers/phenotyping_weak_supervision_snorkel_ratner_et_al_2020.pdf`
+
+Role:
+
+Provides a framework for combining noisy and correlated labeling sources. It supports discussing rule-based tags, model-predicted tags, majority voting, source dependence, and silver labels.
+
+Suggested citation key:
+
+`ratner_et_al_2020_snorkel`
+
+## 4.9 Limited overlap and positivity
+
+Paper:
+
+Crump, Hotz, Imbens, and Mitnik, “Dealing with Limited Overlap in Estimation of Average Treatment Effects,” 2009.
+
+Target filename:
+
+`papers/causal_limited_overlap_crump_et_al_2009.pdf`
+
+Role:
+
+Supports overlap/positivity diagnostics, trimming, common support, and the risks created by rare clinical-state exposures.
+
+Suggested citation key:
+
+`crump_et_al_2009_limited_overlap`
+
+## 4.10 DoWhy
+
+Paper:
+
+Sharma and Kıcıman, “DoWhy: An End-to-End Library for Causal Inference,” 2020.
+
+Target filename:
+
+`papers/software_dowhy_sharma_kiciman_2020.pdf`
+
+Role:
+
+Documents the causal workflow used by the project: modeling assumptions, identification, estimation, and refutation.
+
+Suggested citation key:
+
+`sharma_kiciman_2020_dowhy`
+
+## 4.11 EconML
+
+Paper:
+
+Oprescu, Syrgkanis, Battocchi, Hei, and Lewis, “EconML: A Machine Learning Library for Estimating Heterogeneous Treatment Effects,” 2019.
+
+Download the actual workshop paper, not presentation slides and not merely a printout of the GitHub page.
+
+Target filename:
+
+`papers/software_econml_oprescu_et_al_2019.pdf`
+
+Role:
+
+Documents the software library used for heterogeneous treatment-effect estimation. It complements, rather than replaces, the theoretical DML and generalized-random-forest citations.
+
+Suggested citation key:
+
+`oprescu_et_al_2019_econml`
+
+---
+
+# 5. Do not add LLM papers in this task
+
+Do not download Med-PaLM, medical-question-answering, general LLM reasoning, or LLM causal-graph papers as part of this cleanup.
+
+Search the repository only to determine whether an LLM is actually used in the implemented pipeline.
+
+Record one brief note in `README.md`:
+
+* If no implemented LLM component is found, state that LLM literature is intentionally out of scope.
+* If an implemented LLM component is found, state that its literature coverage requires a separate scope decision.
+
+Do not expand the corpus automatically based only on comments, old plans, or speculative future work.
+
+---
+
+# 6. Normalize every PDF filename
+
+Rename all remaining core PDFs, not only the newly downloaded ones.
+
+Use lowercase ASCII snake_case with this pattern:
+
+`<topic>_<short_description>_<first_author_or_group>_<year>.pdf`
+
+Allowed topic prefixes include:
+
+* `model_`
+* `dataset_`
+* `causal_`
+* `sensitivity_`
+* `clinical_`
+* `phenotyping_`
+* `software_`
+* `review_`
+* `validation_`
+
+Examples:
+
+```text
+model_strats_tipirneni_reddy_2022.pdf
+model_tcn_bai_et_al_2018.pdf
+model_interpnet_shukla_marlin_2019.pdf
+model_sand_song_et_al_2018.pdf
+model_gru_cho_et_al_2014.pdf
+model_grud_che_et_al_2018.pdf
+causal_generalized_random_forests_athey_et_al_2019.pdf
+causal_causal_forest_wager_athey_2018.pdf
+causal_double_machine_learning_chernozhukov_et_al_2018.pdf
+dataset_mimiciii_johnson_et_al_2016.pdf
+dataset_physionet_challenge_silva_et_al_2012.pdf
+```
+
+Requirements:
+
+* Remove all numeric filename prefixes.
+* Do not retain two independent numbering schemes.
+* Do not use spaces, parentheses, commas, accented characters, or mixed case.
+* Avoid excessively long filenames.
+* Preserve every old filename in the `original_filename` column of `catalog.csv`.
+* Update all metadata paths after renaming.
+* Prefer `git mv` for tracked files.
+
+Do not rename existing BibTeX citation keys merely to match filenames. Preserve existing keys wherever they are unique and valid, because future thesis text may depend on them.
+
+---
+
+# 7. Create one canonical BibTeX file
+
+Create:
+
+`thesis-writing/literature/metadata/references.bib`
+
+Use the current `references.bib` as the starting point because it should already contain the existing combined 29-paper corpus.
+
+Merge useful information from `literature_phase1.bib`, but do not create duplicate entries.
+
+The final BibTeX file must:
+
+1. Contain one entry per catalog item.
+2. Include both core and optional papers.
+3. Contain the 29 existing unique entries plus the 11 new entries: expected total 40.
+4. Preserve existing unique citation keys.
+5. Contain no duplicate keys.
+6. Contain no duplicate DOI values.
+7. Contain no duplicate normalized titles.
+8. Use the correct entry type: `@article`, `@inproceedings`, `@misc`, `@techreport`, or another justified type.
+9. Include complete metadata whenever available:
+
+   * authors;
+   * title;
+   * year;
+   * journal/booktitle/organization;
+   * volume;
+   * issue;
+   * pages;
+   * DOI;
+   * authoritative URL.
+10. Protect names and acronyms that BibTeX might incorrectly lowercase, including:
+
+    * `{MIMIC-III}`;
+    * `{PhysioNet}`;
+    * `{STraTS}`;
+    * `{GRU-D}`;
+    * `{SOFA}`;
+    * `{ARDS}`;
+    * `{KDIGO}`;
+    * `{DoWhy}`;
+    * `{EconML}`;
+    * `{CATE}`;
+    * `{HTE}`.
+11. Include:
+
+    * `file = {../papers/<filename>}` for core papers;
+    * `file = {../optional/<filename>}` for optional papers.
+12. Add `keywords = {core}` or `keywords = {optional}` consistently.
+13. Avoid fabricated DOI values or guessed publication details.
+14. Represent the KDIGO guideline using an appropriate corporate-author format.
+15. Use the official publication year for the version actually downloaded.
+
+Validate the completed BibTeX file with an available BibTeX parser or `biber --tool`. If neither is available, perform a structural parse in Python and report that limitation.
+
+---
+
+# 8. Create one canonical metadata catalog
+
+Create:
+
+`thesis-writing/literature/metadata/catalog.csv`
+
+This is the single source of truth for all non-BibTeX literature metadata.
+
+Use UTF-8 and CSV quoting where needed.
+
+Required columns:
+
+```text
+citation_key
+title
+authors
+year
+venue
+doi
+url
+source_pdf_url
+accessed_at
+tier
+topic
+role_in_thesis
+reason_optional
+original_filename
+pdf_path
+pdf_status
+sha256
+notes
+```
 
 Rules:
-- Work sequentially unless the subtasks are read-only.
-- After each implementation stage, run py_compile.
-- After each implementation stage, summarize exactly what changed and what invariants were preserved.
-- The orchestrator must review all changes before moving to the next stage.
-- Do not merge a subtask if it changes preprocessing semantics without explicitly explaining and justifying it.
 
-Goal:
-Refactor MIMIC preprocessing to be memory-safe / disk-backed while preserving the final dataset semantics.
+* `tier` must be exactly `core` or `optional`.
+* `pdf_status` must be one of:
 
-Execution note:
-Do this refactor incrementally, not as one huge rewrite.
+  * `present`
+  * `downloaded`
+  * `missing`
+  * `invalid`
+* `pdf_path` must be relative to the literature directory.
+* `source_pdf_url` must identify the actual PDF source, not just a search-result page.
+* `url` should be the canonical paper landing page, DOI resolver, guideline page, or official project page.
+* `accessed_at` must use ISO date format.
+* `role_in_thesis` must be concise but specific.
+* `reason_optional` must be populated for optional papers and empty for core papers.
+* `original_filename` must preserve the filename before this reorganization.
+* For newly downloaded papers, set `original_filename` to the filename received from the source before normalizing it, when available.
+* Do not describe the clinical tags as ground-truth diagnoses. Use terms such as:
 
-Recommended order:
-1. First inspect and document the current flow.
-2. Then refactor only CHARTEVENTS and LABEVENTS into disk-backed shards.
-3. Add memory logging and --chunksize / --tmp-dir controls.
-4. Run py_compile and a tiny --max-debug-chunks test.
-5. Only after that, continue to INPUTEVENTS / OUTPUTEVENTS.
-6. Finally implement shard-based timeline alignment, aggregation, and semantic comparison.
+  * derived clinical state;
+  * proxy phenotype;
+  * clinically inspired proxy label;
+  * weak clinical label.
+* Distinguish software-library references from theoretical estimator references.
 
-At each stage, keep the script runnable. Do not make a massive all-at-once change that leaves the repository in a broken intermediate state.
+Expected final catalog:
 
-Strict output contract:
-The final output file must remain a pickle containing exactly:
+* 40 total entries;
+* 35 core entries;
+* 5 optional entries.
 
-    [ts, oc, ts_ids]
+If an expected paper cannot be downloaded lawfully, retain its metadata entry with:
 
-with the same logical schema expected by preprocess_mimic_iii_large_contract.py:
+* `tier=core`
+* `pdf_status=missing`
+* an empty `sha256`
+* a clear explanation in `notes`
 
-    ts columns: ["ts_id", "minute", "variable", "value"]
-    oc columns: ["ts_id", "length_of_stay", "in_hospital_mortality", "subset"]
-    ts_ids: sorted list of canonical stay IDs
+Do not substitute an unrelated paper merely to satisfy the expected count.
 
-Do not change downstream filenames/schema except respecting existing --output-path.
-Do not break router.py expectations.
+---
 
-Important semantic constraints:
-The streamed/refactored preprocessing must produce the same dataset logically as the current full-memory implementation.
+# 9. Generate canonical checksums
 
-Do NOT introduce these semantic changes:
-- Do not compute median per chunk if the old code computed median over the full relevant dataframe.
-- Do not compute mean-of-means during aggregation unless counts are preserved.
-- Do not replace `groupby(...).mean()` with an inequivalent operation.
-- Do not change cohort filters.
-- Do not change ICU stay assignment semantics for events missing ICUSTAY_ID.
-- Do not drop events earlier unless this is logically equivalent to the current code.
-- Do not change variable names, unit conversions, valid ranges, or outlier replacement logic.
+Create:
 
-High-level implementation plan:
+`thesis-writing/literature/metadata/checksums.sha256`
 
-1. Inspect current flow first
-   - Read router.py and src/preprocess_mimic_iii_large.py.
-   - Identify how router.py calls preprocessing.
-   - Identify all large raw tables read by preprocess_mimic_iii_large.py.
-   - Identify where `ch`, `la`, `ie`, `oe`, and `events` are materialized.
-   - Identify all places where median-based outlier replacement is used.
+It must contain SHA-256 checksums for every valid PDF under:
 
-2. Add CLI controls to src/preprocess_mimic_iii_large.py
-   Add:
-   - --chunksize, default 500000
-   - --tmp-dir, default to a directory next to the output path, e.g. <output_dir>/preprocess_mimic_tmp
-   - --keep-intermediates
-   - --max-debug-chunks, optional, default None, for tiny structural test runs
+* `papers/`
+* `optional/`
 
-   At startup, print:
-   - raw data path
-   - output path
-   - chunksize
-   - tmp dir
-   - whether keep-intermediates is enabled
-   - max-debug-chunks if set
+Use paths relative to the literature directory.
 
-3. Add safe memory logging
-   Add a helper such as log_memory(label).
-   Use psutil if available. If psutil is not installed, skip gracefully.
-   Log memory after:
-   - ICU/patient load
-   - raw filtering pass
-   - median/statistics pass
-   - event transformation pass
-   - ICU alignment
-   - final aggregation
-   - serialization
+Sort entries lexicographically by path.
 
-4. Refactor away from full raw-table materialization
-   The current pattern:
+Do not include metadata files themselves in this checksum file.
 
-       ch = []
-       for chunk in read_csv(..., chunksize=...):
-           ...
-           ch.append(chunk)
-       ch = pd.concat(ch)
+---
 
-   must be removed.
+# 10. Create the new README
 
-   Instead:
-   - Read raw tables in chunks.
-   - Filter each chunk early.
-   - Write filtered/intermediate shards to disk under --tmp-dir.
-   - Never keep the full filtered CHARTEVENTS/LABEVENTS/INPUTEVENTS/OUTPUTEVENTS dataframe in memory.
+Create:
 
-5. Early filtering rules
-   For each raw table, keep only needed columns and filter as early as possible.
+`thesis-writing/literature/README.md`
 
-   CHARTEVENTS:
-   - use columns: HADM_ID, ICUSTAY_ID, ITEMID, CHARTTIME, VALUE, VALUENUM, VALUEUOM, ERROR
-   - keep rows where ICUSTAY_ID is in adult ICU stays
-   - ERROR != 1
-   - CHARTTIME not null
-   - not both VALUE and VALUENUM null
-   - ITEMID is in the union of all CHARTEVENTS item IDs used by the feature extraction logic
-   - add TABLE="chart"
+It must be concise and derived from the canonical metadata.
 
-   LABEVENTS:
-   - read in chunks too
-   - use columns: HADM_ID, ITEMID, CHARTTIME, VALUE, VALUENUM, VALUEUOM
-   - keep HADM_ID in retained admissions
-   - CHARTTIME not null
-   - not both VALUE and VALUENUM null
-   - ITEMID is in the union of all LABEVENTS item IDs used by feature extraction
-   - add ICUSTAY_ID=np.nan
-   - add TABLE="lab"
+Include:
 
-   INPUTEVENTS_CV / INPUTEVENTS_MV / OUTPUTEVENTS:
-   - apply equivalent early filtering using the current code’s columns and item IDs
-   - keep only the columns required downstream
-   - normalize columns to the event schema as early as possible when safe:
-     HADM_ID, ICUSTAY_ID, CHARTTIME, ITEMID, VALUE, VALUENUM, VALUEUOM, TABLE
+1. Purpose of the corpus.
+2. Final directory structure.
+3. Core versus optional policy.
+4. Counts of core, optional, valid, and missing PDFs.
+5. A topic-level summary:
 
-6. Feature extraction structure
-   Where reasonable, move item IDs and extraction rules into structured definitions so extraction is less duplicated.
-   For example:
-   - feature name
-   - source table(s)
-   - item IDs
-   - valid range
-   - unit conversion
-   - median replacement behavior
-   - output unit
+   * irregular clinical time-series models;
+   * datasets and benchmarks;
+   * clinical proxy phenotyping;
+   * causal identification and DAGs;
+   * DML and causal forests;
+   * overlap and sensitivity analysis;
+   * weak supervision;
+   * software tooling.
+6. A terminology note explaining that the clinical tags are derived proxy states, not verified diagnoses or formal latent variables.
+7. A note that:
 
-   Do not over-engineer if it risks changing behavior. Correctness and low memory are more important than elegance.
+   * E-value papers are optional background;
+   * Cinelli–Hazlett and Chernozhukov et al. are the primary sensitivity references for the implemented robustness-value workflow.
+8. A note explaining why the early InterpNet version is optional.
+9. A note explaining that marginal structural models are retained for longitudinal background but are not the implemented estimator.
+10. The LLM scope note described earlier.
+11. Instructions for adding a future paper:
 
-7. Global median/statistics pass
-   For every feature where the current code uses a median to replace invalid/outlier values:
-   - compute the median globally across all relevant filtered shards
-   - do not compute median per chunk
-   - store medians in a dictionary
-   - log feature name, valid count, and median value
+    * place PDF in the correct folder;
+    * add one BibTeX entry;
+    * add one catalog row;
+    * regenerate checksums;
+    * run duplicate and validity checks.
 
-   This may require a two-pass flow:
-   - pass A: collect valid values for median computation from shards
-   - pass B: transform shards using the global medians
+Do not reproduce the full catalog as a second long Markdown table. Link readers to `metadata/catalog.csv`.
 
-   Use memory-safe accumulation. If a feature has many values, do not keep all raw values if avoidable; but correctness is more important. If exact median requires collecting values, collect only that feature’s numeric values, not entire raw rows. If exact median is still too large, write values to temporary shard files and compute median from those.
+---
 
-8. Transformation pass
-   Read filtered shards one at a time.
-   Apply the same transformations as the old code:
-   - same ITEMID mapping
-   - same feature names
-   - same unit conversions
-   - same outlier rules
-   - same median replacement
-   - same VALUEUOM assignment
-   - same handling of VALUE / VALUENUM
+# 11. Validation
 
-   Output transformed event shards with only the columns needed downstream:
+Before finishing, run all of the following checks.
 
-       HADM_ID, ICUSTAY_ID, CHARTTIME, VALUENUM, TABLE, NAME
+## PDF validation
 
-   Avoid `events = pd.concat([events, ...])` on a growing dataframe.
-   Prefer writing transformed event shards to disk.
+For every PDF:
 
-9. ICU stay assignment
-   The current code assigns missing ICUSTAY_ID by HADM_ID and CHARTTIME:
-   for each event with missing ICUSTAY_ID, assign the ICU stay from the same HADM_ID where:
+* verify `%PDF` magic bytes;
+* run `pdfinfo`;
+* confirm it has at least one page;
+* extract first-page text;
+* compare title/authors to the catalog;
+* detect suspiciously small files;
+* detect password-protected or corrupt files;
+* ensure no file is actually HTML;
+* ensure no slide deck was used when a paper was requested.
 
-       INTIME <= CHARTTIME <= OUTTIME
+## Duplicate validation
 
-   Preserve this logic.
+Check for:
 
-   But do it shard-by-shard:
-   - Build a small ICU interval lookup from the ICU table.
-   - For each transformed event shard:
-     - assign missing ICUSTAY_ID using the same rule
-     - drop rows that cannot be assigned
-     - write aligned shard back to disk
+* identical SHA-256 hashes;
+* duplicate normalized titles;
+* duplicate DOIs;
+* duplicate BibTeX keys;
+* duplicate paper identity represented by final and preprint versions.
 
-   Avoid merging the entire events dataframe with all ICU intervals at once.
+A final and preprint version of the same work should not both be core unless there is a documented methodological reason.
 
-10. Timeline conversion and cohort filtering
-   Preserve the existing cohort logic:
-   - ICU stay lasted at least 24h
-   - patient alive for at least 24h from INTIME, or DEATHTIME is null
-   - ICU stay has at least one event in the first 24h
-   - keep only events belonging to final retained ICU stays
+## Path validation
 
-   Implement this in a memory-safe way:
-   - Compute rel_charttime/minute per shard by joining to a small ICUSTAY_ID -> INTIME mapping.
-   - Determine final eligible ICU stays.
-   - Filter shards by final eligible ICU stays.
-   - Add Age and Gender static rows at minute=0 exactly as the current code does.
+Check that:
 
-11. Final aggregation
-   The current final canonicalization uses groupby over:
+* every catalog `pdf_path` exists unless status is `missing`;
+* every PDF appears exactly once in the catalog;
+* every BibTeX entry has a matching catalog row;
+* every catalog row has a matching BibTeX entry;
+* every valid PDF appears in `checksums.sha256`;
+* no metadata file remains loose in the literature root except `README.md`;
+* `papers/` contains only core PDFs;
+* `optional/` contains only optional PDFs.
 
-       ["ts_id", "minute", "variable"]
+## Count validation
 
-   and computes mean value.
+Expected state when all downloads succeed:
 
-   For memory safety, use map-reduce:
-   - Per shard:
-     - rename columns to ts_id/minute/variable/value
-     - group by ["ts_id", "minute", "variable"]
-     - compute sum and count
-     - write aggregate shard
-   - Final:
-     - concatenate aggregate shards
-     - group by ["ts_id", "minute", "variable"]
-     - sum the sums and counts
-     - compute value = total_sum / total_count
+* 35 core papers;
+* 5 optional papers;
+* 40 catalog rows;
+* 40 unique BibTeX entries;
+* 40 valid PDF files.
 
-   This preserves exact mean semantics and avoids mean-of-means.
+If counts differ, explain the exact reason. Do not force counts by adding duplicates or unrelated files.
 
-   Then build:
-   - ts
-   - ts_ids
-   - oc
+---
 
-   using preprocess_mimic_iii_large_contract.py where possible.
+# 12. Cleanup
 
-12. Validation and semantic comparison
-   Add a helper script or function, e.g.:
+Only after the new files pass validation, remove the obsolete metadata files from the literature root:
 
-       scripts/compare_mimic_processed_artifacts.py
+* `README.txt`
+* `README_filter_decisions.md`
+* `filter_decisions.csv`
+* `literature_phase1.bib`
+* `manifest.md`
+* `references.bib`
+* `thesis_filtered_papers_roles.md`
+* `MANIFEST_sha256.txt`
 
-   It should compare an old baseline artifact and a new streamed artifact semantically, not byte-by-byte.
+Do not remove useful information until it has been transferred into:
 
-   It should:
-   - load both pickle files as [ts, oc, ts_ids]
-   - normalize ts:
-     - sort by ["ts_id", "minute", "variable"]
-     - reset_index(drop=True)
-     - normalize dtypes according to preprocess_mimic_iii_large_contract.py
-   - normalize oc:
-     - sort by ["ts_id"]
-     - reset_index(drop=True)
-     - normalize dtypes
-   - compare ts_ids exactly
-   - compare columns exactly
-   - compare row counts
-   - compare variables
-   - compare missing/extra ts_ids
-   - compare numeric values with tight tolerance, e.g. rtol=1e-9, atol=1e-12
-   - report max absolute value difference
-   - print first few mismatching rows if any
+* `README.md`
+* `metadata/references.bib`
+* `metadata/catalog.csv`
+* `metadata/checksums.sha256`
 
-   Important:
-   - Do not require pickle files to be byte-identical.
-   - Require the dataframes/lists to be semantically equivalent.
+Remove empty temporary directories and temporary download files.
 
-13. router.py changes
-   Update router.py so that:
-   - it exposes --preprocess-chunksize, default 500000
-   - it passes --chunksize <value> to src/preprocess_mimic_iii_large.py for MIMIC preprocessing
-   - it optionally passes --tmp-dir if router has a run-specific tmp directory
-   - if preprocessing subprocess returns -9, raise a clear error:
-     "Child process was killed by SIGKILL, likely OOM / Slurm memory limit."
-   - include the command, log path, and suggest:
-     seff <jobid>
-     sacct -j <jobid> --format=JobID,State,ExitCode,Elapsed,MaxRSS,ReqMem
+Do not leave `.part`, `.tmp`, HTML, or failed-download files in the corpus.
 
-14. Cleanup behavior
-   - If --keep-intermediates is false, remove tmp-dir at the end of a successful run.
-   - If preprocessing fails, keep tmp-dir for debugging and print its path.
-   - Never delete the final output artifact unless the run succeeds and writes a valid replacement.
-   - Prefer writing to a temporary output file and atomically renaming to --output-path after validation succeeds.
+---
 
-15. Tests / checks to run
-   Run:
+# 13. Final response
 
-       python -m py_compile router.py src/preprocess_mimic_iii_large.py src/preprocess_mimic_iii_large_contract.py
+At completion, provide a concise report containing:
 
-   If available, run:
+1. Final directory tree.
+2. Number of core and optional papers.
+3. List of newly downloaded papers with their source domains.
+4. Any failed downloads and why they failed.
+5. Old-to-new filename mapping for moved optional papers.
+6. Number of PDFs renamed.
+7. Duplicate PDFs or metadata entries found and how they were resolved.
+8. BibTeX validation result.
+9. PDF validation result.
+10. Output of `git status --short`.
+11. Any unresolved issue that requires a later methodological decision.
 
-       python src/preprocess_mimic_iii_large.py --validate-config-only
-
-   Run a tiny structural debug run if raw data is available:
-
-       python src/preprocess_mimic_iii_large.py \
-         --raw-data-path <path-to-mimic> \
-         --output-path <debug-output.pkl> \
-         --chunksize 50000 \
-         --max-debug-chunks 1 \
-         --keep-intermediates
-
-   The debug run does not prove full semantic equality, but it must prove the refactored pipeline executes structurally.
-
-Acceptance criteria:
-- MIMIC preprocessing no longer materializes full CHARTEVENTS/LABEVENTS/INPUTEVENTS/OUTPUTEVENTS raw dataframes in memory.
-- The pipeline can run with bounded memory by using shards under --tmp-dir.
-- Final output is still exactly [ts, oc, ts_ids].
-- The contract validation passes.
-- router.py can pass chunksize and reports SIGKILL/OOM clearly.
-- No semantic shortcuts such as per-chunk median or mean-of-means are introduced.
-- A semantic comparison tool exists to compare old vs new artifacts.
+Do not claim success for a download unless the local PDF was opened, parsed, and title-verified.
