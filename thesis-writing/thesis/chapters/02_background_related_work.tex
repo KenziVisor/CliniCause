@@ -1,28 +1,197 @@
 \chapter{Background and Related Work}
 \label{chap:background-related-work}
 
+This chapter places the thesis at the intersection of four methodological traditions.  Critical-care data research supplies the two ICU data sources and exposes the consequences of irregular observation.  Sequence-modeling research offers several ways to represent sparse measurements for prediction.  Electronic-phenotyping and weak-supervision research explains how useful analytical labels can be constructed when direct adjudication is unavailable.  Causal-inference research provides a language for specifying questions, encoding assumptions, selecting adjustment variables, estimating heterogeneous contrasts, and diagnosing limited support or sensitivity to omitted variables.  Each tradition addresses a necessary part of the problem, but none by itself supplies the complete path from irregular events to an auditable observational analysis.  The chapter therefore emphasizes the connections and boundaries among them; project-specific implementation details begin in Chapter~\ref{chap:problem-definition-study-design}.
+
 \section{ICU EHR Datasets and Irregular Sampling}
 \label{sec:background-related-work:icu-ehr-datasets-irregular-sampling}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-% Section ID: C2.1.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+\subsection{Critical-care EHR time series}
+
+ICU electronic health records combine physiological measurements, laboratory results, administered treatments, clinical observations, and administrative information.  These sources do not share a natural sampling clock.  Vital signs may be recorded repeatedly, laboratory tests are ordered at variable intervals, and static admission fields may appear only once.  Observation times are therefore nonuniform both within a variable and across variables, while different patients can have markedly different measurement density and duration.  Reviews of irregular medical time series distinguish irregular spacing within a sequence from heterogeneous sampling rates across variables, and emphasize that either feature complicates models built for complete, fixed-dimensional sequences \cite{sun_2026_review_irregular_medical_timeseries}.
+
+Missingness in this setting is not a single phenomenon.  A value may be absent because a test was not ordered, a device was not connected, a source table did not contain the measurement, the observation fell outside the analysis window, or preprocessing rejected it.  Clinical concern and care processes can influence whether and when a variable is measured, so the observation pattern may contain predictive information \cite{lipton_kale_wetzel_2016_missingness_rnns,che2018grud}.  It would nevertheless be too strong to treat every absence as informative or clinically meaningful.  Observation patterns can mix physiology, workflow, resource availability, and data-quality mechanisms; exploiting them predictively does not identify which mechanism generated them.
+
+Several further properties make ICU EHR data methodologically demanding.  Illness trajectories are heterogeneous, measurement values are high dimensional, physiological and administrative records coexist, and identifiers may refer to a person, admission, ICU stay, or challenge record rather than to the same unit.  Repeated stays can create dependence if they are mistaken for independent people.  Cohort entry, time zero, and the interval over which measurements are summarized can also change the scientific meaning of a record.  These are not merely data-cleaning details: they determine what information is available to a model and whether variables can be interpreted as preceding an outcome or exposure.
+
+Regular resampling and imputation can create a convenient matrix, but they necessarily choose a time resolution and a rule for unobserved cells.  Sparse-event representations instead preserve observed values and times, while missingness-aware recurrent models attach masks and elapsed-time information to a regularized sequence.  Neither strategy is universally preferable.  The relevant choice depends on the source data, measurement density, task, and the distinction between modeling the value process and modeling the observation process.  This thesis therefore treats irregular sampling as both a representation problem and an interpretation boundary.
+
+\subsection{PhysioNet/Computing in Cardiology Challenge 2012}
+
+The PhysioNet/Computing in Cardiology Challenge 2012 was organized around patient-specific prediction of in-hospital mortality from early ICU information.  It combined admission descriptors with time-stamped vital-sign and laboratory series and provided a structured training-and-evaluation setting for mortality classifiers and risk estimators \cite{silva2012physionet}.  Its challenge format makes it a useful compact benchmark-style source: the prediction target, observation window, and evaluation setting were defined for a shared research task rather than left to every investigator to derive independently.
+
+That role must be separated from this thesis's local processing.  The source paper documents the challenge data and rules, but it does not establish that a later repository reproduces every inclusion rule, missing-value convention, split, or score.  Nor does a challenge record automatically correspond to the same unit as an ICU stay in another database.  The thesis uses PhysioNet 2012 as one source on which to exercise a common workflow; exact local data contracts and preprocessing decisions are described in Chapter~\ref{chap:data-preprocessing}, without assuming full reproduction of the original competition.
+
+\subsection{MIMIC-III and benchmark research}
+
+MIMIC-III is a deidentified, single-center critical-care database integrating bedside observations, laboratory data, medications, procedures, coded information, notes, and outcomes over an extended data era.  It was made available to qualified researchers subject to training and a data-use agreement, enabling reproducible critical-care research while retaining controlled-access obligations \cite{johnson2016mimiciii}.  Unlike a fixed prediction challenge, MIMIC-III is a relational clinical database from which researchers must define the study unit, cohort, variables, time windows, and outcomes.
+
+Benchmark work on MIMIC-III illustrates how a database can be converted into standardized clinical time-series tasks and reusable baselines \cite{harutyunyan_2019_mimiciii_benchmark}.  The benchmark is a particular extraction and task definition, not the database itself.  Consequently, citing the benchmark supports the value of reproducible task construction but does not imply that this thesis uses its cohorts or tasks unchanged.  Local preprocessing may draw on a benchmark style while defining different proxy-label targets and downstream analysis objects.
+
+\subsection{Dataset differences relevant to this thesis}
+
+Table~\ref{tab:background-datasets} summarizes the two sources conceptually.  PhysioNet 2012 functions primarily as a bounded mortality-challenge resource derived for a shared task, whereas MIMIC-III provides a broader database that requires more extensive extraction and linkage.  The sources differ in scale, era, available variables, identifier structure, measurement process, and preprocessing burden.  A variable with a similar name can differ in unit, acquisition practice, aggregation, or missingness.  Likewise, a similarly named proxy phenotype can be produced from different evidence and should not be assumed to represent an identical construct.
+
+\begin{table}[htbp]
+\centering
+\caption{Conceptual roles of the ICU datasets used in this thesis.}
+\label{tab:background-datasets}
+\small
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.14\textwidth}p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}@{}}
+\toprule
+Dataset & Research role & Longitudinal structure & Strength for this thesis & Important limitation \\
+\midrule
+PhysioNet 2012 & Bounded critical-care mortality challenge and compact benchmark-style source. & Admission descriptors plus time-stamped early-ICU measurements organized as challenge records. & Provides a clearly framed setting for exercising irregular-time-series prediction and downstream interfaces. & A local pipeline need not reproduce every original challenge rule, split, or preprocessing convention. \\
+MIMIC-III & Broad controlled-access critical-care database supporting many investigator-defined studies. & Relational admission, stay, event, intervention, and outcome tables requiring cohort construction and linkage. & Tests whether the workflow can operate on a richer EHR source with different variables and care-process information. & Any benchmark or local extraction is only one view of the database and carries site-, era-, and definition-specific choices. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The purpose of using both sources is methodological portability, not population pooling.  A shared analytical sequence can be evaluated while preserving dataset-specific cohorts, identifiers, preprocessing, proxy rules, and graphs.  This distinction also prevents cross-dataset differences from being interpreted automatically as biological differences: they may arise from the data source, care process, construct definition, observation pattern, or model interface.
 
 \section{Irregular Time-Series Representation Models}
 \label{sec:background-related-work:irregular-time-series-representation-models}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-% Section ID: C2.2.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+\subsection{Representation challenges and design choices}
+
+Predictive models for irregular clinical time series differ first in what they consider an input.  One family regularizes observations onto a sequence of time bins and supplies imputed values, masks, or time gaps.  Another works directly with observed events, representing measurement identity, value, and time without filling every unobserved cell.  Within these representations, temporal dependence can be modeled by recurrent state updates, temporal convolution, or attention.  These choices encode distinct assumptions about which temporal relationships should be easy to learn and how the observation process should enter the model \cite{sun_2026_review_irregular_medical_timeseries}.
+
+No representation removes the need to define the task and preprocessing contract.  Dense sequences require a bin width, aggregation rule, and treatment of missing cells.  Sparse events require a variable vocabulary, continuous or discrete encodings of time and value, and a policy for very long event streams.  Positional or temporal encodings provide order information to attention mechanisms, while masks can prevent padded or future positions from entering a computation.  Self-supervised pretraining can exploit unlabeled records, but its utility depends on the pretext task and the relation between pretraining and supervised populations.  The five families reviewed below are the predictive families compared by the thesis; their published forms are conceptual precedents rather than proof that every local adaptation is identical.
+
+\subsection{Recurrent baselines: GRU and GRU-D}
+
+The gated recurrent unit (GRU) updates a hidden state sequentially using reset and update gates.  Conceptually, the update gate balances retention of the previous state against incorporation of a candidate state, while the reset gate controls how strongly earlier information contributes to that candidate.  This gating provides a flexible general sequence baseline with fewer gating components than a conventional long short-term memory unit \cite{cho2014gru}.  A standard GRU can learn from a suitably prepared clinical sequence, but it does not inherently know how much time elapsed between observations or why a variable is absent.  Its handling of irregularity therefore depends on the input representation supplied to it.
+
+GRU-D modifies recurrent modeling for multivariate series with missing values.  It uses observation masks and elapsed-time information, and learns decay mechanisms that move missing inputs toward empirical reference values and attenuate hidden states as gaps increase \cite{che2018grud}.  This formulation makes the missingness pattern and time since observation explicit rather than treating imputation as an invisible preprocessing step.  It is one principled response to irregular sampling, not a universal solution: learned decay imposes its own structure, the observation process may differ across sites, and predictive use of missingness does not correct causal bias from measurement decisions.
+
+\subsection{Temporal convolution: TCN}
+
+Temporal convolutional networks apply one-dimensional convolution in temporal order.  Causal convolution prevents future positions from contributing to an earlier output, dilation expands the receptive field without requiring a kernel at every lag, and residual blocks stabilize deeper models.  Because convolutions for many positions can be computed in parallel, a TCN offers a different computational and inductive bias from a recurrent state update \cite{bai2018tcn}.  The canonical TCN study is a general sequence-modeling comparison rather than an ICU-specific method paper.  In an irregular ICU setting, the model still requires an appropriate regular sequence representation, so resampling, aggregation, masks, and time features remain part of its effective design.
+
+\subsection{Attention-based dense modeling: SAnD}
+
+SAnD applies masked self-attention to clinical time series so that a representation at a position can combine information from other permitted positions without recurrent traversal.  Positional encoding supplies temporal order, and attention provides direct paths for modeling long-range relationships \cite{song2018sand}.  Its clinical formulation uses a dense or regularly represented sequence, making preprocessing part of the model interface.  It therefore differs from a sparse-event transformer even though both use attention: attention is a temporal mechanism, not a complete specification of the input representation.
+
+\subsection{Sparse-event transformer modeling: STraTS}
+
+STraTS is designed for sparse and irregular multivariate clinical series.  It treats an observed measurement as a triplet of time, variable, and value; continuous embeddings of time and value are combined with a variable embedding, and transformer-style attention contextualizes the observed events.  This avoids constructing a fully imputed variable-by-time matrix and preserves fine-grained observation times.  The method also introduces a self-supervised forecasting objective for pretraining representations before supervised prediction \cite{tipirneni2022strats}.
+
+This design is well matched to sparse event streams, but it does not make preprocessing irrelevant.  Event selection, normalization, truncation, static features, and the variable vocabulary still determine what the transformer sees.  Moreover, the published method and the thesis's supervised multi-label adaptation are distinct objects.  The paper supports the triplet representation, attention mechanism, and pretraining rationale; Chapter~\ref{chap:predictive-modeling-proxy-states} defines the local target heads, training, and export contract.
+
+\subsection{Relationship among the five included families}
+
+The comparison in Table~\ref{tab:background-model-families} is best understood as a comparison of inductive biases rather than a ladder of sophistication.  GRU supplies a general recurrent baseline; GRU-D makes missingness and elapsed time explicit within recurrence; TCN emphasizes multiscale local-to-long-range temporal filters; SAnD applies attention to a dense sequence; and STraTS applies attention to observed event triplets with a pretraining option.  Explicit missingness handling is central to GRU-D, implicit in the absence and timing of STraTS events, and otherwise dependent on the prepared inputs.  Likewise, pretraining is a defined part of STraTS but not an assumed property of every family.
+
+\begin{table}[htbp]
+\centering
+\caption{Predictive model families included in the thesis comparison.}
+\label{tab:background-model-families}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{0.09\textwidth}p{0.19\textwidth}p{0.27\textwidth}p{0.27\textwidth}p{0.11\textwidth}@{}}
+\toprule
+Model & Core temporal mechanism & Input and irregularity handling & Role in this thesis & Primary reference \\
+\midrule
+STraTS & Transformer-style contextualization and attention pooling. & Sparse observed time--variable--value triplets; timing and absence are retained without a fully imputed grid; self-supervised pretraining is supported. & Sparse-event focal model with a later local multi-label adaptation. & \cite{tipirneni2022strats} \\
+GRU & Gated recurrent hidden-state updates. & Requires a prepared sequence; irregular time and missingness are not inherently resolved by the ordinary recurrent unit. & General recurrent baseline. & \cite{cho2014gru} \\
+GRU-D & Recurrent updates with trainable input and hidden-state decay. & Uses masks and elapsed-time features to model missingness explicitly. & Missingness-aware recurrent baseline. & \cite{che2018grud} \\
+TCN & Dilated temporally ordered convolutions with residual blocks. & Operates on a regular sequence representation whose binning, masks, and aggregation must be defined. & Convolutional sequence baseline. & \cite{bai2018tcn} \\
+SAnD & Masked self-attention with positional encoding. & Operates on a dense clinical sequence; its input is not the same raw sparse-event representation as STraTS. & Dense attention-based baseline. & \cite{song2018sand} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Architecture suitability can vary with measurement density, missingness, preprocessing, label construction, sample size, and the supervised task.  A model can also exploit site-specific observation patterns rather than transferable physiology.  For these reasons, related work motivates empirical comparison but not a universal ranking.  The thesis-specific implementations and results are reserved for Chapters~\ref{chap:predictive-modeling-proxy-states} and~\ref{chap:results}.
 
 \section{Proxy Phenotyping and Weak Supervision}
 \label{sec:background-related-work:proxy-phenotyping-weak-supervision}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Section ID: C2.3.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+\subsection{Electronic phenotyping and rule-derived labels}
+
+Electronic phenotyping identifies patients or records with characteristics of interest from routinely collected EHR data.  Phenotypes may combine diagnosis or procedure codes, laboratory and vital measurements, medications, text, temporal criteria, deterministic rules, statistical models, or machine learning.  The field has consequently developed from manually specified rule sets toward hybrid and learned approaches, while retaining the need to validate the construct for its intended use \cite{banda_2018_electronic_phenotyping}.
+
+Rule-based phenotypes remain attractive when transparency and inspectability matter.  An investigator can trace a positive label to named variables, thresholds, and time conditions; the same rule can be rerun; and domain reviewers can identify implausible clauses.  A rule can also provide a practical label when manual adjudication is unavailable.  Concrete respiratory-failure phenotyping work illustrates how operational cohort definitions can be constructed from EHR evidence while requiring validation against the intended clinical concept \cite{essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping}.
+
+Transparency is not equivalence to clinical truth.  Thresholds can be sensitive to units and preprocessing, required variables may be missing, and a rule developed at one site may not transport to another.  Temporal ambiguity can cause measurements before, during, and after a clinical episode to be collapsed into one label.  Codes and treatments may reflect billing or care processes as well as physiology.  Rule outputs can therefore be reproducible yet noisy, and a negative label can mean insufficient evidence rather than absence of the condition.  Validation must be tied to the intended use: a cohort-retrieval rule, prediction target, and causal exposure may require different evidence.
+
+\subsection{Clinical-definition sources and approximation}
+
+Clinical consensus documents provide important conceptual grounding for organ dysfunction and acute syndromes, but their definitions are usually multicomponent and context dependent.  Sepsis-3 links sepsis to infection-associated organ dysfunction and gives specific clinical operationalizations; KDIGO defines acute kidney injury using creatinine and urine-output changes; and the ISTH work proposes clinical and laboratory scoring for disseminated intravascular coagulation \cite{singer_2016_sepsis3,kdigo_2012_acute_kidney_injury,taylor_et_al_2001_isth_dic}.  SOFA and the Berlin ARDS definition likewise supply authoritative terminology for organ dysfunction and respiratory syndromes \cite{vincent_et_al_1996_sofa,ranieri_et_al_2012_berlin_ards}.
+
+These sources should not be used to upgrade a partial rule into a formal diagnosis.  A project rule may use measurements related to a definition, draw on one threshold family, or approximate part of a syndrome while omitting duration, baseline change, imaging, intervention, or contextual requirements.  The appropriate claim is therefore that a proxy family is \emph{clinically informed by} or \emph{draws on concepts from} these sources.  Whether each local rule captures its intended construct requires rule-level clinical review and, ideally, chart-adjudicated evaluation.  The two definition sources without local PDFs are used here only for this limited conceptual role; no detailed local implementation claim depends on them.
+
+\subsection{Weak supervision and label aggregation}
+
+Weak supervision addresses settings in which accurate hand labels are scarce but multiple imperfect labeling sources are available.  Labeling functions can encode heuristics, distant supervision, or model outputs, and may differ in coverage and accuracy.  Snorkel formalizes the problem by learning a generative label model that estimates source accuracies and dependencies without requiring every training example to be manually labeled \cite{ratner_et_al_2020_snorkel}.  The central lesson for this thesis is that label-source quality and correlation matter: adding sources does not guarantee that shared bias cancels.
+
+A deterministic majority vote is not the same method.  Voting assigns the class supported by a specified number of binary sources and treats their contributions according to the fixed vote rule.  A learned weak-supervision label model instead estimates latent source-quality or dependence parameters and can weight conflicting sources differently.  This thesis uses deterministic majority voting, not the Snorkel generative model.  The output is algorithmic aggregation, not clinical consensus; correlated voters trained on the same rule-derived labels can preserve or amplify common error.
+
+\subsection{Implications for this thesis's proxy states}
+
+The thesis uses \emph{clinically inspired proxy state}, \emph{rule-derived proxy label}, \emph{proxy phenotype}, and \emph{weak clinical label} to distinguish analytical constructs from verified diagnoses.  Repository identifiers beginning with \texttt{LAT\_} are historical software names.  They do not establish that a formally identified latent clinical variable exists.  This distinction is essential because the same column interface is used across several stages without making the generating mechanisms equivalent.
+
+Proxy-state validity can be separated into at least five questions.  \emph{Implementation validity} asks whether code executes the documented rule.  \emph{Schema consistency} asks whether identifiers and columns align across artifacts.  \emph{Predictive learnability} asks whether models can estimate rule-derived labels from time-series inputs.  \emph{Clinical construct validity} asks whether the labels correspond to the intended clinical concept.  \emph{Causal measurement validity} asks whether a proxy can serve as a sufficiently accurate and temporally coherent exposure for the stated causal question.  Repository evidence supports the first three more directly than the last two.
+
+The shared proxy layer has three connected roles in this thesis: it supplies supervised prediction targets, provides binary inputs for algorithmic aggregation, and defines downstream proxy-state exposure representations.  A common interface makes handoffs auditable and permits the same construct name to be traced across stages.  It also creates a compounded error path: rule design can mismeasure a construct, prediction can reproduce or add classification error, aggregation can preserve correlated error, and DAG-guided causal analysis can then condition on or contrast a mismeasured exposure.  Predictive accuracy against rule labels demonstrates learnability of those labels; it is not clinical validation and does not establish causal measurement validity.
 
 \section{Causal Diagrams, Identification, HTE, Overlap, and Sensitivity}
 \label{sec:background-related-work:causal-diagrams-identification-hte-overlap-sensitivity}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[CITATION REQUIRED]}
-% Section ID: C2.4.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+\subsection{Observational causal questions and target-trial thinking}
+
+Causal analysis begins with a question, not an estimator.  Target-trial thinking makes the desired comparison explicit by specifying eligibility, treatment or exposure strategies, assignment, time zero, follow-up, outcome, causal contrast, and analysis plan before observational data are analyzed \cite{hernan_robins_2016_target_trial}.  This discipline exposes mismatches such as using post-baseline information to define eligibility, comparing prevalent with incident exposure, or allowing eligibility and follow-up to begin at different times.  ICU EHR data make these issues acute because clinical state, treatment, measurement, and selection evolve rapidly and are documented through care processes.
+
+The exposure must also correspond to a sufficiently well-defined intervention or contrast.  Different ways of producing the same measured state can lead to different outcomes, so a contrast on a state such as body mass index---or, here, an illness-state proxy---may violate consistency when the underlying intervention is unspecified \cite{hernan_taubman_2008_well_defined_interventions}.  This concern is not repaired by choosing a flexible estimator.  It requires clarity about what changes, when it changes, and which versions of the exposure are being compared.
+
+Retrospective ICU studies additionally face confounding by indication, changing severity, informative measurement, treatment--confounder feedback, selection, and limitations in outcome measurement.  A review of observational causal inference in intensive care emphasizes careful question formulation, assumptions, data preparation, and reporting across the analysis workflow \cite{smit_2023_causal_inference_icu_scoping_review}.  Marginal structural models provide important background for time-varying treatment and confounder processes, but they are not the point/binary exposure estimator implemented in this thesis.  Nor does this thesis claim a complete target-trial emulation.
+
+\subsection{DAGs, backdoor reasoning, and adjustment}
+
+A directed acyclic graph (DAG) represents assumed causal relations through nodes and directed edges.  Paths into an exposure can encode confounding routes, while colliders require special care because conditioning on them can open otherwise blocked associations.  Backdoor reasoning uses the graph to identify covariates that block noncausal paths without adjusting for inappropriate descendants or colliders \cite{pearl_1995_causal_diagrams}.  A DAG thus makes assumptions inspectable and connects scientific reasoning to adjustment-set selection.
+
+Graphical transparency must not be mistaken for empirical proof.  A DAG does not establish that its arrows are correct, and a set that blocks paths in the drawn graph does not guarantee exchangeability in the clinical population.  Required confounders may be unavailable in the observed data; measurement can be an imperfect proxy for a graph node; and temporal order must be justified scientifically rather than inferred from an arrow.  In this thesis, project-specified DAGs guide observed-variable adjustment at a high level.  Their dataset-specific nodes, mappings, and implementation are deferred to Chapter~\ref{chap:causal-graph-effect-estimation-methodology}.
+
+\subsection{Double machine learning}
+
+Double machine learning (DML) separates the causal parameter of interest from flexible nuisance functions, such as outcome regression and exposure propensity.  Machine-learning estimators can fit these functions, but naively substituting regularized predictions into a causal estimating equation can transfer regularization and overfitting bias to the target parameter.  DML addresses this problem through Neyman-orthogonal scores, which reduce first-order sensitivity to nuisance-estimation error, and cross-fitting, which estimates nuisance functions on data separate from the observations used to evaluate the score \cite{chernozhukov2018dml}.
+
+In a residualization interpretation, covariate-explained components are removed from the outcome and exposure, and the residual association enters the orthogonal score.  Cross-fitting rotates training and evaluation folds so observations can contribute efficiently without using the same fitted nuisance error twice.  These devices broaden the nuisance models that can be used while retaining inference under stated regularity and rate conditions.  They do not eliminate the substantive assumptions of causal inference.  DML cannot correct an omitted confounder that was never measured, create overlap where none exists, turn a proxy into an accurately measured exposure, repair an incorrect DAG, or define an otherwise ambiguous intervention.
+
+EconML provides software implementations for heterogeneous-effect estimators, including DML-related workflows, and is useful for documenting implementation context \cite{oprescu_et_al_2019_econml}.  The software reference is distinct from the theoretical basis: library availability does not validate local nuisance models, cross-fitting behavior, or identification assumptions.
+
+\subsection{Causal forests and heterogeneous effects}
+
+Outcome prediction estimates how outcomes vary with covariates under the observed data distribution; effect estimation asks how an outcome contrast varies between exposure conditions under causal assumptions.  A strong prognostic variable need not be an effect modifier, and a subgroup with high baseline risk need not receive greater benefit from an intervention.  Keeping prognostic and treatment-effect heterogeneity separate is therefore fundamental.
+
+Causal forests adapt random-forest ideas to heterogeneous treatment-effect estimation.  Recursive partitioning seeks regions in covariate space with different treatment contrasts, and aggregation across trees stabilizes local estimates.  Under conditions including unconfoundedness and appropriate forest construction, the method provides a nonparametric approach to conditional treatment effects and inference \cite{wager2018causalforest}.  Generalized random forests extend the adaptive-neighborhood view of forests to parameters defined through local moment equations, providing a broader framework in which heterogeneous-effect estimation can be formulated \cite{athey2019grf}.
+
+These methods are attractive when effect modification is nonlinear or involves interactions, but flexibility does not validate discovered subgroups.  Estimated conditional effects can be unstable in sparse regions, depend on nuisance models and tuning, and identify patterns that do not transport.  Forest feature importance describes the fitted model rather than a biological mechanism.  High-dimensional individual estimates are not automatically clinically actionable.
+
+\subsection{HTE in EHR and critical care}
+
+EHR research is motivated by the possibility that large, heterogeneous observational populations can inform conditional or individualized treatment-effect estimation.  The same data introduce confounding, informative missingness, treatment-selection bias, and covariate shift, while individual counterfactual outcomes remain unobserved \cite{bica_2021_individualized_treatment_effects_ehr_ml}.  Validation is consequently harder than ordinary prediction: a held-out factual outcome cannot directly reveal the accuracy of an individual's unobserved alternative outcome.
+
+Modern HTE reviews emphasize principled separation of hypothesis generation from confirmation, careful performance criteria, and the instability of data-driven subgroups \cite{lipkovich_2024_modern_hte_methods,curth_2024_ml_individualized_treatment_effects}.  Critical-care populations add marked variation in baseline risk, disease mechanisms, and competing trajectories.  Heterogeneity in observed outcomes or prognosis can be mistaken for heterogeneity of treatment effect, and average trial results can conceal clinically important variation while exploratory subgroup analyses can also produce spurious patterns \cite{iwashyna_2015_hte_critical_care}.  These considerations motivate conditional-effect modeling in the thesis but do not imply that its proxy-state analyses validate individualized clinical effects.
+
+The empirical study additionally evaluates CausalPFN in an exploratory role; its detailed theoretical positioning remains limited pending a verified primary method reference.  No architecture or method-family claim is made here on the basis of its name or local output.
+
+\subsection{Overlap and empirical support}
+
+Positivity requires that the exposure conditions being compared are possible within relevant covariate strata.  Its empirical counterpart, overlap or common support, asks whether comparable exposed and unexposed observations exist in the analyzed sample.  When propensity scores approach their boundaries, estimates rely on a small number of observations or extrapolation, producing instability and changing the population for which a comparison is credible.  Work on limited overlap formalizes the variance and target-population consequences and motivates explicit attention to the region of adequate support \cite{crump_et_al_2009_limited_overlap}.
+
+Overlap is especially important for heterogeneous-effect estimation because local estimates divide the sample into increasingly specific covariate neighborhoods.  A global mixture of exposed and unexposed records can coexist with local support failures.  Matching rates, failures, and distances can provide indirect evidence about available comparisons, but they depend on the matching representation and algorithm.  They do not replace propensity-score distributions, common-support plots, or covariate-balance assessment.  Conversely, empirical overlap does not establish exchangeability or validate the DAG.  This thesis therefore treats support diagnostics as necessary qualification and does not claim that positivity has been established.
+
+\subsection{Omitted-variable sensitivity and diagnostic workflows}
+
+Even after adjustment, observational estimates can be biased by variables that affect both exposure and outcome but are absent from the model.  Omitted-variable-bias sensitivity analysis asks how strongly such a variable would need to relate to the residualized exposure and outcome to change a conclusion.  Robustness values provide a compact strength-of-confounding summary, while comparison with observed covariates can make a hypothetical confounder scale more interpretable \cite{cinelli_hazlett_2020_sensitivity}.  Extensions to causal machine learning formulate analogous bias bounds and inference for broader target parameters and flexible nuisance estimation \cite{chernozhukov_et_al_2026_ovb_causal_ml}.
+
+Sensitivity results remain model- and scale-dependent.  Benchmarking is persuasive only when the selected observed covariate is scientifically meaningful, and no observed benchmark necessarily bounds every unmeasured process.  A robustness value does not prove that unmeasured confounding is absent.  Sensitivity analysis also does not validate a DAG, create support, or repair exposure misclassification.  Its role is to quantify how conclusions would respond to specified departures from an identifying assumption.
+
+More broadly, transparent causal workflows separate modeling assumptions, identification, estimation, and attempts to refute or perturb the analysis.  DoWhy articulates this model--identify--estimate--refute sequence and implements placebo and other robustness checks as software-supported diagnostics \cite{sharma_kiciman_2020_dowhy}.  The value of such checks is procedural: they can expose sensitivity to broken relationships or alternative assumptions.  They do not turn every perturbation into a formal randomization test, and the citation does not imply that every DoWhy refuter was used in this thesis.
+
+\subsection{Positioning of the present study}
+
+The literature supplies complementary components rather than one end-to-end solution.  Models for irregular series address representation and prediction; phenotyping provides transparent routes from EHR evidence to analytical labels; weak supervision explains how imperfect sources may be combined; DAGs make identification assumptions explicit; DML and forest methods enable flexible adjusted and heterogeneous-effect estimation; and overlap and sensitivity methods expose fragility in support and unmeasured-confounding assumptions.  The contribution of this thesis is to integrate and evaluate these components through a shared, evidence-tracked proxy-state interface, not to claim invention of each component.
+
+Integration also compounds risk.  Measurement error in source events can affect rule-derived labels; model error can alter predicted labels; aggregation can preserve shared error; a project-specified DAG can be misspecified; local comparisons can lack support; and unmeasured confounding can remain after flexible estimation.  Provenance gaps can make it difficult to determine which version of an artifact entered the next stage.  LLM prompts contributed candidate proxy-state and DAG design provenance, but were not an executed estimator, causal-discovery method, medical expert, or source of clinical validation.  Chapters~\ref{chap:problem-definition-study-design}--\ref{chap:experimental-design} therefore define the actual study objects, implementation, assumptions, and diagnostic hierarchy.  This progression preserves the central lesson of the related work: credible integration requires every handoff and limitation to remain visible rather than being absorbed into a single model output.

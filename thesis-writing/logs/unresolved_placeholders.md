@@ -267,3 +267,25 @@ Stage 4.8 replaced the four generic Chapter 1 drafting placeholders and its two 
 
 The thesis-wide gates below remain open and are intentionally retained in their Chapter 11 locations: final supervisor ratification of the contribution hierarchy and causal-language framing; clinical review of proxy-state definitions and interpretation; the primary CausalPFN citation; predictive split/checkpoint lineage; exact producing commits and archive-copy history; and institutional ethics and data-governance wording.  They are not repeated in Chapter 1 because the Introduction states the corresponding boundaries without displaying internal review markers.
 | `thesis-writing/thesis/chapters/11_discussion.tex` | C11.2 Ethical and Clinical-Deployment Considerations | `[VALIDATION REQUIRED: subgroup fairness and external clinical validation]` | No subgroup fairness study, prospective validation, or independent clinical validation is archived. | Conduct and document approved subgroup and external validation before any deployment or general clinical-validity claim. | open |
+
+## Stage 4.9A Update
+
+Stage 4.9A replaced the four generic Chapter 2 drafting placeholders, the generic validation placeholder, and the generic citation placeholder with a completed Background and Related Work chapter.  Chapter 2 now contains exactly four top-level sections, two synthesis tables, a five-family predictive-model review, proxy-phenotyping and weak-supervision background, and an identification-before-estimation causal synthesis.  No generic `\StagePlaceholder` remains in `chapters/02_background_related_work.tex`.
+
+### Resolved During Stage 4.9A
+
+| file | chapter scope | exact placeholder class resolved | evidence | status |
+| --- | --- | --- | --- | --- |
+| `thesis-writing/thesis/chapters/02_background_related_work.tex` | C2.1--C2.4 | Four `[STAGE 4 DRAFT REQUIRED]` markers | Completed literature synthesis using the canonical local corpus. | resolved |
+| `thesis-writing/thesis/chapters/02_background_related_work.tex` | C2.3 | Generic `[VALIDATION REQUIRED]` marker | Replaced by bounded proxy-validity prose and precise review gates retained in this log. | resolved |
+| `thesis-writing/thesis/chapters/02_background_related_work.tex` | C2.4 | Generic `[CITATION REQUIRED]` marker | All inserted Chapter 2 citations resolve to verified catalog and bibliography keys; the specific CausalPFN gap remains open. | resolved |
+
+### Precise Gates Retained for Stage 4.9B or Later Review
+
+| exact gate | current location or tracking status | evidence needed | status |
+| --- | --- | --- | --- |
+| `[CITATION REQUIRED: primary CausalPFN method source]` | Existing Chapter 11 and deferred-fix records; Chapter 2 uses no technical CausalPFN claim. | Verified primary method source and method/version reconciliation. | open |
+| `[CLINICAL REVIEW REQUIRED: proxy-state definitions and clinical interpretation]` | Existing Chapter 11 and deferred-fix records. | Qualified clinician review and, where feasible, chart-adjudicated validation. | open |
+| `[LITERATURE REVIEW REQUIRED: verify whether any rule family lacks an adequate clinical source]` | Stage 4.9A literature audit; several rule families remain explicitly project-specific in Chapter 5. | Rule-family-to-primary-clinical-source matrix with gaps retained as project-specific or filled from vetted literature. | open |
+| `[LITERATURE REVIEW REQUIRED: decide whether formal LLM-assisted-design literature is needed]` | Stage 4.9A literature audit; no approved LLM methodology source is in the canonical corpus. | Supervisor-approved scope decision and, only if needed, a separately authorized corpus addition. | open |
+| `[SUPERVISOR RATIFICATION REQUIRED: final related-work framing]` | Stage 4.9A Chapter 2 synthesis. | Supervisor review of emphasis, boundaries, and cross-chapter balance. | open |
