@@ -1,195 +1,38 @@
-# Stage 4.6A Results Decision Register
+# Stage 4.6A-R Results Decision Register
 
-All recommendations are nonbinding; no recommendation is enacted in checked tables.
+## Decision freeze
 
-## DEC-RESULT-001
-- Question: primary causal sampling condition
-- Available options: original; outcome-downsampled
-- Verified evidence: Both exist; original retains population outcome rate while downsampled is a distinct analysis population.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: original for population interpretation; retain downsampled as separate sensitivity population
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+**AUTHOR DECISION RECORDED.** Supervisor ratification remains pending. These choices were not made from effect magnitude, direction, apparent significance, estimator agreement, or post-hoc clinical interest.
 
-## DEC-RESULT-002
-- Question: primary causal estimator
-- Available options: CausalForestDML; LinearDML; CausalPFN
-- Verified evidence: All twelve summaries exist; PFN skips downstream diagnostics.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: choose an estimator with complete archived diagnostics after human review
-- Recommendation confidence: medium
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+- Primary population: original causal-analysis cohorts. Outcome-downsampled analyses are robustness/sensitivity material only, belong in supplementary material, and are never pooled with original analyses.
+- Estimator hierarchy: CausalForestDML primary; LinearDML secondary; CausalPFN exploratory and included after LinearDML.
+- Exposure policy: report every prespecified dataset-specific proxy-state exposure from original-cohort runs.
+- Required wording: **descriptive matched-pair outcome difference** and **mean model-estimated CATE over the analyzed sample**. Omit normalized CATE from Chapter 10.
+- Cross-dataset policy: qualitative/aligned-concept comparison only; no pooling. Original causal-analysis populations are MIMIC 26,845 and PhysioNet 7,993 records (difference 18,852; MIMIC approximately 3.36 times larger). These are not raw cohort totals.
 
-## DEC-RESULT-003
-- Question: role of CausalPFN
-- Available options: exploratory; supplementary; primary
-- Verified evidence: PFN CATE summaries exist but diagnostic stages are intentionally skipped.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: exploratory/supplementary
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+## Frozen Chapter 10 order
 
-## DEC-RESULT-004
-- Question: matching estimand wording
-- Available options: descriptive matched-pair difference; ATT-like; exclude
-- Verified evidence: Archive reports mean_pair_effect only.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: descriptive matched-pair difference
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+1. Analysis-population counts
+2. Predictive performance
+3. Primary CausalForestDML results
+4. Matching and empirical support
+5. LinearDML comparison
+6. CausalPFN exploratory results
+7. Cross-dataset comparison
+8. Robustness and sensitivity
 
-## DEC-RESULT-005
-- Question: mean_cate wording
-- Available options: mean model-estimated CATE; other approved wording
-- Verified evidence: Arithmetic summary of patient-level modeled CATE values.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: mean model-estimated CATE
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+Downsampling is addressed only within the final robustness section.
 
-## DEC-RESULT-006
-- Question: normalized_CATE inclusion and wording
-- Available options: omit; include with explicit normalization wording
-- Verified evidence: Value divides by sample outcome rate.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: omit from main text pending wording approval
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+## Estimator agreement
 
-## DEC-RESULT-007
-- Question: thesis-primary proxy-state exposures
-- Available options: select subset; show all; none
-- Verified evidence: Archived treatment sets differ by dataset.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: human selection based on construct review
-- Recommendation confidence: medium
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+The three estimators agree in mean-effect direction for 18 of 19 dataset--exposure comparisons: MIMIC 9 of 9 and PhysioNet 9 of 10. The exception is PhysioNet `LAT_SHOCK`: CausalForestDML and LinearDML are negative and CausalPFN is slightly positive.
 
-## DEC-RESULT-008
-- Question: original versus downsampled presentation
-- Available options: original primary; downsampled primary; parallel
-- Verified evidence: Both populations have distinct n/outcome rates.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: original primary, downsampled sensitivity
-- Recommendation confidence: medium
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+CausalPFN reproduced the prevailing direction in nearly every comparison, supporting its promise as a complementary estimator within this pipeline. This broad agreement is not complete agreement and does not establish estimator equivalence, superiority, causal validity, or interchangeable uncertainty quantification. CausalPFN lacks the archived downstream sensitivity and permutation diagnostics available for the DML estimators.
 
-## DEC-RESULT-009
-- Question: cross-dataset comparison scope
-- Available options: qualitative; aligned proxy concepts; pooled
-- Verified evidence: Schemas and proxy concepts differ.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: qualitative/aligned only; no pooling
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+## InterpNet
 
-## DEC-RESULT-010
-- Question: sensitivity-contour selection
-- Available options: choose one; appendix all; omit
-- Verified evidence: Non-PFN contours are archived.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: appendix all pending selection
-- Recommendation confidence: medium
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+**NOT PART OF THE THESIS PIPELINE — EXCLUDED FROM THESIS.** Stage 4.6B must ignore historical audit and literature references to InterpNet.
 
-## DEC-RESULT-011
-- Question: permutation main-text versus appendix role
-- Available options: main; appendix; omit
-- Verified evidence: Aggregate archived rows exist for non-PFN only.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: appendix pending source-interpretation review
-- Recommendation confidence: medium
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+## Former decision records
 
-## DEC-RESULT-012
-- Question: overlap figure omission or generation requirement
-- Available options: omit; create later
-- Verified evidence: No dedicated overlap plot archived.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: omit with support limitations stated
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
-
-## DEC-RESULT-013
-- Question: InterpNet exclusion
-- Available options: exclude; rerun later
-- Verified evidence: No final summary or export archived.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: exclude numerical comparison
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
-
-## DEC-RESULT-014
-- Question: learning-curve figure selection
-- Available options: select archived curve; appendix all
-- Verified evidence: Archived PNGs exist.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: appendix candidate pending selection
-- Recommendation confidence: medium
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
-
-## DEC-RESULT-015
-- Question: cohort-count source
-- Available options: run summary; export; labels; recover manifest
-- Verified evidence: Counts describe different contracts.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: report source-specific counts only
-- Recommendation confidence: high
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
-
-## DEC-RESULT-016
-- Question: primary versus supplementary tables
-- Available options: select hierarchy
-- Verified evidence: All candidate tables are checked but no approved hierarchy is recorded.
-- Scientific consequences: determines which qualified, non-pooled result rows may be foregrounded.
-- Provenance consequences: does not remove the archive, configuration, or split limitations.
-- Recommended option: main predictive + qualified CATE candidate; appendices for diagnostics
-- Recommendation confidence: low
-- Human owner: thesis author and supervisor
-- Current status: OPEN
-- Required before Stage 4.6B: yes
+DEC-RESULT-001 through DEC-RESULT-016 are superseded by this author decision freeze where applicable; their evidence limitations remain in the manifest, source packet, and deferred-fix register.

@@ -1,135 +1,33 @@
-# Stage 4.6A Results Source Packet
+# Stage 4.6A-R Results Source Packet
 
-This packet points to checked CSVs; it deliberately does not reproduce full numerical tables.
+This packet is for Stage 4.6B. Use the checked CSVs and this frozen hierarchy; do not use historical InterpNet references in audit or literature files.
 
-## C10.1 Data and cohort summary
-- Checked file: `checked_cohort_candidates.csv`
-- Canonical source artifacts: Export, majority-vote, and run-summary counts
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Pipeline-contract-specific counts
-- Blocked fields: Raw cohort totals
-- Required wording boundary: Do not merge pipeline counts
-- Remaining human decision: Cohort-count source
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix/supporting.
+## Frozen hierarchy and population boundary
 
-## C10.2 Proxy prevalence and co-occurrence
-- Checked file: `checked_proxy_prevalence.csv; checked_proxy_cooccurrence.csv`
-- Canonical source artifacts: MIMIC rule-based tables
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Existing values only
-- Blocked fields: PhysioNet counterpart tables
-- Required wording boundary: Proxy states, not diagnoses
-- Remaining human decision: Proxy exposure selection
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix/supporting.
+- Primary original causal-analysis populations: MIMIC 26,845 records; PhysioNet 7,993 records; difference 18,852; MIMIC is approximately 3.36 times larger. These are original causal-analysis population counts, not raw cohort totals.
+- Original and outcome-downsampled results must never be pooled. Downsampled material is robustness/supplementary only.
+- CausalForestDML is primary, LinearDML secondary, and CausalPFN exploratory. Report every prespecified original-cohort proxy-state exposure.
+- Use **descriptive matched-pair outcome difference** and **mean model-estimated CATE over the analyzed sample**. Do not use normalized CATE in Chapter 10.
 
-## C10.3 Predictive performance
-- Checked file: `checked_predictive_metrics.csv`
-- Canonical source artifacts: Ten training summaries and paired logs
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Validation/test metrics
-- Blocked fields: InterpNet numerical results
-- Required wording boundary: Do not overstate split provenance
-- Remaining human decision: Model comparison hierarchy
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Main text candidate.
+## Approved Chapter 10 order
 
-## C10.4 Learning-curve diagnostics
-- Checked file: `checked_figure_candidates.csv`
-- Canonical source artifacts: Archived learning-curve PNGs
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Diagnostic figures
-- Blocked fields: Selected figure
-- Required wording boundary: Diagnostic only, not test-metric substitute
-- Remaining human decision: Learning-curve selection
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix.
+1. Analysis-population counts (`checked_cohort_candidates.csv`)
+2. Predictive performance (`checked_predictive_metrics.csv`)
+3. Primary CausalForestDML (`checked_cate_candidates.csv`)
+4. Matching and empirical support (`checked_matching_results.csv`, `checked_matching_failures.csv`)
+5. LinearDML comparison (`checked_cate_candidates.csv`)
+6. CausalPFN exploratory results (`checked_cate_candidates.csv`)
+7. Cross-dataset comparison (`checked_cate_candidates.csv`)
+8. Robustness and sensitivity (`checked_sensitivity_candidates.csv`, `checked_permutation_candidates.csv`)
 
-## C10.5 Mortality prediction from proxy states
-- Checked file: `checked_mortality_prediction.csv`
-- Canonical source artifacts: Canonical mortality text outputs
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Existing source metrics
-- Blocked fields: Formal causal interpretation
-- Required wording boundary: Proxy-state mortality-prediction association
-- Remaining human decision: Presentation role
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix/supporting.
+## Direction agreement
 
-## C10.6 Matching results
-- Checked file: `checked_matching_results.csv; checked_matching_failures.csv`
-- Canonical source artifacts: Cross-run table and per-run summaries
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Matched-pair fields
-- Blocked fields: Approved estimand wording
-- Required wording boundary: Do not call mean_pair_effect ATE or ATT
-- Remaining human decision: Matching wording
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Main text candidate.
+Original-cohort rows support 18 of 19 directionally concordant dataset--exposure comparisons (MIMIC 9/9; PhysioNet 9/10). PhysioNet `LAT_SHOCK` is the exception: CausalForestDML and LinearDML negative; CausalPFN slightly positive. This does not establish estimator equivalence, superiority, causal validity, or interchangeable uncertainty quantification. CausalPFN has no archived downstream sensitivity/permutation diagnostics.
 
-## C10.7 CATE estimates
-- Checked file: `checked_cate_candidates.csv`
-- Canonical source artifacts: Full per-run global summaries
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Mean CATE and distribution fields
-- Blocked fields: Primary estimator/sampling/exposures
-- Required wording boundary: Do not call mean_cate ATE
-- Remaining human decision: Primary hierarchy
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Main text candidate.
+## Figure gate
 
-## C10.8 Heterogeneity diagnostics
-- Checked file: `checked_heterogeneity_candidates.csv`
-- Canonical source artifacts: Patient-level CATE and feature artifacts
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Artifact availability
-- Blocked fields: New subgroup effects
-- Required wording boundary: Feature importance is not mechanism
-- Remaining human decision: Figure choice
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix.
+Use `figure_selection_register.md`. Both original-cohort ranking figures are blocked because their labels are two-DML averages rather than the image-labelled median across all three estimators. `cross_model_direction_counts.png` is also blocked because it aggregates both sampling modes and must not support the 18-of-19 statement. Appendix selections retain their stated diagnostic or illustrative boundaries.
 
-## C10.9 Overlap and support
-- Checked file: `checked_matching_results.csv; checked_matching_failures.csv`
-- Canonical source artifacts: Matching support fields
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Match rate and failures
-- Blocked fields: Dedicated overlap figure
-- Required wording boundary: No positivity claim
-- Remaining human decision: Omit/generate figure later
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix.
+## Persisting limitations
 
-## C10.10 Sensitivity
-- Checked file: `checked_sensitivity_candidates.csv`
-- Canonical source artifacts: Non-PFN benchmark artifacts
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Existing diagnostics
-- Blocked fields: Primary contour
-- Required wording boundary: Keep source classification
-- Remaining human decision: Contour selection
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix/main-text decision.
-
-## C10.11 Permutation checks
-- Checked file: `checked_permutation_candidates.csv`
-- Canonical source artifacts: Archived aggregate files
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Existing trial summaries
-- Blocked fields: New p-values
-- Required wording boundary: Do not label formal test without source support
-- Remaining human decision: Role decision
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix.
-
-## C10.12 Cross-dataset comparison
-- Checked file: `checked_cate_candidates.csv`
-- Canonical source artifacts: Separate dataset rows
-- Admission status: PENDING_HUMAN_SELECTION or explicitly qualified archive evidence
-- Available numerical fields: Dataset-specific estimates
-- Blocked fields: Combined average
-- Required wording boundary: No cross-dataset pooling
-- Remaining human decision: Comparison scope
-- Remaining provenance limitation: ignored archive copies and incomplete producing configuration/split manifests.
-- Recommended role: Appendix/supporting.
+Missing numbered configs, ignored archive-copy history, missing producing commits, predictive split/checkpoint lineage, raw cohort totals, missing PhysioNet proxy tables, overlap diagnostics, proxy clinical validation, and LLM prompt-execution provenance remain open.

@@ -1,35 +1,23 @@
-# Stage 4.6A Results Manifest
+# Stage 4.6A-R Results Manifest
 
-This manifest inventories archived sources only. `final-results/` is ignored/untracked, and recorded producing-machine paths are not treated as local sources.
+The package inventories 1,369 archived result artifacts plus the 16 optional PNGs and one contextual seminar presentation. All have repository-relative paths and SHA-256 entries in `results_checksums.sha256`.
 
-## Scope
+## Author decision freeze
 
-- Source artifacts inventoried: 1369
-- Result-family counts: cate=587, graph=24, majority_vote_proxy=24, matching=308, mortality_prediction=24, permutation=24, predictive=94, proxy=9, run_summary=12, sensitivity=236, supporting_archive=27
-- Predictive final summaries: 10 completed families (five models × two datasets); InterpNet has no final summary/export.
-- Causal runs: 12 archived run summaries; numbered producing configs are referenced but absent locally.
+**AUTHOR DECISION RECORDED; supervisor ratification remains pending.** Original cohorts are primary; outcome-downsampled analyses are robustness/supplementary only and are never pooled. CausalForestDML is primary, LinearDML secondary, and CausalPFN exploratory. Every prespecified original-cohort dataset-specific exposure is reported. Normalized CATE is omitted from Chapter 10.
 
-## Causal Run Matrix
+## Predictive scope
 
-| Dataset | Estimator | Sampling | Run | Overall | Stage statuses | Configuration |
-|---|---|---|---|---|---|---|
-| mimic | CausalForestDML | original | `outputs-mimic-forest` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| mimic | CausalForestDML | outcome-downsampled | `outputs-mimic-forest-downsample` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| mimic | LinearDML | original | `outputs-mimic-linear` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| mimic | LinearDML | outcome-downsampled | `outputs-mimic-linear-downsample` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| mimic | CausalPFN | original | `outputs-mimic-pfn` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=skipped; permutations_test=skipped | numbered config not archived |
-| mimic | CausalPFN | outcome-downsampled | `outputs-mimic-pfn-downsample` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=skipped; permutations_test=skipped | numbered config not archived |
-| physionet | CausalForestDML | original | `outputs-physionet-forest` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| physionet | CausalForestDML | outcome-downsampled | `outputs-physionet-forest-downsample` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| physionet | LinearDML | original | `outputs-physionet-linear` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| physionet | LinearDML | outcome-downsampled | `outputs-physionet-linear-downsample` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=success; permutations_test=success | numbered config not archived |
-| physionet | CausalPFN | original | `outputs-physionet-pfn` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=skipped; permutations_test=skipped | numbered config not archived |
-| physionet | CausalPFN | outcome-downsampled | `outputs-physionet-pfn-downsample` | success | graph=success; majority_vote=success; mortality_prediction=success; matching=success; cate_estimation=success; analyze_cate_results=skipped; permutations_test=skipped | numbered config not archived |
+The thesis predictive comparison contains exactly STraTS, GRU, GRU-D, TCN, and SAnD. **InterpNet is not part of the thesis pipeline and is excluded from the thesis.** Historical audit/literature records are not source-packet instructions.
 
-## Canonical-source rule
+## Direction agreement
 
-Full per-run CATE summaries are the canonical CATE summaries. Reduced manager summaries are excluded; `physionet_manager_global_summary.csv` under the MIMIC LinearDML run is excluded as mislabeled. SHA-256-equivalent copies are grouped in `results_manifest.csv`.
+Original-cohort checked CATE rows yield 18/19 concordant dataset--exposure comparisons: MIMIC 9/9 and PhysioNet 9/10. PhysioNet `LAT_SHOCK` is the exception (CausalForestDML and LinearDML negative; CausalPFN slightly positive). This is bounded directional agreement only; it does not establish equivalence, superiority, causal validity, or interchangeable uncertainty quantification.
+
+## Optional figures
+
+`figure_selection_register.md` classifies all 16 PNGs. Both original-cohort ranking figures are blocked because their labels conflict with their stated three-estimator median scale. `cross_model_direction_counts.png` is blocked because it mixes sampling modes; no replacement was generated. The seminar PowerPoint is contextual provenance only, never numerical authority.
 
 ## Readiness
 
-READY FOR HUMAN RESULT-SELECTION DECISIONS
+BLOCKED: ALL THREE AUTHOR-SELECTED MAIN NUMERICAL FIGURES HAVE SOURCE-VALUE OR SAMPLING CONFLICTS. SUPERVISOR RATIFICATION OF THE RESULTS HIERARCHY REMAINS PENDING.

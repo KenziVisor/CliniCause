@@ -6,11 +6,11 @@ This chapter defines the experiment families and reproducibility boundary used f
 \section{Prediction Experiment Matrix}
 \label{sec:experimental-design:prediction-experiment-matrix}
 
-The planned predictive matrix spans PhysioNet 2012 and MIMIC-III, with STraTS, GRU, GRU-D, TCN, SAnD, and InterpNet implementation families.  The archive provides supervised training summaries and prediction exports for the first five families across the two datasets; STraTS also has pretraining support.  InterpNet implementation and wrapper commands are available, but approved final InterpNet training and prediction artifacts were not found.  Thus, implementation availability, wrapper availability, training-artifact availability, prediction-export availability, final-result availability, and provenance completeness are separate labels rather than interchangeable evidence.
+The planned predictive matrix spans PhysioNet 2012 and MIMIC-III, with STraTS, GRU, GRU-D, TCN, and SAnD model families.  The archive provides supervised training summaries and prediction exports for all five families across the two datasets; STraTS also has pretraining support.  Implementation availability, training-artifact availability, prediction-export availability, final-result availability, and provenance completeness are separate labels rather than interchangeable evidence.
 
 The task is multi-label prediction of dataset-specific proxy-state labels.  Rule-derived and majority-vote sources provide target inputs, while STraTS artifacts use a split-aware dataset contract and prediction exports provide patient-level probability and binary-tag columns.  The experiment design includes pretraining where supported, supervised fine-tuning, family-specific models, a multi-label loss with class weighting where configured, validation/test evaluation, checkpoint selection, prediction export, random-seed or split settings, and training-fraction controls.  These design elements are source-confirmed; they do not by themselves recover the final producing run.
 
-The crucial provenance gaps are processed-pickle hashes, split manifests, checkpoint-to-export mappings, exact producing wrappers/commands, archive-copy history, and the absence of final InterpNet artifacts.  A requirements file describes an intended software environment, not proof of the environment that produced an archived training summary or export.
+The crucial provenance gaps are processed-pickle hashes, split manifests, checkpoint-to-export mappings, exact producing wrappers/commands, and archive-copy history.  A requirements file describes an intended software environment, not proof of the environment that produced an archived training summary or export.
 
 \begin{longtable}{@{}p{0.10\textwidth}p{0.10\textwidth}p{0.11\textwidth}p{0.14\textwidth}p{0.11\textwidth}p{0.12\textwidth}p{0.13\textwidth}@{}}
 \caption{Predictive experimental matrix and artifact-status design; no predictive metric is reported.}
@@ -25,7 +25,6 @@ Dataset & Model family & Pretraining support & Input representation & Primary ou
 \endhead
 PhysioNet 2012 and MIMIC-III & STraTS & Available for STraTS family & Split-aware irregular time series and proxy-label targets & Multi-label predictions and exported proxy-state columns & Training summary and export archived & Split, checkpoint, command, and copy lineage incomplete \\
 PhysioNet 2012 and MIMIC-III & GRU, GRU-D, TCN, SAnD & Not the STraTS pretraining path & Dataset-specific irregular-series representation and proxy-label targets & Multi-label predictions and exports & Training summaries and exports archived & Final producing configuration and split/checkpoint linkage incomplete \\
-PhysioNet 2012 and MIMIC-III & InterpNet & Wrapper/implementation availability recorded separately & Family-specific interpolation-prediction representation & Intended multi-label prediction export & Final artifact not found & No approved final training or export artifact \\
 \bottomrule
 \end{longtable}
 
