@@ -1,18 +1,125 @@
 \chapter{Experimental Design}
 \label{chap:experimental-design}
 
+This chapter defines the experiment families and reproducibility boundary used for later result selection.  It covers datasets, prediction experiments, causal run families, original and outcome-downsampled conditions, configuration resolution, stage orchestration, software and hardware recording, and artifact requirements.  Chapter~\ref{chap:data-preprocessing} describes data preparation, Chapter~\ref{chap:clinical-proxy-state-construction} describes proxy-state construction, Chapter~\ref{chap:predictive-modeling-proxy-states} describes predictive models, Chapter~\ref{chap:causal-graph-effect-estimation-methodology} describes causal estimators, and Chapter~\ref{chap:robustness-sensitivity-validation-design} describes diagnostic design.  This chapter reports neither empirical findings nor a selected primary analysis.
+
 \section{Prediction Experiment Matrix}
 \label{sec:experimental-design:prediction-experiment-matrix}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Section ID: C9.1.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+The planned predictive matrix spans PhysioNet 2012 and MIMIC-III, with STraTS, GRU, GRU-D, TCN, SAnD, and InterpNet implementation families.  The archive provides supervised training summaries and prediction exports for the first five families across the two datasets; STraTS also has pretraining support.  InterpNet implementation and wrapper commands are available, but approved final InterpNet training and prediction artifacts were not found.  Thus, implementation availability, wrapper availability, training-artifact availability, prediction-export availability, final-result availability, and provenance completeness are separate labels rather than interchangeable evidence.
+
+The task is multi-label prediction of dataset-specific proxy-state labels.  Rule-derived and majority-vote sources provide target inputs, while STraTS artifacts use a split-aware dataset contract and prediction exports provide patient-level probability and binary-tag columns.  The experiment design includes pretraining where supported, supervised fine-tuning, family-specific models, a multi-label loss with class weighting where configured, validation/test evaluation, checkpoint selection, prediction export, random-seed or split settings, and training-fraction controls.  These design elements are source-confirmed; they do not by themselves recover the final producing run.
+
+The crucial provenance gaps are processed-pickle hashes, split manifests, checkpoint-to-export mappings, exact producing wrappers/commands, archive-copy history, and the absence of final InterpNet artifacts.  A requirements file describes an intended software environment, not proof of the environment that produced an archived training summary or export.
+
+\begin{longtable}{@{}p{0.10\textwidth}p{0.10\textwidth}p{0.11\textwidth}p{0.14\textwidth}p{0.11\textwidth}p{0.12\textwidth}p{0.13\textwidth}@{}}
+\caption{Predictive experimental matrix and artifact-status design; no predictive metric is reported.}
+\label{tab:predictive-experimental-matrix}\\
+\toprule
+Dataset & Model family & Pretraining support & Input representation & Primary output & Final-artifact status & Provenance limitation \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Model family & Pretraining support & Input representation & Primary output & Final-artifact status & Provenance limitation \\
+\midrule
+\endhead
+PhysioNet 2012 and MIMIC-III & STraTS & Available for STraTS family & Split-aware irregular time series and proxy-label targets & Multi-label predictions and exported proxy-state columns & Training summary and export archived & Split, checkpoint, command, and copy lineage incomplete \\
+PhysioNet 2012 and MIMIC-III & GRU, GRU-D, TCN, SAnD & Not the STraTS pretraining path & Dataset-specific irregular-series representation and proxy-label targets & Multi-label predictions and exports & Training summaries and exports archived & Final producing configuration and split/checkpoint linkage incomplete \\
+PhysioNet 2012 and MIMIC-III & InterpNet & Wrapper/implementation availability recorded separately & Family-specific interpolation-prediction representation & Intended multi-label prediction export & Final artifact not found & No approved final training or export artifact \\
+\bottomrule
+\end{longtable}
+
+\StagePlaceholder{[VALIDATION REQUIRED: create the final predictive and causal artifact manifest with hashes and producing commands]}
 
 \section{Causal Experiment Matrix}
 \label{sec:experimental-design:causal-experiment-matrix}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[SUPERVISOR DECISION REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Section ID: C9.2.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+The causal archive contains a verified design matrix spanning PhysioNet 2012 and MIMIC-III; CausalForestDML, LinearDML, and CausalPFN; and original and outcome-downsampled conditions.  The twelve archived run families are verified from \texttt{experiment\_inventory.csv} and each \texttt{run\_summary.json}, rather than inferred from directory names alone.  Run summaries support execution-oriented metadata and stage statuses, but their referenced numbered configuration CSVs are external absolute paths and are not locally archived.
+
+The orchestrator orders the stages as graph construction, majority vote, mortality prediction, matching, CATE estimation, saved-CATE analysis, and permutation tests.  It assigns stage-specific output directories and logs, writes commands and status fields to \texttt{run\_summary.json}, verifies required outputs, and records enabled, failed, or skipped stages.  The CausalPFN run summaries record the saved-CATE analysis and permutation stages as skipped because that branch does not use the EconML diagnostic workflow; this is an estimator-specific limitation rather than an execution failure.
+
+Outcome downsampling operates on mortality outcome classes, not exposure groups.  It changes the empirical analysis population and sample outcome rate before treatment-specific matching and CATE estimation, and can affect matching availability, nuisance fitting, CATE aggregation, and normalized CATE.  Original and outcome-downsampled runs therefore should not be treated as estimates of the same population quantity without an approved sampling, weighting, or transport argument.  Neither condition is selected as primary here.
+
+Within each causal run, the exposure loop evaluates multiple dataset-specific binary proxy-state columns.  Inclusion of any exposure in a later Results chapter requires treatment-column availability, graph-node availability, valid binary values, adjustment and support diagnostics, artifact completeness, and approved estimand wording.  The exposure list is a design dimension, not a list of approved causal claims.
+
+\begin{longtable}{@{}p{0.08\textwidth}p{0.10\textwidth}p{0.10\textwidth}p{0.08\textwidth}p{0.12\textwidth}p{0.12\textwidth}p{0.10\textwidth}p{0.10\textwidth}@{}}
+\caption{Causal experimental matrix.  The table records run-family design, not effect estimates.}
+\label{tab:causal-experimental-matrix}\\
+\toprule
+Dataset & Estimator & Sampling condition & Graph & Exposure source & Diagnostics expected & Archived run status & Configuration provenance \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Estimator & Sampling condition & Graph & Exposure source & Diagnostics expected & Archived run status & Configuration provenance \\
+\midrule
+\endhead
+PhysioNet 2012 and MIMIC-III & CausalForestDML & Original cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Matching, saved-CATE analysis, and permutations & Archived run family with stage records & Numbered producing config path recorded; local file missing \\
+PhysioNet 2012 and MIMIC-III & LinearDML & Original cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Matching, saved-CATE analysis, and permutations & Archived run family with stage records & Numbered producing config path recorded; local file missing \\
+PhysioNet 2012 and MIMIC-III & CausalPFN & Original cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Matching; CATE; EconML diagnostics not applicable & Archived run family; later diagnostic stages skipped & Numbered producing config path recorded; local file missing \\
+PhysioNet 2012 and MIMIC-III & CausalForestDML, LinearDML, CausalPFN & Outcome-downsampled cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Same family-specific checks, interpreted for a different empirical population & Archived run families with stage records & Numbered producing config path recorded; downsampling setting needs manifest confirmation \\
+\bottomrule
+\end{longtable}
+
+\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: select the primary causal estimator and sampling condition]}
+\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: determine the role of outcome-downsampled analyses]}
+
+\section{Computational Environment and Reproducibility}
+\label{sec:experimental-design:computational-environment-reproducibility}
+
+Reproducibility requires separating committed source state from active worktree state.  A complete record should identify the parent CliniCause commit, causal nested-repository gitlink, active causal nested-worktree status, and STraTS nested-repository state.  A dirty local worktree is not reproducible from a commit alone.  Similarly, run summaries record historical absolute producing-machine paths; these provide context but are not portable execution instructions, and their local existence cannot be assumed.
+
+The active CATE code is designed to capture Python and package versions for EconML, scikit-learn, NumPy, Pandas, SciPy, Matplotlib, NetworkX, Optuna, and PyTorch; platform; training timestamp; estimator module/class; artifact schema version; CUDA availability; and device metadata.  These fields must be classified as captured by active code, actually present in an archived artifact, missing from an older run, or inferred only from a requirements file.  Requirements express an intended environment, not producing-environment proof.  CPU, RAM, GPU, operating-system, and cluster-node information must be reported only where stored or separately documented; paths such as \texttt{/truenas/} are not hardware evidence.
+
+Configuration resolution follows a hierarchy of source defaults, dataset configuration CSV, command-line overrides, resolved runtime values, run summary, and saved-artifact metadata.  The precedence is script-specific: for example, CATE exposes command-line overrides for selected options, whereas matching reads its downsampling setting from the dataset configuration.  The numbered final-run configurations referenced by archived summaries are unavailable locally, so recovered defaults cannot be represented as proof of exact producing settings.
+
+A complete artifact manifest should identify artifact path and role, dataset, model or estimator, sampling condition, source commit, configuration path and hash, command, input/output hashes, row/column schema, timestamp, environment, archive-copy history, and status.  Constructing or validating that manifest is explicitly deferred to Stage 4.6A.
+
+\begin{longtable}{@{}p{0.14\textwidth}p{0.14\textwidth}p{0.18\textwidth}p{0.15\textwidth}p{0.12\textwidth}@{}}
+\caption{Reproducibility-status design.}
+\label{tab:reproducibility-status}\\
+\toprule
+Reproducibility element & Available evidence & Missing evidence & Impact & Required resolution stage \\
+\midrule
+\endfirsthead
+\toprule
+Reproducibility element & Available evidence & Missing evidence & Impact & Required resolution stage \\
+\midrule
+\endhead
+Source commits & Parent history, gitlink, and nested repository state can be recorded & Exact producing commit for every archived artifact and dirty-worktree reconciliation & Commit alone may not reproduce an uncommitted producer state & Stage 4.6A \\
+Dataset configs & Local compact defaults and archived config paths & Numbered final-run config CSVs and hashes & Exact archived settings remain configuration-incomplete & Stage 4.6A \\
+Raw data and processed artifacts & Code contracts and path references & Access record, hashes, and processing manifest & Cohort lineage cannot be reproduced from the archive alone & Stage 4.6A / data manifest \\
+Predictive splits and checkpoint/export mapping & Training summaries, exports, wrappers & Split IDs/seeds, checkpoint hashes, producing commands, copy record & Final prediction provenance incomplete & Stage 4.6A \\
+Causal run configuration and artifacts & Run summaries, logs, stage folders, schemas & Resolved configs, input/output hashes, copy history & Execution-supported but provenance incomplete & Stage 4.6A \\
+Software environment & Active metadata collection and intended requirements & Producing environment for older final runs where absent & Version compatibility cannot be assumed & Stage 4.6A \\
+Hardware environment & Limited device fields where archived & CPU/RAM/GPU/node and OS details where absent & Hardware claims must remain incomplete & Stage 4.6A \\
+Result checksums and prompt/clinical review & Some source and prompt records & Final manifest hashes, prompt-run settings, clinical-review record & Review and artifact lineage remain incomplete & Stage 4.6A / supervisor review \\
+\bottomrule
+\end{longtable}
+
+\StagePlaceholder{[VALIDATION REQUIRED: recover the numbered final-run configuration CSVs or document that they are irrecoverable]}
+\StagePlaceholder{[VALIDATION REQUIRED: document the producing hardware and software environment for final runs]}
+
+\section{Evaluation and Result-Selection Policy}
+\label{sec:experimental-design:evaluation-result-selection-policy}
+
+Stage 4.6A must apply an explicit admission policy before numerical drafting.  A candidate result is admissible only when the producing run is identified; dataset, estimator/model, and sampling condition are known; the source artifact exists; the required schema is validated; status is not failed; source fields are interpreted correctly; input/output relationships are documented; fallback diagnostics are labelled as fallback; the relevant estimand and population are stated; and unresolved limitations remain visible.  Directory names, copied summaries, or non-null cells alone are insufficient.
+
+\begin{longtable}{@{}p{0.08\textwidth}p{0.59\textwidth}p{0.24\textwidth}@{}}
+\caption{Result-admission policy for the later manifest audit.}
+\label{tab:result-admission-policy}\\
+\toprule
+Item & Admission requirement & Evidence to validate \\
+\midrule
+\endfirsthead
+\toprule
+Item & Admission requirement & Evidence to validate \\
+\midrule
+\endhead
+1--3 & Identify producing run; identify dataset/model/estimator/sampling condition; locate source artifact & Run summary, manifest, and source path \\
+4--6 & Validate schema; exclude failed status; interpret source/status fields & Header/schema record, control CSV, report/log \\
+7--9 & Document input/output relationship; label fallback; state estimand and population & Producing command/config, artifact metadata, methods approval \\
+10 & Keep unresolved limitations visible & Manifest audit and deferred-fix/placeholder review \\
+\bottomrule
+\end{longtable}
+
+\StagePlaceholder{[VALIDATION REQUIRED: create the final predictive and causal artifact manifest with hashes and producing commands]}

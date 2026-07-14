@@ -1,30 +1,107 @@
 \chapter{Robustness, Sensitivity, and Validation Design}
 \label{chap:robustness-sensitivity-validation-design}
 
+This chapter records the diagnostic framework surrounding the causal analyses in Chapter~\ref{chap:causal-graph-effect-estimation-methodology}.  It concerns empirical support, omitted-confounding sensitivity, estimator-diagnostic availability, benchmark-confounder comparisons, permutation checks, and run integrity.  These procedures supplement rather than replace the project DAG, adjustment assumptions, and exposure definition.  In particular, they do not validate the DAG, prove exchangeability, establish that a proxy-state exposure is well defined, or establish clinical actionability.  They also do not compensate automatically for measurement error, selection bias, unmeasured confounding, insufficient overlap, an incorrect target-population interpretation, or incomplete run provenance.
+
 \section{Overlap and Support Diagnostics}
 \label{sec:robustness-sensitivity-validation-design:overlap-support-diagnostics}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Section ID: C8.1.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
-% [FIGURE REQUIRED]
-% Source plan: F-OVERLAP-01 in thesis-writing/planning/figure_plan.md.
+
+The matching implementation provides indirect empirical support evidence under its implemented matching representation.  For each proxy-state exposure, the matching summary records the number of treated and control records, number of matched pairs, match rate, final allowed Hamming distance, a sufficient-pair flag, a maximum-distance failure flag, and treatment-level failure information where matching cannot proceed.  These fields are useful support indicators because a comparison requiring no or few acceptable pairs merits caution.  They are not a propensity-score overlap analysis.
+
+Matching is greedy, one-to-one, and based on a binary representation of the selected confounders.  Binary columns are retained and other numeric columns may be median-binarized before Hamming distances are evaluated.  Consequently, a larger accepted distance denotes weaker exact similarity in that representation; it is not a calibrated distance in the original covariate space.  Failure to obtain enough pairs is a support warning, not a zero effect.  Conversely, an adequate matching rate does not prove positivity for the intended target population.  The binarization, greedy ordering, allowed-distance rule, and outcome-downsampled analysis frame all affect this diagnostic.
+
+Dedicated propensity-score distributions, common-support plots, covariate balance before and after matching, standardized mean differences, weighting effective sample sizes, treatment-probability histograms, and formal positivity diagnostics were not found in the approved archive.  Not every analysis necessarily requires every one of these diagnostics, but their absence limits the strength of overlap claims.  Limited overlap is a general concern for observational effect estimation, not evidence that this repository satisfies positivity \cite{crump_et_al_2009_limited_overlap}.
+
+\begin{longtable}{@{}p{0.15\textwidth}p{0.15\textwidth}p{0.18\textwidth}p{0.20\textwidth}p{0.10\textwidth}@{}}
+\caption{Planned overlap and support diagnostic design; this table contains no selected numerical results.}
+\label{tab:overlap-support-design}\\
+\toprule
+Diagnostic & Repository source & What it assesses & What it does not establish & Result status \\
+\midrule
+\endfirsthead
+\toprule
+Diagnostic & Repository source & What it assesses & What it does not establish & Result status \\
+\midrule
+\endhead
+Treated/control counts, pairs, and match rate & \texttt{matching/global\_summary.csv}; per-treatment summaries & Whether the implemented matcher found comparison pairs & Propensity overlap, covariate balance, or positivity & archived; indirect only \\
+Final Hamming distance and sufficient-pair flags & \texttt{matching\_causal\_effect.py}; matching summaries & Similarity under the binary matching representation and support warnings & Similarity in the original covariate space or a target-population guarantee & implemented; archived \\
+Matching failure reason & Per-treatment summaries; cross-run matching-failure table & Why a matching contrast was not produced & A zero effect or absence of an exposure effect & archived \\
+Propensity/common-support and balance diagnostics & Approved archive search & Dedicated treatment-probability and pre/post-match balance evidence & Any conclusion about their value in a particular run & not found \\
+Selected thesis support display & Stage 4.6A manifest and result-selection review & Which verified diagnostic is appropriate for presentation & Empirical positivity without a dedicated diagnostic & requires Stage 4.6A selection \\
+\bottomrule
+\end{longtable}
+
+\StagePlaceholder{[RESULT-SELECTION REQUIRED: select the thesis-primary overlap and support diagnostics after the Stage 4.6A manifest audit]}
+\StagePlaceholder{[FIGURE REQUIRED: generate or recover a dedicated overlap/common-support diagnostic before claiming empirical positivity]}
 
 \section{Sensitivity and Robustness Values}
 \label{sec:robustness-sensitivity-validation-design:sensitivity-robustness-values}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Section ID: C8.2.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
-% [FIGURE REQUIRED]
-% Source plan: F-SENS-SELECT in thesis-writing/planning/figure_plan.md.
+
+The repository separates several evidence layers that should not be collapsed into the statement that an estimator ``produced sensitivity results'': (1) estimator-method availability recorded during fitting; (2) values called directly from the fitted estimator during training; (3) serialized estimator parameters or residuals; (4) later saved-artifact analysis; (5) a fallback or reconstructed diagnostic; (6) benchmark-confounder comparison; and (7) a rendered sensitivity contour.  Robustness-value and omitted-variable-bias sensitivity concepts provide a useful framework for this work \cite{cinelli_hazlett_2020_sensitivity,chernozhukov_et_al_2026_ovb_causal_ml}, but these references do not establish the correctness of local artifacts or assumptions.
+
+During non-PFN fitting, \texttt{cate\_estimation.py} records whether \texttt{robustness\_value}, \texttt{sensitivity\_interval}, \texttt{sensitivity\_summary}, \texttt{summary}, and residual access are available.  It records direct-call values, source labels, unavailable-API errors, a serializable sensitivity-parameter snapshot when exposed, residual availability, estimator metadata, artifact schema version, and package/environment fields.  The per-treatment model artifact and the run-level control-message CSV preserve these fields.  A non-null value must therefore be interpreted together with its recorded source and status; it is not enough to inspect a numerical cell alone.  EconML is the relevant software context for the DML and causal-forest branches, distinct from a claim that the software validates local identification \cite{oprescu_et_al_2019_econml}.
+
+The saved-artifact analysis requires a CATE result directory, then loads available model artifacts and reconstructs the relevant latent-tag and processed-data inputs.  It first considers saved training-direct information and loaded-estimator calls, and it records residual-dependent calculations, benchmark-variable availability, per-treatment reports/CSVs, contours, warnings, and run-level aggregation.  A report can be partial or failed; archived stage completion alone does not imply complete sensitivity information for every treatment.
+
+For clarity, this thesis uses \emph{estimator-native} for a method called on the fitted estimator, \emph{saved-training direct} for that value preserved by the training artifact, and \emph{saved-artifact recomputed} for a later direct call or reconstruction.  A \emph{fallback diagnostic} is a separately labelled calculation using serialized or residual-space information when the desired estimator API or serialized object is unavailable.  \emph{Unavailable}, \emph{partial}, \emph{failed}, and \emph{not applicable} are status outcomes, not numerical sensitivity values.  A fallback exists to retain diagnostic information across version and serialization limitations, but it depends on its own reconstruction assumptions and cannot be presented as identical to an estimator-native calculation.  The Results chapter must report the source/status field alongside every selected sensitivity quantity.
+
+Benchmark-confounder analysis seeks an interpretable scale: it compares a hypothetical omitted-confounding strength with an observed candidate covariate benchmark.  The analysis checks candidate-variable availability, records the selected benchmark and source when possible, and records missing or unimplemented benchmark paths rather than treating them as null evidence.  Such a comparison can expose sensitivity; it cannot show that an observed benchmark bounds every possible unmeasured confounder.
+
+The CausalPFN branch does not implement the same EconML residual, interval, sensitivity, or permutation workflow.  Its missing diagnostics are therefore not zero sensitivity or robustness.  The citation and validation limitation for CausalPFN stated in Chapter~\ref{chap:causal-graph-effect-estimation-methodology} remains in force.
+
+\begin{longtable}{@{}p{0.12\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.15\textwidth}p{0.14\textwidth}p{0.12\textwidth}@{}}
+\caption{Sensitivity-diagnostic design and interpretation boundary.}
+\label{tab:sensitivity-diagnostic-design}\\
+\toprule
+Diagnostic type & Source stage & Applicable estimators & Required saved object & Output form & Interpretation boundary \\
+\midrule
+\endfirsthead
+\toprule
+Diagnostic type & Source stage & Applicable estimators & Required saved object & Output form & Interpretation boundary \\
+\midrule
+\endhead
+Method availability & CATE fitting & EconML branches & Fitted estimator metadata & Boolean availability and errors & API availability is not a diagnostic value \\
+Saved-training direct & CATE fitting & EconML branches where callable & Schema-versioned model artifact & Value plus source/error fields & Interpret only as labelled direct training-time evidence \\
+Saved-artifact recomputed & Saved-CATE analysis & Non-PFN when artifact/environment permits & Model artifact and reconstructed inputs & CSV/report source fields & Later recomputation can differ from training-time access \\
+Fallback diagnostic & Saved-CATE analysis & Non-PFN when direct paths fail & Serialized parameters or residual information & Explicit fallback source and warnings & Not identical to estimator-native output \\
+Benchmark-confounder comparison & Saved-CATE analysis & Non-PFN where candidates are available & Candidate covariate and analysis inputs & Benchmark CSV/report & Gives a scale, not a bound on all unmeasured confounding \\
+Sensitivity contour & Saved-CATE analysis & Non-PFN where parameters permit & Parameters/residual reconstruction and plot path & Rendered diagnostic figure & Requires source and status validation before selection \\
+CausalPFN diagnostic status & Orchestration & CausalPFN & N/A for EconML workflow & Skipped/not applicable status & Absence is not a zero diagnostic \\
+\bottomrule
+\end{longtable}
+
+\StagePlaceholder{[RESULT-SELECTION REQUIRED: identify the thesis-primary estimator, dataset, sampling condition, exposure, and source status for any sensitivity contour]}
+\StagePlaceholder{[VALIDATION REQUIRED: distinguish estimator-native, saved-training, recomputed, and fallback sensitivity outputs for every selected treatment]}
 
 \section{Permutation Checks and Reproducibility Validation}
 \label{sec:robustness-sensitivity-validation-design:permutation-checks-reproducibility-validation}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Section ID: C8.3.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
-% [FIGURE REQUIRED]
-% Source plan: F-PERM-01 in thesis-writing/planning/figure_plan.md.
+
+The permutation script is a sanity-diagnostic wrapper around repeated CATE estimation.  For a treatment permutation, it copies the latent-tag dataframe and shuffles only the currently iterated treatment column.  The remaining latent columns, processed outcome data, graph input, dataset configuration, and estimator type are held fixed.  Each temporary latent CSV is passed to \texttt{cate\_estimation.py} in a subprocess, and the temporary directory is removed after the aggregate metrics are extracted.
+
+For an outcome permutation, the script copies the processed dataset structure and shuffles only the configured mortality outcome column in the outcome dataframe.  The time-series object, identifiers, latent-tag dataframe, graph input, dataset configuration, and estimator type remain unchanged.  One temporary outcome-pickle run yields treatment-level summaries for that trial, after which the temporary input and output directory are removed.  Both procedures derive deterministic trial seeds from a base seed, an experiment code, the treatment index where applicable, and the trial index.  Trial count, base seed, dataset, estimator, sampling condition, aggregation fields, warnings, and subprocess status must be verified for every selected archived run.  The archived non-PFN files expose trial and seed fields, but result selection remains deferred.
+
+The script captures nonzero subprocess return codes and summary-schema failures as errors rather than silently using incomplete trial data.  It supports the LinearDML and CausalForest paths; CausalPFN is excluded by the orchestrator from saved-CATE analysis and permutations.  The resulting aggregate CSVs are diagnostic artifacts, not final effect tables.  They can indicate whether similarly structured outputs arise after a key relationship is disrupted.  They do not prove that an original effect is causal, that the DAG is correct, that confounding is controlled, that the estimator is calibrated, that the proxy exposure is clinically valid, or that an original result is unbiased.  In this limited sense they are negative-control-like disruptions or null-reference exercises, not formal randomization tests.  A model--identify--estimate--refute workflow motivates such checks at a general level, but does not show that this repository implements DoWhy \cite{sharma_kiciman_2020_dowhy}.
+
+Configuration validation is a separate reproducibility control.  The Python and shell validators check the compact dataset-config schema and invoke active scripts with \texttt{--validate-config-only}; router tests additionally exercise command parsing and construction.  The causal orchestrator writes \texttt{run\_summary.json} with resolved stage commands, paths, statuses, timestamps, and expected outputs, while CATE and saved-analysis control-message CSVs record field-level provenance.  These are different evidence layers: schema/config validation, command-construction validation, stage execution status, artifact existence, and scientific validity.  A successful config check does not prove full execution, and a successful stage status does not validate a causal claim.
+
+\begin{longtable}{@{}p{0.12\textwidth}p{0.14\textwidth}p{0.16\textwidth}p{0.12\textwidth}p{0.14\textwidth}p{0.12\textwidth}@{}}
+\caption{Permutation and reproducibility-validation design.}
+\label{tab:permutation-reproducibility-design}\\
+\toprule
+Check & Disrupted element & Held-fixed elements & Output & Primary purpose & Limitation \\
+\midrule
+\endfirsthead
+\toprule
+Check & Disrupted element & Held-fixed elements & Output & Primary purpose & Limitation \\
+\midrule
+\endhead
+Treatment permutation & One iterated treatment column in copied latent tags & Other latent columns, outcome data, graph, config, estimator & Aggregate treatment-permutation CSV & Sanity check after exposure-label disruption & Does not establish identification or calibration \\
+Outcome permutation & Mortality column in copied processed outcome dataframe & Time series, IDs, latent tags, graph, config, estimator & Aggregate outcome-permutation CSV & Null-reference exercise after outcome disruption & Does not validate proxy exposure or DAG \\
+Configuration validation & None; configuration only & Compact schema and declared script contracts & PASS/FAIL and resolved-field output & Detect invalid/missing config fields & Does not load data or execute analysis \\
+Run-summary stage status & None; archived orchestration record & Stage command, log, expected outputs & \texttt{run\_summary.json} & Execution/provenance audit & Status is not scientific validity \\
+Artifact-schema check & None; header/status inspection & Selected artifact path and producing-stage context & Manifest validation record & Prevent wrong-file or wrong-granularity use & Does not establish result correctness \\
+\bottomrule
+\end{longtable}
+
+\StagePlaceholder{[VALIDATION REQUIRED: verify archived permutation trial counts, seeds, estimator type, and subprocess status for every selected run]}
+\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: determine whether permutation checks are main-text evidence or appendix diagnostics]}
