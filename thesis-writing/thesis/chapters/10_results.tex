@@ -1,88 +1,326 @@
 \chapter{Results}
 \label{chap:results}
 
-\section{Data and Cohort Summary}
-\label{sec:results:data-cohort-summary}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.1.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+This chapter reports only results admitted through the frozen Stage~4.6A checked packet.  Original-cohort analyses are primary: CausalForestDML is the primary causal-model estimator, LinearDML is the secondary comparator, and CausalPFN is exploratory.  All prespecified dataset-specific proxy-state exposures are retained; none was selected according to its observed result.  Detailed robustness outputs are summarized selectively, and outcome-downsampled analyses are treated only as a robustness perspective.  Every model-estimated contrast remains conditional on the causal assumptions and proxy-exposure interpretation in Chapter~\ref{chap:causal-graph-effect-estimation-methodology}.
 
-\section{Proxy Prevalence and Co-Occurrence}
-\label{sec:results:proxy-prevalence-cooccurrence}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.2.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+\section{Analysis-Population Counts}
+\label{sec:results:analysis-population-counts}
+
+The original causal-analysis population contained 26,845 MIMIC-III records and 7,993 PhysioNet records (Table~\ref{tab:results-analysis-populations}).  MIMIC-III therefore contributed 18,852 more records and was approximately 3.36 times as large.  These are causal-analysis population counts, not reconstructed raw cohort totals.  Pipeline-stage artifacts have different contracts: prediction-export, proxy-label, majority-vote, and causal-analysis counts must not be interpreted as one universally identical cohort count.
+
+\begin{table}[htbp]
+\centering
+\caption{Original causal-analysis populations admitted to the primary analyses.  Counts describe model rows in the checked original-cohort runs, not raw-source cohort totals.}
+\label{tab:results-analysis-populations}
+\small
+\begin{tabular}{@{}llllr@{}}
+\toprule
+Dataset & Pipeline population & Sampling & Records & Scope \\
+\midrule
+MIMIC-III & Causal-analysis model rows & Original & 26,845 & Primary \\
+PhysioNet 2012 & Causal-analysis model rows & Original & 7,993 & Primary \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Predictive Performance}
 \label{sec:results:predictive-performance}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.3.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-\section{Learning Curves}
-\label{sec:results:learning-curves}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.4.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+The checked archive contains ten completed dataset--model test combinations spanning STraTS, GRU, GRU-D, TCN, and SAnD (Table~\ref{tab:results-predictive-performance}).  On MIMIC-III, STraTS had the smallest archived test loss and the highest archived test AUROC, AUPRC, and minRP.  On PhysioNet, GRU-D led the same four archived metrics.  Thus the leading family differed by dataset, although within each dataset the leader did not depend on which of these four metrics was used.  Rankings among the remaining models did vary by metric; the table therefore does not support a universal model ordering or a claim of statistical superiority.
 
-\section{Mortality Prediction From Proxy States}
-\label{sec:results:mortality-prediction-from-proxy-states}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.5.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+The numerical rows are test summaries and not validation values.  Their summary and paired log values agreed within the checked tolerance, but the archived train/validation/test split manifest and checkpoint-to-export lineage remain incomplete.  No confidence intervals or between-model significance tests were available in the checked packet.
 
-\section{Matching Results}
-\label{sec:results:matching-results}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.6.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+\begingroup
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{@{}llrrrr@{}}
+\caption{Archived predictive test performance for the five included model families.  AUROC, AUPRC, and minRP are macro-averaged across non-degenerate proxy-label targets on the archived test split.}
+\label{tab:results-predictive-performance}\\
+\toprule
+Dataset & Model & Test loss & Test AUROC & Test AUPRC & Test minRP \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Model & Test loss & Test AUROC & Test AUPRC & Test minRP \\
+\midrule
+\endhead
+MIMIC-III & STraTS & 0.348 & 0.905 & 0.869 & 0.795 \\
+MIMIC-III & GRU & 0.386 & 0.881 & 0.840 & 0.770 \\
+MIMIC-III & GRU-D & 0.404 & 0.884 & 0.841 & 0.773 \\
+MIMIC-III & TCN & 0.414 & 0.867 & 0.823 & 0.758 \\
+MIMIC-III & SAnD & 0.409 & 0.880 & 0.836 & 0.767 \\
+\addlinespace
+PhysioNet 2012 & STraTS & 0.341 & 0.915 & 0.877 & 0.818 \\
+PhysioNet 2012 & GRU & 0.397 & 0.915 & 0.897 & 0.831 \\
+PhysioNet 2012 & GRU-D & 0.331 & 0.918 & 0.905 & 0.835 \\
+PhysioNet 2012 & TCN & 0.477 & 0.899 & 0.875 & 0.811 \\
+PhysioNet 2012 & SAnD & 0.436 & 0.914 & 0.886 & 0.820 \\
+\bottomrule
+\end{longtable}
+\endgroup
 
-\section{CATE Estimates}
-\label{sec:results:cate-estimates}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[SUPERVISOR DECISION REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.7.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+\section{Primary CausalForestDML Results}
+\label{sec:results:primary-causal-forest}
 
-\section{Heterogeneity Diagnostics}
-\label{sec:results:heterogeneity-diagnostics}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.8.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+Tables~\ref{tab:results-forest-mimic} and~\ref{tab:results-forest-physionet} report every prespecified original-cohort proxy-state exposure.  The reported quantity is the \emph{mean model-estimated CATE over the analyzed sample}, on the model outcome scale.  It is neither a risk ratio nor an unqualified population-average causal effect.  Exposure prevalence is the proportion of analyzed records carrying the corresponding binary proxy-state tag.  The adjustment-set codes refer to the observed variables archived for each exposure; identifiability with the available nodes remained unresolved for every checked row.
 
-\section{Overlap and Support}
-\label{sec:results:overlap-support}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.9.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+For MIMIC-III, all nine archived means were positive.  The largest mean was for \nolinkurl{LAT_CARDIAC_STRAIN} (0.220), followed by \nolinkurl{LAT_INFLAMMATION_SEPSIS} (0.161).  The smallest were for \nolinkurl{LAT_METABOLIC_DERANGEMENT} (0.020) and \nolinkurl{LAT_SHOCK} (0.021).  This ordering is descriptive and does not establish clinical importance or statistical significance.
 
-\section{Sensitivity}
-\label{sec:results:sensitivity}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.10.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}p{0.34\textwidth}rrlp{0.16\textwidth}@{}}
+\caption{Primary original-cohort MIMIC-III CausalForestDML results ($n=26{,}845$).  Prevalence and mean model-estimated CATE are proportions on their archived scales.}
+\label{tab:results-forest-mimic}\\
+\toprule
+Proxy-state exposure & Prevalence & Mean CATE & Adjustment & Status \\
+\midrule
+\endfirsthead
+\toprule
+Proxy-state exposure & Prevalence & Mean CATE & Adjustment & Status \\
+\midrule
+\endhead
+\nolinkurl{LAT_CARDIAC_STRAIN} & 0.178 & 0.220 & M1 & Identifiability unresolved \\
+\nolinkurl{LAT_INFLAMMATION_SEPSIS} & 0.472 & 0.161 & M0 & Identifiability unresolved \\
+\nolinkurl{LAT_HEPATIC_COAG_DYSFUNCTION} & 0.241 & 0.098 & M2 & Identifiability unresolved \\
+\nolinkurl{LAT_RENAL_DYSFUNCTION} & 0.363 & 0.091 & M3 & Identifiability unresolved \\
+\nolinkurl{LAT_GLOBAL_SEVERITY} & 0.719 & 0.062 & M4 & Identifiability unresolved \\
+\nolinkurl{LAT_RESPIRATORY_FAILURE} & 0.590 & 0.036 & M5 & Identifiability unresolved \\
+\nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & 0.434 & 0.034 & M5 & Identifiability unresolved \\
+\nolinkurl{LAT_SHOCK} & 0.540 & 0.021 & M6 & Identifiability unresolved \\
+\nolinkurl{LAT_METABOLIC_DERANGEMENT} & 0.373 & 0.020 & M7 & Identifiability unresolved \\
+\bottomrule
+\end{longtable}
+\endgroup
 
-\section{Permutation}
-\label{sec:results:permutation}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.11.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+The MIMIC adjustment codes are: M0, no observed adjustment variables archived; M1, age, gender, and chronic burden; M2, inflammation/sepsis and shock; M3, chronic burden and shock; M4, age, gender, chronic burden, and inflammation/sepsis; M5, age, gender, chronic burden, global severity, and inflammation/sepsis; M6, age, gender, cardiac strain, chronic burden, and inflammation/sepsis; and M7, global severity, renal dysfunction, respiratory failure, and shock.  These are observed adjustment-variable records, not proof that all confounding was controlled.
+
+For PhysioNet, nine archived means were positive and the shock mean was negative.  Renal dysfunction had the largest mean (0.120), followed by cardiac injury/strain (0.112) and global severity (0.108).  Coagulation/hematologic dysfunction was small and positive (0.011), while shock was $-0.014$.  Again, ordering by an archived mean is descriptive only.
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}p{0.34\textwidth}rrlp{0.16\textwidth}@{}}
+\caption{Primary original-cohort PhysioNet CausalForestDML results ($n=7{,}993$).  Prevalence and mean model-estimated CATE are proportions on their archived scales.}
+\label{tab:results-forest-physionet}\\
+\toprule
+Proxy-state exposure & Prevalence & Mean CATE & Adjustment & Status \\
+\midrule
+\endfirsthead
+\toprule
+Proxy-state exposure & Prevalence & Mean CATE & Adjustment & Status \\
+\midrule
+\endhead
+\nolinkurl{LAT_RENAL_DYSFUNCTION} & 0.230 & 0.120 & P1 & Identifiability unresolved \\
+\nolinkurl{LAT_CARDIAC_INJURY_STRAIN} & 0.355 & 0.112 & P2 & Identifiability unresolved \\
+\nolinkurl{LAT_GLOBAL_SEVERITY} & 0.777 & 0.108 & P3 & Identifiability unresolved \\
+\nolinkurl{LAT_HEPATIC_DYSFUNCTION} & 0.142 & 0.091 & P1 & Identifiability unresolved \\
+\nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & 0.659 & 0.082 & P0 & Identifiability unresolved \\
+\nolinkurl{LAT_METABOLIC_DERANGEMENT} & 0.558 & 0.078 & P4 & Identifiability unresolved \\
+\nolinkurl{LAT_INFLAMMATION_SEPSIS_BURDEN} & 0.563 & 0.072 & P0 & Identifiability unresolved \\
+\nolinkurl{LAT_RESPIRATORY_FAILURE} & 0.614 & 0.065 & P0 & Identifiability unresolved \\
+\nolinkurl{LAT_COAG_HEME_DYSFUNCTION} & 0.395 & 0.011 & P5 & Identifiability unresolved \\
+\nolinkurl{LAT_SHOCK} & 0.696 & $-0.014$ & P6 & Identifiability unresolved \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+The PhysioNet adjustment codes are: P0, no observed adjustment variables archived; P1, ICU-type indicators 1--4, cardiac injury/strain, inflammation/sepsis burden, and shock; P2, ICU-type indicators 1--4; P3, age, gender, weight, ICU-type indicators 1--4, chronic baseline risk, and inflammation/sepsis burden; P4, renal dysfunction, respiratory failure, and shock; P5, inflammation/sepsis burden and shock; and P6, ICU-type indicators 1--4, cardiac injury/strain, and inflammation/sepsis burden.  The same qualification about incomplete confounding control applies.
+
+The three author-selected main-result PNGs were not inserted.  The frozen figure-selection register classifies both original-cohort ranking images as \texttt{BLOCKED\_VALUE\_CONFLICT} because their displayed labels implement a different estimator aggregation from the image description, and it classifies the direction-count image the same way because it combines original and outcome-downsampled analyses.  Presenting those images as support for the checked tables would conflict with the frozen packet.
+
+\section{Matching and Empirical Support}
+\label{sec:results:matching-empirical-support}
+
+Matching was identical across the three estimator run families within a dataset and sampling condition, so Table~\ref{tab:results-matching-support} reports the cross-run-consistent original-cohort rows once, as supporting evidence for the primary CausalForestDML analysis.  The numerical contrast is a \emph{descriptive matched-pair outcome difference}.  Treated and control record counts were unavailable in the checked table and are left unreported rather than inferred.
+
+Eight of nine MIMIC exposures and seven of ten PhysioNet exposures produced a matched-pair summary.  Matching failed for MIMIC inflammation/sepsis and for PhysioNet inflammation/sepsis burden, neurologic dysfunction, and respiratory failure because no binary matching columns remained after preprocessing.  A failure is not a zero effect.  Among successful rows, final allowed Hamming distance ranged from 0 to 2; increased allowed distance represents weaker exact similarity in the binary matching representation.  Three successful rows were flagged as not reaching the configured sufficient-pair criterion: global severity in both datasets and PhysioNet shock.
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}lp{0.32\textwidth}rrrrp{0.20\textwidth}@{}}
+\caption{Original-cohort descriptive matching and empirical-support summaries.  ``Difference'' is the descriptive matched-pair outcome difference; it is not a model-estimated CATE.}
+\label{tab:results-matching-support}\\
+\toprule
+Dataset & Proxy-state exposure & Pairs & Rate & Distance & Difference & Support/status \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Proxy-state exposure & Pairs & Rate & Distance & Difference & Support/status \\
+\midrule
+\endhead
+MIMIC & \nolinkurl{LAT_CARDIAC_STRAIN} & 4,769 & 1.000 & 0 & 0.345 & Sufficient \\
+MIMIC & \nolinkurl{LAT_GLOBAL_SEVERITY} & 7,537 & 0.390 & 1 & 0.075 & Weak: insufficient-pair flag \\
+MIMIC & \nolinkurl{LAT_HEPATIC_COAG_DYSFUNCTION} & 6,478 & 1.000 & 0 & 0.133 & Sufficient \\
+MIMIC & \nolinkurl{LAT_METABOLIC_DERANGEMENT} & 5,061 & 0.506 & 0 & 0.037 & Sufficient \\
+MIMIC & \nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & 6,275 & 0.539 & 0 & 0.027 & Sufficient \\
+MIMIC & \nolinkurl{LAT_RENAL_DYSFUNCTION} & 8,915 & 0.915 & 0 & 0.134 & Sufficient \\
+MIMIC & \nolinkurl{LAT_RESPIRATORY_FAILURE} & 10,998 & 0.694 & 2 & 0.106 & Sufficient; distance 2 \\
+MIMIC & \nolinkurl{LAT_SHOCK} & 10,380 & 0.717 & 1 & 0.039 & Sufficient \\
+MIMIC & \nolinkurl{LAT_INFLAMMATION_SEPSIS} & -- & -- & -- & -- & Failed: no binary matching columns \\
+\addlinespace
+PhysioNet & \nolinkurl{LAT_CARDIAC_INJURY_STRAIN} & 2,840 & 1.000 & 0 & 0.134 & Sufficient \\
+PhysioNet & \nolinkurl{LAT_COAG_HEME_DYSFUNCTION} & 1,763 & 0.558 & 0 & 0.0017 & Sufficient \\
+PhysioNet & \nolinkurl{LAT_GLOBAL_SEVERITY} & 1,782 & 0.287 & 1 & 0.095 & Weak: insufficient-pair flag \\
+PhysioNet & \nolinkurl{LAT_HEPATIC_DYSFUNCTION} & 1,133 & 1.000 & 0 & 0.137 & Sufficient \\
+PhysioNet & \nolinkurl{LAT_METABOLIC_DERANGEMENT} & 3,378 & 0.757 & 2 & 0.073 & Sufficient; distance 2 \\
+PhysioNet & \nolinkurl{LAT_RENAL_DYSFUNCTION} & 1,841 & 1.000 & 0 & 0.154 & Sufficient \\
+PhysioNet & \nolinkurl{LAT_SHOCK} & 2,433 & 0.438 & 1 & 0.010 & Weak: insufficient-pair flag \\
+PhysioNet & \nolinkurl{LAT_INFLAMMATION_SEPSIS_BURDEN} & -- & -- & -- & -- & Failed: no binary matching columns \\
+PhysioNet & \nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & -- & -- & -- & -- & Failed: no binary matching columns \\
+PhysioNet & \nolinkurl{LAT_RESPIRATORY_FAILURE} & -- & -- & -- & -- & Failed: no binary matching columns \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+For the 15 successful rows, matching and CausalForestDML shared direction in 14 cases.  PhysioNet shock was the exception: its matched-pair difference was positive (0.010), while its model-estimated mean was negative ($-0.014$).  This is a descriptive comparison, not independent causal validation.  A high match rate does not establish positivity; the procedure is greedy and representation-dependent, and no dedicated propensity-overlap or balance figure was available.
+
+\section{LinearDML Comparison}
+\label{sec:results:linear-dml-comparison}
+
+LinearDML and CausalForestDML agreed in mean-effect direction for all 19 original-cohort dataset--exposure pairs (Table~\ref{tab:results-linear-comparison}).  This agreement does not imply equal magnitude or ranking.  In MIMIC, CausalForestDML estimated a larger cardiac-strain mean by approximately 0.033, while LinearDML estimated a larger global-severity mean by approximately 0.018; renal and hepatic/coagulation dysfunction exchanged third and fourth positions.  In PhysioNet, the largest absolute differences were for hepatic dysfunction (approximately 0.030) and renal dysfunction (approximately 0.029), and the top-ranked mean changed from renal dysfunction under CausalForestDML to cardiac injury/strain under LinearDML.  LinearDML imposes a simpler final effect structure; similarity between these archived means does not show that either estimator is unbiased.
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}lp{0.43\textwidth}rrc@{}}
+\caption{Original-cohort comparison of mean model-estimated CATE from CausalForestDML and LinearDML.}
+\label{tab:results-linear-comparison}\\
+\toprule
+Dataset & Proxy-state exposure & Forest & Linear & Same direction \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Proxy-state exposure & Forest & Linear & Same direction \\
+\midrule
+\endhead
+MIMIC & \nolinkurl{LAT_CARDIAC_STRAIN} & 0.220 & 0.188 & Yes \\
+MIMIC & \nolinkurl{LAT_INFLAMMATION_SEPSIS} & 0.161 & 0.161 & Yes \\
+MIMIC & \nolinkurl{LAT_HEPATIC_COAG_DYSFUNCTION} & 0.098 & 0.083 & Yes \\
+MIMIC & \nolinkurl{LAT_RENAL_DYSFUNCTION} & 0.091 & 0.089 & Yes \\
+MIMIC & \nolinkurl{LAT_GLOBAL_SEVERITY} & 0.062 & 0.080 & Yes \\
+MIMIC & \nolinkurl{LAT_RESPIRATORY_FAILURE} & 0.036 & 0.039 & Yes \\
+MIMIC & \nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & 0.034 & 0.032 & Yes \\
+MIMIC & \nolinkurl{LAT_SHOCK} & 0.021 & 0.021 & Yes \\
+MIMIC & \nolinkurl{LAT_METABOLIC_DERANGEMENT} & 0.020 & 0.018 & Yes \\
+\addlinespace
+PhysioNet & \nolinkurl{LAT_RENAL_DYSFUNCTION} & 0.120 & 0.091 & Yes \\
+PhysioNet & \nolinkurl{LAT_CARDIAC_INJURY_STRAIN} & 0.112 & 0.122 & Yes \\
+PhysioNet & \nolinkurl{LAT_GLOBAL_SEVERITY} & 0.108 & 0.107 & Yes \\
+PhysioNet & \nolinkurl{LAT_HEPATIC_DYSFUNCTION} & 0.091 & 0.060 & Yes \\
+PhysioNet & \nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & 0.082 & 0.076 & Yes \\
+PhysioNet & \nolinkurl{LAT_METABOLIC_DERANGEMENT} & 0.078 & 0.080 & Yes \\
+PhysioNet & \nolinkurl{LAT_INFLAMMATION_SEPSIS_BURDEN} & 0.072 & 0.071 & Yes \\
+PhysioNet & \nolinkurl{LAT_RESPIRATORY_FAILURE} & 0.065 & 0.063 & Yes \\
+PhysioNet & \nolinkurl{LAT_COAG_HEME_DYSFUNCTION} & 0.011 & 0.004 & Yes \\
+PhysioNet & \nolinkurl{LAT_SHOCK} & $-0.014$ & $-0.027$ & Yes \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\section{CausalPFN Exploratory Results}
+\label{sec:results:causal-pfn-exploratory}
+
+CausalPFN CATE execution completed for all 19 original-cohort comparisons.  The three estimators agreed in mean-effect direction for 18 of the 19 dataset--exposure comparisons: MIMIC was concordant for 9 of 9 and PhysioNet for 9 of 10 (Table~\ref{tab:results-pfn-comparison}).  The sole exception was PhysioNet \nolinkurl{LAT_SHOCK}: CausalForestDML was negative ($-0.014$), LinearDML was negative ($-0.027$), and CausalPFN was slightly positive (0.0041).
+
+CausalPFN reproduced the prevailing direction in nearly every comparison, supporting its promise as a complementary estimator within this pipeline.  This broad agreement is not complete agreement and does not establish estimator equivalence, superiority, causal validity, or interchangeable uncertainty quantification.  Its later sensitivity and permutation stages were intentionally skipped rather than failed, so it lacks the archived robustness-diagnostic family available for the DML estimators.  Its role remains exploratory, and the unresolved primary-citation limitation in Chapter~\ref{chap:causal-graph-effect-estimation-methodology} remains relevant.
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}lp{0.43\textwidth}rrc@{}}
+\caption{Original-cohort exploratory CausalPFN mean model-estimated CATE and direction agreement with both DML estimators.}
+\label{tab:results-pfn-comparison}\\
+\toprule
+Dataset & Proxy-state exposure & CausalPFN & Forest/Linear signs & All three agree \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Proxy-state exposure & CausalPFN & Forest/Linear signs & All three agree \\
+\midrule
+\endhead
+MIMIC & \nolinkurl{LAT_CARDIAC_STRAIN} & 0.259 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_INFLAMMATION_SEPSIS} & 0.149 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_HEPATIC_COAG_DYSFUNCTION} & 0.097 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_RENAL_DYSFUNCTION} & 0.087 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_GLOBAL_SEVERITY} & 0.073 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_RESPIRATORY_FAILURE} & 0.050 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & 0.035 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_SHOCK} & 0.032 & $+,+$ & Yes \\
+MIMIC & \nolinkurl{LAT_METABOLIC_DERANGEMENT} & 0.031 & $+,+$ & Yes \\
+\addlinespace
+PhysioNet & \nolinkurl{LAT_CARDIAC_INJURY_STRAIN} & 0.119 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_RENAL_DYSFUNCTION} & 0.111 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_HEPATIC_DYSFUNCTION} & 0.107 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_GLOBAL_SEVERITY} & 0.105 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_METABOLIC_DERANGEMENT} & 0.091 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_NEUROLOGIC_DYSFUNCTION} & 0.077 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_INFLAMMATION_SEPSIS_BURDEN} & 0.067 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_RESPIRATORY_FAILURE} & 0.063 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_COAG_HEME_DYSFUNCTION} & 0.025 & $+,+$ & Yes \\
+PhysioNet & \nolinkurl{LAT_SHOCK} & 0.0041 & $-,-$ & No \\
+\bottomrule
+\end{longtable}
+\endgroup
 
 \section{Cross-Dataset Comparison}
 \label{sec:results:cross-dataset-comparison}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[SUPERVISOR DECISION REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
-% Result slot: C10.12.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+MIMIC-III's original causal-analysis population was substantially larger: 26,845 versus 7,993 records, a difference of 18,852 and a ratio of approximately 3.36.  The larger analysis population can affect estimate stability, feasible model flexibility, and the amount of empirical support available; it does not make the MIMIC estimates automatically correct.  The checked outcome rates also differed (0.121 in MIMIC and 0.142 in PhysioNet), but these rates describe the analyzed original-cohort model rows rather than equivalent raw-source cohorts.
+
+Some proxy names suggest nominal alignment, including global severity, shock, respiratory failure, renal dysfunction, neurologic dysfunction, and metabolic derangement.  Others are only approximately corresponding project-defined states: MIMIC combines hepatic and coagulation dysfunction while PhysioNet separates them, and the inflammation/sepsis and cardiac constructs use dataset-specific names and rules.  Consequently, similarly named states are not assumed to be construct-equivalent.  Dataset era, measurement systems, variable availability, proxy rules, DAG structure, empirical support, and estimator behavior also differ.  No effects are pooled, averaged across datasets, or interpreted as evidence of biological inconsistency; detailed clinical interpretation is deferred to Chapter~11.
+
+\section{Robustness and Sensitivity}
+\label{sec:results:robustness-sensitivity}
+
+\subsection{Outcome-downsampled analyses}
+
+The outcome-downsampled analyses retained all outcome-positive records and sampled outcome-negative records, producing 6,486 MIMIC rows and 2,276 PhysioNet rows with sample outcome rates of 0.500.  These are different empirical populations from the original cohorts, so their mean estimates are neither pooled with nor treated as estimates of the same population quantity.
+
+Direction was preserved in 55 of 57 matched original-versus-downsampled estimator--exposure comparisons.  CausalForestDML retained direction for all 19 comparisons.  LinearDML changed direction only for PhysioNet \nolinkurl{LAT_COAG_HEME_DYSFUNCTION}, from 0.0041 to $-0.0174$; CausalPFN changed direction only for PhysioNet \nolinkurl{LAT_SHOCK}, from 0.0041 to $-0.0413$.  All 57 paired means changed numerically, so magnitude changes were widespread and not confined to the two sign changes.  This does not strengthen causal evidence because the sampled population changed.
+
+Matching availability did not change: MIMIC again had eight successful summaries and one failure, while PhysioNet had seven successful summaries and three failures.  Pair counts, match rates, distances, and descriptive differences nevertheless changed under downsampling.  Detailed downsampled values remain supplementary.
+
+\subsection{Sensitivity, permutation, and support diagnostics}
+
+For both CausalForestDML and LinearDML, the checked sensitivity family was partial for eight of nine MIMIC exposures and seven of ten PhysioNet exposures in each sampling condition.  It failed for MIMIC inflammation/sepsis and for the three PhysioNet exposures whose adjustment records were empty: inflammation/sepsis burden, neurologic dysfunction, and respiratory failure.  Available rows combine saved-training-direct values with later recomputation and custom reconstruction from residual parameters; the planned real benchmark extraction is marked unimplemented by design.  These source classifications prevent the values from being presented as a single estimator-native family.  CausalPFN sensitivity was intentionally skipped and is not equivalent to a zero diagnostic.
+
+Treatment- and outcome-permutation aggregate rows were available for every DML dataset--exposure--sampling combination, with ten archived trials and seed 42 in each row.  The checked packet records these as sanity diagnostics and supplies no new p-values.  They are not formal randomization tests and do not prove identification.  CausalPFN permutations were intentionally skipped.
+
+Table~\ref{tab:results-robustness-summary} summarizes availability rather than diagnostic magnitude.  Matching remains indirect, greedy, binary-representation-dependent support evidence.  No dedicated overlap or propensity figure, pre/post-match balance table, or empirical proof of positivity was available.  The principal warnings are the four exposure-specific matching failures per sampling-condition pair, three successful original rows with insufficient-pair flags, and the absence of an equivalent PFN diagnostic family.
+
+\begingroup
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}lllp{0.20\textwidth}p{0.22\textwidth}p{0.18\textwidth}@{}}
+\caption{Robustness and diagnostic availability.  Counts are exposure-level statuses, not effect estimates.}
+\label{tab:results-robustness-summary}\\
+\toprule
+Dataset & Estimator & Sampling & Matching & Sensitivity & Permutation \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Estimator & Sampling & Matching & Sensitivity & Permutation \\
+\midrule
+\endhead
+MIMIC & Forest & Original & 8 available; 1 failed & 8 partial; 1 failed & Treatment/outcome available \\
+MIMIC & Linear & Original & 8 available; 1 failed & 8 partial; 1 failed & Treatment/outcome available \\
+MIMIC & PFN & Original & 8 available; 1 failed & Intentional skip & Intentional skip \\
+MIMIC & Forest & Downsampled & 8 available; 1 failed & 8 partial; 1 failed & Treatment/outcome available \\
+MIMIC & Linear & Downsampled & 8 available; 1 failed & 8 partial; 1 failed & Treatment/outcome available \\
+MIMIC & PFN & Downsampled & 8 available; 1 failed & Intentional skip & Intentional skip \\
+\addlinespace
+PhysioNet & Forest & Original & 7 available; 3 failed & 7 partial; 3 failed & Treatment/outcome available \\
+PhysioNet & Linear & Original & 7 available; 3 failed & 7 partial; 3 failed & Treatment/outcome available \\
+PhysioNet & PFN & Original & 7 available; 3 failed & Intentional skip & Intentional skip \\
+PhysioNet & Forest & Downsampled & 7 available; 3 failed & 7 partial; 3 failed & Treatment/outcome available \\
+PhysioNet & Linear & Downsampled & 7 available; 3 failed & 7 partial; 3 failed & Treatment/outcome available \\
+PhysioNet & PFN & Downsampled & 7 available; 3 failed & Intentional skip & Intentional skip \\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\subsection{Result provenance boundary}
+
+The checked hashes and source paths support arithmetic transcription of the admitted archive rows, but they do not remove the archive's reproducibility limitations.  The \texttt{final-results/} tree is ignored or untracked in the main repository; exact numbered causal configuration files remain unavailable locally; some producing commits and archive-copy histories are incomplete; predictive split and checkpoint-to-export lineage is incomplete; and raw and processed data cannot be reproduced from the repository alone.  These limitations qualify reproducibility claims, not the arithmetic correspondence between the checked rows and the tables above.

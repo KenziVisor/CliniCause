@@ -1,219 +1,377 @@
-# Stage 4.6A-R — Author Decisions, Optional-Figure Audit, and Results-Packet Repair
+# Stage 4.6B — Draft the Numerical Results Chapter from the Frozen Checked Packet
 
 ## Model
 
 Use:
 
 ```text
-GPT-5.6 Terra
-Reasoning: High
-```
-
-## Task
-
-Perform a narrow repair and decision-freeze step before drafting Chapter 10.
-
-Expected latest commit:
-
-```text
-da200b7 adding figures
-```
-
-Its parent is expected to be:
-
-```text
-b4b1212 step 4.6A
-```
-
-Do not draft Chapter 10.
-
-The next stage after this repair is:
-
-```text
-Stage 4.6B
 GPT-5.6 Sol
 Reasoning: High
 ```
 
+## Task Declaration
+
+Implement this task as:
+
+```text
+Stage 4.6B — Draft Chapter 10 from the Frozen Stage 4.6A Results Packet
+```
+
+The latest approved commit is expected to be:
+
+```text
+5e6477a step 4.6A repair
+```
+
+Its immediate predecessors are expected to be:
+
+```text
+da200b7 adding figures
+b4b1212 step 4.6A
+```
+
+This stage drafts:
+
+```text
+thesis-writing/thesis/chapters/10_results.tex
+```
+
+The result hierarchy, figure selection, estimator roles, exposure policy, and terminology have already been decided by the thesis author.
+
+Do not reopen those decisions.
+
+The next stage after this task is:
+
+```text
+Stage 4.7 — Discussion, Limitations, Threats to Validity, Ethics, and Clinical Interpretation
+Model: GPT-5.6 Sol
+Reasoning: High
+```
+
+Do not begin Stage 4.7.
+
 ---
 
-## 1. Verify repository state
+# 1. Core Objective
 
-Run:
+Write a rigorous numerical Results chapter that:
+
+1. reports the verified analysis-population counts;
+2. reports predictive performance for the five model families actually used;
+3. presents original-cohort CausalForestDML results as the primary causal-model output;
+4. reports matching as descriptive matched-pair support evidence;
+5. compares the original-cohort LinearDML estimates with CausalForestDML;
+6. reports CausalPFN as an exploratory but meaningful complementary estimator;
+7. documents the broad directional agreement among all three estimators;
+8. compares MIMIC-III and PhysioNet without pooling non-equivalent results;
+9. discusses downsampled analyses as robustness analyses without making them a dominant thesis theme;
+10. summarizes sensitivity, permutation, and support diagnostics conservatively;
+11. inserts only the three author-selected main-text figures;
+12. preserves every major provenance and interpretation limitation.
+
+The chapter must distinguish clearly between:
+
+* observed numerical results;
+* model-estimated quantities;
+* descriptive matching summaries;
+* robustness diagnostics;
+* causal interpretation assumptions;
+* unresolved provenance limitations.
+
+Do not turn the Results chapter into a second Methods or Discussion chapter.
+
+---
+
+# 2. Mandatory Initial Verification
+
+From the repository root, run:
 
 ```bash
 git status --short
 git branch --show-current
-git log -8 --oneline
-git show --stat --oneline da200b7
-git diff --stat b4b1212..da200b7
+git log -9 --oneline
+git show --stat --oneline 5e6477a
+git diff --stat da200b7..5e6477a
 ```
 
-Confirm:
+Verify:
 
-* Stage 4.6A results files exist;
-* the optional figures are under `thesis-writing/figures-options/`;
-* there are 16 PNG files;
-* Chapter 10 remains undrafted;
-* the previous decision-freeze prompt was not applied.
+* `5e6477a` exists;
+* its message is `step 4.6A repair`;
+* it follows `da200b7 adding figures`;
+* `thesis-writing/logs/stage_4_6A_repair_report.md` exists;
+* `thesis-writing/results/figure_selection_register.md` exists;
+* the frozen checked CSVs exist;
+* Chapter 10 is still an undrafted skeleton;
+* no InterpNet occurrence remains in a thesis `.tex` file.
 
-Do not reset, clean, stage, commit, or push.
-
----
-
-## 2. Record the author-approved hierarchy
-
-Update:
-
-```text
-thesis-writing/results/results_decision_register.md
-thesis-writing/results/results_source_packet.md
-thesis-writing/results/results_manifest.md
-```
-
-Record these decisions:
-
-### Primary analysis population
-
-* Original cohort is primary.
-* Outcome-downsampled analyses are robustness/sensitivity analyses.
-* Discuss downsampling briefly and directly, but do not make it a dominant thesis theme.
-* Detailed downsampled results belong in supplementary material.
-* Never pool original and downsampled estimates.
-
-### Estimator hierarchy
-
-* CausalForestDML: primary.
-* LinearDML: secondary.
-* CausalPFN: exploratory but included in the main Results chapter after LinearDML.
-
-Do not choose this hierarchy based on observed effect magnitudes.
-
-### Exposure policy
-
-Report every prespecified dataset-specific proxy-state exposure from the original-cohort runs.
-
-Do not select exposures based on:
-
-* magnitude;
-* direction;
-* apparent significance;
-* estimator agreement;
-* perceived clinical interest after viewing results.
-
-### Effect wording
-
-Use:
-
-```text
-descriptive matched-pair outcome difference
-mean model-estimated CATE over the analyzed sample
-```
-
-Do not use:
-
-```text
-ATE
-confirmed ATT
-population-average causal effect
-risk ratio
-relative risk
-percent reduction
-```
-
-Omit normalized CATE from the main chapter.
-
-### Cross-dataset comparison
-
-* Compare datasets qualitatively and through aligned concepts only.
-* Do not pool estimates.
-* State explicitly that the original causal analysis populations contain:
-
-  * MIMIC: 26,845 records;
-  * PhysioNet: 7,993 records;
-  * difference: 18,852;
-  * MIMIC is approximately 3.36 times larger.
-* Label these as original causal-analysis population counts, not raw cohort totals.
-
----
-
-## 3. Approved Chapter 10 order
-
-Freeze this order:
-
-```text
-1. Analysis-population counts
-2. Predictive performance
-3. Primary CausalForestDML results
-4. Matching and empirical support
-5. LinearDML comparison
-6. CausalPFN exploratory results
-7. Cross-dataset comparison
-8. Robustness and sensitivity
-```
-
-Downsampling belongs within the final robustness section, not as a headline result section.
-
----
-
-## 4. Estimator-agreement statement
-
-Validate the original-cohort checked CATE rows and record the following supported conclusion:
-
-```text
-The three estimators agree in mean-effect direction for 18 of 19
-dataset–exposure comparisons.
-```
-
-Document:
-
-* MIMIC: 9 of 9 exposures directionally concordant;
-* PhysioNet: 9 of 10 exposures directionally concordant;
-* exception: PhysioNet `LAT_SHOCK`;
-* CausalForestDML and LinearDML are negative for that exposure;
-* CausalPFN is slightly positive.
-
-Approve this bounded positive statement:
-
-```text
-CausalPFN reproduced the prevailing direction in nearly every comparison,
-supporting its promise as a complementary estimator within this pipeline.
-```
-
-Also require:
-
-```text
-This broad agreement is not complete agreement and does not establish
-estimator equivalence, superiority, causal validity, or interchangeable
-uncertainty quantification.
-```
-
-State that CausalPFN lacks the archived downstream sensitivity and permutation diagnostics available for the DML estimators.
-
-Do not call CausalPFN failed.
-
----
-
-## 5. Remove InterpNet from the thesis
-
-Search:
+Run:
 
 ```bash
 grep -Rni "InterpNet\|interpnet" thesis-writing/thesis \
-  --include='*.tex'
+  --include='*.tex' || true
 ```
 
-Remove every InterpNet mention from the thesis draft, including:
+There must be no match.
 
-* Chapter 6 prose;
-* Chapter 6 model table;
-* Chapter 6 placeholders;
-* Chapter 9 experiment prose;
-* Chapter 9 experiment table;
-* Chapter 9 provenance discussion;
-* any other thesis chapter, front-matter, or appendix occurrence.
+Record the initial and final worktree states.
 
-Adjust surrounding prose and tables so that the predictive comparison contains only:
+Do not:
+
+* reset;
+* clean;
+* checkout another branch;
+* discard unrelated changes;
+* stage;
+* amend;
+* commit;
+* push.
+
+---
+
+# 3. Applicable Instructions and Thesis Context
+
+Inspect all applicable instructions, including:
+
+```text
+AGENTS.md
+final-results/AGENTS.md
+final-results/causal-outputs/AGENTS.md
+thesis-writing/thesis/README.md
+```
+
+Inspect the existing thesis chapters needed for terminology and cross-references:
+
+```text
+thesis-writing/thesis/chapters/04_data_preprocessing.tex
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
+thesis-writing/thesis/chapters/09_experimental_design.tex
+thesis-writing/thesis/chapters/10_results.tex
+```
+
+Use Chapters 4–9 for established definitions and methods.
+
+Do not repeat detailed algorithms, model architectures, graph construction, or sensitivity procedures in Chapter 10.
+
+Cross-reference them.
+
+---
+
+# 4. Frozen Numerical Source of Truth
+
+The sole routine numerical source for Chapter 10 is the frozen checked packet under:
+
+```text
+thesis-writing/results/
+```
+
+Inspect:
+
+```text
+results_manifest.csv
+results_manifest.md
+results_source_packet.md
+results_decision_register.md
+figure_selection_register.md
+results_checksums.sha256
+
+checked_cohort_candidates.csv
+checked_predictive_metrics.csv
+checked_predictive_exports.csv
+checked_proxy_prevalence.csv
+checked_proxy_cooccurrence.csv
+checked_proxy_mortality_association.csv
+checked_mortality_prediction.csv
+checked_matching_results.csv
+checked_matching_failures.csv
+checked_cate_candidates.csv
+checked_heterogeneity_candidates.csv
+checked_sensitivity_candidates.csv
+checked_permutation_candidates.csv
+checked_figure_candidates.csv
+```
+
+Also inspect:
+
+```text
+thesis-writing/logs/stage_4_6A_evidence_report.md
+thesis-writing/logs/stage_4_6A_repair_report.md
+thesis-writing/logs/deferred_fixes.md
+thesis-writing/logs/unresolved_placeholders.md
+```
+
+Rules:
+
+* Use checked CSV values rather than reopening raw result files.
+* Do not substitute values from seminar slides or figure labels for checked CSV values.
+* Do not use reduced manager summaries.
+* Do not use excluded, mislabeled, duplicate, failed, or blocked rows.
+* Do not use a row whose selection status excludes it from the relevant chapter role.
+* Preserve missing values as missing.
+* Do not infer an unavailable confidence interval.
+* Do not silently resolve a provenance caveat.
+
+A direct source result may be inspected only to investigate a genuine conflict in the frozen packet. Document every such inspection in the evidence report.
+
+---
+
+# 5. Numerical Transformation Policy
+
+Allowed transformations are limited to:
+
+* sorting rows for presentation;
+* replacing machine identifiers with readable proxy-state labels while retaining the exact identifier;
+* consistent display rounding;
+* calculating explicitly approved counts or simple comparisons;
+* calculating direction agreement from the checked mean-CATE values;
+* calculating the already approved MIMIC-versus-PhysioNet size difference and ratio;
+* formatting LaTeX tables.
+
+Do not calculate:
+
+* new p-values;
+* new confidence intervals;
+* pooled estimates;
+* cross-dataset averages;
+* cross-estimator averages;
+* new normalized effects;
+* new subgroup effects;
+* new robustness values;
+* new permutation statistics;
+* new predictive metrics;
+* new causal estimands.
+
+For every derived count or comparison, record:
+
+```text
+formula
+input checked file
+input rows
+output value
+```
+
+in the Stage 4.6B evidence report.
+
+---
+
+# 6. Rounding Policy
+
+Use source-exact values during validation.
+
+For thesis presentation:
+
+* show population counts as integers;
+* show AUROC, AUPRC, minRP, loss, treatment prevalence, match rate, and effect estimates with three decimal places unless this hides a substantively important small value;
+* use four decimal places where a three-decimal display would round a nonzero effect to zero;
+* do not convert decimals into percentages unless the table and prose state the conversion explicitly;
+* do not mix percentages and proportions in one column;
+* do not display excessive source precision.
+
+Record the exact source value behind every displayed rounded value in the evidence report.
+
+---
+
+# 7. Required Chapter Structure
+
+Use this exact major section order:
+
+```text
+1. Analysis-Population Counts
+2. Predictive Performance
+3. Primary CausalForestDML Results
+4. Matching and Empirical Support
+5. LinearDML Comparison
+6. CausalPFN Exploratory Results
+7. Cross-Dataset Comparison
+8. Robustness and Sensitivity
+```
+
+Section titles may be polished slightly, but their order and substantive roles must not change.
+
+Downsampling belongs within Section 8.
+
+Do not create a headline “Downsampling Results” section.
+
+---
+
+# 8. Chapter Opening
+
+Open Chapter 10 with a concise result-scope statement.
+
+Explain that:
+
+* the chapter reports only results admitted through the Stage 4.6A checked packet;
+* original-cohort analyses are primary;
+* CausalForestDML is primary;
+* LinearDML is secondary;
+* CausalPFN is exploratory;
+* all prespecified dataset-specific proxy-state exposures are retained;
+* no exposure was selected based on its observed result;
+* detailed robustness outputs are summarized selectively;
+* causal interpretation remains conditional on the assumptions in Chapter 7.
+
+Do not begin with a long methods recap.
+
+---
+
+# 9. Section 1 — Analysis-Population Counts
+
+## 9.1 Required causal-analysis counts
+
+Report directly:
+
+```text
+MIMIC-III original causal-analysis population: 26,845 records
+PhysioNet original causal-analysis population: 7,993 records
+Difference: 18,852 records
+MIMIC-to-PhysioNet ratio: approximately 3.36
+```
+
+State explicitly:
+
+* MIMIC’s original causal-analysis population is substantially larger;
+* these are causal-analysis population counts;
+* they are not reconstructed raw cohort totals;
+* pipeline-stage counts may refer to different artifact contracts;
+* prediction-export, proxy-label, majority-vote, and causal-analysis counts must not be represented as one identical cohort count.
+
+## 9.2 Required table
+
+Create a compact table with a label such as:
+
+```latex
+\label{tab:results-analysis-populations}
+```
+
+Suggested columns:
+
+```text
+Dataset
+Pipeline population
+Sampling condition
+Number of records
+Observed outcome rate
+Interpretation
+```
+
+Include only rows whose scope is clear in `checked_cohort_candidates.csv`.
+
+The original causal-analysis populations must be visually primary.
+
+Downsampled counts may be included in a separate lower panel or deferred to Section 8, but they must not visually dominate this opening table.
+
+Do not present an unavailable raw cohort total.
+
+---
+
+# 10. Section 2 — Predictive Performance
+
+## 10.1 Included model families
+
+Include exactly:
 
 ```text
 STraTS
@@ -223,51 +381,625 @@ TCN
 SAnD
 ```
 
-Do not describe InterpNet as missing, excluded, future work, implemented, or unavailable in the thesis.
-
-Historical audit and literature files may retain factual records, but the Stage 4.6B source packet must instruct Codex to ignore them.
-
-Resolve the InterpNet result decision as:
+for:
 
 ```text
-NOT PART OF THE THESIS PIPELINE — EXCLUDED FROM THESIS
+MIMIC-III
+PhysioNet
 ```
 
----
+There should be ten completed dataset–model combinations.
 
-## 6. Optional-figure audit
+Do not mention InterpNet anywhere.
 
-Inspect every PNG under:
+## 10.2 Metric source
+
+Use test rows selected as:
 
 ```text
-thesis-writing/figures-options/
+PRIMARY_MAIN_TEXT
 ```
+
+from:
+
+```text
+checked_predictive_metrics.csv
+```
+
+Report, when present:
+
+```text
+test AUROC
+test AUPRC
+test minRP
+test loss
+```
+
+Keep validation values out of the main predictive table unless needed solely to explain checkpoint selection.
+
+## 10.3 Required table
 
 Create:
 
-```text
-thesis-writing/results/figure_selection_register.md
+```latex
+\label{tab:results-predictive-performance}
 ```
 
-For every figure record:
+Suggested columns:
 
 ```text
-filename
-SHA-256
-width
-height
-figure type
-underlying checked source
-value-validation result
-author decision
-planned chapter or appendix
-required caption boundary
-provenance limitation
+Dataset
+Model
+Test loss
+Test AUROC
+Test AUPRC
+Test minRP
 ```
 
-The author decisions are fixed as follows.
+Group or sort rows consistently by dataset and model.
 
-### Main Results figures
+Do not:
+
+* call one model universally best based on a single metric;
+* imply statistical significance between model results;
+* treat validation metrics as test metrics;
+* infer confidence intervals;
+* overstate final split or checkpoint provenance.
+
+## 10.4 Narrative
+
+Summarize:
+
+* which models achieved the strongest values on each metric;
+* whether the same model leads across all metrics;
+* whether rankings differ by dataset;
+* how much the conclusions depend on the metric used.
+
+Use factual comparative language such as:
+
+```text
+highest archived test AUROC
+largest archived test AUPRC
+smallest archived test loss
+```
+
+Avoid:
+
+```text
+statistically superior
+significantly better
+clinically superior
+definitively best
+```
+
+State briefly that the archived split and checkpoint-to-export lineage remains incomplete.
+
+Do not insert predictive learning-curve figures in Chapter 10.
+
+They remain appendix selections.
+
+---
+
+# 11. Section 3 — Primary CausalForestDML Results
+
+## 11.1 Primary result set
+
+Use every row satisfying:
+
+```text
+estimator = CausalForestDML
+sampling_condition = original
+selection_status = PRIMARY_MAIN_TEXT
+```
+
+from:
+
+```text
+checked_cate_candidates.csv
+```
+
+Include all prespecified exposures:
+
+* nine MIMIC proxy-state exposures;
+* ten PhysioNet proxy-state exposures.
+
+Do not omit an exposure because:
+
+* its estimate is small;
+* its direction differs;
+* it has a support warning;
+* it is clinically awkward;
+* another estimator disagrees;
+* its result is less visually attractive.
+
+## 11.2 Required wording
+
+Use:
+
+```text
+mean model-estimated CATE over the analyzed sample
+```
+
+or a concise table header such as:
+
+```text
+Mean model-estimated CATE
+```
+
+Do not call the value:
+
+```text
+ATE
+population-average treatment effect
+average causal effect
+risk ratio
+relative risk
+percent mortality change
+```
+
+The result is on the model’s outcome scale.
+
+Do not convert it into a percentage-point claim unless Chapter 7 and the checked source unambiguously support that presentation and the conversion is explicitly explained.
+
+## 11.3 Primary tables
+
+Create separate dataset tables or a carefully designed multipanel longtable.
+
+Use labels such as:
+
+```latex
+\label{tab:results-forest-mimic}
+\label{tab:results-forest-physionet}
+```
+
+Include at minimum:
+
+```text
+Proxy-state exposure
+Exposure prevalence
+Mean model-estimated CATE
+Observed adjustment variables or concise adjustment-set reference
+Relevant caveat/status
+```
+
+The exact `LAT_*` identifier must remain recoverable, either in the displayed label or a table note.
+
+Do not show normalized CATE.
+
+Do not show unavailable interval bounds.
+
+## 11.4 Selected figures
+
+Copy without modification:
+
+```text
+thesis-writing/figures-options/mimic_non_downsampled_cate_ranking.png
+thesis-writing/figures-options/physionet_non_downsampled_cate_ranking.png
+```
+
+to:
+
+```text
+thesis-writing/thesis/figures/
+```
+
+Use stable names, preferably:
+
+```text
+mimic_non_downsampled_cate_ranking.png
+physionet_non_downsampled_cate_ranking.png
+```
+
+Verify copied-file hashes against the source files.
+
+Insert both into Section 3.
+
+Captions must state:
+
+* original cohort;
+* CausalForestDML;
+* mean model-estimated CATE;
+* all prespecified dataset-specific exposures are shown;
+* ranking is descriptive;
+* the figure does not establish clinical importance or statistical significance.
+
+Do not call the figures “treatment rankings” without explaining that exposures are proxy-state contrasts.
+
+---
+
+# 12. Section 4 — Matching and Empirical Support
+
+## 12.1 Source
+
+Use:
+
+```text
+checked_matching_results.csv
+checked_matching_failures.csv
+```
+
+Prioritize:
+
+```text
+CausalForestDML
+original cohort
+SUPPORTING_MAIN_TEXT
+```
+
+## 12.2 Terminology
+
+Use:
+
+```text
+descriptive matched-pair outcome difference
+```
+
+Describe matching fields as indirect empirical support evidence.
+
+Do not use:
+
+```text
+ATE
+confirmed ATT
+causal effect confirmed by matching
+positivity established
+balance proven
+```
+
+## 12.3 Required presentation
+
+Create a compact matching table or two dataset-specific tables.
+
+Include, when available:
+
+```text
+proxy-state exposure
+treated records
+control records
+matched pairs
+match rate
+final allowed Hamming distance
+descriptive matched-pair outcome difference
+support or failure status
+```
+
+Avoid an excessively wide table.
+
+Observed confounder details may be referenced to Chapter 7 or placed in a note rather than repeated in full.
+
+## 12.4 Failures and warnings
+
+Report all primary-run matching failures or weak-support warnings.
+
+State explicitly:
+
+* a matching failure is not a zero effect;
+* a high match rate does not establish positivity;
+* the matching procedure is greedy and representation-dependent;
+* increased allowed Hamming distance weakens exact similarity.
+
+Compare matching and model-estimated CATE directions only descriptively.
+
+Do not treat matching as an independent causal validation test.
+
+---
+
+# 13. Section 5 — LinearDML Comparison
+
+## 13.1 Source
+
+Use all rows satisfying:
+
+```text
+estimator = LinearDML
+sampling_condition = original
+selection_status = SECONDARY_MAIN_TEXT
+```
+
+## 13.2 Comparison objective
+
+Compare LinearDML with the primary CausalForestDML results.
+
+Verify directly whether the two estimators agree in direction for all 19 dataset–exposure pairs.
+
+Report the verified count.
+
+Do not claim model equivalence merely because directions agree.
+
+## 13.3 Presentation
+
+Use one concise comparative table or a compact summary paired with the later three-estimator table.
+
+Avoid reproducing every primary table in full unless required for exact numerical transparency.
+
+A suitable comparison table may include:
+
+```text
+Dataset
+Proxy-state exposure
+CausalForestDML mean CATE
+LinearDML mean CATE
+Direction agreement
+```
+
+State:
+
+* agreement in direction;
+* where magnitudes differ materially;
+* where the ranking of exposures differs;
+* that LinearDML imposes a simpler effect structure;
+* that similarity does not prove either estimate is unbiased.
+
+Do not calculate or report a new correlation coefficient unless it already exists in the checked packet.
+
+---
+
+# 14. Section 6 — CausalPFN Exploratory Results
+
+## 14.1 Source
+
+Use all rows satisfying:
+
+```text
+estimator = CausalPFN
+sampling_condition = original
+selection_status = EXPLORATORY_MAIN_TEXT
+```
+
+## 14.2 Required positive but bounded conclusion
+
+State, after direct validation:
+
+```text
+The three estimators agreed in mean-effect direction for 18 of the 19
+dataset–exposure comparisons.
+```
+
+Report:
+
+```text
+MIMIC: 9 of 9 directionally concordant
+PhysioNet: 9 of 10 directionally concordant
+```
+
+Identify the sole exception:
+
+```text
+PhysioNet LAT_SHOCK
+```
+
+State accurately:
+
+* CausalForestDML: negative mean estimate;
+* LinearDML: negative mean estimate;
+* CausalPFN: slightly positive mean estimate.
+
+Use this bounded positive statement:
+
+```text
+CausalPFN reproduced the prevailing direction in nearly every comparison,
+supporting its promise as a complementary estimator within this pipeline.
+```
+
+Immediately qualify it:
+
+```text
+This broad agreement is not complete agreement and does not establish
+estimator equivalence, superiority, causal validity, or interchangeable
+uncertainty quantification.
+```
+
+Also state:
+
+* CausalPFN CATE execution completed;
+* its later sensitivity and permutation stages were intentionally skipped;
+* these skips are not run failures;
+* it lacks the same archived robustness-diagnostic family available for the DML estimators;
+* its role remains exploratory;
+* the unresolved primary-citation limitation remains relevant.
+
+## 14.3 Required figure
+
+Copy without modification:
+
+```text
+thesis-writing/figures-options/cross_model_direction_counts.png
+```
+
+to:
+
+```text
+thesis-writing/thesis/figures/cross_model_direction_counts.png
+```
+
+Verify the hash after copying.
+
+Insert the figure in Section 6.
+
+Its caption must state:
+
+* original-cohort comparisons only;
+* comparison is based on sign of the mean model-estimated CATE;
+* 18 of 19 dataset–exposure pairs share the same direction across all three estimators;
+* direction agreement does not imply equal effect magnitude or uncertainty;
+* PhysioNet shock is the exception.
+
+Do not insert another estimator-agreement figure.
+
+---
+
+# 15. Section 7 — Cross-Dataset Comparison
+
+Compare MIMIC-III and PhysioNet cautiously.
+
+Required points:
+
+* MIMIC original causal-analysis population: 26,845;
+* PhysioNet original causal-analysis population: 7,993;
+* MIMIC has 18,852 more records;
+* MIMIC is approximately 3.36 times larger;
+* this difference affects estimate stability, model flexibility, and the amount of empirical support available, but it does not automatically make MIMIC estimates correct;
+* dataset-specific proxy sets and DAGs differ;
+* similarly named proxy states are not automatically identical constructs;
+* no numerical pooling is performed.
+
+Discuss only conceptually aligned patterns.
+
+Where proxy-state names have plausible alignment, use wording such as:
+
+```text
+nominally aligned proxy concept
+approximately corresponding project-defined state
+```
+
+Do not claim construct equivalence without evidence.
+
+Do not calculate a combined dataset effect.
+
+Do not present differences in effect magnitude as evidence of biological inconsistency without considering:
+
+* population size;
+* outcome prevalence;
+* measurement systems;
+* dataset era;
+* variable availability;
+* proxy rules;
+* DAG structure;
+* support;
+* estimator behavior.
+
+Keep detailed interpretation for Chapter 11.
+
+---
+
+# 16. Section 8 — Robustness and Sensitivity
+
+This section should be concise relative to the primary Results sections.
+
+## 16.1 Outcome-downsampled analyses
+
+Discuss the downsampled results directly but without making them a central headline.
+
+Use:
+
+```text
+checked_cate_candidates.csv
+checked_matching_results.csv
+checked_matching_failures.csv
+```
+
+with:
+
+```text
+sampling_condition = outcome-downsampled
+selection_status = ROBUSTNESS_APPENDIX
+```
+
+Explain:
+
+* these analyses retain all outcome-positive records and sample outcome-negative records;
+* they represent a different empirical population;
+* their sample outcome rate differs from the original cohort;
+* values must not be compared as though they estimate the same population quantity;
+* no pooling is performed;
+* the analyses are used as a robustness perspective.
+
+Summarize:
+
+* whether result directions are generally preserved;
+* which dataset–exposure–estimator combinations change direction;
+* whether magnitude changes are widespread;
+* whether matching availability changes.
+
+Simple direction-agreement counts may be calculated from the checked packet and must be logged.
+
+Do not list every downsampled numerical result in the main text.
+
+Do not imply that larger downsampled effects strengthen causal evidence.
+
+## 16.2 Sensitivity diagnostics
+
+Use:
+
+```text
+checked_sensitivity_candidates.csv
+```
+
+Summarize:
+
+* availability for CausalForestDML and LinearDML;
+* source/status classifications;
+* partial or unavailable rows;
+* benchmark-confounder availability;
+* distinction between estimator-native, saved-training, recomputed, and fallback diagnostics;
+* lack of equivalent PFN diagnostics.
+
+Do not present a sensitivity value without its source classification.
+
+Do not insert sensitivity-contour figures.
+
+Do not say sensitivity analysis validates the DAG or eliminates unmeasured confounding.
+
+## 16.3 Permutation diagnostics
+
+Use:
+
+```text
+checked_permutation_candidates.csv
+```
+
+Summarize:
+
+* treatment and outcome permutation availability;
+* original versus downsampled scope;
+* warnings or partial statuses;
+* PFN non-applicability;
+* role as a sanity diagnostic.
+
+Do not:
+
+* calculate new p-values;
+* call the procedure a formal randomization test;
+* claim that permutation behavior proves identification.
+
+## 16.4 Support limitations
+
+Summarize:
+
+* matching support and failures;
+* absence of a dedicated overlap or propensity figure;
+* no empirical proof of positivity;
+* number or type of important unresolved support warnings.
+
+## 16.5 Compact robustness table
+
+Create a compact status table with a label such as:
+
+```latex
+\label{tab:results-robustness-summary}
+```
+
+Suggested columns:
+
+```text
+Dataset
+Estimator
+Sampling condition
+Matching status
+Sensitivity status
+Permutation status
+Main interpretation
+```
+
+Avoid filling the table with every diagnostic number.
+
+Detailed values remain supplementary.
+
+---
+
+# 17. Figure Policy
+
+Insert exactly these three result figures:
 
 ```text
 mimic_non_downsampled_cate_ranking.png
@@ -275,24 +1007,7 @@ physionet_non_downsampled_cate_ranking.png
 cross_model_direction_counts.png
 ```
 
-Validation requirements:
-
-* compare every displayed value/count against the checked Stage 4.6A CSVs;
-* confirm the ranking figures use original-cohort results;
-* confirm the scale is mean model-estimated CATE, not normalized CATE;
-* confirm all prespecified exposures are shown;
-* confirm `cross_model_direction_counts.png` supports the 18-of-19 statement;
-* confirm it does not silently mix original and downsampled populations.
-
-If a selected image fails numerical validation, mark it:
-
-```text
-BLOCKED_VALUE_CONFLICT
-```
-
-Do not repair, redraw, or replace it during this stage.
-
-### Appendix figures
+Do not insert:
 
 ```text
 mimic_all_run_stability.png
@@ -301,183 +1016,125 @@ mortality_prediction_true_auroc_auprc.png
 permutation_null_check.png
 sensitivity_intervals.png
 shock_rule_tree.png
-```
-
-Caption boundaries:
-
-* all-run stability figures must separate original and downsampled populations;
-* mortality prediction is predictive association, not causal evidence;
-* permutation is a sanity diagnostic, not identification proof;
-* sensitivity intervals do not validate the DAG or eliminate confounding;
-* the shock tree is one illustrative proxy-rule example, not clinical validation.
-
-### Retain for later methods/background placement
-
-```text
 icu_scattered_events.png
 latent_state_tags.png
 majority_vote_tag_cleaning.png
-```
-
-Do not insert them during this stage.
-
-### Exclude from the thesis
-
-```text
 causal_dag_overview.png
 correlation_vs_causation.png
 mortality_prediction_metrics.png
 sensitivity_intervals_trimmed.png
 ```
 
-Reasons:
+The first group remains available for later appendix or methods placement.
 
-* redundant with verified dataset-specific DAGs;
-* generic rather than project-specific;
-* superseded by the corrected AUROC/AUPRC figure;
-* truncated visual range risks selective emphasis.
+The explicitly excluded figures must not appear anywhere in the thesis.
 
-Do not let Codex independently reverse these selections.
+Do not redraw or edit any PNG.
 
 ---
 
-## 7. Update checked-table statuses
+# 18. Required Tables
 
-Without changing any numerical value, update selection-status fields.
-
-### Predictive metrics
-
-* Test rows for STraTS, GRU, GRU-D, TCN, and SAnD:
-  `PRIMARY_MAIN_TEXT`.
-* Validation rows:
-  `SUPPORTING_APPENDIX`.
-
-### CATE results
-
-* CausalForestDML + original:
-  `PRIMARY_MAIN_TEXT`.
-* LinearDML + original:
-  `SECONDARY_MAIN_TEXT`.
-* CausalPFN + original:
-  `EXPLORATORY_MAIN_TEXT`.
-* Every outcome-downsampled row:
-  `ROBUSTNESS_APPENDIX`.
-
-Apply the status to every prespecified exposure.
-
-### Matching
-
-* Original CausalForestDML:
-  `SUPPORTING_MAIN_TEXT`.
-* Original LinearDML:
-  `SECONDARY_APPENDIX`.
-* Original CausalPFN:
-  `EXPLORATORY_APPENDIX`.
-* Downsampled:
-  `ROBUSTNESS_APPENDIX`.
-
-### Sensitivity and permutation
-
-* Original non-PFN:
-  `SUPPORTING_APPENDIX`.
-* Downsampled:
-  `ROBUSTNESS_APPENDIX`.
-* PFN:
-  `NOT_APPLICABLE` for unavailable diagnostic stages.
-
-### Proxy and mortality-prediction tables
-
-Use:
+Chapter 10 should contain a readable set of tables covering:
 
 ```text
-SUPPORTING_APPENDIX
+analysis populations
+predictive test performance
+primary MIMIC CausalForestDML results
+primary PhysioNet CausalForestDML results
+primary matching/support results
+LinearDML comparison
+three-estimator or PFN comparison
+robustness-status summary
 ```
 
-Do not alter row order, row count, source paths, hashes, or numerical fields.
+Avoid unnecessary duplication.
+
+A large exact-value table may use `longtable`, landscape orientation, smaller text, or separate dataset panels.
+
+Do not compress text below reasonable readability.
+
+Every table must have:
+
+* a descriptive caption;
+* a unique label;
+* defined units or scale;
+* dataset and sampling condition;
+* estimator identity;
+* clear footnotes for caveats;
+* source traceability in the evidence report.
 
 ---
 
-## 8. Add the new figures to the manifest
+# 19. Narrative Boundaries
 
-Update:
-
-```text
-thesis-writing/results/results_manifest.csv
-thesis-writing/results/checked_figure_candidates.csv
-thesis-writing/results/results_checksums.sha256
-```
-
-Add all 16 PNGs with:
-
-* repository-relative path;
-* SHA-256;
-* dimensions;
-* selection status;
-* source/provenance status;
-* underlying checked-table relationship;
-* main/appendix/excluded role.
-
-Record the seminar PowerPoint as contextual figure provenance only:
+The Results chapter may state:
 
 ```text
-thesis-writing/prompts-and-documents/
-true_final_thesis_engineering_seminar_unified_redesign.pptx
+the archived estimate was positive/negative
+the estimate was larger/smaller
+the estimators agreed in direction
+the ordering differed across estimators
+matching support was limited
+diagnostics were available, partial, skipped, or unavailable
 ```
 
-Do not use the presentation as numerical authority when checked CSVs are available.
+It must not state:
+
+```text
+the proxy state caused mortality
+the model discovered a clinical treatment effect
+the effect is clinically actionable
+the result proves the DAG
+confounding was eliminated
+positivity was established
+the model is unbiased
+CausalPFN is superior
+the downsampled result validates the original result
+```
+
+Use “exposure contrast,” “proxy-state contrast,” or “model-estimated contrast,” not “treatment recommendation.”
+
+Remember that the binary variables are project-defined proxy states, not interventions assigned in a trial.
 
 ---
 
-## 9. Update placeholders and deferred fixes
+# 20. Provenance Limitations Required in Chapter 10
 
-Update:
+Include a concise result-provenance paragraph or table note acknowledging:
 
-```text
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-```
+* `final-results/` is ignored or untracked in the main repository;
+* exact numbered causal configuration files remain unavailable locally;
+* some producing commits and archive-copy histories are incomplete;
+* predictive split and checkpoint-to-export lineage is incomplete;
+* raw and processed data are not reproducible from the repository alone;
+* checked hashes and source paths support the reported archive values;
+* these limitations affect reproducibility claims, not the arithmetic transcription of validated checked rows.
 
-Mark result-hierarchy decisions:
-
-```text
-AUTHOR DECISION RECORDED
-```
-
-Do not state supervisor approval unless separately documented.
-
-Retain open evidence limitations for:
-
-* missing numbered causal configs;
-* ignored/untracked result archive;
-* producing commits;
-* predictive split and checkpoint lineage;
-* raw cohort totals;
-* missing PhysioNet proxy tables;
-* dedicated overlap diagnostics;
-* proxy clinical validation;
-* LLM prompt execution provenance.
-
-Add a deferred fix for final supervisor ratification of the author-approved results hierarchy.
+Do not repeat the full reproducibility chapter.
 
 ---
 
-## 10. Allowed edits
+# 21. Allowed Edit Scope
 
 You may edit:
 
 ```text
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
-thesis-writing/thesis/chapters/09_experimental_design.tex
-other thesis .tex files only when removing an InterpNet occurrence
-thesis-writing/results/**
+thesis-writing/thesis/chapters/10_results.tex
 thesis-writing/logs/unresolved_placeholders.md
 thesis-writing/logs/deferred_fixes.md
 ```
 
-Create:
+You may create:
 
 ```text
-thesis-writing/logs/stage_4_6A_repair_report.md
+thesis-writing/logs/stage_4_6B_evidence_report.md
+```
+
+You may copy the three approved main-text figures into:
+
+```text
+thesis-writing/thesis/figures/
 ```
 
 A clean build may update:
@@ -486,38 +1143,231 @@ A clean build may update:
 thesis-writing/thesis/main.pdf
 ```
 
+A narrow compilation-only correction may be made to:
+
+```text
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/latexmkrc
+```
+
+only when necessary to fix a fatal build issue and documented.
+
 Do not edit:
 
-* Chapter 10;
-* research code;
-* configs;
-* source result artifacts;
-* the PNG files;
-* bibliography files;
-* audit or planning files;
-* prompt-provenance artifacts.
+```text
+Chapters 1–9
+Chapters 11–12
+front matter
+appendix prose
+planning files
+audit files
+checked CSVs
+result manifests
+decision register
+source packet
+figure-selection register
+research code
+configs
+source result artifacts
+source optional figures
+bibliography files
+prompt-provenance artifacts
+```
+
+Do not restore InterpNet anywhere.
 
 ---
 
-## 11. Validation
+# 22. Placeholder and Deferred-Fix Policy
 
-Confirm:
+Replace the generic Chapter 10 draft placeholder.
 
-1. no InterpNet occurrence remains in any thesis `.tex` file;
-2. the predictive model table contains exactly five model families;
-3. no numerical checked value changed;
-4. all original CausalForest rows are primary;
-5. all original LinearDML rows are secondary;
-6. all original CausalPFN rows are exploratory main-text candidates;
-7. all downsampled rows are robustness material;
-8. normalized CATE is not selected for main text;
-9. the 18-of-19 direction count is reproduced directly;
-10. the PhysioNet shock exception is documented;
-11. every optional PNG is hashed and classified;
-12. every selected numerical figure matches its checked source;
-13. no excluded figure is selected;
-14. no source figure is modified;
-15. no thesis result prose is drafted.
+Do not remove unresolved evidence limitations merely because numerical prose is now written.
+
+Update `unresolved_placeholders.md` for:
+
+* Chapter 10 placeholders resolved by checked values;
+* supervisor ratification of the result hierarchy;
+* appendix placement of selected supplementary figures and tables;
+* unresolved raw cohort totals;
+* missing exact configurations;
+* missing overlap figure;
+* unresolved clinical validation;
+* CausalPFN citation status.
+
+Add deferred fixes with IDs beginning:
+
+```text
+DF-4.6B-
+```
+
+when needed.
+
+Assess at minimum:
+
+1. final supervisor ratification of the result hierarchy;
+2. appendix insertion of selected supplementary diagnostics;
+3. exact causal configuration recovery;
+4. predictive split/checkpoint lineage;
+5. CausalPFN primary citation;
+6. final review of causal-language strength;
+7. final verification of every displayed rounded value.
+
+Do not duplicate existing equivalent issues.
+
+---
+
+# 23. Stage 4.6B Evidence Report
+
+Create:
+
+```text
+thesis-writing/logs/stage_4_6B_evidence_report.md
+```
+
+Include:
+
+## 23.1 Git state
+
+* verified commit;
+* branch;
+* initial and final worktrees;
+* files changed;
+* confirmation that checked sources were not modified.
+
+## 23.2 Baseline build
+
+* command;
+* result;
+* page count;
+* warnings.
+
+## 23.3 Numerical source inventory
+
+For every Chapter 10 table and figure record:
+
+```text
+chapter section
+table or figure label
+checked source file
+selection filter
+source rows
+displayed columns
+rounding rule
+derived values
+caveats
+```
+
+## 23.4 Analysis populations
+
+Record:
+
+* MIMIC count;
+* PhysioNet count;
+* difference;
+* ratio;
+* source rows;
+* scope wording.
+
+## 23.5 Predictive results
+
+For every displayed model–dataset row record:
+
+* source row;
+* exact source values;
+* displayed values;
+* summary/log agreement status;
+* provenance caveat.
+
+## 23.6 Primary CausalForestDML results
+
+For every displayed exposure record:
+
+* dataset;
+* exposure;
+* source row;
+* exact mean CATE;
+* displayed value;
+* treatment prevalence;
+* adjustment-set field;
+* caveats.
+
+## 23.7 Matching
+
+For every displayed row record:
+
+* source;
+* matched-pair fields;
+* support fields;
+* wording used;
+* failure or warning.
+
+## 23.8 LinearDML comparison
+
+Record:
+
+* all original-cohort exposure comparisons;
+* direction-agreement count with CausalForestDML;
+* any magnitude or ordering statements.
+
+## 23.9 CausalPFN comparison
+
+Record:
+
+* all PFN original-cohort source rows;
+* the 18-of-19 calculation;
+* MIMIC 9-of-9;
+* PhysioNet 9-of-10;
+* exact PhysioNet shock values for all three estimators;
+* bounded positive CausalPFN statement;
+* diagnostic limitation.
+
+## 23.10 Downsampling
+
+Record:
+
+* source rows;
+* permitted derived direction-agreement counts;
+* all noted direction changes;
+* wording separating the empirical populations.
+
+## 23.11 Sensitivity and permutation
+
+Record:
+
+* rows summarized;
+* source classifications;
+* unavailable or skipped statuses;
+* no new p-values.
+
+## 23.12 Figures
+
+For each copied figure record:
+
+* source path;
+* destination path;
+* source SHA-256;
+* destination SHA-256;
+* dimensions;
+* figure label;
+* caption boundary;
+* numerical validation status.
+
+## 23.13 Citations
+
+List any citation added to Chapter 10.
+
+Results generally should rely on chapter cross-references and repository evidence rather than adding unnecessary literature citations.
+
+## 23.14 Placeholders and deferred fixes
+
+List:
+
+* resolved;
+* retained;
+* added.
+
+## 23.15 Final build
 
 Run:
 
@@ -529,34 +1379,222 @@ test -f main.pdf
 pdfinfo main.pdf
 ```
 
-Scan for fatal LaTeX, citation, reference, label, and Biber errors.
+Record:
+
+* return status;
+* PDF path;
+* page count;
+* unresolved citations;
+* unresolved references;
+* duplicate labels;
+* Biber errors;
+* fatal errors;
+* layout warnings.
+
+## 23.16 Readiness
+
+Use one:
+
+```text
+READY FOR STAGE 4.7
+READY WITH NON-BLOCKING WARNINGS
+BLOCKED BEFORE STAGE 4.7
+```
 
 ---
 
-## 12. Readiness
+# 24. Validation Requirements
 
-Use:
+## 24.1 Numerical transcription
+
+Programmatically verify every displayed table value against its checked source.
+
+Confirm:
+
+* no transposed value;
+* no dataset mix-up;
+* no estimator mix-up;
+* no original/downsampled mix-up;
+* no validation/test mix-up;
+* no normalized-CATE substitution;
+* no incorrect rounding;
+* no omitted primary exposure;
+* no duplicate exposure.
+
+## 24.2 Population validation
+
+Confirm:
 
 ```text
-READY FOR STAGE 4.6B
+26845 - 7993 = 18852
+26845 / 7993 ≈ 3.36
 ```
 
-only when:
+Do not describe these as raw cohort totals.
 
-* the hierarchy is frozen;
-* InterpNet is absent from the thesis;
-* figure selections are recorded;
-* selected result figures are numerically validated;
-* checked-table statuses are updated;
-* checksums are regenerated;
-* the thesis builds successfully.
+## 24.3 Estimator agreement
 
-Also report:
+Recalculate directly from checked original-cohort rows:
+
+* Forest versus Linear direction agreement;
+* all-three direction agreement;
+* MIMIC all-three agreement;
+* PhysioNet all-three agreement;
+* PhysioNet shock exception.
+
+Confirm that “18 of 19” counts only matched dataset–exposure pairs available for all three estimators.
+
+## 24.4 Exposure completeness
+
+Confirm:
+
+* all nine MIMIC original-cohort exposures appear in the primary result presentation;
+* all ten PhysioNet original-cohort exposures appear;
+* none was selected or excluded based on its result.
+
+## 24.5 Figure validation
+
+Confirm:
+
+* exactly three optional-result figures are inserted;
+* each inserted figure is author-selected;
+* source and destination hashes match;
+* ranking figures are original-cohort CausalForestDML;
+* the direction-count figure reflects 18 of 19;
+* no excluded figure is referenced.
+
+## 24.6 InterpNet validation
+
+Run:
+
+```bash
+grep -Rni "InterpNet\|interpnet" thesis-writing/thesis \
+  --include='*.tex' || true
+```
+
+There must be no occurrence.
+
+## 24.7 Causal-language scan
+
+Search Chapter 10 for:
 
 ```text
-SUPERVISOR RATIFICATION OF THE RESULTS HIERARCHY REMAINS PENDING
+ATE
+ATT
+risk ratio
+relative risk
+percent reduction
+significant
+caused mortality
+proves causality
+validated causal effect
+clinical recommendation
+clinically actionable
+positivity established
+confounding eliminated
+best estimator
+superior estimator
 ```
 
-Do not begin Stage 4.6B.
+Review every occurrence manually.
+
+Retain only:
+
+* explicit warnings;
+* properly qualified methodological references;
+* established acronyms inside estimator names where unavoidable.
+
+## 24.8 Downsampling validation
+
+Confirm:
+
+* original cohorts remain visually and narratively primary;
+* downsampling appears in robustness;
+* downsampled results are discussed;
+* the discussion is not disproportionately long;
+* original and downsampled populations are not pooled;
+* larger downsampled estimates are not treated as stronger evidence.
+
+## 24.9 Scope validation
+
+Confirm:
+
+* only Chapter 10 received substantive thesis prose;
+* only three figures were copied;
+* no checked CSV changed;
+* no source result changed;
+* no optional source PNG changed;
+* no experiment ran;
+* no research code changed;
+* no config changed;
+* no bibliography record changed;
+* no commit or push occurred.
+
+---
+
+# 25. Completion Criteria
+
+Stage 4.6B is complete only when:
+
+* `5e6477a` is verified;
+* the frozen results hierarchy is preserved;
+* Chapter 10 follows the approved eight-section order;
+* analysis-population counts are accurately reported;
+* predictive performance includes exactly five models across two datasets;
+* all original CausalForestDML exposures are reported;
+* matching is described as a descriptive matched-pair outcome difference;
+* LinearDML is presented as the secondary comparator;
+* CausalPFN is presented as exploratory but promising;
+* the 18-of-19 agreement statement is directly validated;
+* the PhysioNet shock exception is explicit;
+* no estimator-equivalence claim is made;
+* cross-dataset pooling is absent;
+* dataset-size differences are explicit;
+* downsampling is addressed but not emphasized;
+* sensitivity, permutation, and support limitations are summarized;
+* exactly three selected figures are inserted;
+* normalized CATE is absent from main results;
+* InterpNet remains absent;
+* all displayed values trace to checked rows;
+* the evidence report is complete;
+* the thesis builds successfully;
+* only allowed files were edited.
+
+---
+
+# 26. Final Response
+
+Report:
+
+1. Verified Stage 4.6A repair commit.
+2. Baseline build result and page count.
+3. Files inspected.
+4. Files changed.
+5. Chapter 10 section structure.
+6. Analysis-population counts.
+7. Predictive models and metrics reported.
+8. Primary CausalForestDML exposure counts by dataset.
+9. Matching results included.
+10. LinearDML comparison conclusion.
+11. CausalPFN comparison conclusion.
+12. Verified estimator direction-agreement count.
+13. PhysioNet shock exception.
+14. Dataset-size comparison.
+15. Downsampling treatment.
+16. Sensitivity summary.
+17. Permutation summary.
+18. Support and overlap limitations.
+19. Tables created and labels.
+20. Figures copied, hashes, and labels.
+21. InterpNet scan result.
+22. Numerical transcription validation.
+23. Causal-language scan result.
+24. Placeholders updated.
+25. Deferred fixes added.
+26. Final build result and page count.
+27. Remaining warnings.
+28. Readiness for Stage 4.7.
 
 Do not commit or push.
+
+Do not begin Stage 4.7.

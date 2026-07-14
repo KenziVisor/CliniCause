@@ -48,7 +48,7 @@ rg -o '\[[A-Z0-9 -]+ REQUIRED\]' thesis-writing/thesis/main.tex thesis-writing/t
 | --- | --- | --- |
 | Front matter | `frontmatter/title_pages.tex`, `abstract_primary.tex`, `abstract_secondary.tex`, `keywords.tex`, `acknowledgements.tex`, `nomenclature.tex` | Administrative details, language/order decisions, abstracts, keywords, acknowledgements, abbreviations, notation. |
 | Chapters 1-9 | `chapters/01_*.tex` through `chapters/09_*.tex` | Drafting placeholders plus targeted result, citation, figure, table, validation, and supervisor-decision placeholders. |
-| Chapter 10 | `chapters/10_results.tex` | Result and validation placeholders for every approved result slot. |
+| Chapter 10 | `chapters/10_results.tex` | Stage 4.6B resolved the generic result/validation skeleton; blocked figures and external provenance/review gates remain tracked below. |
 | Chapters 11-12 | `chapters/11_discussion.tex`, `chapters/12_conclusions_future_work.tex` | Result-dependent synthesis and final conclusion placeholders. |
 | Appendices | `appendices/appendices.tex` | Appendix drafting, validation, figure/table slots, and supervisor-decision placeholders. |
 
@@ -215,3 +215,29 @@ The author recorded the Chapter 10 results hierarchy in the repaired results pac
 | `thesis-writing/thesis/chapters/09_experimental_design.tex` | C9.2 Causal Experiment Matrix | primary causal estimator and sampling condition | AUTHOR DECISION RECORDED: original cohort; CausalForestDML primary, LinearDML secondary, CausalPFN exploratory; outcome-downsampled analyses robustness/supplementary only. | Supervisor ratification of the results hierarchy. |
 | `thesis-writing/thesis/chapters/07_causal_methodology.tex` | C7.2--C7.3 causal result wording | proxy-exposure, matching, mean-CATE, and normalized-CATE interpretation gates | AUTHOR DECISION RECORDED: report all prespecified original-cohort exposures; use descriptive matched-pair outcome difference and mean model-estimated CATE over the analyzed sample; omit normalized CATE from Chapter 10. | Supervisor ratification and all prior causal/provenance limitations. |
 | `thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex` | C8.1--C8.3 display-selection gates | overlap, sensitivity, and permutation presentation role | AUTHOR DECISION RECORDED: appendix/supporting role for selected diagnostics; the supplied cross-model direction figure is blocked for mixing sampling modes. | Recover or approve a replacement for the blocked direction-count figure if it is needed. |
+
+## Stage 4.6B Update
+
+Stage 4.6B replaced the generic Chapter 10 skeleton with checked numerical prose and tables in the frozen eight-section order.  No generic `\StagePlaceholder` remains in `chapters/10_results.tex`.
+
+### Resolved During Stage 4.6B
+
+| file | chapter scope | placeholder class resolved | evidence | status |
+| --- | --- | --- | --- | --- |
+| `thesis-writing/thesis/chapters/10_results.tex` | Analysis populations and predictive performance | Generic result and validation placeholders | `checked_cohort_candidates.csv`, `checked_predictive_metrics.csv` | resolved |
+| `thesis-writing/thesis/chapters/10_results.tex` | Primary Forest, matching, Linear, and PFN results | Generic result, validation, and hierarchy placeholders | Frozen Stage 4.6A hierarchy plus checked CATE and matching rows | resolved with frozen qualifications |
+| `thesis-writing/thesis/chapters/10_results.tex` | Cross-dataset and robustness sections | Generic result, validation, and supervisor-decision placeholders | Checked CATE, sensitivity, permutation, and support rows | resolved with frozen qualifications |
+
+### Retained Gates After Stage 4.6B
+
+| gate | current status | required resolution |
+| --- | --- | --- |
+| Supervisor ratification of the result hierarchy | Author decision is frozen; supervisor ratification is still absent. | Record supervisor approval or requested hierarchy revisions before final submission. |
+| Main-result figures | Both ranking PNGs and the direction-count PNG are `BLOCKED_VALUE_CONFLICT`; none was copied or inserted. | Recover already-valid replacements or authorize a separate corrected-figure task. |
+| Supplementary figures and exact-value tables | Appendix candidates are selected but not inserted in this stage. | Complete the approved appendix-placement pass. |
+| Raw cohort totals | Original causal-analysis counts are reported, but reconstructed raw-source cohort totals remain unavailable. | Recover raw/processed data manifests and hashes; do not relabel causal-analysis counts. |
+| Exact causal configurations | Numbered producing configuration files remain unavailable locally. | Recover and archive the exact configurations or document irrecoverability. |
+| Predictive split/checkpoint lineage | Test summaries are checked, but split and checkpoint-to-export provenance remains incomplete. | Recover split manifests, producing commands, and checkpoint/export hashes. |
+| Overlap evidence | Matching remains indirect support evidence; no dedicated overlap/propensity figure exists. | Recover or generate an approved diagnostic before any positivity claim. |
+| Clinical validation | Proxy states and DAGs lack complete clinician/chart-review validation. | Complete and record clinical/supervisor review before strengthening causal or clinical language. |
+| CausalPFN citation and diagnostics | CausalPFN remains exploratory; its primary citation and DML-equivalent diagnostic family are absent. | Add a vetted primary citation and uncertainty/diagnostic plan, or retain the exploratory boundary. |
