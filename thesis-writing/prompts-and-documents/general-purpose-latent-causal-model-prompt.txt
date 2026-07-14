@@ -1,0 +1,760 @@
+You are an expert clinical causal inference researcher, medical ML scientist, and causal representation learning specialist.
+
+Your task is to construct the most clinically plausible latent-variable causal DAG for an irregular medical time-series dataset.
+
+--------------------------------------------
+GLOBAL VARIABLES — CONFIGURE BEFORE USE
+--------------------------------------------
+
+DATASET-NAME = ENTER-DATASET-NAME-HERE
+DATASET-DESCRIPTION-LINK = ENTER-OFFICIAL-DATASET-DESCRIPTION-URL-HERE
+
+Use DATASET-NAME and DATASET-DESCRIPTION-LINK as global variables throughout this prompt.
+Do not hard-code any dataset-specific name elsewhere in the prompt.
+The only external source that may be referenced directly by URL is DATASET-DESCRIPTION-LINK.
+
+--------------------------------------------
+GLOBAL RESEARCH MISSION — READ BEFORE DOING ANYTHING
+--------------------------------------------
+
+Your final goal is NOT merely to construct rule-based decision trees.
+
+Your final goal is to construct a research-backed latent-variable causal model for DATASET-NAME.
+
+The decision trees are only an implementation mechanism for converting observed measurements into binary proxy labels for latent clinical states. They are not the scientific endpoint.
+
+The scientific endpoint is:
+
+1. A clinically plausible latent causal ontology:
+   - What are the true hidden clinical states behind the observed measurements?
+   - Which latent states are meaningful causal variables?
+   - Which observed variables are only noisy manifestations of these states?
+
+2. A clinically and causally justified latent DAG:
+   - How do background variables affect latent clinical states?
+   - How do latent states affect each other?
+   - How do latent states affect mortality?
+   - How do latent states generate observed labs, vitals, and charted values?
+   - How does missingness/measurement intensity arise from latent severity and clinical decision-making?
+
+3. A causal-inference-ready graph:
+   - Which variables are confounders?
+   - Which variables are mediators?
+   - Which variables are colliders?
+   - Which variables should or should not be adjusted for when estimating effects on mortality?
+   - Which latent states are outcome-proximal severity markers rather than valid adjustment variables?
+
+4. A practical operationalization layer:
+   - Only after the latent variables are selected and justified, create rule-based binary decision trees.
+   - These trees produce implementable proxy labels such as LAT_SHOCK, LAT_RENAL_DYSFUNCTION, and LAT_GLOBAL_SEVERITY.
+   - The trees are tools for implementation, not the main research contribution.
+
+Priority order:
+1. Research-backed latent clinical states.
+2. Research-backed latent causal DAG.
+3. Measurement model from latent states to observed variables.
+4. Missingness and irregular-sampling model.
+5. Confounding/mediation/collider analysis.
+6. Rule-based decision trees for implementation.
+
+If there is any conflict between making a simple decision tree and preserving causal correctness, preserve causal correctness.
+
+Core objective:
+Construct a clinically grounded latent causal representation of the dataset, including:
+1. A set of causal latent variables representing underlying patient clinical states.
+2. Formal definitions of these latent variables using available observed measurements and metadata.
+3. Rule-based binary decision trees that convert observational/meta data into binary latent-variable labels.
+4. A directed acyclic graph (DAG) over background variables, latent clinical states, observed measurements, measurement/missingness processes, and mortality.
+5. A clear explanation of how the latent clinical states causally affect mortality.
+6. A clear explanation of how the observed variables are generated as manifestations, measurements, or proxies of the latent clinical states.
+
+Important conceptual rule:
+The observed variables in the dataset are not the main causal variables. They are clinical measurements, test results, charted values, or proxies. The causal variables of interest are latent clinical states such as shock, respiratory failure, renal dysfunction, hepatic dysfunction, inflammation/sepsis burden, coagulation dysfunction, metabolic derangement, neurologic dysfunction, cardiac injury, global severity, chronic baseline risk, or other dataset-appropriate latent states.
+
+Do not construct a naive causal graph where every lab/vital directly causes every other lab/vital. Instead, construct a causal representation in which:
+- Background/static variables influence latent patient states.
+- Latent patient states influence observed measurements.
+- Latent patient states influence mortality.
+- Observed measurements are mainly manifestations of latent physiology, not primary causal mechanisms.
+- Measurement frequency and missingness may themselves be informative and influenced by latent severity, clinical decision-making, or care intensity.
+
+Your goal is to approximate the true underlying clinical causal structure as well as possible using deep research, medical reasoning, causal inference principles, and the official dataset documentation. Do not merely produce a correlation graph.
+
+--------------------------------------------
+PHASE 1 — Dataset audit
+--------------------------------------------
+
+First, open and study DATASET-DESCRIPTION-LINK carefully.
+
+Extract:
+1. The complete list of available variables.
+2. Which variables are static/background variables.
+3. Which variables are time-varying observed measurements.
+4. Which variables are outcomes, especially mortality.
+5. Which variables are interventions or care-process variables, if any.
+6. Units, clinical meaning, valid ranges, and measurement windows when available.
+7. Known dataset collection rules and missingness patterns.
+8. Whether the dataset contains ICU type, admission type, care unit, demographics, diagnoses, chart events, labs, vitals, medications, procedures, or outcomes.
+
+Then summarize the dataset in a compact audit table.
+
+Do not proceed to latent-variable construction until the dataset audit is complete.
+
+--------------------------------------------
+PHASE 2 — Deep Research protocol and research goals
+--------------------------------------------
+
+Perform deep research before constructing latent variables, decision trees, or the DAG.
+
+The purpose of Deep Research is not to collect thresholds for decision trees.
+
+The purpose of Deep Research is to infer the most plausible latent clinical causal structure behind the dataset.
+
+Your research must answer the following research questions:
+
+RQ1 — Latent-state discovery:
+What hidden physiological or clinical states plausibly generate the observed measurements in DATASET-NAME?
+
+Examples:
+- Shock or hemodynamic instability may generate abnormal blood pressure, heart rate, lactate, urine output, and vasopressor-related signals if available.
+- Respiratory failure may generate abnormal oxygenation, respiratory rate, blood gas, ventilation, and saturation signals.
+- Renal dysfunction may generate abnormal creatinine, BUN, urine output, potassium, bicarbonate, and acid-base patterns.
+- Inflammation/sepsis burden may generate fever/hypothermia, WBC abnormalities, lactate elevation, shock, and organ dysfunction.
+- Global severity may represent multi-system physiological instability rather than a single measurement.
+
+RQ2 — Measurement model:
+For each observed variable, determine whether it is:
+- a background/static cause,
+- an observed proxy of a latent state,
+- a treatment/intervention/care-process variable,
+- a measurement/missingness-process variable,
+- an outcome,
+- or irrelevant/noisy for the causal model.
+
+Do not treat observed labs and vitals as the primary causal variables unless they are true interventions.
+
+RQ3 — Latent causal DAG:
+Determine the causal relationships among:
+- background variables,
+- latent clinical states,
+- mortality,
+- observed measurements,
+- and missingness/measurement processes.
+
+The graph should represent a clinical data-generating process:
+background risk → latent physiology → observed measurements and mortality.
+
+RQ4 — Mortality mechanism:
+Explain how mortality is caused through latent clinical states, not through raw measurements directly.
+
+For example:
+- chronic baseline risk → vulnerability → global severity → organ dysfunction → mortality
+- acute insult → inflammation/sepsis → shock → renal/metabolic failure → mortality
+- respiratory failure → hypoxemia/acidosis → global severity → mortality
+
+Adapt these mechanisms to the actual dataset variables.
+
+RQ5 — Missingness and irregular sampling:
+Because DATASET-NAME is an irregular clinical time-series dataset, research whether missingness is likely:
+- MCAR,
+- MAR,
+- MNAR,
+- or caused by care intensity / clinician suspicion / latent severity.
+
+Treat measurement frequency and missingness as potentially informative, not as random noise.
+
+RQ6 — Operational proxy construction:
+Only after RQ1–RQ5 are answered, construct binary rule-based decision trees for the approved latent variables.
+
+The decision trees should approximate the latent states using available observed variables, but they must not replace the causal DAG.
+
+Research sources to use:
+1. DATASET-DESCRIPTION-LINK.
+2. Dataset-specific papers, benchmark papers, and preprocessing conventions.
+3. ICU severity literature: SOFA, APACHE, SAPS, sepsis, shock, organ failure, respiratory failure, renal failure, coagulation, hepatic dysfunction, neurologic dysfunction, metabolic derangement.
+4. Causal inference literature: SCMs, DAGs, latent variables, backdoor adjustment, mediation, colliders, potential outcomes.
+5. Causal representation learning literature: observed variables as functions/proxies of latent causal variables.
+6. Clinical EHR/time-series literature: irregular sampling, informative missingness, measurement intensity, care processes.
+7. Existing clinical causal graphs or phenotype networks, if available.
+
+For every proposed latent variable, decision rule, and DAG edge, provide:
+- clinical mechanism,
+- dataset support,
+- causal direction,
+- whether it risks leakage,
+- whether it is a confounder, mediator, collider, or measurement proxy,
+- confidence level,
+- and whether it should be kept, optional, or rejected.
+
+Do not proceed from research to final DAG until you can explain why the selected latent variables are the right causal level for this dataset.
+
+--------------------------------------------
+PHASE 3 — Core causal ontology
+--------------------------------------------
+
+Use the following node types:
+
+A. Background/static variables
+Examples:
+- Age
+- Sex/gender
+- Ethnicity/race, if available
+- Height, weight, BMI
+- ICU type, admission type, first care unit
+- Chronic disease burden or baseline vulnerability, if derivable
+
+Background variables may cause latent clinical states and mortality risk, but they are generally not caused by ICU measurements.
+
+B. Latent clinical state variables
+These are the main causal variables.
+
+Possible candidate latent states include, but are not limited to:
+- Chronic baseline risk / chronic burden
+- Acute insult / acute physiological stress
+- Global severity of illness
+- Circulatory shock / hemodynamic instability
+- Respiratory failure / pulmonary dysfunction
+- Renal dysfunction / kidney injury
+- Hepatic dysfunction / liver injury
+- Coagulation or hematologic dysfunction
+- Inflammation / infection / sepsis burden
+- Neurologic dysfunction
+- Cardiac injury / cardiac strain
+- Metabolic derangement / acid-base-electrolyte disorder
+- Nutritional, fluid balance, or volume-status burden, if supported by variables
+- Treatment/care intensity, if the dataset contains care-process variables
+
+Do not force this list. Adapt the latent variables to the actual variables in DATASET-NAME.
+
+Each latent variable must have:
+1. A clinical definition.
+2. A causal interpretation.
+3. Observable indicators from the dataset.
+4. Suggested proxy rule or thresholding logic.
+5. Expected direction of abnormality.
+6. Confidence level.
+7. Notes on possible ambiguity.
+
+C. Observed measurement variables
+These include labs, vitals, charted measurements, and test results.
+
+Treat these as manifestations or noisy measurements of latent states, for example:
+- Shock may manifest through low blood pressure, high lactate, tachycardia, vasopressor use if available.
+- Respiratory failure may manifest through PaO2, FiO2, oxygen saturation, respiratory rate, ventilation variables if available.
+- Renal dysfunction may manifest through creatinine, BUN, urine output, potassium, bicarbonate.
+- Hepatic dysfunction may manifest through bilirubin, AST, ALT, albumin.
+- Coagulation dysfunction may manifest through platelets, INR/PT/PTT if available.
+- Inflammation/infection may manifest through WBC, temperature, lactate, cultures/antibiotics if available.
+- Cardiac injury may manifest through troponin, heart rate, blood pressure, ECG-related variables if available.
+- Metabolic derangement may manifest through glucose, bicarbonate, pH, electrolytes, anion gap if derivable.
+
+An observed variable may be an indicator of more than one latent state. Allow multi-parent measurement edges when clinically justified.
+
+D. Mortality outcome
+Mortality should be treated as an outcome node.
+Latent states may cause mortality directly.
+Background variables may affect mortality directly or indirectly through latent states.
+Observed measurements should generally not directly cause mortality unless the variable is truly an intervention or treatment exposure. Labs and vitals usually indicate the severity state rather than causing death themselves.
+
+E. Measurement and missingness process
+Because DATASET-NAME is an irregular medical dataset, include a measurement process if relevant:
+- Measurement intensity
+- Test ordering process
+- Missingness indicator
+- Observation availability
+- Care intensity
+
+These may be influenced by latent severity, clinician suspicion, ICU type, care unit, admission type, or background risk.
+Do not assume missingness is MCAR.
+Discuss whether missingness is likely MAR or MNAR.
+If missingness is clinically informative, include it as a separate observation-process node, not as a biological causal state.
+
+--------------------------------------------
+PHASE 4 — Latent variable selection and definition
+--------------------------------------------
+
+Before constructing the DAG, define the latent variables that will appear in the DAG.
+
+This phase must happen before DAG construction.
+
+Your task in this phase:
+1. Propose candidate latent clinical variables based on the dataset audit.
+2. Map available observed and metadata variables to candidate latent variables.
+3. Remove candidate latent variables that are not sufficiently supported by the dataset.
+4. Merge overlapping latent variables if the dataset cannot distinguish them reliably.
+5. Mark weakly measured but clinically important latent variables as optional.
+6. Finalize the latent variable set before constructing causal edges.
+
+For every latent variable, define it operationally from observed data.
+
+For each latent variable produce:
+1. Name
+2. Clinical meaning
+3. Why it is latent rather than directly observed
+4. Observable indicators
+5. Metadata indicators, if relevant
+6. Suggested binary definition
+7. Suggested continuous severity score, if useful
+8. Thresholds or quantile-based fallback rules
+9. Missingness handling
+10. Directionality: higher value means worse/better?
+11. Whether this latent variable should be used as:
+    - prediction target,
+    - confounder,
+    - mediator,
+    - outcome-proximal severity marker,
+    - treatment-effect modifier.
+12. Confidence: high / medium / low.
+13. Whether to keep, merge, make optional, or reject.
+
+Definitions must be clinically meaningful but also implementable on DATASET-NAME.
+
+Do not define latent variables from a single measurement unless unavoidable.
+Prefer multiple indicators and majority-vote or score-based definitions.
+If the dataset lacks sufficient indicators for a latent state, either:
+- remove the latent variable,
+- mark it as weakly measured,
+- merge it with another latent variable,
+- or define it as optional.
+
+Do not use mortality or post-outcome information to define any latent variable.
+Do not allow outcome leakage.
+Do not use future measurements if the latent label is intended to represent an earlier clinical state.
+
+At the end of this phase, provide a final approved latent-variable list.
+Only these approved latent variables may be used as latent nodes in the DAG.
+
+--------------------------------------------
+IMPORTANT — Decision trees are not the final goal
+--------------------------------------------
+
+The rule-based binary decision trees are only an operational layer.
+
+They are used to create binary proxy labels for latent variables so that the thesis pipeline can generate latent_tags.csv and use those labels in downstream modeling.
+
+Do not optimize the entire answer around the decision trees.
+
+A correct answer with clinically meaningful latent variables and a strong DAG is better than a large collection of simplistic decision trees.
+
+The decision trees must serve the causal model, not define the causal model.
+
+Before writing any tree, explicitly state:
+- which latent clinical state the tree approximates,
+- why this state belongs in the DAG,
+- which observed variables are manifestations of that state,
+- and how the proxy label may differ from the true unobserved clinical state.
+
+--------------------------------------------
+PHASE 5 — Rule-based binary decision trees for latent labels
+--------------------------------------------
+
+After the latent-variable set is finalized, construct a rule-based binary decision tree for each approved latent variable.
+
+Use a self-contained score-based tree structure.
+
+The desired structure is:
+
+1. Define several clinically meaningful domain indicators.
+2. Each domain indicator is a Boolean condition based on observed measurements or metadata.
+3. Combine domain indicators into a score:
+   score = sum(domain indicators)
+4. Apply a threshold:
+   if score >= THRESHOLD:
+       LATENT_VARIABLE = 1
+   else:
+       LATENT_VARIABLE = 0
+
+Example score-based structure:
+- Circulatory domain:
+  MAP_first < 70 OR SysABP_first <= 100
+- Neurologic domain:
+  GCS_first < 15
+- Respiratory domain:
+  RespRate_first >= 22 OR SaO2_first < 92
+- Metabolic domain:
+  Lactate_first > 2 OR pH_first < 7.3 OR HCO3_first < 18
+- Renal domain:
+  Creatinine_first >= 2
+- score = sum(domain indicators)
+- score >= 2 gives Severity = 1
+- otherwise Severity = 0
+
+For each latent variable, create a similar binary decision tree.
+
+Requirements:
+1. The output of every tree must be binary: 0 or 1.
+2. The rules must use only observed variables and metadata available in DATASET-NAME.
+3. Use clinically interpretable thresholds when possible.
+4. If standard clinical thresholds are not available or not dataset-appropriate, propose quantile-based fallback thresholds.
+5. Each tree should use multiple indicators when possible.
+6. A tree may use first value, worst value, mean value, slope, variability, measurement frequency, or missingness indicators, but you must justify each choice.
+7. Avoid using mortality, survival time, discharge disposition, or outcome-derived variables.
+8. Avoid using future values if the latent variable is meant to represent early-state physiology.
+9. Use missingness explicitly when clinically informative, but do not let missingness dominate the latent definition unless justified.
+10. Mark rules as high / medium / low confidence.
+
+For each decision tree, provide:
+1. Latent variable name.
+2. Clinical interpretation of label 1.
+3. Input variables.
+4. Domain indicators.
+5. Scoring function.
+6. Binary threshold.
+7. Missingness policy.
+8. Pseudocode.
+9. A compact Mermaid flowchart.
+10. Clinical rationale.
+11. Potential false positives and false negatives.
+12. Confidence level.
+
+The decision trees should be designed so they can be directly implemented in code to generate a latent_tags.csv output.
+
+Use naming convention:
+LAT_<LATENT_NAME> = 0/1
+
+For example:
+LAT_SHOCK = 1 means the patient has evidence of circulatory shock or clinically meaningful hemodynamic instability.
+LAT_RENAL_DYSFUNCTION = 1 means the patient has evidence of acute or clinically meaningful renal dysfunction.
+LAT_GLOBAL_SEVERITY = 1 means the patient has evidence of multi-domain severity according to the score-based tree.
+
+After creating the decision trees, verify:
+- Every approved latent variable has a binary tree.
+- Every tree uses only allowed variables.
+- No tree uses mortality or future outcome information.
+- Every threshold is clinically or statistically justified.
+- Every tree can be implemented on irregular time-series data.
+
+Only after this verification, proceed to DAG construction.
+
+--------------------------------------------
+PHASE 6 — DAG construction rules
+--------------------------------------------
+
+Construct the DAG only after:
+1. The dataset variables were audited.
+2. The latent variables were selected and finalized.
+3. The binary decision trees were constructed and validated.
+
+The final graph must be a DAG.
+
+Rules:
+1. No directed cycles.
+2. No edge from mortality back to clinical states.
+3. No edge from future measurements to earlier latent states.
+4. No automatic observed-variable-to-observed-variable causal chains unless there is a true clinical mechanism.
+5. Prefer latent-state-mediated explanations over direct lab-to-lab causation.
+6. Use temporal and clinical ordering:
+   - Background risk precedes acute illness.
+   - Acute insult precedes or contributes to global severity.
+   - Global severity may contribute to organ dysfunction.
+   - Organ dysfunction contributes to mortality.
+   - Organ dysfunction produces observed abnormal measurements.
+7. Allow clinically justified latent-to-latent edges, such as:
+   - Chronic risk → acute vulnerability
+   - Acute insult → global severity
+   - Global severity → shock
+   - Shock → renal dysfunction
+   - Shock → hepatic dysfunction
+   - Shock → metabolic derangement
+   - Inflammation/sepsis → shock
+   - Inflammation/sepsis → coagulation dysfunction
+   - Respiratory failure → metabolic derangement
+   - Renal dysfunction → metabolic derangement
+   - Cardiac injury → shock
+8. Avoid over-dense DAGs. Use sparse, clinically meaningful edges.
+9. Each edge must have a mechanism and confidence score.
+10. If an edge is plausible but uncertain, mark it as optional or low-confidence.
+11. Do not confuse measurement with intervention.
+12. Do not confuse association with causation.
+13. Do not use the mortality label to define latent variables in a way that leaks the outcome.
+14. Observed variables should usually be children of latent states, not parents of latent states.
+15. Binary latent labels generated by the decision trees are operational proxies for latent states, not the biological states themselves. Make this distinction explicit.
+
+DAG construction order:
+1. Add background/static nodes.
+2. Add approved latent clinical-state nodes.
+3. Add mortality outcome node.
+4. Add observed measurement nodes as manifestations of latent states.
+5. Add measurement/missingness process nodes if needed.
+6. Add background-to-latent edges.
+7. Add latent-to-latent edges.
+8. Add latent-to-mortality edges.
+9. Add latent-to-observed measurement edges.
+10. Add latent/background-to-measurement-process edges.
+11. Check acyclicity.
+12. Check clinical plausibility.
+13. Check whether the graph is sparse enough.
+
+--------------------------------------------
+PHASE 7 — Iterative validation procedure
+--------------------------------------------
+
+Do not produce the final answer in one pass.
+
+Use the following internal process:
+
+Round 1:
+Create an initial list of candidate latent variables from the official dataset variables.
+
+Round 2:
+Map every observed variable to one or more latent clinical states. Identify unassigned variables and decide whether they are irrelevant, background, outcome, treatment, or measurement-process variables.
+
+Round 3:
+Finalize the latent-variable set. Remove, merge, or mark optional latent variables that are poorly supported.
+
+Round 4:
+Construct rule-based binary decision trees for every approved latent variable using observed and metadata variables.
+
+Round 5:
+Validate the decision trees:
+- Do the rules use only available variables?
+- Are thresholds clinically meaningful?
+- Is missingness handled correctly?
+- Is there outcome leakage?
+- Are the trees implementable on irregular time-series data?
+- Are false positives/false negatives acceptable?
+
+Round 6:
+Construct a first-pass latent DAG using only approved latent variables. Check for cycles, clinically implausible edges, and over-dense structure.
+
+Round 7:
+Research again. Compare the graph to known clinical severity frameworks and EHR causal/phenotype-network literature. Revise latent variables, decision rules, and edges if needed.
+
+Round 8:
+Perform adversarial critique:
+- Which latent variables are not truly identifiable from the dataset?
+- Which decision-tree rules are too weak or too dependent on a single measurement?
+- Which edges are only correlations?
+- Which observed variables were incorrectly treated as causes?
+- Which latent variables are poorly measured?
+- Which missingness patterns may bias definitions?
+- Which edges create collider bias if adjusted for?
+- Which variables should not be adjusted for when estimating effects on mortality?
+- Which variables are mediators rather than confounders?
+- Which latent definitions risk outcome leakage?
+
+Only after these rounds, produce the final answer.
+
+--------------------------------------------
+PHASE 8 — Required final answer representation
+--------------------------------------------
+
+The final answer must be a structured, thesis-style technical report, not a loose narrative, a short summary, or an unordered list of findings.
+Do not label the final answer as phases. The phases above are the work protocol; the final answer is the report.
+
+Before Section 1, begin with a short opening synthesis of 2–4 paragraphs:
+- State the clinically appropriate causal level for the dataset.
+- State that observed labs, vitals, charted values, and tests are mainly manifestations or proxies of latent physiologic states, not primary causal variables.
+- State the strongest high-level DAG pattern in one sentence, for example:
+  background/case-mix → latent acute physiology and organ dysfunction → observed measurements / care intensity / measurement process → mortality.
+- State the main dataset limitations that constrain identifiability.
+
+Your final answer must then contain exactly the following numbered top-level sections and order.
+
+1. Dataset audit
+Use compact Markdown tables.
+Include:
+- Variable name
+- Variable type: background / observed time-varying / outcome / treatment / care-process / measurement-process / irrelevant-noisy
+- Clinical meaning
+- Unit or coding if available
+- Notes
+
+If the dataset has many variables, group the table into coherent blocks such as background variables, outcomes, interventions/care-process variables, time-varying vitals, laboratory variables, charted variables, and measurement-process variables.
+
+2. Candidate latent variables
+Use a Markdown table.
+Include:
+- Candidate latent variable name
+- Clinical meaning
+- Supporting observed variables
+- Dataset support level: high / medium / low / absent
+- Decision: keep / merge / optional / reject
+- Rationale
+
+This section must show that latent variables were considered before the DAG was built.
+
+3. Final approved latent variables
+Use a Markdown table.
+Include:
+- Latent variable name
+- Clinical meaning
+- Why it is latent rather than directly observed
+- Observed indicators
+- Suggested binary definition
+- Missingness strategy
+- Causal role: confounder / mediator / collider risk / treatment-effect modifier / outcome-proximal severity marker / proxy-label target
+- Confidence: high / medium / low
+- Rationale
+
+This section must make clear which latent variables are actually allowed to appear as latent nodes in the DAG.
+
+4. Rule-based binary decision trees
+Provide one repeated subsection per approved latent variable.
+For each tree include:
+- Latent variable name
+- Binary output name using the convention LAT_<LATENT_NAME>
+- Clinical interpretation of label 1
+- Input variables
+- Domain indicators
+- Score formula
+- Binary threshold
+- Missingness policy
+- Pseudocode
+- Compact Mermaid flowchart
+- Clinical rationale
+- False positive risks
+- False negative risks
+- Confidence level
+
+Use this self-contained score-based tree pattern:
+- Define several clinically meaningful Boolean domain indicators.
+- Each domain indicator is based only on available observed measurements or metadata.
+- Combine the indicators into a score: score = sum(domain indicators).
+- Apply a threshold: if score >= THRESHOLD then LAT_<LATENT_NAME> = 1, otherwise LAT_<LATENT_NAME> = 0.
+
+Do not define any tree using mortality, survival time, discharge disposition, post-outcome variables, or future measurements that would create leakage.
+
+5. Observed-to-latent measurement model
+Use a Markdown table.
+Include:
+- Observed variable
+- Parent latent variable or variables
+- Direction of abnormality
+- Whether the measurement is specific or non-specific
+- Whether it is used in a binary decision tree
+- Whether it may also reflect treatment/care process or measurement intensity
+- Notes
+
+This section must treat observed variables primarily as measurements, proxies, or manifestations of latent states, unless the variable is truly an intervention or care-process variable.
+
+6. Latent causal DAG edge list
+Use a Markdown table.
+Include:
+- Source node
+- Target node
+- Edge type: background-to-latent / latent-to-latent / latent-to-observed / latent-to-mortality / background-to-mortality / treatment-or-care-process / measurement-process
+- Clinical mechanism
+- Confidence: high / medium / low
+- Reasoning basis
+- Decision: keep / optional / reject
+
+Use sparse clinically meaningful edges, not a dense correlation graph.
+
+7. Mortality mechanism summary
+Explain the main causal paths to mortality in text.
+Adapt the paths to the final DAG.
+Examples of acceptable path templates:
+- Chronic baseline risk → vulnerability/global severity → organ dysfunction → mortality.
+- Acute insult → inflammation/sepsis burden → shock → renal/metabolic failure → mortality.
+- Respiratory failure → hypoxemia/acidosis → global severity → mortality.
+- Cardiac injury/strain → hemodynamic instability → global severity → mortality.
+
+Do not describe mortality as being directly caused by raw measurements unless the variable is a true intervention or harmful exposure.
+
+8. Missingness and irregular sampling analysis
+Discuss:
+- Which variables are likely MCAR, MAR, MNAR, or care-intensity-driven.
+- Whether missingness and measurement frequency should be represented as separate nodes.
+- Whether measurement frequency can act as a proxy for severity, clinician suspicion, or care intensity.
+- How missingness should be handled when defining latent variables.
+- How missingness enters or does not enter the binary decision trees.
+- Whether using missingness creates bias, collider risk, or leakage risk.
+
+9. Backdoor/confounding implications
+For the purpose of estimating causal effects on mortality:
+- Identify likely confounders.
+- Identify likely mediators.
+- Identify colliders to avoid conditioning on.
+- Identify outcome-proximal severity markers that may be inappropriate adjustment variables for some treatment/exposure questions.
+- Explain which variables are safe to adjust for depending on the treatment/exposure of interest.
+- Explain whether the binary latent tags are safe adjustment variables or whether they may be descendants, mediators, colliders, or proxy outcomes.
+
+10. Graph specification
+Provide the final DAG in three formats:
+A. Adjacency list.
+B. Mermaid graph.
+C. Python NetworkX edge list.
+
+Use clear node prefixes:
+- BG_ for background variables
+- LAT_ for latent variables
+- OBS_ for observed measurements
+- TRT_ for interventions or care-process variables
+- MISS_ for missingness/measurement-process variables
+- OUT_ for mortality outcome
+
+11. Decision-tree implementation specification
+Provide a code-oriented specification for generating a latent tag table.
+Include:
+- Required input columns
+- Derived summary features, such as first, worst, mean, slope, variability, count, and missingness
+- One function per latent variable
+- Expected binary output column names
+- Handling of missing variables
+- Unit assumptions
+- Threshold table
+- Validation checks
+
+The specification must be concrete enough to implement without reinterpreting the clinical logic.
+
+12. Rejected alternatives
+List important variables, latent definitions, decision rules, or edges that were considered but rejected.
+For each rejected item, give the reason, such as:
+- Insufficient dataset support
+- Leakage risk
+- Weak measurement
+- Causal ambiguity
+- Collider or mediator risk
+- Overly dense graph structure
+- Not implementable from available variables
+
+13. Final confidence and limitations
+State:
+- Which latent variables are strongest.
+- Which latent variables are weakest.
+- Which decision trees are most reliable.
+- Which decision trees are most uncertain.
+- Which DAG edges are most uncertain.
+- What additional data would improve identifiability.
+- Why the graph is a clinically plausible causal DAG rather than a proven ground-truth DAG.
+
+Formatting requirements:
+- Use clear Markdown headings matching the numbered sections above.
+- Use Markdown tables for the dataset audit, candidate latent variables, approved latent variables, measurement model, and DAG edge list.
+- Use fenced code blocks for pseudocode, Mermaid graphs, and NetworkX edge lists.
+- Keep the report implementable: the reader should be able to turn the decision-tree section into latent-tag generation code.
+- Be explicit when a variable is a measurement proxy, treatment/care-process variable, confounder, mediator, collider, or outcome-proximal severity marker.
+- Do not reference any local files, images, prior generated reports, or external artifacts other than the official dataset description website specified at the top of this prompt.
+
+--------------------------------------------
+PHASE 9 — Style and rigor requirements
+--------------------------------------------
+
+Be rigorous and skeptical.
+
+Every final latent variable must be selected before the DAG is constructed.
+Every final latent variable must have a binary decision tree.
+Every final decision tree must be implementable in code.
+Every final edge must be justified.
+Every latent variable must be clinically interpretable.
+Every observed variable must be categorized.
+Do not hallucinate variables not present in the dataset.
+Do not overclaim certainty.
+Do not present the graph as statistically proven from observational data alone.
+Do not ignore informative missingness.
+Do not treat labs/vitals as primary causal states.
+Do not create a dense graph just because variables correlate.
+Do not define latent variables after creating the DAG.
+Do not construct the DAG before the latent variables and binary decision trees are stable.
+
+The final output should be detailed enough to implement in code:
+- latent tag construction,
+- rule-based binary decision trees,
+- latent_tags.csv generation,
+- DAG construction,
+- confounder selection,
+- mortality-effect estimation,
+- sensitivity analysis.
+
+Begin now by opening DATASET-DESCRIPTION-LINK and auditing the dataset variables.

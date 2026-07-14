@@ -1,133 +1,176 @@
-# Stage 4.2 — Draft the Predictive Modeling of Proxy States Chapter
+# Stage 4.3 — Draft the Clinical Proxy-State Construction Chapter
 
-## Context
+## Authoritative Task Declaration
 
-Stages 0–3, Stage 4.0, and Stage 4.1 of the CliniCause thesis workflow are complete.
+Implement this `prompt.txt` exactly as written.
+
+The active task is:
+
+```text
+Stage 4.3 — Chapter 5: Clinical Proxy-State Construction
+```
+
+There is no conflict between the stage number and the chapter number.
+
+The approved drafting order is intentionally different from the final thesis chapter order:
+
+```text
+Stage 4.1 drafted Chapters 3 and 4.
+Stage 4.2 drafted Chapter 6.
+Stage 4.3 now drafts Chapter 5.
+```
+
+The older granular entries in:
+
+```text
+thesis-writing/planning/stage4_prompt_queue.md
+```
+
+are evidence-routing records created during Stage 3. They do not override this prompt.
+
+Stage 4.3 combines the older proxy-state tasks into one coherent chapter-writing task and covers all four approved sections:
+
+```text
+C5.1 — Rationale and Terminology
+C5.2 — PhysioNet Proxy-State Rules
+C5.3 — MIMIC Proxy-State Rules and Validation Artifacts
+C5.4 — Predicted and Majority-Vote Proxy States
+```
+
+Do not stop merely because the old queue divided these topics into separate task IDs.
+
+---
+
+# 1. Context
+
+Stages 0–3 and Stages 4.0–4.2 are complete.
 
 The latest approved commit is expected to be:
 
 ```text
-d7edc78 step 4.1
+c9f6b12 step 4.2
 ```
 
-Stage 4.1 drafted:
-
-```text
-Chapter 3 — Problem Definition and Study Design
-Chapter 4 — Data and Preprocessing
-```
-
-It also verified the WSL PDF and LaTeX toolchain and produced a successful XeLaTeX/Biber build.
-
-This task covers only:
-
-```text
-Chapter 6 — Predictive Modeling of Proxy States
-```
-
-The target file is:
+Stage 4.2 drafted:
 
 ```text
 thesis-writing/thesis/chapters/06_predictive_modeling.tex
 ```
 
-The approved section structure is:
+and verified a successful XeLaTeX/Biber build.
+
+This task covers only:
 
 ```text
-C6.1 — Self-Supervised STraTS Pretraining
-C6.2 — Supervised Multi-Label Models
-C6.3 — Prediction Export and Normalization
+Chapter 5 — Clinical Proxy-State Construction
 ```
 
-Do not draft Chapter 5 or any later methods, experiments, results, discussion, introduction, or background chapter.
+The target file is:
 
-This chapter is a methodology chapter. It must explain what the predictive implementation does, but it must not report final model performance.
+```text
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+```
+
+This is a methods and construct-definition chapter.
+
+It must explain:
+
+* why proxy states are needed;
+* what the project means by a proxy state;
+* how rule-based states are derived in PhysioNet;
+* how rule-based states are derived in MIMIC-III;
+* how the two datasets differ;
+* which measurements and rule families enter each state;
+* which temporal summaries or aggregation operators are used;
+* how predicted proxy-state outputs differ from rule-derived labels;
+* how binary predictions are normalized for voting;
+* how majority voting aligns records and combines voters;
+* what validation evidence exists;
+* what validation and provenance evidence is still missing.
+
+The chapter must not present final numerical results.
 
 ---
 
-# 1. Objective
+# 2. Objective
 
-Draft a technically accurate and academically written Chapter 6 that explains:
-
-* the self-supervised STraTS pretraining task;
-* the STraTS and iSTraTS representations;
-* the common supervised multi-label proxy-prediction task;
-* the GRU, GRU-D, TCN, SAnD, and InterpNet baselines;
-* model-specific handling of irregular observations and missingness;
-* the shared target and output interface;
-* evaluation-metric definitions without numerical values;
-* checkpointing and transfer/fine-tuning behavior as actually implemented;
-* prediction CSV export;
-* conversion of combined probability/binary exports into downstream voter inputs;
-* limitations in final split, checkpoint, and archive provenance.
-
-The chapter must distinguish clearly between:
+Draft an academically rigorous version of:
 
 ```text
-method described in a paper
-method implemented in the repository
-method configured in wrapper scripts
-method apparently executed
-method with an approved final result artifact
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
 ```
 
-Do not collapse these evidence levels.
+The completed chapter must:
+
+1. define proxy-state terminology conservatively;
+2. document the active PhysioNet rule implementation;
+3. document the active MIMIC rule implementation;
+4. exclude legacy and draft taggers from the primary method unless execution evidence requires otherwise;
+5. distinguish dataset-specific proxy-state taxonomies;
+6. create a source-supported proxy-state definition table;
+7. explain the available MIMIC validation artifacts without reporting final values;
+8. distinguish rule-derived, model-predicted, and majority-vote proxy states;
+9. document majority-vote input validation, identifier alignment, latent-column alignment, and tie handling;
+10. preserve all unresolved clinical-review and provenance limitations;
+11. use only verified citation keys;
+12. compile successfully with XeLaTeX and Biber.
 
 ---
 
-# 2. Mandatory Initial Inspection
+# 3. Mandatory Initial Inspection
 
-## 2.1 Repository and Commit State
+## 3.1 Git State
 
 From the repository root, run:
 
 ```bash
 git status --short
 git branch --show-current
-git log -4 --oneline
-git show --stat --oneline d7edc78
+git log -5 --oneline
+git show --stat --oneline c9f6b12
 ```
 
 Verify that:
 
-* `d7edc78` exists;
-* its message is `step 4.1`;
-* it follows the Stage 4.0 commit;
-* Chapters 3 and 4 and the Stage 4.1 evidence report are present;
-* the Chapter 6 skeleton is present.
+* `c9f6b12` exists;
+* its message is `step 4.2`;
+* it follows `d7edc78 step 4.1`;
+* Chapter 6 and the Stage 4.2 evidence report are present;
+* the Chapter 5 skeleton remains present.
+
+Record the initial working-tree state.
 
 Do not:
 
 * reset;
+* clean;
 * checkout another branch;
-* clean the working tree;
 * stage files;
-* amend commits;
+* amend a commit;
+* discard unrelated changes;
 * commit;
-* push;
-* discard unrelated local changes.
+* push.
 
-Record the pre-existing working-tree state.
+## 3.2 Repository Instructions
 
-## 2.2 Repository Instructions
-
-Locate and inspect all applicable instruction files before editing, including:
+Locate and inspect all applicable instruction files, including:
 
 ```text
 AGENTS.md
-STraTS/AGENTS.md
 causal-irregular-time-series/AGENTS.md
+final-results/AGENTS.md
+final-results/causal-outputs/AGENTS.md
 ```
 
 Apply the instructions governing each inspected path.
 
-When instructions conflict with this prompt, stop and report the conflict rather than silently choosing one.
+The detailed `final-results/AGENTS.md` evidence hierarchy should be used when interpreting result-like proxy artifacts.
 
-## 2.3 WSL Toolchain
+Do not treat the directory name `final-results` as proof that an artifact is approved or final.
 
-The WSL PDF and LaTeX toolchain was successfully installed and verified during Stage 4.1.
+## 3.3 Toolchain Verification
 
-Confirm that these commands remain available:
+Confirm that the verified WSL toolchain remains available:
 
 ```bash
 command -v pdfinfo
@@ -137,13 +180,11 @@ command -v xelatex
 command -v biber
 ```
 
-Record only material changes from the Stage 4.1 environment.
+Do not reinstall tools when the commands remain available.
 
-Do not reinstall the toolchain when all commands are present.
+## 3.4 Baseline Thesis Build
 
-## 2.4 Baseline Thesis Build
-
-Before drafting, run:
+Before editing, run:
 
 ```bash
 cd thesis-writing/thesis
@@ -153,26 +194,26 @@ test -f main.pdf
 pdfinfo main.pdf
 ```
 
-Confirm:
+Record:
 
-* the baseline build succeeds;
-* Biber executes;
-* the PDF is generated;
-* no fatal LaTeX error exists;
-* there are no undefined citations or references;
-* chapter and section labels are unique.
+* return status;
+* baseline PDF path;
+* page count;
+* citation status;
+* reference status;
+* duplicate-label status;
+* fatal errors;
+* nonfatal warnings.
 
-Record the baseline page count.
+The expected baseline is approximately 44 pages, but verify the actual current page count.
 
-If the baseline fails, identify and repair only a narrow thesis-workspace compilation defect before drafting.
-
-Do not edit scientific prose in another chapter to fix a build problem.
+If the baseline fails, make only the narrowest permitted compilation repair before drafting.
 
 ---
 
-# 3. Required Planning and Audit Inspection
+# 4. Required Planning and Audit Inspection
 
-Inspect the relevant Stage 3 planning files:
+Inspect:
 
 ```text
 thesis-writing/planning/thesis_story.md
@@ -189,17 +230,21 @@ thesis-writing/planning/stage4_prompt_queue.md
 Pay particular attention to:
 
 ```text
-C6.1
-C6.2
-C6.3
-T-MODEL-01
-T-TRAIN-CFG-01
-T-PRED-TASK-01
+C5.1
+C5.2
+C5.3
+C5.4
+T-PROXY-01
+T-PROXY-PREV-01
+T-PROXY-COOC-01
+T-PROXY-MORT-01
 T-PRED-EXPORT-01
-T-PRED-METRICS-01
+F-TREE-PHY-*
+F-TREE-MIMIC-*
+F-DATAFLOW-01
 ```
 
-Inspect the relevant audit files:
+Inspect:
 
 ```text
 thesis-writing/audit/repository_map.md
@@ -208,22 +253,24 @@ thesis-writing/audit/experiment_inventory.csv
 thesis-writing/audit/claim_evidence_ledger.csv
 thesis-writing/audit/terminology_map.md
 thesis-writing/audit/unresolved_questions.md
+thesis-writing/audit/figure_table_inventory.md
 ```
 
-Inspect the previous Stage 4 logs:
+Inspect previous Stage 4 reports:
 
 ```text
 thesis-writing/logs/stage_4_0_setup_report.md
 thesis-writing/logs/stage_4_1_evidence_report.md
+thesis-writing/logs/stage_4_2_evidence_report.md
 thesis-writing/logs/unresolved_placeholders.md
 thesis-writing/logs/deferred_fixes.md
 ```
 
-Use these documents as evidence indexes, not as substitutes for current source inspection.
+Use the planning and audit files as evidence indexes, but verify technical claims against current source.
 
 ---
 
-# 4. Literature Inspection
+# 5. Required Literature Inspection
 
 Inspect:
 
@@ -233,152 +280,311 @@ thesis-writing/literature/metadata/catalog.csv
 thesis-writing/literature/metadata/references.bib
 ```
 
-Verify the exact citation keys before inserting them.
+Verify exact citation keys before using them.
 
-Expected primary method keys include:
-
-```text
-tipirneni2022strats
-cho2014gru
-che2018grud
-bai2018tcn
-song2018sand
-shukla2019interpolation
-```
-
-The MIMIC benchmark citation may be used for dataset or benchmark context when relevant:
+Expected relevant keys include:
 
 ```text
-harutyunyan_2019_mimiciii_benchmark
+banda_2018_electronic_phenotyping
+essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping
+ratner_et_al_2020_snorkel
+singer_2016_sepsis3
+kdigo_2012_acute_kidney_injury
+taylor_et_al_2001_isth_dic
+vincent_et_al_1996_sofa
+ranieri_et_al_2012_berlin_ards
 ```
 
-Do not use the optional early InterpNet workshop paper as the main InterpNet citation when the canonical 2019 source is available.
+Use these sources according to their actual scope.
 
-Academic citations support method definitions and context. They do not prove local execution, checkpoint use, or result values.
+Important limits:
+
+* Electronic phenotyping literature supports the general construct-design context, not validation of this project’s states.
+* Sepsis-3 supports clinical context for sepsis, shock, organ dysfunction, vasopressor, and lactate concepts; it does not prove that the implemented rule is a formal Sepsis-3 diagnosis.
+* KDIGO supports renal dysfunction and AKI concepts; do not claim full KDIGO staging unless the source code implements it.
+* ISTH DIC and SOFA references provide clinical grounding; do not state that the project computes the complete formal score unless verified.
+* Berlin ARDS and respiratory-failure phenotyping sources provide respiratory grounding; do not call a proxy rule an adjudicated ARDS diagnosis.
+* Snorkel supports weak-supervision and aggregation context; the project does not implement the Snorkel generative label model.
+
+When a proxy-state rule lacks adequate citation coverage:
+
+* use a precise `[CITATION REQUIRED: ...]` placeholder;
+* add it to the placeholder register;
+* record a deferred citation gap;
+* do not invent a clinical citation.
+
+Do not edit the bibliography or literature metadata during this task.
 
 ---
 
-# 5. Required STraTS Source Inspection
+# 6. Required Active Source Inspection
 
-Inspect the current STraTS repository rather than relying only on copied context documents.
+## 6.1 PhysioNet Tagger
 
-At minimum inspect:
-
-```text
-STraTS/SCRIPTS.md
-STraTS/requirements.txt
-STraTS/src/main.py
-STraTS/src/dataset_pretrain.py
-STraTS/src/dataset.py
-STraTS/src/models.py
-STraTS/src/evaluator_pretrain.py
-STraTS/src/evaluator.py
-STraTS/src/learning_curves.py
-STraTS/src/modeling_strats.py
-STraTS/src/modeling_gru.py
-STraTS/src/modeling_grud.py
-STraTS/src/modeling_tcn.py
-STraTS/src/modeling_sand.py
-STraTS/src/modeling_interpnet.py
-```
-
-Inspect all current predictive wrapper scripts, including where present:
+Inspect the complete current active file:
 
 ```text
-STraTS/run_main.sh
-STraTS/run_main_rest.sh
-STraTS/run_main_mimic.sh
-STraTS/run_full_main.sh
-STraTS/run_strats_job.sbatch
+causal-irregular-time-series/src/tagging_latent_variables_physionet.py
 ```
 
-Verify every model name and filename against the actual tree.
+Also inspect:
 
-Do not assume that documentation filenames are correct when they conflict with current source.
+```text
+causal-irregular-time-series/configs/physionet-global-variables.csv
+causal-irregular-time-series/SCRIPTS.md
+causal-irregular-time-series/src/dataset_config.py
+```
+
+Inspect relevant consumers or renderers only as needed:
+
+```text
+causal-irregular-time-series/src/decision_trees_plot.py
+causal-irregular-time-series/src/mortality_prediction_using_latents.py
+causal-irregular-time-series/src/matching_causal_effect.py
+causal-irregular-time-series/src/cate_estimation.py
+```
+
+Verify:
+
+* input artifact contract;
+* required columns;
+* feature extraction;
+* measurement aliases;
+* time-window behavior;
+* summary statistics;
+* threshold values;
+* logical operators;
+* missing-value behavior;
+* output ordering;
+* command-line options;
+* the meaning of `--optimized`;
+* the role and expected format of `--thresholds-path`;
+* output CSV schema;
+* decision-tree pickle output;
+* any difference between default and optimized thresholds.
+
+Do not assume the optimized-threshold mode was used in final results merely because the option exists.
+
+## 6.2 MIMIC Tagger
+
+Inspect the complete current active file:
+
+```text
+causal-irregular-time-series/src/tagging_latent_variables_mimiciii.py
+```
+
+Also inspect:
+
+```text
+causal-irregular-time-series/configs/mimic-global-variables.csv
+causal-irregular-time-series/src/preprocess_mimic_iii_large_contract.py
+causal-irregular-time-series/SCRIPTS.md
+```
+
+Verify all supported input modes:
+
+```text
+summary CSV
+canonical processed pickle
+raw concept CSV inputs
+```
+
+Verify:
+
+* which input modes are mutually exclusive;
+* how canonical pickle mode reconstructs the required summary features;
+* measurement aliases;
+* GCS reconstruction;
+* window or aggregation behavior;
+* threshold definitions;
+* logical combinations;
+* missing-value handling;
+* output latent ordering;
+* output artifact schemas;
+* validation-summary generation;
+* prevalence output;
+* mortality-by-tag output;
+* co-occurrence output;
+* decision-tree serialization.
+
+Do not infer which MIMIC input mode produced the final archive unless provenance evidence confirms it.
+
+## 6.3 Legacy and Draft Taggers
+
+Inspect, but do not use as the primary method unless execution evidence requires it:
+
+```text
+causal-irregular-time-series/src/draft/
+causal-irregular-time-series/src/draft/tagging_latent_variables_physionet_old.py
+causal-irregular-time-series/src/draft/tagging_latent_variables_mimiciii_old.py
+causal-irregular-time-series/src/draft/clinically_sufficient_tagging_latent_variables.py
+causal-irregular-time-series/src/draft/optimize_latent_thresholds.py
+```
+
+Also search for other similarly named active or historical files.
+
+Determine:
+
+* which files are explicitly designated active;
+* which are legacy;
+* whether any archived artifacts appear inconsistent with the active scripts;
+* whether threshold optimization belongs to the active final workflow or an older experiment.
+
+Do not silently blend rules from multiple implementations.
+
+When final artifact columns or metadata disagree with the active implementation, record the mismatch and limit the chapter wording.
 
 ---
 
-# 6. Required Export and Orchestration Inspection
+# 7. Required Artifact Inspection
 
-For prediction export, normalization, and downstream handoff, inspect:
+Read-only inspection is permitted for text, CSV, and JSON artifacts.
+
+## 7.1 PhysioNet Rule Artifacts
+
+Inspect:
 
 ```text
-router.py
-SCRIPTS.md
-causal-irregular-time-series/src/split_predicted_latent_tags.py
+final-results/trees/physionet-tags/physionet-latent-tags.csv
+final-results/trees/physionet-tags/
+causal-irregular-time-series/trees/physionet-trees/
+```
+
+Verify:
+
+* file existence;
+* CSV headers;
+* identifier column;
+* proxy-state columns;
+* row count;
+* duplicate `ts_id` status;
+* whether values are binary;
+* whether column names and ordering match the active tagger;
+* matching tree pickle or image availability;
+* provenance evidence.
+
+Do not report prevalence values or cohort counts in Chapter 5.
+
+Do not deserialize a decision-tree pickle naively. Saved callables may depend on the producing script’s module context.
+
+## 7.2 MIMIC Rule and Validation Artifacts
+
+Inspect:
+
+```text
+final-results/trees/mimic-tags/latent_tags.csv
+final-results/trees/mimic-tags/latent_tags_with_features.csv
+final-results/trees/mimic-tags/prevalence.csv
+final-results/trees/mimic-tags/mortality_by_tag.csv
+final-results/trees/mimic-tags/cooccurrence_phi.csv
+final-results/trees/mimic-tags/validation_summary.json
+final-results/trees/mimic-tags/
+causal-irregular-time-series/trees/mimic-trees/
+```
+
+Verify schemas and internal consistency.
+
+Expected artifact meanings must be confirmed rather than assumed:
+
+```text
+latent_tags.csv
+    one row per ts_id with binary proxy-state columns
+
+latent_tags_with_features.csv
+    feature summaries plus proxy-state outputs
+
+prevalence.csv
+    counts and prevalence by proxy state
+
+mortality_by_tag.csv
+    unadjusted mortality association by proxy-state value
+
+cooccurrence_phi.csv
+    pairwise proxy-state association matrix
+
+validation_summary.json
+    summary metadata, sanity checks, prevalence and association records
+```
+
+Do not insert numerical values from these files into Chapter 5.
+
+Numerical prevalence, mortality association, and co-occurrence findings belong to the Results chapter after result-manifest validation.
+
+State clearly that `mortality_by_tag.csv` is associational and not causal evidence.
+
+## 7.3 Majority-Vote Artifacts
+
+Inspect:
+
+```text
+final-results/causal-outputs/outputs-*/majority_vote/latent_tags_majority_vote.csv
+final-results/causal-outputs/outputs-*/run_summary.json
+```
+
+Use `run_summary.json` where available to determine:
+
+* the voter input directory;
+* command invocation;
+* stage status;
+* output path;
+* dataset;
+* config reference.
+
+Do not assume that multiple identical majority-vote outputs are independent experimental results.
+
+---
+
+# 8. Majority-Vote and Prediction-Handoff Source Inspection
+
+Inspect:
+
+```text
 causal-irregular-time-series/src/majority_vote_latents.py
+causal-irregular-time-series/src/split_predicted_latent_tags.py
 causal-irregular-time-series/main.py
+causal-irregular-time-series/scripts/run_main.sh
+router.py
+STraTS/src/main.py
 ```
 
-Use these files to establish:
+Verify:
 
-* how STraTS predictions are exported;
-* the structure of probability and binary columns;
-* how combined prediction CSVs are split;
-* what files are suitable as binary voter inputs;
-* how the router collects or normalizes predictive artifacts;
-* where majority-vote aggregation occurs.
+* accepted voter file extension and discovery order;
+* required `ts_id` column;
+* duplicate-ID handling;
+* binary-value validation;
+* probability-column rejection or exclusion;
+* latent-column comparison;
+* treatment of additional or missing columns;
+* identifier intersection or join behavior;
+* output row ordering;
+* voter count;
+* majority threshold;
+* exact tie convention;
+* output schema;
+* output path;
+* how the output becomes the latent input for mortality, matching, and CATE stages.
 
-Do not draft the detailed majority-vote methodology in Chapter 6. That belongs in Chapter 5.
+The expected behavior is that voting occurs over binary-only voter CSVs aligned on shared `ts_id`, with ties assigned to 1, but confirm this directly from current source before writing it as fact.
 
-Chapter 6 may explain only the predictive-output handoff and cross-reference the later or earlier proxy-aggregation section using the existing thesis structure.
+Do not describe majority vote as:
+
+* clinical consensus;
+* expert adjudication;
+* ground truth;
+* validated ensemble superiority;
+* a probabilistic label model.
+
+It is a deterministic aggregation rule over available binary voters.
 
 ---
 
-# 7. Result-Artifact Inspection Boundary
-
-You may inspect predictive result artifacts only to classify provenance and implementation status.
-
-Relevant locations may include:
-
-```text
-final-results/strats-outputs/
-STraTS/outputs/
-training_summary.txt
-log.txt
-checkpoint_best.bin
-pt_saved_variables.pkl
-predicted*_latent_tags*.csv
-learning_curve_history.csv
-```
-
-Do not extract or write performance values in Chapter 6.
-
-Do not write:
-
-* AUROC values;
-* AUPRC values;
-* minRP values;
-* losses;
-* comparative rankings;
-* claims that one model outperformed another;
-* claims of statistical significance.
-
-Those belong to the experimental-design and results stages after a result manifest and approved source selection exist.
-
-You may state evidence status, for example:
-
-* implementation present;
-* wrapper configuration present;
-* checkpoint artifact present;
-* final result artifact missing;
-* final archive provenance incomplete.
-
-Treat InterpNet carefully:
-
-* describe the implemented method when verified;
-* cite the canonical paper;
-* do not claim an approved final performance result when none exists;
-* retain an actionable result placeholder for Chapter 10 or the central placeholder log.
-
----
-
-# 8. Allowed Edit Scope
+# 9. Allowed Edit Scope
 
 You may edit:
 
 ```text
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
 thesis-writing/logs/unresolved_placeholders.md
 thesis-writing/logs/deferred_fixes.md
 ```
@@ -386,10 +592,10 @@ thesis-writing/logs/deferred_fixes.md
 You may create:
 
 ```text
-thesis-writing/logs/stage_4_2_evidence_report.md
+thesis-writing/logs/stage_4_3_evidence_report.md
 ```
 
-A clean build may update the generated file:
+The clean build may update:
 
 ```text
 thesis-writing/thesis/main.pdf
@@ -397,562 +603,560 @@ thesis-writing/thesis/main.pdf
 
 Do not manually edit the PDF.
 
-You may make a narrow compilation-only repair to:
+A narrow compilation-only repair may be made to:
 
 ```text
 thesis-writing/thesis/main.tex
 thesis-writing/thesis/latexmkrc
 ```
 
-only when a fatal build error requires it. Document any such repair.
+only when required by a fatal build error and fully documented.
 
 Do not edit:
 
 ```text
-Chapter 1
-Chapter 2
-Chapter 3
-Chapter 4
-Chapter 5
+Chapters 1–4
+Chapter 6
 Chapters 7–12
 front matter
 appendices
 planning files
 audit files
-bibliography metadata
+literature metadata
+bibliography
 research code
-configuration files
-results
+config files
+result artifacts
 ```
 
-Do not update the stale thesis README during this task. It is already recorded as a deferred cleanup item.
+Do not update the stale thesis README during this task. That is already recorded as a deferred issue.
 
 ---
 
-# 9. Evidence Policy
+# 10. Forbidden Actions
 
-For every technical statement, classify the basis internally as one of:
+Do not:
+
+* modify proxy-state thresholds;
+* optimize thresholds;
+* run Optuna;
+* rerun the taggers;
+* regenerate majority-vote outputs;
+* run mortality prediction;
+* run matching or causal estimation;
+* regenerate decision trees;
+* deserialize unknown tree pickles directly;
+* modify result CSVs or JSON;
+* add clinical claims absent from code or literature;
+* call proxy states diagnoses or ground truth;
+* call majority vote clinical consensus;
+* present prevalence values;
+* present mortality rates or risk ratios;
+* present co-occurrence values;
+* present predictive metrics;
+* present causal estimates;
+* claim final artifact provenance where it remains incomplete;
+* repair research code;
+* add bibliography entries;
+* commit or push.
+
+---
+
+# 11. Evidence-Strength Policy
+
+For each technical statement, classify its evidence internally as:
 
 ```text
-PAPER-DESCRIBED
+LITERATURE-GROUNDED
 IMPLEMENTATION-CONFIRMED
 CONFIGURATION-CONFIRMED
+ARTIFACT-SCHEMA-CONFIRMED
 EXECUTION-SUPPORTED
-RESULT-ARTIFACT-PRESENT
 PROVENANCE-INCOMPLETE
+CLINICAL-VALIDATION-INCOMPLETE
 BLOCKED
 ```
 
-The main prose does not need to display these labels repeatedly, but the evidence report must.
+The evidence report must show these classifications.
 
-Use the strongest wording justified by the evidence.
+The main prose should use wording no stronger than the evidence supports.
 
-Examples:
-
-### Acceptable
+Acceptable:
 
 ```text
-The implementation represents each STraTS observation using learned embeddings of time, value, and variable identity.
+The implementation defines a renal-dysfunction proxy using creatinine- and urine-related measurements.
 ```
 
 ```text
-The wrapper scripts configure self-supervised pretraining before supervised proxy-label prediction.
+The rule is clinically inspired by renal-dysfunction criteria but is not a complete adjudicated KDIGO diagnosis.
 ```
 
 ```text
-Archived checkpoint-related artifacts are present, although the exact provenance of the final copied outputs remains incomplete.
+The archived CSV has the schema expected from the active tagger, although the producing command and input-artifact hash are not fully documented.
 ```
 
-### Not acceptable without stronger evidence
+Not acceptable:
 
 ```text
-All final models were correctly pretrained.
-```
-
-```text
-Pretraining improved predictive accuracy.
+Patients with this tag had confirmed acute kidney injury.
 ```
 
 ```text
-Every exported prediction was out-of-sample.
+The proxy states were clinically validated.
 ```
 
 ```text
-The pretrained weights were successfully transferred.
+The majority vote produces the true patient state.
 ```
 
 ```text
-The final InterpNet model achieved competitive performance.
+The tree figures prove that the active tagger generated the final CSVs.
 ```
 
 ---
 
-# 10. Special Audit: Checkpoint Loading and Fine-Tuning
+# 12. Chapter 5 Requirements
 
-Inspect the complete checkpoint-loading path in:
+## 12.1 Chapter Opening
 
-```text
-STraTS/src/main.py
-STraTS/src/models.py
-```
+Open with a concise explanation that:
 
-Determine separately:
+* the project transforms heterogeneous irregular ICU measurements into a smaller set of interpretable binary constructs;
+* these constructs provide supervised targets for the predictive models and exposures for downstream observational analyses;
+* their interpretability comes from explicit rules;
+* their labels are proxies rather than verified diagnoses;
+* their value depends on construct validity, data availability, measurement quality, and clinical review.
 
-1. the intended warm-start or fine-tuning behavior;
-2. the state dictionary constructed from `--load_ckpt_path`;
-3. which state dictionary is actually passed to `load_state_dict`;
-4. how `checkpoint_best.bin` is selected and reloaded;
-5. whether the pretraining checkpoint is demonstrably used to initialize the supervised model;
-6. whether only STraTS/iSTraTS have compatible self-supervised pretraining paths;
-7. whether wrapper scripts and archived artifacts prove successful transfer.
+Cross-reference Chapter 3 for formal task definitions and Chapter 6 for predictive-model mechanics.
 
-Do not infer successful transfer from the presence of a `--load_ckpt_path` argument.
-
-When the suspected warm-start issue remains present:
-
-* distinguish intended design from actual active code;
-* avoid claiming successful pretrained initialization;
-* log a new deferred fix;
-* use conservative thesis wording;
-* retain a validation placeholder if needed.
-
-Do not repair the training code during this task.
+Do not repeat the complete preprocessing chapter.
 
 ---
 
-# 11. Chapter 6 Requirements
+## 12.2 C5.1 — Rationale and Terminology
 
-## 11.1 Chapter Opening
+Define and distinguish:
 
-Open the chapter with a concise explanation that:
+```text
+proxy state
+proxy phenotype
+clinically inspired proxy label
+rule-based proxy state
+predicted proxy state
+majority-vote proxy state
+binary proxy-state tag
+```
 
-* the prediction task uses rule-derived proxy-state vectors as supervised targets;
-* the input consists of irregular ICU measurement histories and static covariates;
-* the implementation compares STraTS-family models with recurrent, convolutional, attention-based, decay-based, and interpolation-based baselines;
-* Chapter 6 defines model and output mechanics;
-* final training configurations and numerical comparisons are deferred to Chapters 9 and 10.
+Explain the repository’s historical use of:
 
-Do not repeat the full dataset description from Chapter 4.
+```text
+latent
+latent variable
+LAT_*
+```
 
-Use a cross-reference to the data-contract discussion rather than restating it at length.
+State that the thesis retains `LAT_*` as stable implementation column names while using “proxy state” in explanatory prose.
+
+Explain that the proxy-state framework is intended to:
+
+* compress multivariate measurements into interpretable constructs;
+* supply weak or rule-derived supervised targets;
+* establish consistent variables for downstream analyses;
+* preserve a transparent mapping to source measurements.
+
+Explain limitations:
+
+* no chart-adjudicated reference labels were found;
+* thresholds approximate clinical criteria;
+* source-variable availability differs between datasets;
+* missing measurements can prevent rules from firing;
+* a negative proxy tag does not prove absence of disease;
+* a positive proxy tag does not establish a diagnosis;
+* cross-dataset states with similar names need not be identical constructs.
+
+Use:
+
+```text
+banda_2018_electronic_phenotyping
+```
+
+for general electronic-phenotyping context.
+
+Use:
+
+```text
+ratner_et_al_2020_snorkel
+```
+
+only for weak-label and aggregation context, not to claim the project implements Snorkel.
+
+Retain a clinical-review placeholder when final terminology or construct validity requires advisor or clinician approval.
 
 ---
 
-## 11.2 Section C6.1 — Self-Supervised STraTS Pretraining
+## 12.3 C5.2 — PhysioNet Proxy-State Rules
 
-Explain the verified STraTS pretraining pipeline.
+Document the exact active PhysioNet proxy-state set.
 
-### Observation Representation
-
-Verify and describe how a single irregular observation is represented.
-
-The implementation is expected to combine components corresponding to:
-
-* measurement time;
-* measurement value;
-* variable identity.
-
-Explain continuous-value embeddings only to the level supported by source and the STraTS paper.
-
-Describe:
-
-* token construction;
-* contextualization of irregular observation tokens;
-* pooling into a fixed-dimensional time-series representation;
-* integration of static demographic features;
-* the difference between STraTS and iSTraTS when verified.
-
-Do not describe iSTraTS as a separately pretrained architecture unless current source supports that statement.
-
-### Forecasting Task
-
-Verify and explain:
-
-* how forecast anchors are chosen;
-* the minimum-history condition;
-* which observations form the historical context;
-* the future prediction window;
-* how the target for each variable is selected;
-* how variables with no future observation are masked;
-* dataset-specific time-horizon or context restrictions;
-* training-derived value normalization;
-* training-split variable vocabulary construction.
-
-Where the implementation uses a two-hour prediction window or a 12-hour minimum anchor, state it only after confirming it in current source.
-
-### Pretraining Objective and Evaluation
-
-Explain:
-
-* the forecasting head;
-* the masked regression objective;
-* the role of the pretraining evaluator;
-* how validation windows are materialized or cached, when relevant;
-* the meaning of `loss_neg` if that remains the checkpoint metric.
-
-Do not report loss values.
-
-### Saved Pretraining State
-
-Verify the role and contents of:
+The expected active columns include:
 
 ```text
-pt_saved_variables.pkl
-checkpoint_best.bin
+LAT_CHRONIC_BASELINE_RISK
+LAT_GLOBAL_SEVERITY
+LAT_SHOCK
+LAT_RESPIRATORY_FAILURE
+LAT_RENAL_DYSFUNCTION
+LAT_HEPATIC_DYSFUNCTION
+LAT_COAG_HEME_DYSFUNCTION
+LAT_INFLAMMATION_SEPSIS_BURDEN
+LAT_NEUROLOGIC_DYSFUNCTION
+LAT_CARDIAC_INJURY_STRAIN
+LAT_METABOLIC_DERANGEMENT
 ```
 
-Explain what metadata can be reused during supervised loading, including where verified:
+Verify this list from current source and artifact headers.
 
-* variable vocabulary;
-* means and standard deviations;
-* maximum time.
+For each state, determine:
 
-Do not claim that a pretraining checkpoint successfully initialized final supervised models until the checkpoint-loading audit supports that statement.
+* exact output column;
+* clinical construct;
+* source measurement families;
+* temporal summary or aggregation;
+* threshold or logical rule;
+* handling of missing inputs;
+* clinical grounding citation;
+* implementation status;
+* validation limitation.
 
-### Citation
+Do not copy large blocks of Python into the thesis.
 
-Use:
+Translate the implementation into readable scientific prose and a compact table.
 
-```text
-tipirneni2022strats
-```
+### PhysioNet Rule Table
 
-for the STraTS method.
-
-Do not cite the paper as proof of local code execution.
-
----
-
-## 11.3 Section C6.2 — Supervised Multi-Label Models
-
-### Supervised Target Definition
-
-Explain that the supervised label matrix is loaded from a separate proxy-label CSV.
-
-Verify and describe:
-
-* accepted identifier column names;
-* normalization to `ts_id`;
-* row alignment with split IDs;
-* duplicate-ID checks;
-* missing-label checks;
-* treatment of all non-ID columns as target columns;
-* binary multi-label target structure;
-* per-target positive-class weighting;
-* the shared supervised loss.
-
-Use “proxy labels” or “proxy states,” not diagnoses or ground truth.
-
-### Shared Output Interface
-
-Verify that the supervised backends produce one output per proxy-state target.
-
-Explain:
-
-* number of targets determined at runtime;
-* sigmoid or probability conversion;
-* shared binary or multi-label head;
-* whether fine-tuning uses an intermediate forecasting head;
-* how static features are combined with the time-series representation.
-
-When behavior differs between scratch training and checkpoint-loaded training, describe each path separately.
-
-Do not claim that every model uses identical internal architecture merely because the output head is shared.
-
-### Model Families
-
-Describe each implemented family accurately.
-
-#### STraTS and iSTraTS
-
-Cover:
-
-* irregular observation triplets;
-* learned time/value embeddings;
-* variable embeddings;
-* transformer-style contextualization;
-* fusion attention;
-* static-feature concatenation;
-* verified distinction between STraTS and iSTraTS.
-
-Use:
+Create a table or a set of tables corresponding to:
 
 ```text
-tipirneni2022strats
-```
-
-#### GRU
-
-Cover:
-
-* recurrent sequence processing;
-* the dense hourly representation used by this implementation;
-* included observation-mask and elapsed-time channels where verified.
-
-Use:
-
-```text
-cho2014gru
-```
-
-#### GRU-D
-
-Cover:
-
-* missingness masks;
-* elapsed time since previous observation;
-* decay-based handling of missing values;
-* the actual tensors supplied by the loader.
-
-Use:
-
-```text
-che2018grud
-```
-
-#### TCN
-
-Cover:
-
-* temporal convolution;
-* the dense time-grid input;
-* shared value, mask, and elapsed-time representation where verified.
-
-Use:
-
-```text
-bai2018tcn
-```
-
-#### SAnD
-
-Cover:
-
-* attention-based sequence modeling;
-* dense time-grid representation;
-* positional or temporal structure as implemented.
-
-Use:
-
-```text
-song2018sand
-```
-
-#### InterpNet
-
-Cover:
-
-* continuous-time interpolation or cross-channel interpolation concepts;
-* irregular time, value, mask, and holdout inputs;
-* the current implementation interface.
-
-Use:
-
-```text
-shukla2019interpolation
-```
-
-State clearly that implementation presence does not establish an approved final performance artifact.
-
-### Model Comparison Table
-
-Create a non-numeric methods table corresponding to:
-
-```text
-T-MODEL-01
+T-PROXY-01
 ```
 
 Suggested columns:
 
 ```text
-Model
-Temporal representation
-Missingness or irregularity handling
-Static-feature use
-Self-supervised pretraining support
-Primary citation
-Repository evidence status
+Proxy-state column
+Construct represented
+Input measurements
+Rule structure or threshold family
+Temporal aggregation
+Clinical grounding
+Validation status
 ```
 
-Verify each cell against current source.
+Include exact numeric thresholds where they are central to reproducibility and clearly verified from active source.
 
-Do not put final AUROC, AUPRC, or loss values in this table.
+Do not include prevalence or mortality results.
 
-Use a stable label such as:
+When a state combines several clauses, summarize the logical structure accurately using terms such as:
+
+```text
+any-of
+all-of
+threshold exceedance
+minimum
+maximum
+mean
+last observed value
+early-window summary
+record-level summary
+```
+
+Use equations only when they improve clarity.
+
+### PhysioNet Optimized Mode
+
+Explain `--optimized` and `--thresholds-path` only after verifying them.
+
+Distinguish:
+
+```text
+default clinically inspired thresholds
+optional externally supplied optimized thresholds
+```
+
+Do not state which was used for final artifacts without evidence.
+
+When the producing threshold file is unavailable, retain:
+
+```text
+[VALIDATION REQUIRED: identify whether the archived PhysioNet proxy-state CSV used default or externally optimized thresholds and record the threshold-file provenance]
+```
+
+### PhysioNet Tree Artifacts
+
+Do not include decision-tree images unless their provenance and correspondence with the active rule set are verified.
+
+When unverified, retain a precise figure placeholder rather than inserting the image.
+
+---
+
+## 12.4 C5.3 — MIMIC Proxy-State Rules and Validation Artifacts
+
+Document the exact active MIMIC proxy-state set.
+
+The expected active columns include:
+
+```text
+LAT_CHRONIC_BURDEN
+LAT_INFLAMMATION_SEPSIS
+LAT_GLOBAL_SEVERITY
+LAT_SHOCK
+LAT_RESPIRATORY_FAILURE
+LAT_RENAL_DYSFUNCTION
+LAT_HEPATIC_COAG_DYSFUNCTION
+LAT_NEUROLOGIC_DYSFUNCTION
+LAT_METABOLIC_DERANGEMENT
+LAT_CARDIAC_STRAIN
+```
+
+Verify the list from current source and artifact headers.
+
+Explain differences from PhysioNet, including where verified:
+
+* chronic burden versus chronic baseline risk;
+* combined hepatic/coagulation state versus separate states;
+* inflammation/sepsis naming;
+* cardiac strain naming;
+* differences in available measurement families;
+* reconstruction of MIMIC summary features from canonical events;
+* source-table or concept aliases.
+
+Do not imply the two datasets use identical definitions simply because constructs have similar names.
+
+### MIMIC Input Modes
+
+Explain the three supported input paths:
+
+```text
+precomputed summary CSV
+canonical processed pickle
+raw concept CSVs
+```
+
+Describe:
+
+* how exactly one input mode is selected;
+* how the canonical pickle is transformed into rule-needed summaries;
+* relevant measurement aliases;
+* GCS reconstruction;
+* any differences in available features by input mode.
+
+Do not state which mode generated the final archive unless execution evidence proves it.
+
+### MIMIC Rule Table
+
+Extend `T-PROXY-01` with MIMIC rows or create a separate MIMIC table using the same schema.
+
+For every state, record:
+
+* output name;
+* input feature families;
+* rule logic;
+* temporal or record aggregation;
+* clinical grounding;
+* cross-dataset correspondence;
+* validation status.
+
+### Validation Artifacts
+
+Explain the purpose and schema of:
+
+```text
+prevalence.csv
+mortality_by_tag.csv
+cooccurrence_phi.csv
+validation_summary.json
+latent_tags_with_features.csv
+```
+
+Do not insert their numerical contents.
+
+State explicitly:
+
+* prevalence is a descriptive property of the proxy labels;
+* mortality-by-tag is an unadjusted association;
+* risk ratios in that file are not causal estimates;
+* co-occurrence measures association between proxy states;
+* validation summaries provide sanity checks, not clinical adjudication;
+* no expert chart-review validation artifact was found unless new evidence proves otherwise.
+
+Use citations conservatively for clinical grounding.
+
+Add a supervisor or clinical-review placeholder for combined or ambiguous constructs where needed.
+
+---
+
+## 12.5 C5.4 — Predicted and Majority-Vote Proxy States
+
+Begin by distinguishing three sources:
+
+```text
+rule-derived proxy state
+model-predicted proxy state
+majority-vote proxy state
+```
+
+Explain that these can share `LAT_*` column names while representing different generation mechanisms.
+
+### Prediction Normalization
+
+Cross-reference Chapter 6 rather than repeating model architecture.
+
+Explain:
+
+* prediction exports contain `ts_id`, probability columns, and thresholded binary columns;
+* the downstream voter format requires only `ts_id` and binary proxy columns;
+* `split_predicted_latent_tags.py` separates probabilities and binary tags;
+* probability outputs are not directly supplied as binary voters;
+* target column ordering must remain consistent.
+
+Do not claim that final predictions are test-only or out-of-sample while export provenance remains incomplete.
+
+### Majority-Vote Algorithm
+
+Describe the exact verified algorithm.
+
+At minimum establish:
+
+* voter file discovery;
+* number of voters;
+* ID normalization;
+* duplicate handling;
+* use of shared `ts_id`;
+* whether the output uses the intersection of IDs;
+* latent-column matching;
+* binary-value validation;
+* vote threshold;
+* tie handling;
+* deterministic output schema.
+
+When verified, define the vote mathematically.
+
+For record (i), proxy state (k), and (M) voter files, a suitable expression is:
 
 ```latex
-\label{tab:predictive-model-comparison}
+\[
+\widetilde{Z}_{ik}
+=
+\mathbb{I}
+\left(
+\sum_{m=1}^{M} Z_{ik}^{(m)}
+\geq \tau_M
+\right),
+\]
 ```
 
-after confirming that the label is unused.
+where `\tau_M` must match the exact code.
 
-### Evaluation Metrics
+Explain explicitly whether an even-voter tie is mapped to 1.
 
-Define, without reporting values:
+Do not use this equation until the current source confirms the threshold.
 
-* per-target AUROC;
-* per-target AUPRC;
-* maximum minimum of precision and recall, where implemented;
-* averaging across valid non-degenerate target columns;
-* the supervised checkpoint-selection score;
-* the limited `eval_train` subset behavior if it affects interpretation.
+### Interpretation Boundary
 
-Do not call averaged multi-label metrics micro- or macro-averages unless the evaluator implementation supports that exact term.
+State that majority voting:
 
-Do not imply that validation metrics are test metrics.
+* aggregates model outputs;
+* does not establish clinical truth;
+* does not remove shared model bias;
+* does not guarantee independence among voters;
+* can amplify correlated errors;
+* depends on identical construct definitions and aligned IDs;
+* depends on the exact voter set supplied to each causal run.
 
-### Training Mechanics
+Use the Snorkel citation only as broad weak-supervision context and explain that no generative label model is used.
 
-Describe only stable implementation mechanics suitable for a methods chapter, such as:
+### Voter Provenance
 
-* optimizer family;
-* binary multi-label objective;
-* gradient clipping;
-* checkpoint selection;
-* deterministic seed construction;
-* early or periodic validation behavior.
+Retain an actionable placeholder such as:
 
-Move run-specific hyperparameters, selected train fractions, run identifiers, epoch counts, and final configurations to Chapter 9 unless the Stage 3 plan explicitly requires them here.
+```text
+[VALIDATION REQUIRED: create a per-run voter manifest listing every binary voter CSV, source predictive model, export split, checkpoint hash, input-artifact hash, row count, latent ordering, and majority-vote output hash]
+```
 
-Do not infer the final experiment configuration from parser defaults alone.
+Do not claim a specific final voter composition without a manifest or run-summary evidence.
 
 ---
 
-## 11.4 Section C6.3 — Prediction Export and Normalization
+# 13. Clinical Citation-Coverage Matrix
 
-### Export Trigger and Checkpoint Selection
+As part of the evidence report, create a citation-coverage matrix.
 
-Verify and explain:
-
-* the flag that requests CSV export;
-* whether export occurs after training or in an export-only invocation;
-* whether an existing best checkpoint is reloaded;
-* which data split is exported;
-* how wrapper scripts set the split;
-* whether final archived provenance proves those settings.
-
-Do not describe an export as test-only or out-of-sample unless verified.
-
-### CSV Schema
-
-Explain the verified schema:
+For each proxy state record:
 
 ```text
-ts_id
-<label>_prob
-<label>
+dataset
+proxy-state column
+clinical construct
+implemented measurements
+implemented threshold/rule family
+candidate clinical citation
+degree of alignment with citation
+limitations
+citation status
 ```
 
-for each target label.
-
-Explain that:
-
-* probability columns contain model outputs;
-* binary columns are produced through the implemented threshold;
-* the current threshold is `0.5` when verified;
-* the binary columns are model predictions, not rule labels or clinical truth;
-* export rows are identified using normalized `ts_id`.
-
-Create a concise non-numeric schema table corresponding to:
+Use statuses:
 
 ```text
-T-PRED-TASK-01
-T-PRED-EXPORT-01
+SUPPORTED FOR BROAD CLINICAL GROUNDING
+PARTIALLY ALIGNED
+CITATION EXISTS BUT LOCAL PDF MISSING
+CITATION GAP
+CLINICAL REVIEW REQUIRED
 ```
 
-when useful.
+Do not claim that a citation validates the exact implementation merely because the clinical topic is similar.
 
-Use a unique stable label such as:
-
-```latex
-\label{tab:prediction-export-schema}
-```
-
-### Downstream Normalization
-
-Explain at a high level:
-
-* why probability and binary columns may need to be separated;
-* how `split_predicted_latent_tags.py` performs this separation;
-* why majority-vote inputs must contain only `ts_id` and binary proxy columns;
-* how the router prepares or collects voter CSVs;
-* that majority-vote semantics are described in Chapter 5 rather than here.
-
-Do not present majority-vote aggregation as model ensembling performance.
-
-### Provenance Limitation
-
-Retain a precise limitation concerning:
-
-* the exact split exported by the final archived commands;
-* the source processed-pickle hash;
-* split-generation seed or ID lists;
-* checkpoint-to-export mapping;
-* archive-copy provenance.
-
-Do not hide this limitation behind vague wording.
+When an exact threshold or combination is project-specific, state that explicitly.
 
 ---
 
-# 12. Citation Requirements
+# 14. Placeholder Policy
 
-Use exact verified bibliography keys.
-
-At minimum, when their methods are described, cite:
-
-```text
-tipirneni2022strats
-cho2014gru
-che2018grud
-bai2018tcn
-song2018sand
-shukla2019interpolation
-```
-
-Use:
-
-```text
-harutyunyan_2019_mimiciii_benchmark
-```
-
-only for relevant benchmark context, not as the source of the local model implementation.
-
-Do not insert:
-
-* nonexistent citation keys;
-* citations copied from comments without checking `references.bib`;
-* an optional source in place of the approved primary source;
-* citations for local execution claims;
-* citations for numerical results.
-
-Run Biber validation after editing.
-
----
-
-# 13. Placeholder Policy
-
-Remove the generic placeholders:
+Remove the generic Chapter 5 placeholders:
 
 ```text
 [STAGE 4 DRAFT REQUIRED]
-[RESULT REQUIRED]
 [VALIDATION REQUIRED]
+[TABLE REQUIRED]
 ```
 
-from Chapter 6 when the associated content has been drafted or replaced by a more precise evidence gate.
+when the associated material is drafted or replaced by a precise evidence gate.
 
-Retain precise placeholders where needed, such as:
-
-```text
-[VALIDATION REQUIRED: confirm that the final supervised checkpoints were initialized from the intended self-supervised STraTS checkpoint]
-```
+Appropriate remaining placeholders may include:
 
 ```text
-[VALIDATION REQUIRED: record the final export split, split-generation seed or ID manifest, source checkpoint, and archive-copy provenance]
+[SUPERVISOR DECISION REQUIRED: approve “proxy state” as the primary thesis term and review the construct-level wording]
 ```
 
 ```text
-[RESULT REQUIRED: approved final InterpNet evaluation artifact before inclusion in the predictive performance comparison]
+[VALIDATION REQUIRED: identify whether the archived PhysioNet proxy-state CSV used default or optimized thresholds]
+```
+
+```text
+[VALIDATION REQUIRED: identify the MIMIC tagger input mode, source artifact hash, producing command, and source commit for the archived tag CSV]
+```
+
+```text
+[VALIDATION REQUIRED: verify the provenance and active-rule correspondence of the planned proxy-state decision-tree figures]
+```
+
+```text
+[VALIDATION REQUIRED: create a per-run majority-vote voter manifest]
+```
+
+```text
+[CITATION REQUIRED: clinical grounding for <specific proxy state or rule clause>]
 ```
 
 Every placeholder must be added to:
@@ -961,56 +1165,64 @@ Every placeholder must be added to:
 thesis-writing/logs/unresolved_placeholders.md
 ```
 
-Record:
+For each entry record:
 
 * file;
 * section;
 * exact placeholder;
 * reason;
 * required evidence;
-* planned resolution stage;
+* expected resolution stage;
 * status.
 
-Do not leave a generic placeholder without an actionable description.
+Do not leave generic placeholders without context.
 
 ---
 
-# 14. Deferred-Fix Collection
+# 15. Deferred-Fix Collection
 
 Review all existing deferred issues.
 
-The following remain open and must not be silently resolved:
+Do not silently resolve unrelated issues from Stages 4.0–4.2.
+
+Pay particular attention to the existing predictive-provenance issues because C5.4 depends on them:
 
 ```text
-DF-4.1-001 — MIMIC preprocessing outcome-column mismatch
-DF-4.1-002 — predictive split and archive provenance
-DF-4.1-003 — stale thesis README toolchain statement
+DF-4.1-002
+DF-4.2-002
+DF-4.2-003
+DF-4.2-004
 ```
 
-Stage 4.2 is directly responsible for reassessing `DF-4.1-002`.
-
-Mark it resolved only when a complete predictive manifest or equivalent evidence is actually found.
-
-Append newly discovered issues using IDs beginning with:
+Append new Stage 4.3 issues with IDs beginning:
 
 ```text
-DF-4.2-
+DF-4.3-
 ```
 
-Potential issues that must be checked include:
+Potential issues to assess include:
 
-* ineffective or incorrect warm-start checkpoint loading;
-* mismatch between wrapper intent and active checkpoint behavior;
-* model documentation disagreeing with source;
-* prediction export using a different split than described;
-* missing mapping from checkpoint to exported CSV;
-* inconsistent target ordering across latent CSVs and exports;
-* unclear status of iSTraTS final experiments;
-* misleading use of “fine-tuning” when initialization is unverified;
-* generated `main.pdf` being tracked without an explicit repository policy;
-* result summaries existing without command or source-commit provenance.
+* active tagger disagreeing with archived CSV columns;
+* archived artifacts matching a legacy tagger rather than the active tagger;
+* unknown PhysioNet default-versus-optimized threshold provenance;
+* unavailable optimized threshold file;
+* unknown MIMIC input mode;
+* MIMIC feature reconstruction differing by input mode;
+* incomplete clinical citation coverage;
+* no clinician or chart-review validation;
+* decision-tree figure provenance absent;
+* decision-tree pickle portability;
+* MIMIC and PhysioNet constructs sharing names but using materially different definitions;
+* majority-vote tie-to-one convention requiring justification;
+* voter input directories not archived;
+* incomplete voter-file manifests;
+* probability columns accidentally entering voter inputs;
+* mismatched latent ordering between voters;
+* inconsistent row intersections across causal runs;
+* duplicate or nonbinary voter values;
+* result artifacts existing without input hashes or source commits.
 
-For every deferred item record:
+For every item record:
 
 ```text
 ID
@@ -1023,45 +1235,42 @@ recommended later action
 urgency
 ```
 
-Do not repair predictive source code during this task.
-
-Do not untrack or ignore `main.pdf` during this task. Record the policy question for later cleanup when it remains unresolved.
+Do not fix research code or regenerate artifacts during this task.
 
 ---
 
-# 15. Stage 4.2 Evidence Report
+# 16. Stage 4.3 Evidence Report
 
 Create:
 
 ```text
-thesis-writing/logs/stage_4_2_evidence_report.md
+thesis-writing/logs/stage_4_3_evidence_report.md
 ```
 
-It must contain the following sections.
+It must contain:
 
-## 15.1 Git State
+## 16.1 Git State
 
 Record:
 
 * branch;
-* inspected commit;
-* verification of `d7edc78`;
+* verification of `c9f6b12`;
 * initial status;
 * final status;
-* files changed by Stage 4.2;
-* unrelated pre-existing modifications.
+* Stage 4.3 files changed;
+* unrelated pre-existing changes.
 
-## 15.2 Toolchain and Baseline Build
+## 16.2 Baseline Build
 
 Record:
 
-* command paths;
-* baseline build command;
-* baseline build result;
-* initial PDF page count;
-* baseline warnings.
+* commands;
+* return status;
+* PDF path;
+* baseline page count;
+* warnings.
 
-## 15.3 Files Inspected
+## 16.3 Files Inspected
 
 Group by:
 
@@ -1069,131 +1278,122 @@ Group by:
 * planning;
 * audit;
 * literature;
-* STraTS data loaders;
-* STraTS models;
-* STraTS evaluators;
-* STraTS wrappers;
-* parent router;
-* downstream export-normalization scripts;
-* predictive artifacts.
+* active PhysioNet tagging;
+* active MIMIC tagging;
+* legacy taggers;
+* prediction normalization;
+* majority voting;
+* orchestration;
+* rule artifacts;
+* validation artifacts;
+* tree artifacts.
 
-## 15.4 Model Implementation Matrix
+## 16.4 Active-Implementation Decision
 
-For each model record:
+State explicitly:
+
+* the active PhysioNet tagger;
+* the active MIMIC tagger;
+* which files were classified legacy;
+* evidence supporting the classification;
+* whether archived artifacts match the active implementations.
+
+## 16.5 PhysioNet Rule Matrix
+
+For each PhysioNet proxy state list:
 
 ```text
-model name
-source file
-input representation
-irregularity/missingness handling
-static-feature handling
-pretraining support
-supervised head
-primary citation
-implementation status
-execution evidence
-approved final-result status
-limitations
+column
+construct
+source features
+time or record summary
+threshold logic
+missingness behavior
+clinical citation
+implementation evidence
+artifact evidence
+validation limitation
+```
+
+## 16.6 MIMIC Rule Matrix
+
+For each MIMIC proxy state list the same fields, plus:
+
+```text
+available input modes
+canonical-pickle aliasing or reconstruction behavior
+cross-dataset correspondence
+```
+
+## 16.7 Clinical Citation-Coverage Matrix
+
+Include the matrix required above.
+
+## 16.8 Artifact-Schema Audit
+
+Record schemas and checks for:
+
+```text
+PhysioNet proxy tags
+MIMIC proxy tags
+MIMIC proxy tags with features
+MIMIC prevalence
+MIMIC mortality by tag
+MIMIC co-occurrence
+MIMIC validation summary
+majority-vote tags
 ```
 
 Include:
 
-```text
-STraTS
-iSTraTS
-GRU
-GRU-D
-TCN
-SAnD
-InterpNet
-```
+* row granularity;
+* key columns;
+* binary validation;
+* duplicate-ID status;
+* row counts for audit only;
+* provenance status.
 
-## 15.5 Pretraining Contract
+Do not copy audit row counts into the thesis chapter unless explicitly approved later.
 
-Record:
-
-* input fields;
-* forecast-anchor logic;
-* context window;
-* target window;
-* target construction;
-* masks;
-* normalization;
-* variable vocabulary;
-* objective;
-* evaluator behavior;
-* saved metadata;
-* checkpoint-selection rule.
-
-## 15.6 Supervised Contract
+## 16.9 Majority-Vote Contract
 
 Record:
 
-* latent CSV schema;
-* accepted ID names;
-* ID normalization;
-* target-column derivation;
-* loss;
-* class weighting;
-* output shape;
-* metric calculations;
-* checkpoint-selection rule.
-
-## 15.7 Checkpoint-Loading Audit
-
-Record:
-
-* intended warm-start flow;
-* actual active code flow;
-* state dictionaries loaded;
-* any ignored or overwritten state dictionary;
-* supported model types;
-* wrapper assumptions;
-* artifact evidence;
-* conclusion on whether successful pretrained initialization is verified.
-
-Do not soften an implementation defect.
-
-## 15.8 Export Contract
-
-Record:
-
-* export flag;
-* split selection;
-* checkpoint reload behavior;
-* probability columns;
-* binary columns;
-* threshold;
-* output naming;
-* normalization/splitting scripts;
-* downstream voter requirements;
+* voter discovery;
+* required schema;
+* binary validation;
+* ID alignment;
+* latent alignment;
+* vote threshold;
+* tie handling;
+* output schema;
+* run-summary linkage;
 * provenance limitations.
 
-## 15.9 Citations Used
+## 16.10 Citations Used
 
-List each inserted citation key and the method claim it supports.
+List every citation key inserted and the exact claim type it supports.
 
-## 15.10 Placeholders
-
-List:
-
-* resolved Chapter 6 placeholders;
-* retained placeholders;
-* newly added placeholders;
-* where each will be resolved.
-
-## 15.11 Deferred Fixes
+## 16.11 Placeholders
 
 List:
 
-* existing predictive issues confirmed;
-* issues resolved through evidence;
-* new `DF-4.2-*` entries;
-* generated-PDF tracking-policy status.
+* generic placeholders resolved;
+* precise placeholders retained;
+* new placeholders;
+* expected resolution stage.
 
-## 15.12 Final Build
+## 16.12 Deferred Fixes
 
-Record:
+List:
+
+* previously known issues confirmed;
+* issues resolved through evidence only;
+* new `DF-4.3-*` items.
+
+## 16.13 Final Build
+
+Run:
 
 ```bash
 cd thesis-writing/thesis
@@ -1203,144 +1403,174 @@ test -f main.pdf
 pdfinfo main.pdf
 ```
 
-Include:
+Record:
 
 * return status;
 * PDF path;
-* page count;
+* final page count;
 * citation status;
 * reference status;
 * duplicate-label status;
 * fatal errors;
-* remaining nonfatal warnings.
+* nonfatal warnings.
 
-## 15.13 Readiness
+## 16.14 Readiness
 
 Use one of:
 
 ```text
-READY FOR STAGE 4.3
+READY FOR STAGE 4.4
 READY WITH NON-BLOCKING WARNINGS
-BLOCKED BEFORE STAGE 4.3
+BLOCKED BEFORE STAGE 4.4
 ```
 
-Stage 4.3 will draft the clinical proxy-state construction chapter.
+Stage 4.4 will draft the causal graph and causal-effect methodology chapter.
 
-Do not begin Stage 4.3.
+Do not begin Stage 4.4.
 
 ---
 
-# 16. Validation Requirements
+# 17. Validation Requirements
 
-## 16.1 Source-to-Prose Validation
+## 17.1 Terminology Validation
 
-For every paragraph containing implementation details, verify that the source file named in the evidence report supports it.
-
-Specifically verify:
-
-* STraTS versus iSTraTS pooling;
-* which models support pretraining;
-* each model’s input tensors;
-* shared versus model-specific heads;
-* class-weight calculation;
-* metric averaging;
-* checkpoint-selection score;
-* export threshold;
-* export split behavior;
-* checkpoint reload behavior.
-
-## 16.2 Risky-Wording Search
-
-Search the edited chapter for wording including:
+Search Chapter 5 for:
 
 ```text
-ground truth
 diagnosis
+diagnosed
+confirmed disease
+ground truth
+gold standard
+true state
 clinically validated
-state of the art
-outperformed
-best model
-significantly better
-causal
-treatment effect
-all models were pretrained
-successfully fine-tuned
-out-of-sample
-test-set predictions
-fully reproducible
-guarantees
+clinical consensus
+latent disease
+causes mortality
+causal validation
+treatment recommendation
+actionable
 ```
 
 Every occurrence must be:
 
-* justified;
-* qualified;
 * removed;
-* or recorded as an unresolved issue.
+* explicitly qualified;
+* part of a literature discussion;
+* or documented as a problem.
 
-The word “causal” may appear only in a cross-reference to the downstream pipeline, not as a property of the predictive model.
-
-## 16.3 Citation Validation
-
-Confirm that:
-
-* every inserted key exists;
-* all model descriptions have the appropriate primary citation;
-* no citation is used as proof of local performance;
-* Biber reports no unresolved key.
-
-## 16.4 Table Validation
-
-Confirm that:
-
-* `tab:predictive-model-comparison` is unique;
-* `tab:prediction-export-schema` is unique when used;
-* every table cell is source-supported;
-* no numerical result is included;
-* InterpNet status is not overstated;
-* captions describe methods, not findings.
-
-## 16.5 Terminology Validation
-
-Use consistently:
+Ensure consistent distinction among:
 
 ```text
-proxy state
-proxy label
-multi-label prediction
+rule-derived proxy state
+predicted proxy state
+majority-vote proxy state
 probability output
 binary prediction
-irregular observation
-static covariate
-pretraining
-scratch supervised training
-checkpoint-loaded training
-prediction export
+proxy-state exposure
 ```
 
-Distinguish:
+## 17.2 Rule Validation
+
+For every table row and every threshold in prose:
+
+* verify it against the active source;
+* verify units;
+* verify comparison direction;
+* verify any AND/OR grouping;
+* verify temporal summary;
+* verify missing-input handling;
+* verify dataset;
+* verify output column.
+
+Do not infer a clinical threshold from a citation when the implementation differs.
+
+## 17.3 Dataset-Difference Validation
+
+Confirm that the chapter does not conflate:
 
 ```text
-rule-derived proxy label
-model-predicted proxy label
-probability prediction
-thresholded binary prediction
-majority-vote proxy label
+LAT_CHRONIC_BASELINE_RISK
+LAT_CHRONIC_BURDEN
 ```
 
-Do not call a thresholded model prediction a clinical label without qualification.
-
-## 16.6 LaTeX Validation
-
-Run a clean final build:
-
-```bash
-cd thesis-writing/thesis
-latexmk -C
-latexmk -xelatex main.tex
+```text
+LAT_HEPATIC_DYSFUNCTION
+LAT_COAG_HEME_DYSFUNCTION
+LAT_HEPATIC_COAG_DYSFUNCTION
 ```
 
-Scan the build logs for:
+```text
+LAT_INFLAMMATION_SEPSIS_BURDEN
+LAT_INFLAMMATION_SEPSIS
+```
+
+```text
+LAT_CARDIAC_INJURY_STRAIN
+LAT_CARDIAC_STRAIN
+```
+
+Explain differences only to the degree supported by source.
+
+## 17.4 Majority-Vote Validation
+
+Confirm:
+
+* only binary columns are treated as voters;
+* probability columns are excluded;
+* all voter files contain `ts_id`;
+* latent columns are aligned;
+* tie handling matches source;
+* output is not called truth;
+* final voter provenance remains qualified.
+
+## 17.5 Citation Validation
+
+Confirm that:
+
+* every inserted key exists in `references.bib`;
+* no key is invented;
+* clinical sources are not presented as validation of the exact proxy implementation;
+* missing local PDFs are handled according to the citation plan;
+* Biber reports no unresolved citations.
+
+## 17.6 Table Validation
+
+Use stable unique labels, for example:
+
+```latex
+\label{tab:physionet-proxy-definitions}
+\label{tab:mimic-proxy-definitions}
+\label{tab:proxy-source-types}
+```
+
+Confirm that:
+
+* labels are unique;
+* every row is source-supported;
+* tables contain methods, not numerical results;
+* captions use “proxy state” rather than “diagnosis”;
+* wide tables do not create severe layout failures;
+* existing packages and table environments are preferred.
+
+Do not add a new LaTeX package unless necessary.
+
+## 17.7 Figure Validation
+
+Do not include a tree or dataflow figure unless:
+
+* source artifact is identified;
+* producing code is identified;
+* active-rule correspondence is verified;
+* labels are legible;
+* caption does not overclaim;
+* path is stable.
+
+Otherwise retain a precise figure placeholder.
+
+## 17.8 LaTeX Validation
+
+Run a clean final build and scan logs for:
 
 ```text
 LaTeX Error
@@ -1354,76 +1584,79 @@ Emergency stop
 Fatal error
 ```
 
-Confirm:
+Record overfull and underfull boxes separately.
 
-```bash
-test -f main.pdf
-pdfinfo main.pdf
-```
+The high count of nonfatal underfull boxes from existing tables should not be mistaken for a failed build, but new severe table overflow should be minimized.
 
-Record overfull and underfull boxes separately as nonfatal layout issues.
-
-## 16.7 Scope Validation
+## 17.9 Scope Validation
 
 Confirm that:
 
-* only Chapter 6 contains new substantive prose;
-* no performance values were inserted;
+* only Chapter 5 contains new substantive prose;
+* no numerical result was inserted;
+* no tagger or voting code was edited;
+* no result artifact was modified;
+* no thresholds were optimized;
+* no proxy-state generation was run;
+* no majority-vote generation was run;
 * no other chapter was drafted;
-* no research code was changed;
-* no configuration was changed;
-* no training or prediction job was run;
-* no result file was modified;
-* no bibliography record was changed;
-* no commit or push was performed.
+* no bibliography entry was changed;
+* no commit or push occurred.
 
 ---
 
-# 17. Completion Criteria
+# 18. Completion Criteria
 
-Stage 4.2 is complete only when:
+Stage 4.3 is complete only when:
 
-* commit `d7edc78` is verified;
+* `c9f6b12` is verified;
 * the baseline thesis compiles;
-* C6.1 accurately describes the self-supervised STraTS task;
-* C6.2 accurately describes every implemented supervised model family;
-* pretraining support is not attributed to unsupported baselines;
-* the checkpoint-loading path is audited explicitly;
-* C6.3 documents export and normalization without overstating split provenance;
-* method tables contain no performance values;
-* all model citations are valid;
-* InterpNet’s missing final result remains visible;
-* predictive provenance limitations remain visible;
+* all four Chapter 5 sections are drafted;
+* active and legacy tagging implementations are distinguished;
+* all PhysioNet proxy states are documented;
+* all MIMIC proxy states are documented;
+* dataset-specific definitions are not conflated;
+* exact thresholds and logical rules are source-verified;
+* proxy labels are never presented as diagnoses;
+* the methods table is complete and source-supported;
+* validation artifacts are described without numerical findings;
+* mortality-by-tag is explicitly identified as associational;
+* predicted and majority-vote states are distinguished;
+* majority-vote alignment and tie handling are documented accurately;
+* voter provenance limitations remain visible;
+* clinical citation gaps remain visible;
+* placeholders are updated centrally;
 * new repository issues are added to the deferred-fix register;
-* placeholders are centrally tracked;
 * the final thesis compiles successfully;
-* the evidence report is complete;
-* only permitted files were edited.
+* the Stage 4.3 evidence report is complete;
+* only allowed files were edited.
 
 ---
 
-# 18. Final Response
+# 19. Final Response
 
 At the end, report:
 
-1. Verified Stage 4.1 commit.
+1. Verified Stage 4.2 commit.
 2. Initial and final Git status.
-3. Baseline compilation result and page count.
+3. Baseline build result and page count.
 4. Files inspected.
 5. Files changed.
-6. C6.1 content drafted.
-7. C6.2 models documented.
-8. C6.3 export and normalization documented.
-9. Model-comparison and export-schema tables created.
-10. Checkpoint-loading audit conclusion.
-11. Citations inserted.
-12. Remaining placeholders.
-13. Existing and new deferred fixes.
-14. Final build command and result.
-15. Final PDF path and page count.
-16. Remaining LaTeX warnings.
-17. Stage 4.3 readiness status.
+6. Active versus legacy tagger decision.
+7. C5.1 terminology content drafted.
+8. PhysioNet states documented.
+9. MIMIC states documented.
+10. Proxy-definition tables created.
+11. Validation artifacts documented.
+12. Majority-vote algorithm documented.
+13. Clinical citation coverage and gaps.
+14. Remaining placeholders.
+15. Existing and new deferred fixes.
+16. Final build command and result.
+17. Final PDF path and page count.
+18. Remaining LaTeX warnings.
+19. Stage 4.4 readiness status.
 
 Do not commit or push.
 
-Do not proceed to Stage 4.3.
+Do not proceed to Stage 4.4.
