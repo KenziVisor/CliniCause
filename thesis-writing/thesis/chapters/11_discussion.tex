@@ -1,18 +1,215 @@
 \chapter{Discussion}
 \label{chap:discussion}
 
-\section{Answer Research Questions}
+This chapter interprets the evidence reported in Chapter~\ref{chap:results} within the study design and assumptions established in Chapters~\ref{chap:problem-definition-study-design}--\ref{chap:experimental-design}.  The central distinction is between what the repository demonstrates empirically---an implemented, evidence-tracked workflow and stable patterns across several analyses---and what it does not establish clinically or causally.  The discussion therefore treats the reported quantities as prediction results, descriptive matched-pair comparisons, or adjusted model estimates under project assumptions, according to their source.
+
+\section{Answering the Research Questions}
 \label{sec:discussion:answer-research-questions}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
 % Section ID: C11.1.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
+\subsection{Main Research Question}
+\label{subsec:discussion:main-rq}
+
+The main research question asked: \emph{How can irregular ICU time-series data be converted into clinically interpretable proxy-state representations and used, under explicit causal assumptions, to support DAG-guided adjusted effect estimation for in-hospital mortality?}
+
+The direct answer is that this thesis demonstrates an evidence-tracked methodological framework with a sequence of explicit interfaces.  Dataset-specific irregular measurements are converted into normalized data contracts; deterministic, clinically inspired rules create proxy states; irregular-time-series models predict the rule-derived labels; exported probabilities and binary fields are normalized and may be aggregated algorithmically; source-coded, project-specified DAGs define treatment-specific adjustment logic; and matching and heterogeneous-effect estimators analyze selected proxy-state exposures.  Robustness and provenance checks then qualify the resulting interpretation.  The framework was implemented and empirically exercised across MIMIC-III and PhysioNet 2012.
+
+This is a feasibility and integration result, not a conclusive solution to the clinical causal question.  The proxy states are not chart-adjudicated diagnoses, many exposures describe illness states rather than well-defined interventions, and the project DAGs are assumed rather than empirically established.  The adjusted estimates remain conditional on construct measurement, consistency, exchangeability, temporal ordering, overlap, and model adequacy.  The framework therefore supports auditable retrospective analysis and hypothesis generation, but it does not produce clinical treatment recommendations.  In summary, the thesis demonstrates the feasibility of linking irregular-time-series representation, proxy-state prediction, and assumption-guided adjusted effect estimation in one auditable workflow, while showing that the strength of causal interpretation is constrained chiefly by construct validity, intervention definition, causal-graph validity, empirical support, and provenance.
+
+\StagePlaceholder{[SUPERVISOR RATIFICATION REQUIRED: final causal-language and results hierarchy]}
+
+\subsection{Data Contracts and End-to-End Pipeline Integration}
+\label{subsec:discussion:data-contracts-integration}
+
+\paragraph{SRQ-1---data contracts.}
+The pipeline requires at least two distinct processed-artifact contracts.  The causal repository uses \texttt{[ts, oc, ts\_ids]}, with a normalized \texttt{ts\_id} linking the long event table to the outcome table.  The STraTS and baseline workflow uses a split-aware artifact with events, outcomes, and explicit train, validation, and test identifier collections.  The router and conversion logic bridge these contracts by normalizing identifiers and constructing the split-aware form when requested.  Prediction exports add another interface: \texttt{ts\_id}, paired probability and binary proxy-state columns, and subsequently binary-only voter files.  The answer is therefore \emph{implementation supported}: the repository defines and validates these boundaries, but exact processed-pickle hashes, producing commands, and final split lineage remain incomplete.
+
+\paragraph{SRQ-4---prediction normalization and aggregation.}
+Prediction outputs are normalized into paired probability and binary proxy-state fields, while downstream voter inputs retain the binary fields in an approved order.  Majority voting aligns shared normalized identifiers, checks identical binary proxy-state schemas, and applies the implemented tie rule.  This supplies a deterministic handoff into the causal repository.  It is algorithmic aggregation rather than clinical consensus, and complete voter-input, checkpoint, and archive-copy provenance is still unavailable.  Moreover, aggregation cannot automatically correct systematic error shared by models trained on the same rule-derived targets.
+
+\StagePlaceholder{[PROVENANCE REQUIRED: predictive split and checkpoint-to-export lineage]}
+
+\subsection{Proxy-State Construction, Prediction, and Aggregation}
+\label{subsec:discussion:proxy-prediction-aggregation}
+
+\paragraph{SRQ-2---proxy-state construction.}
+Rule-based proxy states were implemented consistently enough to act as supervised prediction labels, algorithmic majority-vote inputs, and downstream exposure variables.  Deterministic source rules and stable \texttt{LAT\_*} schemas make this pipeline consistency inspectable.  The answer is nevertheless \emph{unresolved clinically}: the two datasets use different proxy ontologies and available measurements; threshold rules may misclassify constructs; PhysioNet has fewer validation artifacts; clinical review remains incomplete; and no chart-adjudicated reference labels were archived.  These are clinically inspired proxy states, not diagnoses, ground truth, or validated phenotypes.  This positioning is consistent with electronic-phenotyping and rule-based phenotype work, while the aggregation layer shares only the broad weak-supervision objective and does not implement a learned Snorkel label model \cite{banda_2018_electronic_phenotyping,essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping,ratner_et_al_2020_snorkel}.
+
+\StagePlaceholder{[CLINICAL REVIEW REQUIRED: proxy-state definitions and clinical interpretation]}
+
+\paragraph{SRQ-3---predictive modeling.}
+The checked comparison included STraTS, GRU, GRU-D, TCN, and SAnD.  STraTS led the four archived test metrics in MIMIC-III, whereas GRU-D led them in PhysioNet.  The leading architecture therefore differed by dataset.  This is empirically supported evidence that representation choice is dataset dependent, not evidence for universal model superiority.  Handling irregularity or missingness can be useful in several ways, and prior work distinguishes sparse-token representations from missingness-aware recurrent processing \cite{sun_2026_review_irregular_medical_timeseries,lipton_kale_wetzel_2016_missingness_rnns,tipirneni2022strats,che2018grud}.  The local comparison does not reproduce the original papers' benchmark tasks exactly.
+
+Several mechanisms may contribute to the dataset-specific pattern: variable availability, measurement frequency, missingness, label prevalence, proxy definitions, preprocessing, dataset era, sample size, and ICU composition.  The repository did not isolate those mechanisms, so they remain possible explanations rather than findings.  In addition, no uncertainty intervals or paired between-model tests were archived, checkpoint-to-export provenance is incomplete, and the prediction targets themselves lack clinical validation.  Statistical superiority is therefore not established.
+
+\subsection{Adjusted Effect Estimation and Estimator Agreement}
+\label{subsec:discussion:adjusted-effects-agreement}
+
+\paragraph{SRQ-5---DAG-guided adjustment.}
+Dataset-specific, source-coded DAGs select treatment-specific observed adjustment sets from columns available in each analysis frame.  The active graph code is the implementation authority; LLM prompt outputs provide design provenance only.  The graphs were neither learned from the data nor clinically or empirically validated, and the adjustment sets differ across exposures.  Several checked rows contain empty observed adjustment sets, while treatment-specific identifiability remains unresolved throughout the checked packet.  The answer is thus \emph{conditional on assumptions}: a computed set documents how the project applied its graph, but it does not prove exchangeability or the absence of unmeasured confounding \cite{pearl_1995_causal_diagrams}.
+
+\paragraph{SRQ-6---matching, CATE, sensitivity, and permutation evidence.}
+The approved hierarchy uses original cohorts as primary, CausalForestDML as the primary estimator, LinearDML as secondary, CausalPFN as exploratory, and outcome-downsampled analyses as robustness evidence.  In the primary forest results, all nine MIMIC original-cohort mean model-estimated CATE summaries were positive; nine of ten PhysioNet summaries were positive, with shock negative.  This pattern supports the narrower conclusion that the project-defined proxy-state exposures contain systematic mortality-related variation after the implemented adjustment procedure, that patterns differ by construct and dataset, and that heterogeneous-effect estimators can be applied to the constructed analysis objects.  It does not show that a proxy state caused death, that changing it would change mortality, or that a ranking identifies intervention priorities.
+
+CausalForestDML and LinearDML agreed in direction for all 19 original-cohort dataset--exposure pairs.  This complete directional concordance is useful model-form triangulation: the sign pattern was not unique to the nonlinear forest final stage.  It does not imply equal magnitudes, orderings, estimands, uncertainty, or correctness, and it does not validate the DAG or rule out residual confounding.  Indeed, Chapter~\ref{chap:results} shows that magnitudes and within-dataset orderings can differ even when signs agree.
+
+Within this pipeline, CausalPFN showed promise as a complementary estimator because it reproduced the prevailing direction across nearly all prespecified comparisons.  It contributed to all-three directional concordance for 18 of 19 original-cohort dataset--exposure pairs despite using a different modeling approach.  This positive result is bounded: magnitudes were not identical to DML magnitudes, the archived sensitivity and permutation stages were intentionally absent, and the approved literature corpus lacks a primary method citation.  CausalPFN therefore remains an exploratory empirical contribution rather than an estimator with the same diagnostic support as the DML analyses.
+
+\StagePlaceholder{[CITATION REQUIRED: primary CausalPFN method source]}
+
+PhysioNet shock is the central exception rather than a detail to be averaged away.  CausalForestDML and LinearDML were negative, CausalPFN was slightly positive, and the descriptive matching summary was positive.  This disagreement is a substantive caution about model, representation, and support sensitivity.  It should not be resolved by a vote among estimators, and the negative DML estimates should not be described as a clinically protective effect.
+
+Matching provides a transparent descriptive baseline and an empirical-support warning system.  Most prespecified exposures produced summaries, and 14 of 15 successful original-cohort matching summaries shared the primary forest direction.  Failures identified cases in which no usable binary matching columns remained; some successful rows carried insufficient-pair warnings; and accepted Hamming distances varied.  Stable matching availability across original and downsampled populations supports the reproducibility of the availability pattern, but matching neither proves positivity nor supplies complete balance evidence.  A failed comparison is missing support, not a zero estimate, and a successful descriptive matched-pair outcome difference is not automatically an ATT or independent causal confirmation.
+
+Sensitivity and permutation evidence adds layers rather than closure.  DML sensitivity outputs were saved-training direct, reconstructed, partial, or failed depending on the exposure, and reconstructed diagnostics are not identical to estimator-native calculations.  Benchmark-confounder comparisons supply a scale, not proof that omitted-variable bias is absent.  Treatment and outcome permutations provide disruption-based sanity checks for the DML estimators, but the archived procedure is not automatically a formal randomization test and does not establish identification.  The corresponding CausalPFN stages were intentionally skipped.  Finally, matching fields provide indirect support evidence, but dedicated propensity, common-support, and balance plots were not archived; positivity remains unestablished \cite{crump_et_al_2009_limited_overlap,cinelli_hazlett_2020_sensitivity,chernozhukov_et_al_2026_ovb_causal_ml}.
+
+\subsection{Cross-Dataset Interpretation and Robustness}
+\label{subsec:discussion:cross-dataset-robustness}
+
+The original causal-analysis populations contained 26,845 MIMIC records and 7,993 PhysioNet records, so the MIMIC analysis population was approximately 3.36 times larger.  A larger analysis population can provide more information for nuisance-model fitting and modeled effect heterogeneity, and it may contribute to numerical stability.  It does not demonstrate better data quality, make the MIMIC findings more valid, or erase differences in era, variables, measurement systems, missingness, proxy rules, DAGs, or patient composition.  Predictive training and causal analysis also use distinct artifact contracts, so their populations should not be assumed identical merely because some row counts align.
+
+Broad methodological replication across both datasets is a strength: the pipeline operated with the same overall sequence of representation, proxy prediction, aggregation, graph-guided adjustment, and estimator comparison.  However, similarly named proxy states are not automatically construct-equivalent.  MIMIC combines some domains that PhysioNet separates, and the rules and graphs are dataset specific.  The deliberate no-pooling policy is therefore essential.  Cross-dataset differences are evidence about portability of the workflow and sensitivity to context, not a pooled clinical effect or proof of biological inconsistency.
+
+Outcome-based downsampling remained a contained robustness analysis.  It retained outcome-positive records and sampled outcome-negative records, thereby changing the empirical population and outcome prevalence.  Original and downsampled means do not automatically target the same population quantity.  Nevertheless, direction was preserved in 55 of 57 matched estimator--dataset--exposure comparisons, which indicates broad sign stability under a substantial sampling perturbation and suggests that many sign patterns were not solely driven by the original mortality imbalance.  Every paired mean changed numerically, and two PhysioNet comparisons changed sign.  The procedure is not formal transport or reweighting; magnitude changes cannot be read as stronger or weaker original-population effects, and directional preservation does not validate causal identification.
+
+\subsection{Relationship to Prior Work and Methodological Implications}
+\label{subsec:discussion:prior-work-implications}
+
+The contribution lies in connecting layers that are often evaluated separately.  First, a shared proxy-state interface can link irregular-time-series prediction and observational effect-estimation workflows.  Second, explicit separation of causal and split-aware predictive data contracts prevents silent identifier, split, and cohort conflation.  Third, source-coded DAGs make adjustment choices inspectable even when their scientific correctness remains an assumption.  Fourth, multi-estimator comparison exposes both broad directional agreement and important exceptions such as PhysioNet shock.  Fifth, matching, sensitivity, and permutation diagnostics reveal support and provenance limitations that a single effect table would conceal.  Finally, manifests and checked source packets materially improve numerical traceability in a complex repository.
+
+These implications align with the wider emphasis on explicit intervention definitions and target-trial thinking in observational research \cite{hernan_robins_2016_target_trial,hernan_taubman_2008_well_defined_interventions}.  They also address difficulties identified in observational ICU causal analysis and machine-learning HTE research: defining the target question, controlling bias, validating heterogeneity, handling covariate shift, and distinguishing predictive variation from actionable treatment-effect variation \cite{smit_2023_causal_inference_icu_scoping_review,bica_2021_individualized_treatment_effects_ehr_ml,lipkovich_2024_modern_hte_methods,curth_2024_ml_individualized_treatment_effects,iwashyna_2015_hte_critical_care}.  The literature supplies methodological context; it does not validate this project's proxy labels, graphs, estimates, or local execution.  Accordingly, the framework should be described as an auditable research workflow rather than a generally validated clinical methodology.
+
+\subsection{Clinical Meaning and Appropriate Use}
+\label{subsec:discussion:clinical-meaning}
+
+The proxy states summarize clinically inspired patterns and are analytically useful for organizing retrospective evidence.  They may support hypothesis generation and help identify proxy-state contrasts that merit targeted clinical and causal investigation.  High prediction performance against rule labels does not establish clinical accuracy, however, and a positive adjusted proxy-state contrast does not imply that clinicians should attempt to manipulate the proxy directly.  The system did not undergo prospective validation, external clinical validation, or clinical impact analysis.  Its causal quantities are not ready for bedside decision support, and no patient-level treatment recommendation follows from the results.
+
+\paragraph{SRQ-7---principal limitations.}
+The main limitations arise from proxy-label construct validity and measurement error; ill-defined or non-manipulable exposures; unvalidated DAG assumptions and possible unmeasured confounding; temporal ambiguity; incomplete empirical support; model dependence; outcome-class downsampling; dataset heterogeneity; incomplete final-run provenance; and the absence of clinical, fairness, and deployment validation.  The answer is therefore \emph{empirically supported with substantial unresolved boundaries}.  These limitations determine the strength of every preceding answer and motivate the validity analysis below.
+
+\begin{longtable}{@{}p{0.10\textwidth}p{0.34\textwidth}p{0.18\textwidth}p{0.28\textwidth}@{}}
+\caption{Evidence-based answers to the research questions.}
+\label{tab:discussion-rq-answers}\\
+\toprule
+Question & Evidence-based answer & Strength of answer & Principal boundary \\
+\midrule
+\endfirsthead
+\toprule
+Question & Evidence-based answer & Strength of answer & Principal boundary \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Main RQ & An auditable workflow links irregular measurements, proxy construction and prediction, algorithmic aggregation, project DAGs, and adjusted analyses across both datasets. & Implementation supported & Clinical and causal meaning remains assumption dependent. \\
+SRQ-1 & Separate causal and split-aware predictive contracts are connected through normalized identifiers, routing, and explicit export schemas. & Implementation supported & Producing hashes, commands, and split lineage are incomplete. \\
+SRQ-2 & Deterministic proxy states can serve consistently as labels, voter inputs, and exposures. & Unresolved clinically & No chart adjudication or external clinical validation. \\
+SRQ-3 & The included model families completed the proxy-label task; the leading family differed by dataset. & Empirically supported with qualifications & No uncertainty or paired superiority tests; target validity and provenance are incomplete. \\
+SRQ-4 & Exports are normalized to probability/binary pairs and may be combined by deterministic majority vote. & Implementation supported & Voting is not clinical consensus and can preserve shared error. \\
+SRQ-5 & Source-coded DAGs yield exposure-specific observed adjustment sets. & Conditional on assumptions & Graph correctness, temporal ordering, and identifiability are unresolved. \\
+SRQ-6 & Primary, secondary, exploratory, matching, and diagnostic analyses show broad directional triangulation with explicit exceptions. & Empirically supported with qualifications & Agreement is not estimator equivalence or causal validation. \\
+SRQ-7 & Construct, identification, support, modeling, transport, provenance, and clinical-use limitations materially bound all findings. & Partially supported & Several limitations require new clinical review, provenance, or validation evidence. \\
+\end{longtable}
+
 \section{Limitations and Threats to Validity}
 \label{sec:discussion:limitations-threats-validity}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[RESULT REQUIRED]}
-\StagePlaceholder{[VALIDATION REQUIRED]}
 % Section ID: C11.2.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+\subsection{Construct and Measurement Validity}
+\label{subsec:discussion:construct-measurement-validity}
+
+The principal construct limitation is that clinically inspired rules approximate conditions but were not evaluated against chart-adjudicated diagnoses.  Repository evidence consists of active rule code, binary artifact schemas, and limited descriptive validation summaries.  This makes the constructs transparent but does not establish their sensitivity, specificity, or equivalence across datasets.  Prediction and majority voting introduce further classification error, and correlated voters can preserve shared systematic error.  Existing mitigations are deterministic definitions, source-code traceability, dataset-specific naming, and explicit proxy terminology; the residual risk remains high because clinical review and reference-standard validation are absent.
+
+Binary exposure states also compress severity, duration, and timing.  A positive tag may combine clinically distinct trajectories, while a negative tag can reflect missing measurement rather than absence of a condition.  Proxy onset relative to covariates and mortality is not fully established, so exposure misclassification and temporal ambiguity can bias both prediction and adjusted analyses.  The processed outcome, \texttt{in\_hospital\_mortality}, is consistently required by the software, but its producing-artifact provenance is incomplete, and no competing-risk or post-discharge mortality analysis was performed.
+
+The observation process is itself informative.  Measurement frequency may reflect clinical concern, resource use, or care pathways; models that encode masks or time gaps can exploit this signal without removing its causal implications.  Preprocessing and missingness-aware representation are therefore not equivalent to adjustment for the decision to measure.  This concern can affect proxy construction, predictive comparisons, and effect estimation simultaneously.
+
+\subsection{Causal Identification and Estimand Validity}
+\label{subsec:discussion:identification-estimand-validity}
+
+These are the central constraints on causal interpretation.  Illness-state proxies are not necessarily well-defined interventions, so consistency and the meaning of contrasting exposure states may be difficult to specify.  No target-trial emulation was performed, and the pipeline does not implement a method for time-varying treatment--confounder feedback.  Exchangeability depends on a project-specified DAG, correct temporal ordering, and measured variables; topology alone cannot establish patient-record timing.  Some archived observed adjustment sets are empty, every checked identifiability field remains unresolved, and unmeasured or misspecified confounding remains possible.
+
+Positivity was assumed rather than established.  Matching availability, failures, pair counts, and distances provide indirect evidence, but the archive lacks dedicated propensity distributions, common-support plots, and pre/post-match balance summaries.  Interference is also assumed, not tested, and repeated admissions or shared ICU processes may complicate unit-level independence.
+
+Estimand language remains deliberately restricted.  The mean model-estimated CATE over the analyzed sample is an aggregate of model outputs, not automatically a population ATE.  The descriptive matched-pair outcome difference is not automatically an ATT.  Normalized CATE was omitted because scaling by the sample outcome rate is unstable across populations and does not create a risk ratio or another standard clinical estimand.  These boundaries mitigate overstatement but do not resolve the underlying intervention-definition and identification problems.
+
+\subsection{Statistical, Modeling, and Support Limitations}
+\label{subsec:discussion:statistical-modeling-support}
+
+Many displayed main estimates lack uncertainty intervals, no formal multiple-comparison strategy was documented, and this thesis did not add significance tests.  Absence of an interval cannot be interpreted as either significance or insignificance.  Model selection, nuisance-model adequacy, regularization, hyperparameters, and cross-fitting behavior remain assumptions whose impact was not exhaustively tested.  CausalForestDML, LinearDML, and CausalPFN do not provide interchangeable uncertainty, and directional agreement can coexist with material magnitude and ordering differences.
+
+Support evidence is incomplete and representation dependent.  Some matching runs failed, some successful matches required larger Hamming distances, and some carried insufficient-pair warnings.  Sensitivity outputs were partial or failed for several exposure families; reconstructed or fallback diagnostics have different status from estimator-native outputs.  Permutation aggregates are limited sanity checks rather than formal inferential tests.  CausalPFN lacks the corresponding archived downstream diagnostic family.  The multi-estimator and diagnostic hierarchy exposes these risks, but it cannot remove them.
+
+\subsection{External Validity and Generalizability}
+\label{subsec:discussion:external-validity}
+
+MIMIC-III and PhysioNet differ in size, era, variables, measurement practices, and patient composition.  Their proxy ontologies and DAGs are dataset specific, and nominally similar states are not necessarily equivalent.  Numerical estimates were therefore not pooled.  Operation of the workflow on both sources is positive evidence of engineering and methodological portability, especially given the inclusion of several predictive and causal model families.  It is not evidence that the estimates transport to other hospitals, countries, care practices, EHR systems, or time periods.
+
+No prospective validation, independent external clinical validation, or formal transport analysis was performed.  Subgroup performance and effect stability by age, gender, ICU type, or other characteristics were not evaluated as a fairness study.  Consequently, the analysis does not establish clinical generalizability or subgroup equity.
+
+\subsection{Reproducibility and Provenance}
+\label{subsec:discussion:reproducibility-provenance}
+
+The Stage~4.6A manifest, checked packet, source paths, and checksums provide strong numerical-transcription reproducibility for the values admitted to Chapter~\ref{chap:results}.  They also improve artifact traceability by distinguishing canonical sources, duplicates, blocked figures, and generated replacements.  This is not the same as computational rerun reproducibility.  The \texttt{final-results/} archive is ignored or untracked in the main repository; exact numbered causal configurations are unavailable; result-generating commits and copy histories are incomplete; and the nested causal repository contains local modifications.
+
+Predictive split provenance, checkpoint-to-export mapping, and copied-output lineage remain incomplete.  Raw and processed datasets are external, exact processed-pickle hashes and producing commands are unavailable, and some paths are absolute to the producing machine.  Final software, environment, and hardware records are also incomplete.  Thus the packet validates archived numerical transcription and materially improves artifact traceability, while a clean-checkout rerun is not currently demonstrated.  Scientific reproducibility---replication of findings under independently reconstructed data, definitions, and analysis---is weaker still and requires new evidence rather than additional formatting of the archive.
+
+\StagePlaceholder{[PROVENANCE REQUIRED: exact numbered causal configurations]}
+\StagePlaceholder{[PROVENANCE REQUIRED: exact producing commits and archive-copy history]}
+
+\subsection{LLM-Assisted Design Provenance}
+\label{subsec:discussion:llm-provenance}
+
+LLM prompts contributed candidate proxy-state and DAG design material, but source code defines the rules and graphs that the repository implements.  The prompts were neither a causal-discovery algorithm nor clinical validation.  Exact settings, research or browsing modes, follow-up interactions, and complete accepted/rejected human-review decisions remain only partially documented.
+
+The main risks are hallucinated clinical relationships, authority bias, undocumented prompt sensitivity, incomplete reproducibility, and circular reasoning if generated suggestions are later treated as evidence for their own correctness.  Preserved prompt artifacts, prompt-to-code traceability, explicit source-code authority, conservative language, and planned expert review mitigate these risks.  Residual risk remains high until a prompt-run and human-review manifest records who reviewed each proposed construct and arrow, what changed, and why.  No claim is made that an LLM is an established medical expert.
+
+\subsection{Ethical and Clinical-Deployment Considerations}
+\label{subsec:discussion:ethics-deployment}
+
+Misclassification can misrepresent a record's clinical condition, amplify measurement bias, and generate misleading exposure contrasts.  Groups with different testing intensity or access to measurements may be affected disproportionately.  Automation bias is therefore a direct risk: users could overread model probabilities as diagnoses, proxy-state rankings as clinical priorities, adjusted estimates as treatment recommendations, or estimator agreement as causal certainty.
+
+No dedicated fairness audit was performed.  The presence of age, gender, ICU type, or other variables in an adjustment set does not constitute fairness validation, and subgroup predictive performance and effect stability remain untested.  Data-governance statements are similarly limited to what the repository documents; no institutional approval number, consent procedure, ethics-board decision, or data-use agreement is inferred here.  The required institutional wording must be supplied from authoritative project records.
+
+\StagePlaceholder{[ETHICS DOCUMENTATION REQUIRED: institutional approval and data-governance wording]}
+\StagePlaceholder{[VALIDATION REQUIRED: subgroup fairness and external clinical validation]}
+
+The deployment boundary is unambiguous: \emph{the system is a retrospective research workflow and is not suitable for patient-level clinical deployment or treatment recommendation in its current form}.  No prospective safety, workflow, impact, or human-factors evaluation was performed.  This limitation is not cured by predictive accuracy, estimator agreement, or artifact traceability.
+
+\begingroup
+\scriptsize
+\sloppy
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{0.14\textwidth}p{0.24\textwidth}p{0.18\textwidth}p{0.19\textwidth}p{0.17\textwidth}@{}}
+\caption{Repository-specific limitations and threats to validity.}
+\label{tab:discussion-limitations}\\
+\toprule
+Validity domain & Repository-specific limitation & Potential impact & Existing mitigation & Residual risk \\
+\midrule
+\endfirsthead
+\toprule
+Validity domain & Repository-specific limitation & Potential impact & Existing mitigation & Residual risk \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Proxy construct validity & Rule-defined states lack chart-adjudicated reference labels. & Construct error can distort prediction targets and exposure contrasts. & Explicit rules, proxy terminology, and source traceability. & High; clinical review and validation remain absent. \\
+Prediction-label validity & Models learn rule-derived targets and voters may share error. & Performance can be high against an imperfect label source. & Separate rule, prediction, and vote terminology. & High; voting cannot remove correlated systematic error. \\
+Exposure definition & Binary illness-state proxies are not necessarily manipulable interventions. & Consistency and causal meaning may be ill defined. & Exposure wording and no treatment recommendation. & High; intervention definition remains unresolved. \\
+Temporal ordering & Proxy, covariate, and outcome timing is not established by graph topology. & Reverse ordering or post-exposure adjustment can bias estimates. & DAG descendant filtering and explicit caveats. & High; record-level timing needs validation. \\
+DAG validity & Project graphs were not learned or empirically validated. & Misspecified arrows can select inadequate adjustment sets. & Source-coded transparency and prompt/code traceability. & High; expert review is incomplete. \\
+Unmeasured confounding & Available variables may not block real-world backdoor paths. & Adjusted estimates may retain bias. & DML adjustment and layered sensitivity diagnostics. & High; sensitivity does not eliminate omitted-variable bias. \\
+Overlap and support & Dedicated propensity and balance diagnostics are absent; matching failures occur. & Weakly supported contrasts may be unstable or nontransportable. & Pair, rate, distance, warning, and failure fields. & High; positivity is unestablished. \\
+Estimator/model dependence & Estimators differ in structure, magnitude, ranking, and diagnostics. & Conclusions may depend on model form or tuning. & Frozen hierarchy and multi-estimator triangulation. & Medium--high; agreement is mainly directional. \\
+Uncertainty and comparisons & Intervals are unavailable for many displayed means; no multiplicity plan exists. & Precision and false-discovery risk cannot be fully assessed. & No new significance claims or tests. & High for exposure-specific inference. \\
+Outcome downsampling & Sampling changes outcome prevalence and the empirical population. & Means no longer target an automatically identical population quantity. & Robustness-only role, no pooling, explicit sign-change report. & Medium--high; some conclusions are sampling sensitive. \\
+Cross-dataset transport & Datasets differ in era, size, variables, proxies, DAGs, and populations. & Local patterns may not transport or be construct equivalent. & Dataset-specific reporting and no numerical pooling. & High; no external transport validation. \\
+Missing result configurations & Numbered producing causal configs are unavailable. & Exact reruns and setting verification are blocked. & Run summaries and checked manifest. & High for computational reproduction. \\
+Predictive provenance & Split, checkpoint-to-export, and copy lineage are incomplete. & Final export and out-of-sample claims remain qualified. & Schema checks, paired logs, and wrappers. & High until per-export lineage is recovered. \\
+Ignored result archive & \texttt{final-results/} is ignored or untracked. & Clean-checkout artifact recovery is not guaranteed. & Checksums, source packet, and canonical-source register. & Medium--high; external archival record is needed. \\
+LLM-assisted design & Prompt settings and accepted/rejected human decisions are incomplete. & Authority bias, hallucination, and circular justification are possible. & Preserved prompts and source-code authority. & High until expert review is documented. \\
+Clinical validation & No prospective, chart-review, or external clinical validation was performed. & Clinical accuracy and utility are unknown. & Retrospective, hypothesis-generating use boundary. & High; bedside use is inappropriate. \\
+Fairness and deployment & No subgroup fairness, safety, impact, or human-factors audit was performed. & Unequal errors and automation harm may go undetected. & Explicit non-deployment boundary. & High; dedicated evaluation is required. \\
+\end{longtable}
+\endgroup
