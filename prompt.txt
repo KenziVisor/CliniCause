@@ -1,1357 +1,488 @@
-# Stage 3 — Thesis Structure and Construction Plan
+# Stage 4.0 — Prepare the Thesis-Writing Environment and LaTeX Skeleton
 
 ## Context
 
-You are working from the root of the current `CliniCause` repository.
+Stages 0–3 of the CliniCause thesis workflow are complete.
 
-Stages 0, 1, and 2 are complete.
+The repository should already contain:
 
-The repository contains:
+* the validated literature corpus under `thesis-writing/literature/`;
+* the repository and evidence audit under `thesis-writing/audit/`;
+* the approved thesis outline and construction plan under `thesis-writing/planning/`;
+* the BGU thesis instructions and example thesis/template resources;
+* the research repositories and available result artifacts.
 
-* the parent `CliniCause` orchestration repository;
-* the nested `causal-irregular-time-series` research repository;
-* the nested `STraTS` predictive-model repository;
-* the curated thesis literature corpus;
-* the completed Stage 2 audit files under `thesis-writing/audit/`;
-* the official thesis instructions at `thesis-writing/general-instructions.pdf`;
-* a previously submitted example thesis under `thesis-writing/example-omri-thesis/`;
-* the operational thesis plan in `thesis-writing/THESIS_PLAN.md`.
+This task begins Stage 4, but it must **not write substantive thesis prose**. Its purpose is to convert the approved Stage 3 plan into a safe, organized, compilable LaTeX workspace.
 
-Your task is to implement **Stage 3 only**: design the complete thesis structure and construction plan.
+## Objective
 
-Do not write full thesis prose in this stage.
+Create or adapt the thesis LaTeX structure so that subsequent Stage 4 prompts can draft individual chapters without reorganizing the project, breaking compilation, duplicating bibliography files, or inventing content.
 
-Do not modify research code, results, literature metadata, or the example thesis.
+The output should be a clean thesis skeleton with:
 
----
+* approved chapter and section files;
+* front matter and back matter;
+* bibliography integration;
+* stable labels and file naming;
+* placeholder conventions;
+* compilation instructions;
+* an initial clean compile, or a precise report of compilation blockers.
 
-## Primary Objective
+## Required Initial Inspection
 
-Create a detailed, evidence-driven thesis blueprint that answers:
+Before editing anything:
 
-1. What is the central research story of this thesis?
-2. What chapters and sections are required?
-3. What exact repository and literature evidence supports every planned section?
-4. Which figures and tables are currently available, which can be generated from verified evidence, and which remain blocked?
-5. Which claims are safe, risky, unsupported, or dependent on unresolved questions?
-6. In what order should the thesis be written during Stage 4?
-7. How should the final thesis be organized to comply with the BGU engineering thesis instructions and the repository’s actual LaTeX conventions?
-
-The output must be detailed enough that each Stage 4 writing prompt can later target one clearly specified section with an explicit evidence packet.
-
----
-
-# 1. Mandatory Initial Inspection
-
-Before creating or modifying any planning files, inspect the current repository state.
-
-## 1.1 Repository and instruction files
-
-At minimum, inspect:
-
-```text
-AGENTS.md
-thesis-writing/THESIS_PLAN.md
-thesis-writing/general-instructions.pdf
-thesis-writing/context-dump.txt
-```
-
-Search for additional `AGENTS.md` files in the parent and nested repositories. Apply the instructions governing each inspected path.
-
-If there is no root `AGENTS.md`, do not create one during this stage unless an existing instruction explicitly requires it.
-
-## 1.2 Completed Stage 2 audit
-
-Inspect every current file under:
-
-```text
-thesis-writing/audit/
-```
-
-This must include, where present:
-
-```text
-repository_map.md
-evidence_inventory.md
-experiment_inventory.csv
-figure_table_inventory.md
-terminology_map.md
-unresolved_questions.md
-claim_evidence_ledger.csv
-```
-
-Do not rely only on filenames. Read their contents and use their status, provenance, uncertainty, and risk fields.
-
-Treat the audit as the main evidence index, but verify critical paths against the current repository where practical.
-
-## 1.3 Literature corpus
-
-Inspect:
-
-```text
-thesis-writing/literature/README.md
-thesis-writing/literature/metadata/catalog.csv
-thesis-writing/literature/metadata/references.bib
-```
-
-Also inspect any Stage 1 literature matrices or gap reports that exist.
-
-Use `catalog.csv` and `references.bib` as the source of truth for available literature and citation keys.
-
-Do not add, remove, rename, or repair literature records in Stage 3.
-
-Do not cite optional literature as the primary source for an implemented method when a core source exists.
-
-## 1.4 Example thesis
-
-Inspect the structure and build conventions under:
-
-```text
-thesis-writing/example-omri-thesis/
-```
-
-At minimum inspect:
-
-```text
-main.tex
-Bibliography.bib
-myshorts.tex
-```
-
-Also inspect its figure directory and any build scripts or editor configuration that exist.
-
-Use this directory only to learn:
-
-* LaTeX organization;
-* title and approval-page patterns;
-* front-matter sequence;
-* language switching;
-* bibliography setup;
-* chapter, section, figure, table, abbreviation, and notation conventions;
-* likely compilation workflow.
-
-Do not:
-
-* copy its subject-matter text;
-* reuse its factual claims;
-* treat its exact structure as automatically suitable for this thesis;
-* edit any file inside `thesis-writing/example-omri-thesis/`;
-* treat its figures or tables as CliniCause evidence.
-
-## 1.5 Current project implementation
-
-Use the Stage 2 audit as a router, then inspect the current files needed to confirm the proposed thesis story.
-
-At minimum, consider the current implementation and documentation in:
-
-```text
-README.md
-SCRIPTS.md
-router.py
-causal-irregular-time-series/README.md
-causal-irregular-time-series/SCRIPTS.md
-causal-irregular-time-series/AGENTS.md
-causal-irregular-time-series/main.py
-causal-irregular-time-series/configs/
-causal-irregular-time-series/src/
-STraTS/SCRIPTS.md
-STraTS/AGENTS.md
-STraTS/src/main.py
-STraTS/src/dataset.py
-STraTS/src/dataset_pretrain.py
-STraTS/src/models.py
-STraTS/src/evaluator.py
-STraTS/src/evaluator_pretrain.py
-```
-
-Inspect additional source files only where needed to verify a planned section.
-
-Do not perform a new full repository audit unless Stage 2 evidence is incomplete or inconsistent.
-
-## 1.6 Git state
-
-Record, but do not repair:
+1. Confirm the repository root.
+2. Run and record:
 
 ```bash
 git status --short
 git branch --show-current
-git rev-parse HEAD
+git log -1 --oneline
 ```
 
-Also record the corresponding status and commit identifiers for the nested repositories where possible.
-
-Do not commit, push, checkout another branch, reset, clean, stage, or discard changes.
-
----
-
-# 2. Authoritative Evidence Policy
-
-The thesis plan must be based only on verified evidence.
-
-Permitted evidence classes are:
-
-1. current repository code;
-2. configuration files;
-3. documented data contracts;
-4. verified run or result artifacts;
-5. verified figures and tables;
-6. completed Stage 2 audit records;
-7. curated literature records;
-8. official BGU instructions;
-9. explicitly recorded advisor-approved assumptions.
-
-Do not infer that:
-
-* a script was executed merely because it exists;
-* an ignored or missing output was previously generated;
-* an archived run is a final thesis result;
-* a generated-looking image has verified provenance;
-* the example thesis establishes an official BGU rule;
-* an implemented estimator proves causality;
-* a proxy label is a verified diagnosis;
-* all repository workflows belong in the final thesis.
-
-When evidence is insufficient, use one of these exact markers:
-
-```text
-[NEEDS EVIDENCE]
-[NEEDS RESULT]
-[NEEDS CITATION]
-[PROVENANCE UNCLEAR]
-[ADVISOR CHECK]
-[VALIDATION REQUIRED]
-[OUT OF CURRENT SCOPE]
-```
-
-Do not hide missing evidence behind vague wording.
-
----
-
-# 3. Required Thesis Narrative Analysis
-
-Before fixing the outline, identify the most defensible thesis narrative from the actual repository.
-
-The repository appears to combine these broad elements:
-
-1. irregular ICU time-series preprocessing for PhysioNet 2012 and MIMIC-III;
-2. clinically inspired rule-based proxy-state construction;
-3. multi-label prediction of those proxy states using STraTS and baseline sequence models;
-4. aggregation or normalization of predicted proxy-state labels;
-5. a clinician-authored causal DAG;
-6. DAG-guided adjustment-set logic;
-7. matching and heterogeneous-effect estimation;
-8. overlap, sensitivity, benchmark, and permutation analyses;
-9. an end-to-end router connecting these stages.
-
-Do not assume that all nine elements are equally central or equally supported.
-
-Determine:
-
-* the main research question;
-* secondary research questions;
-* the primary methodological contribution;
-* supporting engineering contributions;
-* empirical contributions that are currently evidenced;
-* components that are implemented but lack execution evidence;
-* components that belong only in limitations, appendices, or future work.
-
-Create a concise thesis-story statement containing:
-
-* problem;
-* proposed approach;
-* research pipeline;
-* evaluated questions;
-* evidence status;
-* intended contribution boundaries.
-
-The story must clearly distinguish:
-
-```text
-clinical measurements
-rule-based proxy states
-predicted proxy states
-majority-vote or normalized proxy states
-exposures/treatments in the causal analysis
-outcome
-confounders
-effect modifiers
-causal estimates
-clinical interpretation
-```
-
-Do not conflate these concepts.
-
----
-
-# 4. BGU Requirements to Map Explicitly
-
-Read `thesis-writing/general-instructions.pdf` directly and create a traceable requirements checklist.
-
-At minimum, account for:
-
-* problem definition and introduction;
-* comprehensive literature review;
-* evaluation of the relevance and relative value of prior work;
-* explicit research objective;
-* detailed research methodology;
-* presentation of results;
-* discussion of reliability, error, and measurement limitations;
-* justified conclusions and possible applications;
-* Hebrew and English abstracts in matching formats;
-* abstract length limit;
-* keywords;
-* acknowledgements;
-* table of contents through third-level headings;
-* terminology, abbreviations, or symbol list where needed;
-* separate lists and numbering for figures and tables;
-* appendices;
-* bibliography consistency;
-* required ordering of front and back matter;
-* page numbering conventions;
-* high-quality figures;
-* equations and notation following accepted conventions.
-
-For every requirement, identify:
-
-* the planned thesis location;
-* whether the example thesis demonstrates a usable implementation;
-* whether a new LaTeX implementation will be needed later;
-* whether advisor or departmental confirmation is still required.
-
-Do not edit or create the final LaTeX thesis in Stage 3.
-
----
-
-# 5. Required Deliverables
-
-Create the directory if it does not exist:
+3. Inspect all files under:
 
 ```text
 thesis-writing/planning/
+thesis-writing/audit/
+thesis-writing/literature/
 ```
 
-Create or fully update all files below.
+4. Locate and inspect:
 
----
+* the approved thesis outline;
+* chapter evidence map;
+* writing order;
+* terminology and notation conventions;
+* figure and table plans;
+* citation plan;
+* the BGU thesis instructions;
+* the existing thesis LaTeX source, if present;
+* the example thesis/template files;
+* existing bibliography configuration;
+* any existing build scripts, `latexmkrc`, Makefiles, or compilation instructions.
 
-## 5.1 `thesis-writing/planning/thesis_story.md`
+5. Determine whether the thesis workspace already exists and whether it compiles before modification.
 
-This file must contain:
+Do not assume that filenames or compile commands are correct merely because they exist.
 
-### A. One-paragraph thesis thesis statement
+## Source-of-Truth Priority
 
-A precise paragraph describing the thesis problem, approach, and contribution.
+When sources disagree, use this priority:
 
-### B. Main research question
+1. approved Stage 3 planning documents;
+2. BGU thesis instructions;
+3. current thesis LaTeX files;
+4. repository audit outputs;
+5. literature corpus metadata;
+6. example thesis materials.
 
-One primary research question.
+The example thesis is a formatting reference only. Its prose, claims, results, figures, tables, personal details, and bibliography must not be copied into the CliniCause thesis.
 
-### C. Secondary research questions
+## Allowed Scope
 
-A compact set of well-scoped secondary questions.
-
-Each question must be answerable from planned experiments or clearly marked as blocked.
-
-### D. Contribution hierarchy
-
-Classify proposed contributions as:
+You may inspect:
 
 ```text
-primary contribution
-secondary methodological contribution
-engineering/reproducibility contribution
-empirical contribution
-supporting analysis
-future work
+the full repository
+thesis-writing/planning/
+thesis-writing/audit/
+thesis-writing/literature/
+thesis-writing/general-instructions.pdf
+thesis-writing/example-omri-thesis/
+existing thesis/template/build files
 ```
 
-### E. Evidence boundary
-
-State what the repository currently supports and what it does not yet support.
-
-### F. Terminology risks
-
-List terms that could cause overclaiming or ambiguity.
-
-### G. Candidate thesis titles
-
-Propose 3–5 technically accurate titles.
-
-Avoid titles that imply:
-
-* verified clinical diagnosis;
-* clinical deployment;
-* proven causal effects;
-* treatment recommendations;
-* fully validated end-to-end execution when evidence is absent.
-
-Select one recommended working title and explain why it is the safest and most representative.
-
----
-
-## 5.2 `thesis-writing/planning/bgu_requirements_map.md`
-
-Create a structured requirements table with at least these columns:
+You may edit or create files only inside:
 
 ```text
-requirement_id
-requirement
-source_location
-planned_thesis_location
-example_thesis_pattern
-implementation_status
-advisor_check
-notes
+thesis-writing/thesis/
+thesis-writing/logs/
 ```
 
-Separate:
+A root-level or thesis-local build configuration may be edited only when necessary for thesis compilation and only if it is clearly part of the thesis workspace.
 
-* official requirements from `general-instructions.pdf`;
-* patterns observed in the example thesis;
-* recommended project-specific choices.
-
-Never describe an example-thesis convention as an official requirement unless the PDF independently supports it.
-
-Include a proposed final document sequence from the first cover page to the final English cover page.
-
----
-
-## 5.3 `thesis-writing/planning/thesis_outline.md`
-
-Produce a detailed hierarchy down to at least the third heading level where useful.
-
-For each chapter, section, and substantive subsection include:
-
-```text
-Purpose
-Key questions
-Planned claims
-Evidence class
-Primary repository sources
-Primary literature themes or citation keys
-Candidate figures
-Candidate tables
-Dependencies
-Known risks
-Open questions
-Drafting readiness
-Maximum scope
-```
-
-Use one of these readiness statuses:
-
-```text
-READY FOR METHODS DRAFT
-READY WITH QUALIFICATIONS
-BLOCKED BY RESULTS
-BLOCKED BY PROVENANCE
-BLOCKED BY ADVISOR DECISION
-APPENDIX ONLY
-FUTURE WORK
-```
-
-The outline must be customized to this repository. Do not merely reproduce the generic outline from `THESIS_PLAN.md`.
-
-At minimum, evaluate the following proposed structure and modify it where evidence warrants.
-
-### Front matter
-
-* English and Hebrew title/approval pages as required;
-* abstract in the primary thesis language;
-* keywords;
-* acknowledgements;
-* table of contents;
-* abbreviations;
-* notation;
-* list of figures;
-* list of tables.
-
-### Chapter 1 — Introduction
-
-Possible contents:
-
-* irregular clinical time-series problem;
-* clinical and methodological motivation;
-* gap between clinical proxy construction, time-series prediction, and downstream causal analysis;
-* thesis objectives;
-* research questions;
-* contributions;
-* thesis organization.
-
-Do not plan numerical claims here unless results are verified.
-
-### Chapter 2 — Background and Related Work
-
-Possible contents:
-
-* ICU electronic health records and irregular sampling;
-* missingness and temporal representation;
-* PhysioNet 2012 and MIMIC-III;
-* GRU, GRU-D, TCN, SAnD, InterpNet, STraTS and iSTraTS;
-* weak supervision and proxy phenotyping;
-* causal diagrams and identification;
-* DML, causal forests, matching, and heterogeneous effects;
-* overlap and positivity;
-* sensitivity to unmeasured confounding;
-* relationship of the thesis pipeline to prior work.
-
-Do not turn this into a paper-by-paper inventory.
-
-### Chapter 3 — Problem Definition and Study Design
-
-Consider whether this chapter should include:
-
-* notation;
-* data units and time horizons;
-* proxy-state prediction task;
-* binary labels and model outputs;
-* treatment/exposure definitions;
-* mortality outcome;
-* estimands;
-* causal assumptions;
-* boundaries between prediction and causal estimation.
-
-This chapter must make clear that the clinical states are derived proxy states rather than verified diagnoses.
-
-### Chapter 4 — Data and Preprocessing
-
-Possible contents:
-
-* PhysioNet 2012;
-* MIMIC-III;
-* access and privacy constraints;
-* cohort construction;
-* long-format event representation;
-* processed artifact contracts;
-* static variables;
-* temporal windows;
-* missingness handling;
-* dataset-specific preprocessing;
-* split-aware STraTS artifacts versus causal-pipeline artifacts;
-* identity-field normalization;
-* leakage safeguards;
-* unresolved provenance.
-
-Do not claim final cohort counts unless verified result artifacts exist.
-
-### Chapter 5 — Clinical Proxy-State Construction
-
-Possible contents:
-
-* rationale for derived proxy states;
-* list of proxy states;
-* input variables;
-* clinical rules;
-* time windows;
-* ordinal stages and binary conversion where applicable;
-* PhysioNet and MIMIC implementation differences;
-* generated decision-tree representations;
-* validation status;
-* known limitations;
-* distinction between active and legacy taggers.
-
-Assess whether proxy construction should precede predictive modeling in the final chapter order.
-
-### Chapter 6 — Predictive Modeling of Proxy States
-
-Possible contents:
-
-* self-supervised STraTS pretraining;
-* supervised multi-label prediction;
-* STraTS and iSTraTS;
-* GRU, GRU-D, TCN, SAnD, and InterpNet;
-* model-specific representations;
-* shared prediction heads;
-* class weighting;
-* train/validation/test splitting;
-* metrics;
-* checkpointing;
-* prediction export;
-* known warm-start or execution limitations;
-* prediction normalization and majority voting.
-
-Do not imply that model comparisons were completed unless execution and results are verified.
-
-### Chapter 7 — Causal Graph and Causal-Effect Methodology
-
-Possible contents:
-
-* causal question;
-* exposure/treatment definition;
-* outcome;
-* background covariates;
-* graph construction;
-* active DAG versions;
-* adjustment-candidate mapping;
-* backdoor logic;
-* collider and descendant handling;
-* matching baseline;
-* LinearDML;
-* CausalForestDML;
-* CausalPFN, only if it belongs in the evidenced thesis;
-* effect modifiers;
-* nuisance estimation;
-* uncertainty;
-* assumptions and limitations.
-
-Explicitly address whether proxy states represent meaningful interventions. Mark this for advisor review if unresolved.
-
-### Chapter 8 — Robustness, Sensitivity, and Validation Design
-
-Possible contents:
-
-* overlap and positivity diagnostics;
-* treatment prevalence;
-* sensitivity analysis;
-* robustness values;
-* benchmark proxy scores;
-* contour plots;
-* direct versus fallback diagnostics;
-* treatment permutations;
-* outcome permutations;
-* configuration validation;
-* reproducibility checks.
-
-Do not describe fallback diagnostics as estimator-native diagnostics.
-
-### Chapter 9 — Experimental Design
-
-Possible contents:
-
-* experimental research questions;
-* dataset/model/label-source matrix;
-* train fractions and runs;
-* hyperparameters;
-* comparison protocol;
-* metrics;
-* causal model matrix;
-* down-sampling choices;
-* minimal versus expanded safe confounder sets;
-* computational environment;
-* planned ablations;
-* decision criteria;
-* missing experiments.
-
-Decide whether experimental design should appear before the causal-methodology chapters, after them, or be integrated into the corresponding method chapters.
-
-### Chapter 10 — Results
-
-Plan subsection slots only for verified or expected evidence categories, such as:
-
-* data/cohort summary;
-* proxy-state prevalence and co-occurrence;
-* predictive performance;
-* model learning curves;
-* mortality-prediction utility of proxy states;
-* matching results;
-* CATE estimates;
-* heterogeneity;
-* overlap;
-* sensitivity;
-* permutation checks;
-* cross-dataset comparison.
-
-Every planned result subsection must have a status:
-
-```text
-VERIFIED RESULT AVAILABLE
-RESULT ARTIFACT EXISTS — PROVENANCE REVIEW NEEDED
-IMPLEMENTED — RESULT MISSING
-NOT YET IMPLEMENTED
-NOT PART OF FINAL THESIS
-```
-
-Do not invent placeholders disguised as results.
-
-### Chapter 11 — Discussion
-
-Possible contents:
-
-* answer to each research question;
-* interpretation of predictive findings;
-* interpretation limits for proxy states;
-* interpretation limits for causal estimates;
-* comparison with prior work;
-* generalizability;
-* methodological limitations;
-* data limitations;
-* measurement error;
-* label error;
-* unmeasured confounding;
-* overlap limitations;
-* reproducibility limitations;
-* ethical and clinical-use limitations.
-
-### Chapter 12 — Conclusions and Future Work
-
-Possible contents:
-
-* concise contribution summary;
-* what was demonstrated;
-* what remains unverified;
-* recommended next experiments;
-* clinical validation requirements;
-* future improvements in model training and causal design.
-
-The conclusion must not introduce new evidence.
-
-### Appendices
-
-Evaluate appendices for:
-
-* complete proxy-state definitions;
-* additional DAGs;
-* configuration fields;
-* model hyperparameters;
-* extra result tables;
-* sensitivity plots;
-* permutation details;
-* command-line examples;
-* environment and reproducibility notes;
-* unresolved implementation details that should not interrupt the main narrative.
-
----
-
-## 5.4 `thesis-writing/planning/chapter_evidence_map.md`
-
-Create a chapter-by-chapter evidence map.
-
-For every planned chapter and substantive section, include:
-
-```text
-section_id
-section_title
-purpose
-planned_claims
-claim_ids_from_audit
-repository_sources
-config_sources
-result_sources
-figure_sources
-table_sources
-literature_keys
-evidence_status
-risk_level
-unresolved_dependencies
-recommended_wording_strength
-```
-
-Use the current `claim_evidence_ledger.csv` rather than starting a disconnected claim system.
-
-Where useful, propose new planned claim IDs, but do not overwrite the audit ledger in Stage 3.
-
-Use wording-strength classifications:
-
-```text
-DESCRIPTIVE
-IMPLEMENTATION-CONFIRMED
-EXECUTION-CONFIRMED
-RESULT-CONFIRMED
-ASSOCIATIONAL
-CAUSAL-WITH-ASSUMPTIONS
-CLINICAL-INTERPRETATION-RESTRICTED
-BLOCKED
-```
-
-A planned causal claim must identify:
-
-* exposure/treatment;
-* outcome;
-* target estimand;
-* adjustment assumptions;
-* overlap assumption;
-* sensitivity limitation;
-* intervention-definition concern;
-* evidence status.
-
----
-
-## 5.5 `thesis-writing/planning/citation_plan.md`
-
-Map the validated literature corpus into the thesis.
-
-Organize by chapter and conceptual role rather than by alphabetical paper list.
-
-For each source or source group include:
-
-```text
-citation_key
-core_or_optional
-planned_sections
-claim_supported
-why_this_source
-alternative_or_redundant_sources
-usage_limitations
-```
-
-Requirements:
-
-* every implemented predictive model must have an appropriate primary citation;
-* both datasets must have canonical citations;
-* causal DAG and identification claims must have foundational support;
-* DML and causal-forest claims must use primary method sources;
-* weak supervision and proxy phenotyping require appropriate support;
-* overlap and sensitivity methods require primary support;
-* software citations should be separated from mathematical method citations;
-* optional E-value literature must not replace the primary implemented sensitivity references;
-* marginal structural model literature may provide background but must not be described as the implemented estimator;
-* LLM literature must remain out of scope unless new implementation evidence exists.
-
-Identify citation gaps with `[NEEDS CITATION]`.
-
-Do not edit `references.bib`.
-
----
-
-## 5.6 `thesis-writing/planning/figure_plan.md`
-
-Create an inventory of all planned thesis figures.
-
-Include at least:
-
-```text
-figure_id
-planned_caption
-planned_chapter
-purpose
-source_artifact
-generation_script
-input_artifacts
-provenance_status
-current_availability
-needs_regeneration
-risk
-notes
-```
-
-Classify each figure as:
-
-```text
-EXISTING VERIFIED PROJECT FIGURE
-EXISTING PROJECT FIGURE — PROVENANCE UNCLEAR
-PLANNED FROM VERIFIED DATA
-PLANNED BUT RESULT MISSING
-FORMATTING EXAMPLE ONLY
-EXCLUDE
-```
-
-Explicitly evaluate:
-
-* the end-to-end workflow image;
-* PhysioNet proxy-state decision trees;
-* MIMIC proxy-state decision trees;
-* causal DAG figures;
-* learning curves;
-* model-comparison plots;
-* proxy prevalence/co-occurrence plots;
-* treatment-effect distributions;
-* feature-importance plots;
-* overlap plots;
-* sensitivity contours;
-* permutation null-distribution plots.
-
-Files under `thesis-writing/example-omri-thesis/Figs/` must be marked as formatting/example assets and excluded from CliniCause evidence.
-
-Do not generate or copy figures during Stage 3.
-
----
-
-## 5.7 `thesis-writing/planning/table_plan.md`
-
-Create an inventory of all planned thesis tables.
-
-Include:
-
-```text
-table_id
-planned_title
-planned_chapter
-purpose
-source_artifact
-source_columns
-aggregation_or_transformation
-provenance_status
-availability
-risk
-notes
-```
-
-Evaluate at least:
-
-* dataset and cohort summary;
-* observed-variable summary;
-* proxy-state definition summary;
-* model architecture comparison;
-* training configuration;
-* predictive performance;
-* proxy-state prevalence;
-* proxy-state co-occurrence;
-* mortality-prediction performance;
-* matching summaries;
-* causal estimator summaries;
-* overlap diagnostics;
-* sensitivity/robustness results;
-* permutation checks;
-* limitations and threat-to-validity matrix.
-
-Do not fill unavailable numeric cells with invented values.
-
-Use `[NEEDS RESULT]` for blocked tables.
-
----
-
-## 5.8 `thesis-writing/planning/terminology_and_notation.md`
-
-Create the authoritative terminology and notation plan.
-
-It must include:
-
-### A. Preferred terminology
-
-Define and standardize:
-
-```text
-irregular clinical time series
-measurement event
-patient/stay/record
-derived proxy state
-proxy phenotype
-clinically inspired proxy label
-rule-based proxy label
-predicted proxy state
-latent-tag prediction
-exposure
-treatment
-outcome
-confounder
-adjustment set
-effect modifier
-matching estimate
-average treatment effect
-conditional average treatment effect
-heterogeneous treatment effect
-overlap
-positivity
-sensitivity analysis
-robustness value
-permutation check
-```
-
-### B. Prohibited or restricted terminology
-
-At minimum restrict:
-
-```text
-diagnosis
-ground truth clinical state
-validated phenotype
-causal effect
-treatment recommendation
-clinical actionability
-latent variable
-unbiased estimate
-proof
-```
-
-For each restricted term, explain the conditions under which it may be used.
-
-### C. Dataset identifiers
-
-Standardize:
-
-* `ts_id`;
-* patient versus ICU stay terminology;
-* dataset-specific identifier aliases;
-* PhysioNet versus MIMIC naming;
-* split-aware versus unsplit data artifacts.
-
-### D. Mathematical notation
-
-Propose notation for:
-
-* patients/stays;
-* irregular measurement tuples;
-* measurement variables;
-* timestamps;
-* static covariates;
-* proxy-state labels;
-* predicted probabilities;
-* binary predicted labels;
-* exposure;
-* outcome;
-* confounders;
-* effect modifiers;
-* potential outcomes;
-* ATE and CATE;
-* estimator outputs;
-* confidence intervals;
-* sensitivity parameters.
-
-Ensure notation reflects what the implementation actually estimates.
-
-### E. Abbreviation list
-
-Propose the abbreviation list for the final thesis.
-
-Avoid abbreviations used only once or twice.
-
----
-
-## 5.9 `thesis-writing/planning/writing_order.md`
-
-Recommend the Stage 4 drafting sequence.
-
-Do not default automatically to chapter-number order.
-
-For every drafting unit include:
-
-```text
-draft_order
-section
-why_now
-required_evidence
-blocking_dependencies
-expected_output_file
-review_focus
-```
-
-Prefer beginning with stable, implementation-grounded sections such as:
-
-* data contracts and preprocessing;
-* proxy-state construction;
-* predictive-model methodology;
-* causal methodology;
-* experimental design.
-
-Delay:
-
-* results until artifacts are verified;
-* discussion until results are stable;
-* introduction and contributions until the thesis body is clear;
-* abstracts until the thesis is nearly final.
-
-Divide large chapters into manageable Stage 4 prompt units.
-
-The writing plan must identify a human approval gate after every chapter or major section group.
-
----
-
-## 5.10 `thesis-writing/planning/stage4_prompt_queue.md`
-
-Create a concrete queue of future Codex prompts.
-
-For each proposed Stage 4 task include:
-
-```text
-task_id
-target_section
-objective
-allowed_read_scope
-allowed_edit_scope
-evidence_packet
-required_citations
-known_placeholders
-validation
-human_approval_gate
-```
-
-Do not write the complete future prompts verbatim unless useful.
-
-The queue should be fine-grained enough that a single task does not attempt to write an entire thesis or several unrelated chapters.
-
----
-
-## 5.11 `thesis-writing/planning/stage3_validation_report.md`
-
-At the end, create a validation report containing:
-
-### Files inspected
-
-List the major files and directories actually inspected.
-
-### Files created or changed
-
-List only Stage 3 planning files.
-
-### BGU compliance check
-
-Report which official requirements have been mapped and which still require confirmation.
-
-### Evidence coverage
-
-Report:
-
-* chapters fully supported for methodology drafting;
-* chapters requiring result artifacts;
-* chapters blocked by provenance;
-* chapters requiring advisor decisions.
-
-### Cross-file consistency checks
-
-Verify:
-
-* section IDs agree across planning files;
-* chapter names agree;
-* citation keys exist;
-* figure/table IDs are unique;
-* terminology is consistent;
-* evidence paths exist where claimed;
-* example-thesis assets are not treated as project evidence;
-* unresolved Stage 2 questions remain visible.
-
-### Remaining blockers
-
-Group blockers as:
-
-```text
-advisor decision
-missing result
-missing provenance
-missing citation
-template/format question
-repository inconsistency
-future experiment
-```
-
-### Stage 3 approval recommendation
-
-End with exactly one of:
-
-```text
-READY FOR HUMAN REVIEW
-NOT READY — CRITICAL PLANNING GAPS REMAIN
-```
-
-Do not declare Stage 3 approved yourself.
-
----
-
-# 6. Planning Rules Specific to This Thesis
-
-## 6.1 Proxy-state language
-
-Clinical tags must normally be described as:
-
-* derived proxy states;
-* proxy phenotypes;
-* clinically inspired proxy labels;
-* weak clinical labels.
-
-Do not call them verified diagnoses.
-
-Do not call them formal latent variables without an explicit theoretical and validation argument.
-
-When discussing the repository’s historical naming, distinguish the code’s `latent` terminology from the preferred thesis terminology.
-
-## 6.2 Prediction versus causal analysis
-
-Keep separate:
-
-1. predicting proxy-state labels from irregular measurements;
-2. aggregating or normalizing predicted labels;
-3. treating selected proxy states as exposures in downstream analyses;
-4. estimating adjusted associations or causal effects under assumptions.
-
-Predictive AUROC or AUPRC does not validate causal identification.
-
-Mortality-prediction performance does not validate a proxy state as a diagnosis.
-
-## 6.3 Causal wording
-
-The thesis may describe:
-
-* implemented causal estimators;
-* DAG-guided adjustment logic;
-* estimates produced under stated assumptions;
-* sensitivity and overlap diagnostics.
-
-It must not imply unconditional causality.
-
-Any planned causal conclusion must explicitly address:
-
-* consistency;
-* exchangeability or no unmeasured confounding;
-* positivity/overlap;
-* model specification;
-* measurement error;
-* treatment definition;
-* temporal ordering;
-* proxy-label error;
-* intervention interpretability.
-
-## 6.4 Active versus legacy code
-
-Treat files under:
-
-```text
-causal-irregular-time-series/src/draft/
-```
-
-as legacy unless execution evidence proves they were used for final results.
-
-Do not design the main methods chapter around a legacy implementation merely because its code is easier to explain.
-
-If active and legacy implementations conflict, record the conflict rather than silently choosing one.
-
-## 6.5 Dataset contracts
-
-Account for the fact that the causal repository and STraTS repository use different processed-pickle contracts.
-
-The plan must make this distinction explicit and identify where the router or preprocessing workflow bridges them.
-
-Do not describe them as one identical artifact contract.
-
-## 6.6 Missing result artifacts
-
-The Stage 2 audit identified that many outputs may be ignored, external, archived, or absent.
-
-A section can be planned without results, but its result claims and tables must remain blocked.
-
-Do not transform implementation evidence into execution evidence.
-
-## 6.7 Example thesis use
-
-Use `example-omri-thesis` to understand practical LaTeX patterns.
-
-Do not assume its package list is clean or ideal.
-
-Document duplicate, obsolete, fragile, or project-specific LaTeX choices that should not automatically be copied.
-
-Examples may include:
-
-* repeated package imports;
-* mixed bibliography tooling;
-* hard-coded title-page content;
-* language-specific Unicode declarations;
-* unusual figure paths;
-* inline chapter content inside one large `main.tex`.
-
-Recommend later architecture improvements, but do not implement them during Stage 3.
-
----
-
-# 7. Validation Procedure
-
-After creating the planning files, perform the following checks.
-
-## 7.1 File and link validation
-
-Check that all repository paths cited in planning files exist.
-
-Where a path is expected but absent, mark it explicitly.
-
-## 7.2 Citation-key validation
-
-For every citation key mentioned in planning files:
-
-* confirm it exists in `metadata/references.bib`;
-* confirm its corpus role in `catalog.csv`;
-* flag missing or inconsistent keys.
-
-Do not modify bibliography files.
-
-## 7.3 Evidence-status validation
-
-Confirm that no planned claim has been promoted beyond its evidence level.
-
-Examples:
-
-* code existence → implementation-confirmed only;
-* output file without provenance → provenance unclear;
-* verified summary CSV linked to a run → result-confirmed, if provenance is sufficient;
-* literature statement → background support, not repository execution proof.
-
-## 7.4 BGU requirement validation
-
-Cross-check the proposed thesis sequence and planned sections against the official PDF.
-
-Do not rely exclusively on the example thesis.
-
-## 7.5 Scope validation
-
-Confirm that Stage 3 did not:
-
-* draft full thesis prose;
-* modify code;
-* modify result files;
-* modify literature files;
-* modify the example thesis;
-* create final LaTeX chapters;
-* generate figures;
-* generate numeric result tables;
-* commit or push.
-
-## 7.6 Optional lightweight checks
-
-You may run lightweight, read-only or planning-validation commands such as:
-
-```bash
-git status --short
-find thesis-writing/planning -maxdepth 1 -type f -print
-rg "\[NEEDS|\[ADVISOR|\[PROVENANCE|\[VALIDATION" thesis-writing/planning
-```
-
-Do not run model training, preprocessing, causal estimation, or other expensive workflows.
-
-Do not compile or edit the example thesis merely to prove that it builds.
-
-A LaTeX compile test belongs in a later construction or validation stage unless an existing CliniCause thesis skeleton already exists and can be checked without modifying it.
-
----
-
-# 8. Forbidden Actions
+## Forbidden Scope
 
 Do not:
 
-* write full thesis chapters;
-* create final thesis prose;
-* modify Python, shell, configuration, test, or routing code;
-* modify datasets;
-* modify processed artifacts;
-* modify run outputs;
-* rerun experiments;
-* repair missing provenance by assumption;
-* add or remove papers;
-* edit BibTeX;
-* alter checksums;
-* copy example-thesis prose;
-* edit `thesis-writing/example-omri-thesis/`;
-* delete or rename audit files;
-* silently resolve Stage 2 questions;
-* commit;
-* push;
-* create a pull request;
-* reset or clean any working tree.
+* write substantive chapter prose;
+* summarize research findings in paragraph form;
+* invent results, methods, citations, figures, tables, or contributions;
+* edit research code;
+* edit datasets or result artifacts;
+* rerun preprocessing, model training, or causal experiments;
+* modify the approved audit, planning, or literature files;
+* rename existing bibliography keys;
+* create a second independent bibliography database;
+* copy prose or research content from the example thesis;
+* silently delete existing thesis material;
+* commit, push, merge, rebase, or modify Git history.
 
----
+## Required Procedure
 
-# 9. Required Final Response
+### 1. Determine the Existing Thesis State
 
-At the end of the task, report:
+Classify the current thesis workspace as one of:
 
-1. the current branch and commit inspected;
-2. all files inspected at a high level;
-3. all planning files created or changed;
-4. the recommended thesis story;
-5. the recommended chapter structure;
-6. the chapters ready for Stage 4 methods drafting;
-7. the chapters blocked by missing results or provenance;
-8. the most important advisor decisions;
-9. validation commands or checks performed;
-10. whether the planning package is:
+* usable existing thesis;
+* partially usable thesis;
+* template only;
+* no thesis workspace.
 
-```text
-READY FOR HUMAN REVIEW
-```
+Record the classification and supporting evidence in the setup report.
 
-or:
+When existing thesis content is found:
+
+* preserve it;
+* do not overwrite it blindly;
+* report conflicts with the approved Stage 3 outline;
+* move or rename files only when clearly necessary;
+* document every structural change.
+
+### 2. Establish the Thesis Directory Structure
+
+Use the existing structure when it is sound. Otherwise, create a clear structure similar to:
 
 ```text
-NOT READY — CRITICAL PLANNING GAPS REMAIN
+thesis-writing/thesis/
+├── main.tex
+├── frontmatter/
+│   ├── title_pages.tex
+│   ├── abstract_primary.tex
+│   ├── abstract_secondary.tex
+│   ├── keywords.tex
+│   ├── acknowledgements.tex
+│   └── nomenclature.tex
+├── chapters/
+│   ├── 01_introduction.tex
+│   ├── 02_background_related_work.tex
+│   ├── 03_problem_formulation.tex
+│   ├── 04_data_preprocessing.tex
+│   ├── 05_predictive_modeling.tex
+│   ├── 06_proxy_state_construction.tex
+│   ├── 07_causal_methodology.tex
+│   ├── 08_experimental_design.tex
+│   ├── 09_results.tex
+│   ├── 10_discussion.tex
+│   └── 11_conclusion.tex
+├── appendices/
+│   └── appendices.tex
+├── figures/
+├── tables/
+├── references.bib
+├── latexmkrc
+└── README.md
 ```
 
-Do not move to Stage 4.
+This is a suggested structure, not a command to replace a valid existing template. Follow the approved Stage 3 outline and the template’s architecture.
 
-Do not claim Stage 3 is approved.
+Do not create empty chapter files that conflict with an existing include system.
 
-The human reviewer will inspect the planning package and decide whether Stage 4 may begin.
+### 3. Create the Approved Outline in LaTeX
+
+Translate the approved Stage 3 outline into:
+
+* `\chapter`;
+* `\section`;
+* `\subsection`;
+
+headings only.
+
+Do not create speculative subheadings that were not approved.
+
+Each planned section should contain only a visible placeholder comment, for example:
+
+```latex
+% [STAGE 4 DRAFT REQUIRED]
+% Evidence map: see thesis-writing/planning/chapter_evidence_map.md
+```
+
+Do not insert filler prose such as “This chapter discusses...”.
+
+### 4. Establish Stable Labels
+
+Create a consistent label convention, such as:
+
+```latex
+chap:
+sec:
+subsec:
+fig:
+tab:
+eq:
+app:
+```
+
+Add labels to approved chapters and sections where appropriate.
+
+Do not rename valid existing labels unless they are duplicated, malformed, or inconsistent with the approved structure. Record every renamed label and update all internal references.
+
+### 5. Integrate the Canonical Bibliography
+
+The canonical bibliography source is:
+
+```text
+thesis-writing/literature/metadata/references.bib
+```
+
+Use one of these approaches:
+
+* reference it directly from the thesis build; or
+* create a documented symbolic link or synchronized thesis-local reference, if required by the toolchain.
+
+Do not manually create a divergent duplicate.
+
+Verify:
+
+* the selected bibliography backend;
+* the bibliography style;
+* compatibility with the template;
+* that existing citation keys remain unchanged;
+* that a minimal bibliography build succeeds.
+
+Do not add uncited placeholder citations merely to force entries into the bibliography.
+
+### 6. Configure Front Matter
+
+Prepare structural files for the required front matter, based on the approved thesis language and BGU instructions.
+
+The structure must support:
+
+* title and approval pages;
+* primary-language abstract;
+* secondary-language abstract;
+* abstracts limited to 500 words when later drafted;
+* 10–15 keywords or key phrases;
+* acknowledgements;
+* table of contents through the third heading level;
+* nomenclature or list of symbols, when required;
+* list of figures;
+* list of tables;
+* correct front-matter and main-matter page-numbering transitions.
+
+Use placeholders for personal, administrative, or approval information that has not been supplied:
+
+```text
+[AUTHOR DETAILS REQUIRED]
+[SUPERVISOR DETAILS REQUIRED]
+[DEPARTMENT DETAILS REQUIRED]
+[APPROVAL TEXT REQUIRED]
+```
+
+Do not infer these values.
+
+### 7. Configure Figures and Tables
+
+Create stable thesis-local figure and table paths without copying unrelated example assets.
+
+Where the Stage 3 plans identify approved source assets:
+
+* add comments documenting their expected source paths;
+* do not copy or regenerate the assets unless required for a compile test;
+* do not include figures or tables in chapters yet unless they are already approved and part of the existing skeleton.
+
+Create placeholder conventions for later prompts, for example:
+
+```latex
+% [FIGURE REQUIRED: figure_plan identifier]
+% [TABLE REQUIRED: table_plan identifier]
+```
+
+### 8. Establish Placeholder Conventions
+
+Use only the following visible placeholder classes unless the planning documents define stricter ones:
+
+```text
+[STAGE 4 DRAFT REQUIRED]
+[RESULT REQUIRED]
+[CITATION REQUIRED]
+[FIGURE REQUIRED]
+[TABLE REQUIRED]
+[VALIDATION REQUIRED]
+[SUPERVISOR DECISION REQUIRED]
+[ADMINISTRATIVE DETAILS REQUIRED]
+```
+
+Create or update:
+
+```text
+thesis-writing/logs/unresolved_placeholders.md
+```
+
+The file should explain each placeholder class and initially inventory any placeholders already present in the thesis.
+
+Do not hide unresolved material in generic TODO comments.
+
+### 9. Create Thesis Build Instructions
+
+Create or update:
+
+```text
+thesis-writing/thesis/README.md
+```
+
+Document:
+
+* required LaTeX engine;
+* bibliography backend;
+* exact clean-build command;
+* incremental-build command;
+* cleanup command;
+* expected output PDF path;
+* required packages or system tools;
+* known warnings that are currently acceptable;
+* working-directory assumptions.
+
+Prefer an automated command such as `latexmk` when compatible with the template.
+
+### 10. Compile and Validate
+
+First run a non-destructive baseline build when an existing thesis is present.
+
+After structural changes:
+
+1. clean generated auxiliary files;
+2. run the documented full compile;
+3. confirm that bibliography processing executes;
+4. confirm that the output PDF is created;
+5. inspect the compile log for:
+
+   * undefined control sequences;
+   * missing files;
+   * missing citations;
+   * undefined references;
+   * duplicate labels;
+   * bibliography errors;
+   * broken figure paths;
+   * fatal package conflicts.
+
+Do not spend this task polishing harmless typography warnings such as minor overfull boxes unless they prevent meaningful validation.
+
+When compilation cannot succeed because of an external dependency, record:
+
+* the exact command;
+* the exact error;
+* the missing dependency or file;
+* the narrowest proposed remedy.
+
+Do not claim a successful compile unless the expected PDF was actually generated.
+
+### 11. Record Deferred Fixes
+
+Create or update:
+
+```text
+thesis-writing/logs/deferred_fixes.md
+```
+
+Record repository, template, tooling, bibliography, or structural issues discovered during this task that are real but not necessary to fix during Stage 4.0.
+
+For each item include:
+
+```text
+ID
+area
+path
+issue
+evidence
+impact
+recommended later action
+urgency
+```
+
+Do not fix unrelated repository issues during this task.
+
+## Required Deliverables
+
+At minimum, produce or update:
+
+```text
+thesis-writing/thesis/
+thesis-writing/thesis/README.md
+thesis-writing/logs/stage_4_0_setup_report.md
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
+```
+
+The thesis directory must contain:
+
+* the approved chapter hierarchy;
+* front-matter and back-matter structure;
+* bibliography integration;
+* stable labels;
+* a documented build path.
+
+## Stage 4.0 Setup Report
+
+The file:
+
+```text
+thesis-writing/logs/stage_4_0_setup_report.md
+```
+
+must contain:
+
+1. repository branch and inspected commit;
+2. initial Git status;
+3. files and directories inspected;
+4. original thesis/template state;
+5. structural decisions made;
+6. files created, modified, moved, or preserved;
+7. bibliography configuration;
+8. build command;
+9. compilation result;
+10. warnings and blockers;
+11. unresolved placeholders;
+12. deferred fixes;
+13. readiness decision for Stage 4.1.
+
+Use one of these final readiness statuses:
+
+```text
+READY FOR STAGE 4.1
+READY WITH NON-BLOCKING WARNINGS
+BLOCKED BEFORE STAGE 4.1
+```
+
+Explain the status with concrete evidence.
+
+## Validation Checklist
+
+Before finishing, verify:
+
+* [ ] No substantive thesis prose was written.
+* [ ] The structure matches the approved Stage 3 outline.
+* [ ] Existing useful template behavior was preserved.
+* [ ] The example thesis contributed formatting only, not copied content.
+* [ ] The canonical bibliography is connected without divergence.
+* [ ] Citation keys were not renamed.
+* [ ] Chapter files and include order are coherent.
+* [ ] Labels are unique.
+* [ ] Front matter supports BGU requirements.
+* [ ] Abstract and keyword constraints are documented.
+* [ ] Contents can display through the third heading level.
+* [ ] Figure and table lists are configured.
+* [ ] Placeholder conventions are documented.
+* [ ] The exact compile command is recorded.
+* [ ] A PDF was generated, or the precise blocker was documented.
+* [ ] No research code, results, audit files, planning files, or literature metadata were modified.
+* [ ] No commit or push was performed.
+
+## Final Response
+
+At the end, report:
+
+1. Git branch and inspected commit.
+2. Initial and final Git status.
+3. Files inspected.
+4. Files created or changed.
+5. Thesis structure established.
+6. Bibliography integration method.
+7. Exact build command and result.
+8. Unresolved blockers or placeholders.
+9. Deferred fixes recorded.
+10. Stage 4.1 readiness status.
+
+Do not proceed to Stage 4.1.
