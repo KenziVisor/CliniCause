@@ -1,139 +1,126 @@
-# Stage 4.3R — Repair LLM, Prompt-Engineering, and Method-Provenance Coverage
+# Stage 4.4 — Draft the Causal Graph, Adjustment-Set, Matching, and Heterogeneous-Effect Methodology Chapter
 
 ## Authoritative Task Declaration
 
-Implement this prompt as a corrective task after Stage 4.3 and before Stage 4.4.
+Implement this `prompt.txt` exactly as written.
 
 The active task is:
 
 ```text
-Stage 4.3R — LLM and Prompt-Provenance Repair
+Stage 4.4 — Chapter 7: Causal Graph and Causal-Effect Methodology
 ```
 
-This is not Stage 4.4.
-
-Do not draft the full causal-methodology chapter yet.
-
-The purpose of this repair is to incorporate newly committed evidence under:
+The latest approved commit is expected to be:
 
 ```text
-thesis-writing/prompts-and-documents/
+30f137e step 4.3 repair
 ```
 
-These materials were not inspected during Stage 2, Stage 3, or Stage 4.3 and materially change the documented provenance of:
+There is no conflict between the Stage 4 prompt number and the thesis chapter number.
 
-* proxy-state ontology design;
-* rule elicitation;
-* causal-DAG design;
-* clinical and causal reasoning;
-* prompt engineering;
-* research-document generation.
-
-The corrected thesis must distinguish:
+This task combines the older granular planning tasks:
 
 ```text
-LLM-assisted design proposal
-human or project review
-source-code implementation
-executed artifact
-clinical validation
+S4-006 — C7.1-C7.2 DAG and adjustment methodology
+S4-007 — C7.3 matching and heterogeneous-effect estimators
 ```
 
-These are separate evidence levels.
+into one coherent Chapter 7 drafting task.
+
+This task covers only:
+
+```text
+C7.1 — Dataset-Specific DAGs
+C7.2 — Adjustment-Set Logic
+C7.3 — Matching and Heterogeneous-Effect Estimators
+```
+
+The target file is:
+
+```text
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+```
+
+Do not draft Chapter 8, Chapter 9, results, discussion, background, introduction, conclusion, or front matter.
+
+Stage 4.5 will address robustness, sensitivity, experimental design, and reproducibility. Do not begin it.
 
 ---
 
 # 1. Context
 
-The latest approved repository commit is expected to be:
+Stages 0–3, Stages 4.0–4.3, and the Stage 4.3R LLM prompt-provenance repair are complete.
+
+The thesis currently distinguishes:
 
 ```text
-0009d91 step 4.3 + prompts
+LLM-assisted design proposal
+project or human review
+source-code implementation
+executed artifact
+clinical validation
 ```
 
-This commit contains:
+These evidence levels must remain separate.
 
-* the completed Stage 4.3 Chapter 5 draft;
-* the Stage 4.3 evidence report;
-* updated placeholder and deferred-fix logs;
-* the generated thesis PDF;
-* a newly committed `thesis-writing/prompts-and-documents/` directory.
+The proxy-state ontology and DAG design were informed by an LLM-assisted clinical and causal elicitation protocol. However:
 
-The Stage 4.3 evidence report states that this directory was outside Stage 4.3 scope. Therefore, Chapter 5 and the existing planning documents do not yet incorporate its methodological implications.
+* the LLM did not learn a graph from patient-level data;
+* the LLM did not execute the causal pipeline;
+* the prompt outputs do not clinically validate the DAG;
+* the prompt outputs do not establish causal identification;
+* the active graph scripts define the implemented DAGs;
+* the active matching and CATE scripts define the implemented adjustment and estimation procedures;
+* run artifacts support execution only to the degree permitted by their provenance.
 
-The exact final prompt template appears to include:
+Use wording such as:
 
 ```text
-general-purpose-latent-causal-model-prompt.txt
-physionet-prompt.txt
-mimic-prompt.txt
+project-specified DAG
+LLM-assisted design provenance
+source-code-implemented DAG
+assumed causal structure
+encoded backdoor-path logic
+adjusted effect estimate under stated assumptions
+proxy-state exposure
+modeled treatment variable
 ```
 
-Historical variants include:
+Avoid wording such as:
 
 ```text
-old-physionet-prompt.txt
-old-mimic-prompt.txt
+LLM-discovered DAG
+learned causal graph
+clinically validated DAG
+true causal graph
+ground-truth latent state
+proven causal effect
+treatment recommendation
 ```
-
-The directory also includes generated reports, manager summaries, research-question documents, and validation/reference documents in PDF or DOCX form.
-
-Do not infer the relationship among these files from their filenames alone. Audit the relationships directly.
 
 ---
 
-# 2. Core Interpretation
+# 2. Objective
 
-The LLM is not an inference-time component of the executable CliniCause pipeline.
+Draft an academically rigorous Chapter 7 that explains:
 
-It does not:
+1. how the PhysioNet 2012 and MIMIC-III DAGs were developed and operationalized;
+2. the distinction between LLM-assisted design provenance and implemented graph source;
+3. the node families and clinically assumed edge categories in each graph;
+4. the relationship between proxy-state nodes, observed measurements, treatments or care processes, missingness processes, and mortality;
+5. how graph nodes are mapped to available dataframe columns;
+6. how candidate adjustment sets are formed;
+7. how backdoor paths, colliders, descendants, and unavailable graph variables are handled;
+8. the distinction between the expanded-safe and minimal adjustment-set modes;
+9. how observed adjustment variables differ from effect modifiers;
+10. how the matching baseline is implemented;
+11. how `LinearDML` and `CausalForestDML` are implemented;
+12. how the optional CausalPFN branch differs from the EconML estimators;
+13. what the patient-level and summary outputs mean;
+14. why `mean_cate`, normalized CATE, and matched-pair differences must not be overinterpreted;
+15. which assumptions and limitations remain unresolved.
 
-* process ICU records during normal pipeline execution;
-* generate STraTS predictions during execution;
-* estimate matching or CATE outputs during execution;
-* replace the active tagger scripts;
-* replace the active DAG scripts;
-* provide chart-adjudicated clinical labels.
-
-However, the newly committed prompt evidence indicates that an LLM was used as a **method-design and expert-elicitation instrument** to propose or refine:
-
-* candidate latent clinical states;
-* observed-to-latent mappings;
-* proxy-state decision rules;
-* clinical threshold families;
-* missingness and measurement-process interpretation;
-* candidate causal edges;
-* mortality pathways;
-* adjustment implications;
-* rejected alternatives;
-* implementation specifications.
-
-This use is methodologically relevant and must be documented.
-
-Use conservative terms such as:
-
-```text
-LLM-assisted expert elicitation
-LLM-assisted evidence synthesis
-LLM-generated candidate ontology
-LLM-proposed rule specification
-LLM-proposed causal structure
-project-reviewed design artifact
-source-code operationalization
-```
-
-Do not use:
-
-```text
-AI-discovered clinical truth
-validated LLM diagnosis
-LLM-proven causal graph
-automatically learned DAG
-clinical expert consensus
-ground-truth latent state
-```
-
-unless discussing why such wording is inappropriate.
+The chapter must contain no final numerical findings.
 
 ---
 
@@ -141,49 +128,94 @@ unless discussing why such wording is inappropriate.
 
 ## 3.1 Git State
 
-From the repository root, run:
+From the CliniCause repository root, run:
 
 ```bash
 git status --short
 git branch --show-current
-git log -6 --oneline
-git show --stat --oneline 0009d91
+git log -7 --oneline
+git show --stat --oneline 30f137e
 ```
 
-Verify:
+Verify that:
 
-* commit `0009d91` exists;
-* its message is `step 4.3 + prompts`;
-* it follows `c9f6b12 step 4.2`;
-* Chapter 5 and the Stage 4.3 evidence report are present;
-* `thesis-writing/prompts-and-documents/` is tracked in this commit.
-
-Record the initial and final working-tree states.
+* `30f137e` exists;
+* its message is `step 4.3 repair`;
+* it follows `0009d91 step 4.3 + prompts`;
+* the LLM prompt-provenance audit exists;
+* the Stage 4.3R repair report exists;
+* Chapters 3 and 5 include the repaired LLM-assisted provenance language;
+* Chapter 7 remains an undrafted skeleton.
 
 Do not:
 
 * reset;
 * clean;
 * checkout another branch;
+* discard unrelated changes;
 * stage;
+* amend;
 * commit;
-* push;
-* discard unrelated changes.
+* push.
 
-## 3.2 Applicable Instructions
+Record the initial and final working-tree states.
 
-Inspect all relevant `AGENTS.md` files.
+## 3.2 Nested Repository State
 
-Also inspect:
+The causal repository may be a nested Git repository or gitlink with local changes.
+
+Run:
+
+```bash
+git -C causal-irregular-time-series status --short
+git -C causal-irregular-time-series branch --show-current
+git -C causal-irregular-time-series log -5 --oneline
+git ls-files --stage causal-irregular-time-series
+```
+
+Record:
+
+* nested branch;
+* nested HEAD;
+* parent gitlink SHA when resolvable;
+* local nested modifications;
+* whether inspected source differs from the committed nested HEAD.
+
+The local source files used for thesis drafting are the immediate implementation evidence, but any divergence from committed source must remain visible.
+
+Do not modify or commit the nested repository.
+
+## 3.3 Applicable Instructions
+
+Locate and inspect all applicable instructions, including:
 
 ```text
+AGENTS.md
+causal-irregular-time-series/AGENTS.md
 final-results/AGENTS.md
+final-results/causal-outputs/AGENTS.md
 thesis-writing/thesis/README.md
 ```
 
-Do not let stale instructions override current source evidence.
+Apply the evidence hierarchy defined for `final-results/`.
 
-## 3.3 Baseline Thesis Build
+Do not treat an artifact as authoritative merely because its directory contains the word `final`.
+
+## 3.4 Toolchain Verification
+
+Confirm:
+
+```bash
+command -v pdfinfo
+command -v pdftotext
+command -v latexmk
+command -v xelatex
+command -v biber
+```
+
+Do not reinstall tools when they remain available.
+
+## 3.5 Baseline Thesis Build
 
 Run:
 
@@ -198,403 +230,114 @@ pdfinfo main.pdf
 Record:
 
 * return status;
+* PDF path;
 * page count;
-* citation and reference status;
+* citation status;
+* reference status;
 * duplicate-label status;
 * fatal errors;
-* existing nonfatal warnings.
+* nonfatal layout warnings.
+
+The expected baseline is approximately 54 pages, but verify the current value.
 
 ---
 
-# 4. Complete Prompt-and-Document Inventory
+# 4. Stage 4.3R Repair Verification
 
-Inspect every file under:
-
-```text
-thesis-writing/prompts-and-documents/
-```
-
-Create an inventory containing:
-
-```text
-path
-file type
-size
-SHA-256
-apparent role
-dataset
-prompt/output/internal-document classification
-version status
-relationship to another file
-author or generator metadata, when available
-creation/modification metadata, when available
-text extraction status
-provenance confidence
-```
-
-Use commands such as:
-
-```bash
-find thesis-writing/prompts-and-documents -maxdepth 1 -type f -printf '%f\t%s bytes\n' | sort
-sha256sum thesis-writing/prompts-and-documents/*
-file thesis-writing/prompts-and-documents/*
-```
-
-Do not edit the prompt or document artifacts.
-
----
-
-# 5. PDF and DOCX Inspection
-
-## 5.1 PDF Files
-
-For each PDF, run:
-
-```bash
-pdfinfo "<file>"
-pdftotext -layout "<file>" -
-```
-
-Save temporary extracted text outside tracked thesis directories when useful.
-
-Determine:
-
-* title;
-* page count;
-* whether it appears to be an LLM output;
-* whether it contains a model/product identifier;
-* whether it contains citations;
-* whether it contains prompt text or only generated results;
-* whether it is duplicated by a DOCX;
-* whether it is an old or final report;
-* whether it directly informed source code.
-
-Do not treat PDF formatting as scientific validation.
-
-## 5.2 DOCX Files
-
-Inspect DOCX contents without modifying them.
-
-Use an appropriate method such as:
-
-```bash
-python - <<'PY'
-from pathlib import Path
-from docx import Document
-
-for path in sorted(Path("thesis-writing/prompts-and-documents").glob("*.docx")):
-    doc = Document(path)
-    print(f"\n===== {path} =====")
-    for paragraph in doc.paragraphs:
-        text = paragraph.text.strip()
-        if text:
-            print(text)
-PY
-```
-
-Also inspect document metadata when available.
-
-Determine whether PDF/DOCX pairs contain equivalent content.
-
-When they differ, identify which appears newer and do not silently choose one as authoritative.
-
----
-
-# 6. Prompt-Version Audit
-
-Compare:
-
-```text
-general-purpose-latent-causal-model-prompt.txt
-physionet-prompt.txt
-mimic-prompt.txt
-old-physionet-prompt.txt
-old-mimic-prompt.txt
-```
-
-Establish:
-
-1. Whether the final dataset-specific prompts are derived from the general template.
-2. Which global substitutions were made.
-3. Whether the final PhysioNet and MIMIC prompts differ only in dataset variables or have substantive differences.
-4. How each final prompt differs from its `old-*` version.
-5. Which version was actually used to produce each generated report.
-6. Whether follow-up prompts or manual edits occurred.
-7. Whether the exact prompt text is sufficient to reproduce the documented output.
-
-Generate unified diffs for audit purposes:
-
-```bash
-diff -u \
-  thesis-writing/prompts-and-documents/old-physionet-prompt.txt \
-  thesis-writing/prompts-and-documents/physionet-prompt.txt || true
-
-diff -u \
-  thesis-writing/prompts-and-documents/old-mimic-prompt.txt \
-  thesis-writing/prompts-and-documents/mimic-prompt.txt || true
-```
-
-Do not paste the full 700-plus-line prompt into the main thesis chapter.
-
-Instead, document its structure and preserve the exact files as versioned supplementary artifacts.
-
----
-
-# 7. Extract the Actual Prompt Protocol
-
-From the final prompt template, document the verified protocol.
-
-At minimum identify:
-
-* assigned expert role;
-* declared research mission;
-* dataset variables and official dataset-documentation link;
-* dataset audit;
-* deep-research requirements;
-* candidate latent-state discovery;
-* observed-to-latent measurement model;
-* mortality mechanism;
-* missingness and irregular-sampling analysis;
-* latent-state selection;
-* rule-based binary proxy construction;
-* leakage restrictions;
-* causal-DAG construction;
-* confounder, mediator, and collider analysis;
-* iterative validation;
-* adversarial critique;
-* required report structure;
-* implementation specification.
-
-Also record risky wording inside the prompt, including language such as:
-
-```text
-true hidden clinical states
-most clinically plausible DAG
-causal correctness
-clinically justified latent DAG
-```
-
-Explain that these are **prompt objectives**, not evidence that the returned constructs are true, identified, clinically validated, or causally correct.
-
----
-
-# 8. Determine the Actual LLM Execution Provenance
-
-Search all new documents and repository history for:
-
-```text
-model provider
-product or interface
-model name
-model version
-run date
-conversation date
-deep-research mode
-browsing mode
-temperature
-reasoning setting
-system prompt
-follow-up prompts
-human edits
-reviewer names or roles
-clinical reviewer
-output export method
-```
-
-Do not infer these values.
-
-When undocumented, create precise placeholders:
-
-```text
-[VALIDATION REQUIRED: identify the LLM provider, product, and exact model/version used for the final PhysioNet prompt run]
-```
-
-```text
-[VALIDATION REQUIRED: identify the LLM provider, product, and exact model/version used for the final MIMIC-III prompt run]
-```
-
-```text
-[VALIDATION REQUIRED: record run dates, research/browsing mode, available generation settings, follow-up prompts, and export procedure]
-```
-
-```text
-[SUPERVISOR DECISION REQUIRED: document the human and clinical review applied to LLM-proposed ontology, rules, and DAG edges]
-```
-
-A prompt file alone does not prove which model executed it.
-
-A generated PDF alone does not prove that all recommendations were accepted into the implementation.
-
----
-
-# 9. Prompt-Output-to-Code Traceability
-
-Create a traceability matrix mapping:
-
-```text
-prompt requirement
-generated-report recommendation
-implemented source location
-implemented proxy/DAG element
-agreement status
-difference
-human-review evidence
-artifact evidence
-confidence
-```
-
-Cover at minimum:
-
-* PhysioNet latent-state set;
-* MIMIC latent-state set;
-* PhysioNet rule families;
-* MIMIC rule families;
-* PhysioNet DAG nodes and edges;
-* MIMIC DAG nodes and edges;
-* measurement-process or missingness nodes;
-* mortality pathways;
-* confounder/mediator/collider recommendations;
-* rejected prompt recommendations;
-* recommendations that were never implemented;
-* implementation elements absent from the LLM reports.
-
-Use statuses:
-
-```text
-DIRECTLY ALIGNED
-PARTIALLY ALIGNED
-IMPLEMENTATION MODIFIED
-PROMPT RECOMMENDATION NOT IMPLEMENTED
-IMPLEMENTATION NOT FOUND IN PROMPT OUTPUT
-RELATIONSHIP UNCLEAR
-```
-
-Do not assume that textual similarity proves direct provenance.
-
-The active source code remains authoritative for what the executable pipeline implements.
-
-The LLM output remains authoritative only for documenting the design proposal it contains.
-
----
-
-# 10. Correct the Literature Scope
-
-The current literature README and citation plan state that LLM literature is out of scope.
-
-That statement is now incomplete.
-
-Update:
-
-```text
-thesis-writing/literature/README.md
-thesis-writing/planning/citation_plan.md
-```
-
-The corrected distinction should be:
-
-```text
-No LLM is used as an execution-time predictive or causal estimator in the CliniCause pipeline. However, an LLM-assisted research and expert-elicitation process was used during proxy-ontology, rule, and DAG design. Literature concerning LLM use as a domain expert, clinical reasoning aid, prompt engineering, reliability, hallucination, and human oversight is therefore relevant to the methodology and limitations discussion.
-```
-
-Do not automatically add new BibTeX records from generated reports.
-
-First inspect whether the current corpus already contains suitable sources.
-
-When it does not, create:
-
-```text
-thesis-writing/literature/llm_methodology_candidate_additions.md
-```
-
-The candidate-additions file should specify the literature roles needed:
-
-* LLMs as medical or domain-expert assistants;
-* evaluation of LLM medical reasoning reliability;
-* prompt-engineering methodology;
-* reproducibility and reporting of LLM-assisted research;
-* human oversight and hallucination risk;
-* LLM-assisted causal or ontology construction, when supported by appropriate literature.
-
-Add explicit citation gaps to the citation plan, for example:
-
-```text
-CIT-GAP-004 — Evidence for using LLMs as domain-expert or evidence-synthesis assistants in medicine.
-CIT-GAP-005 — Prompt-engineering and reproducibility guidance for the exact multi-phase elicitation protocol.
-CIT-GAP-006 — Limitations, hallucination, bias, and human-validation requirements for LLM-generated clinical and causal structures.
-```
-
-Do not invent citation keys.
-
-Do not add a paper merely because it appears in an LLM-generated bibliography.
-
----
-
-# 11. Correct the Stage 2 and Stage 3 Evidence Base
-
-## 11.1 New Audit File
-
-Create:
+Inspect:
 
 ```text
 thesis-writing/audit/llm_prompt_provenance_audit.md
+thesis-writing/logs/stage_4_3_llm_prompt_repair_report.md
+thesis-writing/literature/llm_methodology_candidate_additions.md
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
 ```
 
-It must contain:
+Confirm that:
 
-1. Artifact inventory.
-2. Prompt version comparison.
-3. Prompt execution metadata.
-4. Output-document relationships.
-5. Prompt-output-to-code traceability.
-6. Scientific role.
-7. Clinical and causal limitations.
-8. Missing provenance.
-9. Citation needs.
-10. Recommended thesis wording.
+* prompt artifacts are classified as design provenance;
+* active source remains authoritative;
+* final runs are documented as user-reported ChatGPT 5.4 with extended reasoning;
+* exact execution settings and human-review provenance remain incomplete;
+* no prompt output is called clinical validation;
+* no prompt output is called causal discovery.
 
-## 11.2 Existing Audit Files
-
-Update only where necessary:
+Retain these open issues:
 
 ```text
-thesis-writing/audit/repository_map.md
-thesis-writing/audit/evidence_inventory.md
-thesis-writing/audit/terminology_map.md
-thesis-writing/audit/unresolved_questions.md
-thesis-writing/audit/claim_evidence_ledger.csv
+DF-4.3R-001 — prompt execution provenance
+DF-4.3R-002 — human and clinical review record
+DF-4.3R-003 — LLM methodology citations
 ```
 
-Add a distinct evidence class for:
-
-```text
-LLM-DESIGN-ARTIFACT
-```
-
-Do not classify an LLM report as:
-
-```text
-clinical validation
-execution evidence
-ground truth
-result-confirmed
-causal identification
-```
-
-Recommended wording-strength categories include:
-
-```text
-LLM-PROPOSED
-PROJECT-REVIEWED
-IMPLEMENTATION-CONFIRMED
-CLINICAL-REVIEW-INCOMPLETE
-PROVENANCE-INCOMPLETE
-```
+Do not attempt to resolve them without new evidence.
 
 ---
 
-# 12. Correct the Thesis Story and Planning Files
+# 5. Narrow Planning Correction
 
-Update:
+The Stage 4.3R repair did not add the previously planned LLM design-provenance figure.
+
+You may make the following narrow planning correction:
+
+```text
+thesis-writing/planning/figure_plan.md
+```
+
+Add:
+
+```text
+F-LLM-ELICITATION-01
+```
+
+with a planned purpose equivalent to:
+
+```text
+Show the traceable path from generic prompt template, dataset-specific prompt
+execution, and candidate LLM report through project review, source-code
+implementation, artifact generation, and thesis evidence.
+```
+
+The figure must communicate:
+
+```text
+LLM proposal ≠ source-code implementation ≠ executed artifact ≠ clinical validation
+```
+
+Planned chapter:
+
+```text
+C5/C7 or Appendix
+```
+
+Source evidence:
+
+```text
+thesis-writing/prompts-and-documents/
+thesis-writing/audit/llm_prompt_provenance_audit.md
+active tagger and graph scripts
+```
+
+Provenance status:
+
+```text
+PLANNED FROM VERIFIED DESIGN-PROVENANCE ARTIFACTS
+```
+
+Do not generate or insert this figure during Stage 4.4 unless it can be created without new scientific claims and without adding a fragile LaTeX dependency.
+
+The two dataset DAG figures are the required figures for this stage.
+
+Do not otherwise redesign the Stage 3 plan.
+
+---
+
+# 6. Required Planning and Audit Inspection
+
+Inspect:
 
 ```text
 thesis-writing/planning/thesis_story.md
@@ -608,392 +351,1478 @@ thesis-writing/planning/writing_order.md
 thesis-writing/planning/stage4_prompt_queue.md
 ```
 
-## 12.1 Thesis Story
-
-Replace unqualified claims such as:
+Pay particular attention to:
 
 ```text
-clinician-authored DAG
-```
-
-with wording supported by the new evidence, such as:
-
-```text
-project-specified, LLM-assisted DAG
-```
-
-or:
-
-```text
-dataset-specific project DAG developed through LLM-assisted evidence synthesis and subsequently encoded in source code
-```
-
-Do not claim clinical authorship or approval unless a named clinical-review process is documented.
-
-The main thesis story should now include:
-
-* LLM-assisted ontology and DAG elicitation as a methodological component;
-* source-code implementation as the operational layer;
-* evidence tracking and human review as safeguards;
-* explicit separation from automated causal discovery and clinical validation.
-
-## 12.2 Research Questions
-
-Consider adding or refining a secondary research question such as:
-
-```text
-How can a structured LLM-assisted elicitation protocol be used to propose clinically interpretable proxy states and causal structures, and how do those proposals differ from the final source-code implementation?
-```
-
-Do not make this a research question when the available evidence cannot answer it. In that case, classify it as a methodology or reproducibility question.
-
-## 12.3 Chapter Allocation
-
-Plan LLM-related material across:
-
-### Chapter 5
-
-* prompt-assisted proxy-state ontology and rule elicitation;
-* distinction between LLM proposal and implemented rule;
-* prompt-output-to-code traceability;
-* clinical-validation limitations.
-
-### Chapter 7
-
-* prompt-assisted causal ontology and DAG elicitation;
-* distinction from causal discovery or graph learning;
-* final source-code graph as the implemented object;
-* human/clinical review status;
-* prompt wording risks and causal assumptions.
-
-### Chapter 9
-
-* exact prompt version;
-* prompt hashes;
-* model/provider/version;
-* run date and settings;
-* report files;
-* prompt-version history;
-* human review;
-* reproducibility protocol.
-
-### Chapter 11
-
-* hallucination risk;
-* anchoring and confirmation bias;
-* opaque model updates;
-* non-determinism;
-* clinical expertise limitations;
-* source-selection bias;
-* causal-direction errors;
-* need for independent review.
-
-### Appendix
-
-* exact final generic prompt;
-* exact final PhysioNet prompt;
-* exact final MIMIC prompt;
-* prompt hashes;
-* old-versus-final change summary;
-* report and manager-summary inventory.
-
-Do not insert the entire prompts into the main methods narrative.
-
----
-
-# 13. Add Figure and Table Plans
-
-Add a planned non-result methods figure:
-
-```text
+C7.1
+C7.2
+C7.3
+T-ASSUMPTIONS-01
+T-DAG-NODES-01
+T-ADJUST-01
+T-MATCH-01
+T-CATE-01
+T-LLM-PROMPT-01
+F-DAG-PHY-01
+F-DAG-MIMIC-01
 F-LLM-ELICITATION-01
 ```
 
-Suggested purpose:
+Inspect:
 
 ```text
-Show the traceable workflow from general prompt template, through dataset-specific prompt execution and generated candidate report, to human/project review, source-code implementation, artifact validation, and thesis claims.
+thesis-writing/audit/repository_map.md
+thesis-writing/audit/evidence_inventory.md
+thesis-writing/audit/experiment_inventory.csv
+thesis-writing/audit/claim_evidence_ledger.csv
+thesis-writing/audit/terminology_map.md
+thesis-writing/audit/unresolved_questions.md
+thesis-writing/audit/llm_prompt_provenance_audit.md
 ```
 
-The figure must make clear that:
-
-```text
-LLM output ≠ implemented code ≠ clinical validation
-```
-
-Do not generate the figure during this repair unless the existing planning policy clearly permits it.
-
-Add planned tables:
-
-```text
-T-LLM-PROVENANCE-01
-    Prompt, model, run, output, hash, and review provenance.
-
-T-LLM-TRACEABILITY-01
-    Mapping from LLM-proposed ontology/rules/DAG elements to active source implementation.
-
-T-PROMPT-VERSION-01
-    Old versus final prompt differences and methodological implications.
-```
-
-Do not insert invented model metadata.
+Use planning and audit documents as indexes. Verify implementation details against active source.
 
 ---
 
-# 14. Repair Chapter 3
+# 7. Required Literature Inspection
 
-Edit narrowly:
-
-```text
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-```
-
-Do not rewrite the chapter.
-
-Add a concise study-design disclosure explaining:
-
-* candidate proxy-state definitions and DAG structure were informed by a structured LLM-assisted elicitation process;
-* the LLM did not learn labels or a graph from patient-level data;
-* the active tagger and DAG source files define the implemented objects;
-* LLM-generated recommendations are design evidence, not validation;
-* final causal interpretation still depends on assumptions and review.
-
-Revise this type of wording:
+Inspect:
 
 ```text
-project-authored DAG
+thesis-writing/literature/README.md
+thesis-writing/literature/metadata/catalog.csv
+thesis-writing/literature/metadata/references.bib
+thesis-writing/literature/llm_methodology_candidate_additions.md
 ```
 
-to reflect LLM assistance without overstating provenance.
+Verify every citation key before inserting it.
 
-A suitable form is:
+Expected approved keys include:
 
 ```text
-project-specified DAG developed through an LLM-assisted clinical and causal elicitation protocol and subsequently encoded in source code
+pearl_1995_causal_diagrams
+hernan_robins_2016_target_trial
+hernan_taubman_2008_well_defined_interventions
+smit_2023_causal_inference_icu_scoping_review
+chernozhukov2018dml
+wager2018causalforest
+athey2019grf
+oprescu_et_al_2019_econml
+bica_2021_individualized_treatment_effects_ehr_ml
+lipkovich_2024_modern_hte_methods
+curth_2024_ml_individualized_treatment_effects
+iwashyna_2015_hte_critical_care
 ```
 
-Use a more conservative alternative when human-review evidence is incomplete.
+Citation limits:
 
-Do not add a literature citation until an approved key exists. Use a precise citation placeholder when necessary.
+* Pearl supports DAG and backdoor concepts, not the correctness of the project DAGs.
+* Target-trial and well-defined-intervention sources should be used to limit the interpretation of proxy-state exposures.
+* DML and forest papers support estimator methodology, not local execution or performance.
+* EconML supports software implementation context, not mathematical identification.
+* HTE reviews support interpretation and validation cautions.
+* No approved CausalPFN primary citation is currently present.
+* No approved LLM methodology citation is currently present.
+
+Do not invent a CausalPFN or LLM citation key.
+
+Do not edit the bibliography during this task.
 
 ---
 
-# 15. Repair Chapter 5
+# 8. Required LLM Prompt and Report Inspection
 
-Edit:
-
-```text
-thesis-writing/thesis/chapters/05_proxy_state_construction.tex
-```
-
-Do not discard the verified rule tables already drafted.
-
-## 15.1 Add an LLM-Assisted Elicitation Subsection
-
-Within C5.1, add an appropriately titled subsection such as:
+Inspect read-only:
 
 ```text
-LLM-Assisted Ontology and Rule Elicitation
+thesis-writing/prompts-and-documents/general-purpose-latent-causal-model-prompt.txt
+thesis-writing/prompts-and-documents/physionet-prompt.txt
+thesis-writing/prompts-and-documents/mimic-prompt.txt
+thesis-writing/prompts-and-documents/physionet-prompt-running.pdf
+thesis-writing/prompts-and-documents/mimic-prompt-running.pdf
+thesis-writing/prompts-and-documents/latent-causal-manager-summary.pdf
+thesis-writing/prompts-and-documents/latent-causal-manager-summary.docx
+thesis-writing/prompts-and-documents/clinical_cate_manager_summary.pdf
+thesis-writing/prompts-and-documents/clinical_cate_manager_summary.docx
 ```
 
-Explain:
+Use:
 
-1. A reusable general-purpose prompt template was prepared.
-2. Dataset-specific prompts configured the dataset name and official dataset-description source.
-3. The prompt required a staged process involving dataset audit, literature-guided clinical reasoning, candidate-state selection, rule design, DAG construction, missingness analysis, and adversarial critique.
-4. Generated reports were treated as candidate methodological design documents.
-5. Proposed states and rules were subsequently represented in repository source code.
-6. The active source code, not the generated prose, defines the implemented rules.
-7. No claim of chart-adjudicated validation follows from LLM generation.
-8. Mismatches between prompt outputs and code must be documented.
-9. Model/provider/version and human-review provenance remain explicit limitations when not recoverable.
+```bash
+pdfinfo "<file>"
+pdftotext -layout "<file>" -
+```
 
-## 15.2 Add a Prompt-Artifact Table
+and an appropriate DOCX text extraction method.
 
-Create a compact table such as:
+Do not quote large passages in the thesis.
+
+## 8.1 Complete DAG Traceability
+
+The Stage 4.3R audit established only high-level alignment.
+
+For Stage 4.4, create a detailed traceability analysis for the DAG layer.
+
+For every implemented graph node and every implemented edge, classify its relationship to the final dataset-specific LLM report:
+
+```text
+DIRECTLY ALIGNED
+PARTIALLY ALIGNED
+IMPLEMENTATION MODIFIED
+PROMPT RECOMMENDATION NOT IMPLEMENTED
+IMPLEMENTATION NOT FOUND IN PROMPT OUTPUT
+RELATIONSHIP UNCLEAR
+```
+
+Record:
+
+```text
+dataset
+implemented node or edge
+node/edge family
+LLM-report counterpart
+agreement status
+difference
+source-code location
+human-review evidence
+confidence
+```
+
+This detailed matrix belongs in the Stage 4.4 evidence report, not necessarily in the main thesis prose.
+
+Do not infer direct provenance merely because two concepts have similar names.
+
+---
+
+# 9. Required DAG Source Inspection
+
+Inspect the full current active files:
+
+```text
+causal-irregular-time-series/src/physionet2012_causal_graph.py
+causal-irregular-time-series/src/mimiciii_causal_graph.py
+causal-irregular-time-series/src/dataset_config.py
+causal-irregular-time-series/configs/physionet-global-variables.csv
+causal-irregular-time-series/configs/mimic-global-variables.csv
+causal-irregular-time-series/docs/global-variables-parameters.txt
+```
+
+Also inspect:
+
+```text
+causal-irregular-time-series/main.py
+causal-irregular-time-series/scripts/run_main.sh
+router.py
+```
+
+Verify for each dataset:
+
+* graph-construction function;
+* output pickle path;
+* output PNG path;
+* node names;
+* node prefixes;
+* node metadata;
+* edge list;
+* graph outcome node;
+* acyclicity check;
+* graph-save behavior;
+* graph-rendering behavior;
+* relationship to dataset config;
+* relationship to downstream matching and CATE scripts.
+
+## 9.1 Node Families
+
+Classify nodes semantically using their prefixes:
+
+```text
+BG_*    background or baseline variables
+LAT_*   proxy-state or historically named latent nodes
+OBS_*   observed measurement aggregates or manifestations
+TRT_*   treatment or care-process nodes
+MISS_*  missingness or measurement-process nodes
+OUT_*   mortality outcome node
+```
+
+Check the source metadata carefully.
+
+The graph scripts may store treatment, missingness, and outcome nodes under a broad `node_type="observed"` metadata group for rendering. Do not confuse that implementation grouping with their semantic causal roles.
+
+## 9.2 Dataset Differences
+
+Document source-supported differences between the PhysioNet and MIMIC DAGs, including:
+
+* background-node availability;
+* proxy-state taxonomy;
+* dataset-specific mortality node name;
+* treatment/care-process nodes;
+* missingness-process representation;
+* measurement aggregates;
+* dataset-specific latent-to-latent paths;
+* direct background-to-mortality edges;
+* observed manifestations.
+
+Do not imply that similarly named proxy states or graph structures are identical across datasets.
+
+## 9.3 Graph Assumption Boundary
+
+State explicitly:
+
+* the graph is manually/project specified rather than learned from patient-level data;
+* LLM reports are design inputs, not statistical graph-discovery evidence;
+* acyclicity is mechanically checked;
+* acyclicity does not validate edge directions;
+* graph completeness is not established;
+* omitted variables and incorrect arrows remain possible;
+* proxy-state measurement error can affect graph interpretation;
+* graph validity is treatment-specific;
+* the graph is used to encode assumptions for adjustment logic.
+
+---
+
+# 10. Required Graph-Artifact and Figure Inspection
+
+Inspect the graph artifacts under:
+
+```text
+final-results/causal-outputs/outputs-*/graph/
+```
+
+At minimum locate canonical candidates for:
+
+```text
+F-DAG-PHY-01
+F-DAG-MIMIC-01
+```
+
+Expected candidates include:
+
+```text
+final-results/causal-outputs/outputs-physionet-forest/graph/physionet_causal_dag.png
+final-results/causal-outputs/outputs-mimic-forest/graph/mimic_causal_dag.png
+```
+
+Verify exact current paths.
+
+For every duplicated DAG artifact:
+
+* compute SHA-256;
+* compare dimensions;
+* compare byte identity;
+* identify whether duplicates are equivalent;
+* inspect the corresponding `run_summary.json`;
+* confirm dataset and graph stage status;
+* compare displayed nodes and edges to the active source;
+* check labels, arrows, cropping, and readability;
+* confirm no legacy graph is being substituted.
+
+Use tools such as:
+
+```bash
+find final-results/causal-outputs -path '*/graph/*' -type f -print
+sha256sum <candidate-files>
+file <candidate-files>
+python - <<'PY'
+from PIL import Image
+# Inspect image dimensions and modes.
+PY
+```
+
+When image comparison requires rendered inspection, inspect the actual images rather than relying only on filenames.
+
+## 10.1 Canonical Thesis Copies
+
+When a figure is verified:
+
+Copy one canonical source for each dataset to stable thesis paths such as:
+
+```text
+thesis-writing/thesis/figures/physionet_causal_dag.png
+thesis-writing/thesis/figures/mimic_causal_dag.png
+```
+
+Do not modify image pixels.
+
+Record in:
+
+```text
+thesis-writing/thesis/figures/README.md
+```
+
+for each copied figure:
+
+```text
+thesis path
+source artifact
+source SHA-256
+destination SHA-256
+producing script
+dataset
+source commit or status
+run-summary evidence
+verification date
+known limitations
+```
+
+If the figure cannot be verified or is unreadable, do not insert it. Retain a precise figure placeholder and explain the blocker.
+
+## 10.2 Figure Captions
+
+Captions must use wording such as:
+
+```text
+Project-specified PhysioNet 2012 DAG, informed by LLM-assisted design
+elicitation and encoded by the active graph-construction source.
+```
+
+and:
+
+```text
+Project-specified MIMIC-III DAG, informed by LLM-assisted design
+elicitation and encoded by the active graph-construction source.
+```
+
+Captions must also state that arrows encode assumed causal directions rather than statistically learned relationships.
+
+Do not call either figure:
+
+```text
+the true causal DAG
+the learned DAG
+the clinically validated DAG
+```
+
+Use stable labels:
 
 ```latex
-\label{tab:llm-prompt-artifact-provenance}
+\label{fig:physionet-causal-dag}
+\label{fig:mimic-causal-dag}
+```
+
+after confirming they are unused.
+
+---
+
+# 11. Required Adjustment-Logic Source Inspection
+
+Inspect the full relevant graph and adjustment logic in:
+
+```text
+causal-irregular-time-series/src/matching_causal_effect.py
+causal-irregular-time-series/src/cate_estimation.py
+```
+
+Do not assume the two implementations are identical. Compare them directly.
+
+Verify:
+
+* dataframe-to-graph alias maps;
+* graph-node-to-dataframe alias maps;
+* treatment and outcome naming;
+* background-feature extraction;
+* allowed adjustment-node types;
+* candidate backdoor pool;
+* treatment descendants;
+* ancestor restrictions;
+* backdoor-path enumeration;
+* path-activity logic;
+* collider detection;
+* collider-descendant exclusion;
+* expanded-safe set;
+* minimal set;
+* fallback behavior;
+* mapping back to observed columns;
+* missing graph candidates;
+* open-path diagnostics;
+* identification-status fields;
+* effect-modifier selection;
+* overlap between `W` and `X`;
+* missing-value imputation;
+* treatment and outcome validation.
+
+## 11.1 Backdoor-Graph Terminology Audit
+
+Pay special attention to the helper that removes outgoing treatment edges.
+
+The implementation may name the resulting object `G_do` or describe it as an intervention-style graph.
+
+Removing outgoing treatment edges corresponds to the graph used for backdoor-path assessment, not the ordinary mutilated graph representing `do(T)` through removal of incoming treatment edges.
+
+In the thesis:
+
+* call it the **backdoor graph with treatment-outgoing edges removed**;
+* do not call it the `do(T)` graph;
+* do not repeat inaccurate source comments as formal causal notation;
+* document the naming mismatch in the evidence report;
+* add a deferred code-documentation issue when the mismatch remains.
+
+Do not modify research code during this task.
+
+## 11.2 Identification Wording
+
+The implementation may output a field such as:
+
+```text
+identifiable_with_available_nodes
+```
+
+In thesis prose, describe this conservatively as:
+
+```text
+whether the implemented algorithm found that all encoded backdoor paths were
+blocked by the available mapped variables under the project DAG
+```
+
+Do not translate this field into:
+
+```text
+the causal effect is identified
+all confounding is controlled
+exchangeability is proven
+```
+
+The field reflects only the encoded graph and available mapped variables.
+
+---
+
+# 12. Required Estimator Source Inspection
+
+Inspect:
+
+```text
+causal-irregular-time-series/src/matching_causal_effect.py
+causal-irregular-time-series/src/cate_estimation.py
+causal-irregular-time-series/requirements.txt
+causal-irregular-time-series/main.py
+causal-irregular-time-series/scripts/run_main.sh
+```
+
+Inspect relevant result schemas only for method and execution provenance:
+
+```text
+final-results/causal-outputs/outputs-*/run_summary.json
+final-results/causal-outputs/outputs-*/matching/
+final-results/causal-outputs/outputs-*/cate_estimation/
+final-results/causal-outputs/cate_cross_run_matching_table.csv
+final-results/causal-outputs/cate_cross_run_matching_failures.csv
+final-results/causal-outputs/cate_cross_run_unified_table.csv
+final-results/causal-outputs/cate_cross_run_summary.csv
+```
+
+Do not write numerical values into Chapter 7.
+
+## 12.1 Common Analysis Data
+
+Verify and describe:
+
+* `ts_id` normalization;
+* merge of proxy-state exposures with `oc`;
+* canonical outcome source;
+* background-feature extraction;
+* source of treatment columns;
+* treatment binary validation;
+* outcome binary validation;
+* missing-feature handling;
+* optional outcome-class downsampling;
+* distinction between original and downsampled analysis populations.
+
+Do not describe downsampling as treatment balancing.
+
+Run-specific selection and exact final configurations belong in Chapter 9.
+
+## 12.2 Effect Modifiers
+
+Verify:
+
+* configured effect-modifier order;
+* which variables are retained when present;
+* whether effect modifiers are selected separately from the graph adjustment set;
+* whether a variable can appear in both `W` and `X`;
+* fill-value behavior;
+* dataset-specific availability.
+
+State clearly that:
+
+* `W` represents observed adjustment variables used by EconML;
+* `X` represents effect-modifier variables used for heterogeneity;
+* the implementation may allow overlap between `W` and `X`;
+* effect-modifier selection is configuration driven rather than learned from the DAG algorithm.
+
+When the overlap is present and not methodologically justified in project documents, record it as a deferred review item.
+
+---
+
+# 13. Allowed Edit Scope
+
+You may edit:
+
+```text
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
+thesis-writing/planning/figure_plan.md
+thesis-writing/thesis/figures/README.md
+```
+
+You may create:
+
+```text
+thesis-writing/logs/stage_4_4_evidence_report.md
+thesis-writing/thesis/figures/physionet_causal_dag.png
+thesis-writing/thesis/figures/mimic_causal_dag.png
+```
+
+Create or copy the two PNG files only after figure verification.
+
+A clean build may update:
+
+```text
+thesis-writing/thesis/main.pdf
+```
+
+Do not manually edit the PDF.
+
+A narrow compilation-only repair may be made to:
+
+```text
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/latexmkrc
+```
+
+only when a fatal build problem requires it and the repair is documented.
+
+Do not edit:
+
+```text
+Chapters 1–6
+Chapters 8–12
+front matter
+appendices
+research code
+configuration files
+result artifacts
+prompt artifacts
+bibliography metadata
+literature PDFs
+other planning files
+```
+
+Do not update `thesis_outline.md` or redesign Chapter 7. The existing outline is sufficient when interpreted with the repaired evidence map.
+
+---
+
+# 14. Forbidden Actions
+
+Do not:
+
+* modify either graph script;
+* modify matching or CATE code;
+* regenerate DAGs;
+* rerun matching;
+* rerun CATE estimation;
+* rerun sensitivity analysis;
+* rerun permutations;
+* alter result CSVs or JSON;
+* select a primary estimator;
+* select a primary sampling condition;
+* present effect estimates;
+* present match rates;
+* present confidence intervals;
+* present robustness values;
+* present permutation results;
+* present model rankings;
+* claim clinical validation;
+* claim graph discovery;
+* claim complete confounding control;
+* claim positivity;
+* call proxy-state exposures administered treatments;
+* call `mean_cate` an ATE without approved justification;
+* call matched-pair mean differences an ATE or ATT without qualification;
+* call normalized CATE a risk ratio or relative risk;
+* invent a CausalPFN citation;
+* invent LLM settings or review records;
+* commit or push.
+
+---
+
+# 15. Evidence-Strength Policy
+
+Classify each substantive claim internally as:
+
+```text
+LLM-DESIGN-PROPOSAL
+PROJECT-SPECIFIED
+IMPLEMENTATION-CONFIRMED
+CONFIGURATION-CONFIRMED
+EXECUTION-SUPPORTED
+ARTIFACT-SCHEMA-CONFIRMED
+CAUSAL-WITH-ASSUMPTIONS
+CLINICAL-REVIEW-INCOMPLETE
+PROVENANCE-INCOMPLETE
+BLOCKED
+```
+
+Use wording no stronger than the evidence.
+
+Acceptable:
+
+```text
+The active PhysioNet graph script encodes an assumed edge from the shock
+proxy-state node to renal dysfunction.
+```
+
+```text
+Under the project DAG, the adjustment routine constructs a candidate pool
+from available background and proxy-state nodes that lie on encoded
+backdoor structures.
+```
+
+```text
+The implementation reports whether its selected observed variables block
+all backdoor paths represented in the supplied graph.
+```
+
+```text
+LinearDML and CausalForestDML produce conditional effect estimates under
+the supplied exposure, outcome, covariate, graph, and model assumptions.
+```
+
+Not acceptable:
+
+```text
+Shock was proven to cause renal failure.
+```
+
+```text
+The LLM discovered the causal structure.
+```
+
+```text
+The selected variables eliminate confounding.
+```
+
+```text
+The estimated effects are clinically actionable treatment effects.
+```
+
+---
+
+# 16. Chapter 7 Requirements
+
+## 16.1 Chapter Opening
+
+Open with a concise statement that Chapter 7 documents:
+
+* dataset-specific project DAGs;
+* LLM-assisted design provenance;
+* source-code implementation;
+* graph-guided observed adjustment;
+* a matching baseline;
+* heterogeneous-effect estimators;
+* interpretation boundaries.
+
+Cross-reference:
+
+* Chapter 3 for the observational study setting and estimand caveats;
+* Chapter 5 for proxy-state construction;
+* Chapter 6 for predicted proxy states.
+
+State that Chapter 7 does not establish clinical DAG validity or causal identification.
+
+---
+
+# 17. C7.1 — Dataset-Specific DAGs
+
+## 17.1 Provenance and Authority
+
+Explain the sequence:
+
+```text
+structured LLM-assisted elicitation
+→ candidate ontology and DAG proposal
+→ project selection or modification
+→ active graph source code
+→ graph pickle and PNG artifacts
+→ downstream adjustment logic
+```
+
+State clearly:
+
+* prompt reports are design-provenance artifacts;
+* active graph scripts are implementation authority;
+* selected graph artifacts support execution or rendering provenance;
+* human and clinical review remain incompletely documented;
+* no statistical causal-discovery algorithm is used.
+
+Do not imply that every LLM-proposed edge was implemented unchanged.
+
+## 17.2 DAG Definition
+
+Define a directed acyclic graph:
+
+[
+G=(V,E),
+]
+
+where nodes represent project-defined variables or constructs and edges encode assumed causal directions.
+
+Explain acyclicity separately from validity:
+
+* `networkx.is_directed_acyclic_graph` verifies no directed cycles;
+* it does not verify clinical correctness;
+* it does not verify causal sufficiency;
+* it does not verify faithfulness;
+* it does not verify identification.
+
+Use:
+
+```text
+project-specified DAG
+assumed edge
+encoded relationship
+```
+
+rather than:
+
+```text
+true graph
+learned edge
+discovered mechanism
+```
+
+## 17.3 PhysioNet DAG
+
+Describe the verified PhysioNet node families:
+
+* background variables;
+* proxy-state nodes;
+* observed measurement aggregates;
+* mechanical-ventilation care-process node;
+* missingness or ordering nodes;
+* mortality outcome.
+
+Summarize representative edge categories:
+
+* background to chronic baseline risk;
+* chronic baseline risk to global severity and mortality;
+* inflammation/sepsis burden to severity, shock, and coagulation;
+* cardiac strain to shock and mortality;
+* shock to organ dysfunction and mortality;
+* respiratory failure to metabolic derangement, ventilation, and mortality;
+* proxy states to observed measurement aggregates;
+* severity and ICU type to measurement-intensity processes;
+* missingness or ordering processes to observed availability.
+
+Do not reproduce every edge in dense prose.
+
+Use the source-supported node and edge counts only after computing them directly from the active graph.
+
+## 17.4 MIMIC-III DAG
+
+Describe the verified MIMIC node families and representative paths.
+
+Important dataset-specific elements may include, when verified:
+
+* age, sex, demographic/access, admission-context, and ICU-unit background nodes;
+* chronic burden;
+* inflammation/sepsis;
+* global severity;
+* cardiac strain;
+* shock;
+* respiratory failure;
+* renal dysfunction;
+* combined hepatic/coagulation dysfunction;
+* neurologic dysfunction;
+* metabolic derangement;
+* antibiotics;
+* vasopressors;
+* mechanical ventilation;
+* dialysis;
+* measurement intensity;
+* mortality.
+
+Explain that treatment or care-process nodes are not the same as the proxy-state exposures analyzed by the downstream CATE script.
+
+## 17.5 Dataset Comparison Table
+
+Create:
+
+```latex
+\label{tab:dag-node-families}
 ```
 
 Suggested columns:
 
 ```text
-Artifact
-Dataset
-Role
-Version status
-Relation to implementation
-Provenance status
+Node family
+PhysioNet examples
+MIMIC-III examples
+Role in assumed data-generating structure
+Implementation caveat
 ```
 
-Do not include unsupported metadata.
+Every entry must be source supported.
 
-## 15.3 Correct Causal and Clinical Language
+Do not include numerical results.
 
-The exact prompt includes aspirational language concerning:
+## 17.6 DAG Figures
 
-* “true hidden clinical states”;
-* the “most clinically plausible” graph;
-* “causal correctness.”
+Insert both verified DAG figures when possible.
 
-The chapter must explain that these phrases directed the LLM’s search objective but do not establish:
+Each figure must:
 
-* latent-state identifiability;
-* clinical validity;
-* graph correctness;
-* causal identification;
-* clinician agreement.
+* use the stable copied thesis path;
+* be referenced in prose;
+* have a conservative caption;
+* identify the dataset;
+* state that edges are project assumptions;
+* remain legible;
+* avoid cropping;
+* compile successfully.
 
-## 15.4 Preserve Existing Rule Evidence
+When full-width rendering remains unreadable, consider a dedicated page using existing LaTeX facilities. Do not add a package merely for cosmetic convenience unless unavoidable.
 
-Keep the current source-code-derived rule tables unless the new traceability audit finds a concrete discrepancy.
+If one figure is blocked, retain a precise placeholder rather than inserting an unverified image.
 
-When a prompt recommendation and implemented rule differ:
+## 17.7 DAG Limitations
 
-* describe the implemented rule in Chapter 5;
-* document the LLM recommendation in the evidence report or appendix plan;
-* do not merge the two;
-* record the discrepancy.
+End C7.1 with explicit limitations:
+
+* graph design was LLM assisted;
+* human/clinical review is incompletely documented;
+* proxy states may be measured with error;
+* omitted causes may exist;
+* some edges may represent temporal or mechanistic assumptions rather than identified relations;
+* intervention and care-process variables may be incompletely represented;
+* the DAG is not a full raw-variable graph;
+* the same graph may not identify every exposure contrast;
+* observed measurement and missingness processes are simplified abstractions.
+
+Retain a supervisor-review placeholder.
 
 ---
 
-# 16. Do Not Repair Chapter 7 Yet
+# 18. C7.2 — Adjustment-Set Logic
 
-Do not draft:
+## 18.1 Exposure and Outcome
 
-```text
-thesis-writing/thesis/chapters/07_causal_methodology.tex
-```
+Define:
 
-during this repair.
+[
+A_i \in {0,1}
+]
 
-Instead, update its Stage 4.4 planning packet so the next prompt requires inspection of:
+as one selected proxy-state exposure and:
 
-```text
-general-purpose-latent-causal-model-prompt.txt
-physionet-prompt.txt
-mimic-prompt.txt
-the corresponding generated reports
-the active DAG source files
-the generated DAG artifacts
-the LLM prompt-provenance audit
-```
+[
+Y_i = \texttt{in_hospital_mortality}.
+]
 
-Stage 4.4 must distinguish:
+State that software calls `A_i` a treatment, but many values represent illness-state proxies rather than manipulable interventions.
+
+Distinguish:
 
 ```text
-LLM-proposed DAG
-project-reviewed DAG
-source-code DAG
-rendered run artifact
-clinically approved DAG
+dataframe outcome: in_hospital_mortality
+PhysioNet graph outcome: OUT_InHospitalMortality
+MIMIC graph outcome: OUT_MORTALITY
 ```
 
-Do not assume those objects are identical.
+## 18.2 Available Variable Mapping
+
+Explain:
+
+* source dataframe columns are mapped to graph nodes;
+* ICU-type one-hot columns map to a shared background graph node;
+* source-specific aliases are handled;
+* only graph nodes with corresponding available dataframe variables can enter the observed adjustment matrix;
+* missing graph candidates are recorded rather than silently created;
+* graph treatment and outcome nodes are excluded from candidate adjustment sets.
+
+## 18.3 Allowed Adjustment Universe
+
+Verify and explain that the implementation permits only available nodes classified as:
+
+```text
+background
+latent/proxy
+```
+
+Observed measurements, care-process nodes, missingness nodes, and outcome nodes are not automatically included in the adjustment pool.
+
+Explain the rationale and limitation:
+
+* restricting observed manifestations may reduce adjustment for descendants or mediators;
+* it can also omit genuine baseline confounders not represented as allowed graph nodes;
+* the safety of a proxy-state covariate depends on the exposure-specific graph.
+
+## 18.4 Candidate Backdoor Pool
+
+Translate the implementation accurately.
+
+The candidate pool is formed from available permitted graph nodes that:
+
+* are ancestors of the exposure in the original graph;
+* remain ancestors of the outcome in the graph with treatment-outgoing edges removed;
+* are not descendants of the exposure;
+* are not the exposure or outcome.
+
+Do not call the treatment-outgoing-edge-removed graph the ordinary `do(A)` graph.
+
+Use notation such as:
+
+[
+\mathcal C(A,Y)
+===============
+
+\mathcal A_{\mathrm{allowed}}
+\cap \operatorname{An}*{G}(A)
+\cap \operatorname{An}*{G_{\underline A}}(Y)
+\setminus \operatorname{De}_{G}(A),
+]
+
+only when the notation accurately reflects the source.
+
+Define (G_{\underline A}) explicitly as the graph obtained by deleting arrows emanating from (A).
+
+## 18.5 Backdoor Paths and Path Activity
+
+Explain that the code:
+
+* enumerates simple undirected paths between exposure and outcome;
+* retains paths whose first edge points into the exposure;
+* evaluates path activity using collider and non-collider rules;
+* checks whether a candidate set blocks all encoded backdoor paths.
+
+Avoid claiming that exhaustive enumeration is computationally scalable to arbitrary large DAGs. It is used on the project’s compact graphs.
+
+## 18.6 Expanded-Safe Set
+
+Explain the verified expanded mode:
+
+1. begin from the candidate pool;
+2. identify collider nodes on encoded backdoor paths;
+3. remove those colliders;
+4. remove their descendants;
+5. test whether the remaining set blocks all encoded backdoor paths;
+6. fall back to the minimal-set routine when needed.
+
+Do not imply that simply removing every collider descendant is a universal causal-identification algorithm outside the encoded project graph.
+
+## 18.7 Minimal Set
+
+Explain that the minimal routine:
+
+* starts with the full candidate pool;
+* checks whether it blocks all encoded paths;
+* returns failure when the full pool cannot do so;
+* removes redundant variables one by one while blocking remains;
+* produces a deterministic inclusion-minimal set under its ordering.
+
+Use “inclusion-minimal under the implemented elimination order,” not “the unique minimal adjustment set.”
+
+## 18.8 Observed Adjustment Columns
+
+Explain how graph candidates map back to dataframe columns.
+
+Document outputs such as:
+
+```text
+candidate_pool
+graph_candidates
+observed_confounders
+missing_graph_nodes
+open_backdoor_paths_if_any
+identifiable_with_available_nodes
+colliders_removed
+collider_descendants_removed
+```
+
+Qualify `identifiable_with_available_nodes` as an internal encoded-graph diagnostic.
+
+## 18.9 Effect Modifiers Versus Adjustment Variables
+
+Define:
+
+```text
+W — observed adjustment variables
+X — configured effect modifiers
+```
+
+Explain:
+
+* `W` comes from graph-guided adjustment mapping;
+* `X` comes from a configured preferred feature list;
+* `X` may include demographics, ICU indicators, and selected baseline proxy states;
+* `X` can overlap `W` in the current implementation;
+* missing values are filled using stored training fill values;
+* the overlap and effect-modifier list require methodological review.
+
+## 18.10 Adjustment Table
+
+Create:
+
+```latex
+\label{tab:adjustment-set-logic}
+```
+
+Suggested rows:
+
+```text
+Step
+Implementation action
+Included variables
+Excluded variables
+Recorded diagnostic
+Interpretation limitation
+```
+
+Do not include treatment-specific result values.
+
+## 18.11 Assumption Table
+
+Create or cross-reference a concise assumptions table corresponding to:
+
+```text
+T-ASSUMPTIONS-01
+```
+
+Include:
+
+* consistency;
+* exposure definition;
+* conditional exchangeability relative to observed variables;
+* positivity or overlap;
+* graph adequacy;
+* proxy-state measurement;
+* outcome measurement;
+* nuisance-model adequacy;
+* no interference;
+* temporal ordering.
+
+For each assumption state:
+
+```text
+role
+repository support
+unresolved threat
+safe interpretation
+```
+
+Do not state that an assumption was verified merely because code exists.
 
 ---
 
-# 17. Placeholder Updates
+# 19. C7.3 — Matching and Heterogeneous-Effect Estimators
 
-Update:
+## 19.1 Common Analysis Frame
+
+Explain the common inputs:
+
+* proxy-state CSV;
+* processed causal pickle;
+* graph pickle;
+* canonical mortality outcome;
+* extracted background variables;
+* dataset config;
+* selected exposure list.
+
+Explain that records are merged on normalized `ts_id`.
+
+Describe optional outcome-class downsampling only as an implemented analysis condition. Do not state which condition is thesis primary.
+
+## 19.2 Matching Baseline
+
+Describe the matching method accurately.
+
+Verify and explain:
+
+* treated and control groups are defined by one binary proxy-state exposure;
+* graph-guided observed adjustment columns are prepared;
+* missing numeric values are median imputed;
+* already binary columns remain binary;
+* nonbinary numeric variables are thresholded relative to their sample median unless binary-only mode is required;
+* matching distance is Hamming distance;
+* matching is greedy and one-to-one;
+* treated rows are processed in implementation order;
+* ties among nearest controls are resolved by first candidate order;
+* controls are not reused by default;
+* the permitted distance is expanded incrementally;
+* matching stops after sufficient matches or the maximum distance;
+* pair effect is the treated outcome minus the matched control outcome.
+
+Exact values such as:
+
+```text
+maximum Hamming distance
+minimum pair count
+minimum match rate
+replacement setting
+```
+
+may be included only when verified as stable implementation or configuration defaults.
+
+Label them as implementation settings, not necessarily final selected experiment settings.
+
+## 19.3 Matching Interpretation
+
+Use:
+
+```text
+matched-pair outcome difference
+matching baseline
+mean pair difference among matched pairs
+ATT-like descriptive contrast
+```
+
+when appropriate.
+
+Do not automatically call the output:
+
+```text
+ATE
+ATT
+identified causal effect
+```
+
+Explain:
+
+* greedy matching may depend on ordering;
+* median binarization loses information;
+* unmatched treated units affect the target population;
+* support limitations may prevent sufficient matching;
+* matching rate and distance provide indirect support information;
+* residual confounding remains possible.
+
+Do not write numerical matching results.
+
+## 19.4 LinearDML
+
+Explain:
+
+* nuisance outcome and treatment models;
+* binary treatment configuration;
+* orthogonalized or residualized estimation concept;
+* `W` adjustment covariates;
+* `X` effect modifiers;
+* conditional effect output;
+* effect intervals when available;
+* saved estimator and metadata artifacts.
+
+Use:
+
+```text
+chernozhukov2018dml
+oprescu_et_al_2019_econml
+```
+
+where appropriate.
+
+Do not claim that the exact implementation satisfies every theoretical regularity condition without validation.
+
+## 19.5 CausalForestDML
+
+Explain:
+
+* forest-based nuisance models;
+* forest-based heterogeneous-effect estimation;
+* binary treatment handling;
+* conditional effect estimates;
+* effect intervals;
+* feature-importance output as model diagnostic;
+* nonparametric heterogeneity role.
+
+Use:
+
+```text
+wager2018causalforest
+athey2019grf
+oprescu_et_al_2019_econml
+```
+
+Distinguish the EconML implementation from the original causal-forest algorithms.
+
+Do not interpret feature importance as a causal mechanism.
+
+## 19.6 CausalPFN
+
+Describe only source-verified behavior.
+
+Verify:
+
+* package/import path;
+* feature matrix construction;
+* deduplication of confounders and effect modifiers;
+* fit interface;
+* CATE-estimation call;
+* device selection;
+* saved artifacts;
+* absence of an estimator pickle when applicable;
+* absence of EconML confidence intervals;
+* absence of EconML residual-based sensitivity diagnostics;
+* orchestration skips for unsupported analyses.
+
+Because a primary citation remains unresolved:
+
+* keep CausalPFN secondary or exploratory;
+* do not describe its architecture beyond what source and installed package documentation support;
+* insert an actionable citation placeholder;
+* cross-reference the existing deferred citation issue;
+* do not invent a citation.
+
+## 19.7 CATE Outputs
+
+Define the implementation’s patient-level output cautiously:
+
+[
+\widehat{\tau}(x)
+]
+
+as a model-based conditional contrast associated with exposure values 1 and 0, under the supplied design and assumptions.
+
+Explain output fields such as:
+
+```text
+ts_id
+exposure column
+in_hospital_mortality
+CATE
+normalized_CATE
+confidence interval columns when available
+```
+
+Do not write numerical values.
+
+## 19.8 Normalized CATE
+
+Verify that the implementation divides CATE by the observed outcome rate.
+
+Explain this as:
+
+```text
+an implementation-defined descriptive rescaling
+```
+
+Do not call it:
+
+```text
+risk ratio
+relative risk
+percent mortality reduction
+standardized causal effect
+```
+
+without an independently justified derivation.
+
+Record the interpretation as a deferred methodological review item when it remains unapproved.
+
+## 19.9 Mean CATE
+
+Explain that:
+
+```text
+mean_cate
+```
+
+is the arithmetic mean of the fitted patient-level conditional estimates over the analyzed rows.
+
+Do not automatically call it an ATE.
+
+Its interpretation depends on:
+
+* analyzed population;
+* optional downsampling;
+* exposure definition;
+* graph assumptions;
+* covariate construction;
+* estimator properties;
+* support;
+* model fit.
+
+## 19.10 Estimator Comparison Table
+
+Create:
+
+```latex
+\label{tab:causal-estimator-methods}
+```
+
+Suggested columns:
+
+```text
+Method
+Input covariate roles
+Main output
+Heterogeneity support
+Uncertainty output
+Saved artifact
+Key limitation
+Primary citation
+```
+
+Rows:
+
+```text
+Greedy Hamming matching
+LinearDML
+CausalForestDML
+CausalPFN
+```
+
+Do not include performance or effect values.
+
+For CausalPFN, place an explicit citation-gap marker without creating an undefined LaTeX citation.
+
+---
+
+# 20. Citation Requirements
+
+At minimum, use verified keys where their claims are made:
+
+```text
+pearl_1995_causal_diagrams
+hernan_taubman_2008_well_defined_interventions
+chernozhukov2018dml
+wager2018causalforest
+athey2019grf
+oprescu_et_al_2019_econml
+```
+
+Use ICU or HTE review keys where they materially support interpretation:
+
+```text
+smit_2023_causal_inference_icu_scoping_review
+bica_2021_individualized_treatment_effects_ehr_ml
+lipkovich_2024_modern_hte_methods
+curth_2024_ml_individualized_treatment_effects
+iwashyna_2015_hte_critical_care
+```
+
+Do not overcite implementation details.
+
+Repository-specific behavior must be mapped to source in the evidence report rather than attributed to papers.
+
+No citation should be inserted for:
+
+* local graph execution;
+* exact node or edge lists;
+* source-code defaults;
+* output schemas;
+* local file provenance.
+
+---
+
+# 21. Placeholder Policy
+
+Remove:
+
+```text
+[STAGE 4 DRAFT REQUIRED]
+```
+
+from completed Chapter 7 sections.
+
+Replace generic placeholders with actionable placeholders such as:
+
+```text
+[SUPERVISOR DECISION REQUIRED: approve the causal interpretation and clinical plausibility of the PhysioNet and MIMIC project DAGs]
+```
+
+```text
+[SUPERVISOR DECISION REQUIRED: approve the final estimand wording for proxy-state exposures]
+```
+
+```text
+[VALIDATION REQUIRED: document the human and clinical review decisions applied to the LLM-assisted DAG proposals]
+```
+
+```text
+[VALIDATION REQUIRED: recover the exact graph source commit, config, command, and output hashes for the canonical DAG artifacts]
+```
+
+```text
+[VALIDATION REQUIRED: validate treatment-specific adjustment sets against the selected final run artifacts]
+```
+
+```text
+[SUPERVISOR DECISION REQUIRED: review the use of overlapping variables in W and X]
+```
+
+```text
+[SUPERVISOR DECISION REQUIRED: approve or replace the interpretation of normalized_CATE]
+```
+
+```text
+[CITATION REQUIRED: validated primary source for the CausalPFN method before treating it as a main thesis estimator]
+```
+
+```text
+[FIGURE REQUIRED: verified canonical <dataset> DAG figure and provenance]
+```
+
+Every placeholder must be added to:
 
 ```text
 thesis-writing/logs/unresolved_placeholders.md
 ```
 
-Add all unresolved LLM-provenance fields, including:
-
-```text
-[VALIDATION REQUIRED: identify the exact LLM provider, product, and model/version used for the final PhysioNet prompt run]
-```
-
-```text
-[VALIDATION REQUIRED: identify the exact LLM provider, product, and model/version used for the final MIMIC-III prompt run]
-```
-
-```text
-[VALIDATION REQUIRED: record the execution dates, research/browsing mode, settings, follow-up prompts, and output-export procedure]
-```
-
-```text
-[VALIDATION REQUIRED: map every implemented proxy state and DAG component to the corresponding generated-report recommendation or mark it as independently added]
-```
-
-```text
-[SUPERVISOR DECISION REQUIRED: document the human and clinical review applied to the LLM-generated design proposals]
-```
-
-```text
-[CITATION REQUIRED: LLM-assisted domain-expert elicitation and prompt-engineering methodology]
-```
-
-```text
-[CITATION REQUIRED: limitations and validation requirements for LLM-generated medical and causal structures]
-```
-
-Every entry must include:
+Record:
 
 * file;
 * section;
+* exact placeholder;
 * reason;
 * evidence needed;
 * expected resolution stage;
 * status.
 
+Do not duplicate existing placeholders.
+
 ---
 
-# 18. Deferred-Fix Updates
+# 22. Deferred-Fix Collection
 
-Append a new section to:
+Review all existing deferred fixes.
 
-```text
-thesis-writing/logs/deferred_fixes.md
-```
-
-Use IDs:
+Do not duplicate:
 
 ```text
-DF-4.3R-001
-DF-4.3R-002
-...
+DF-4.0-003 — CausalPFN citation
+DF-4.0-004 — result archive manifest
+DF-4.0-005 — missing final configs
+DF-4.0-007 — missing overlap diagnostics
+DF-4.3R-001 — LLM execution settings
+DF-4.3R-002 — human/clinical review
+DF-4.3R-003 — LLM methodology citations
 ```
 
-At minimum assess:
+Append new issues with IDs beginning:
 
-### LLM execution provenance
+```text
+DF-4.4-
+```
 
-Model/provider/version, dates, modes, settings, and follow-up prompts may be missing.
+Assess at minimum:
 
-### Human-review provenance
+* source code naming the treatment-outgoing-edge-removed graph as `G_do`;
+* differences between matching and CATE adjustment implementations;
+* graph artifact source-commit/config provenance;
+* prompt-output-to-code edge-level discrepancies;
+* unreviewed DAG edges;
+* graph nodes unavailable in the analysis dataframe;
+* treatment-specific open encoded backdoor paths;
+* overlap between `W` and `X`;
+* median imputation and all-missing-to-zero behavior;
+* greedy matching order dependence;
+* median binarization of numeric matching variables;
+* ambiguous matching estimand;
+* ambiguous `mean_cate` interpretation;
+* ambiguous `normalized_CATE` interpretation;
+* CausalPFN uncertainty and sensitivity limitations;
+* mismatches between run summaries and active source;
+* graph figure readability or provenance issues.
 
-The identity and qualifications of reviewers may be undocumented.
-
-### Prompt-output-to-code provenance
-
-The mapping between generated recommendations and active source code may be incomplete.
-
-### Clinical-validation status
-
-LLM generation must not be treated as clinical validation.
-
-### Causal-graph authorship wording
-
-“Clinician-authored” may be unsupported and must be corrected unless evidence exists.
-
-### Prompt-version provenance
-
-The producing old/final prompt version for each report may be unclear.
-
-### Literature coverage
-
-The corpus lacks an approved LLM methodology and reliability evidence packet.
-
-### Reproducibility
-
-The exact prompts are available, but model behavior may not be reproducible without provider/version/date/settings.
-
-For every item include:
+For each entry include:
 
 ```text
 ID
@@ -1006,145 +1835,231 @@ recommended later action
 urgency
 ```
 
+Do not repair research code.
+
 ---
 
-# 19. Repair Evidence Report
+# 23. Stage 4.4 Evidence Report
 
 Create:
 
 ```text
-thesis-writing/logs/stage_4_3_llm_prompt_repair_report.md
+thesis-writing/logs/stage_4_4_evidence_report.md
 ```
 
-It must include:
+It must contain:
 
-## 19.1 Git State
+## 23.1 Git State
 
-* verified commit;
-* initial status;
-* final status;
+Record:
+
+* parent branch and commit;
+* verification of `30f137e`;
+* nested causal branch and HEAD;
+* parent gitlink SHA when available;
+* initial and final statuses;
+* unrelated local modifications;
 * files changed.
 
-## 19.2 Artifact Inventory
+## 23.2 Baseline Build
 
-All files in `prompts-and-documents/`, with classifications and hashes.
+Record:
 
-## 19.3 Prompt Architecture
+* commands;
+* result;
+* PDF path;
+* baseline page count;
+* warnings.
 
-The exact phases and expected outputs of the final template.
+## 23.3 Files Inspected
 
-## 19.4 Version Comparison
+Group by:
 
-* general versus dataset-specific;
-* old versus final;
-* producing-version conclusions.
+* thesis and logs;
+* planning;
+* audit;
+* literature;
+* prompts and generated reports;
+* graph source;
+* adjustment source;
+* matching source;
+* estimator source;
+* configs;
+* orchestration;
+* graph artifacts;
+* matching/CATE schemas.
 
-## 19.5 LLM Execution Metadata
+## 23.4 LLM-to-DAG Traceability Matrix
 
-Known, unknown, and conflicting metadata.
+Include the required node- and edge-level mapping for both datasets.
 
-## 19.6 Output-Document Relationships
+Summarize:
 
-Which prompt appears related to which report or manager summary.
+* directly aligned elements;
+* modified elements;
+* prompt-only elements;
+* implementation-only elements;
+* unclear elements;
+* human-review evidence.
 
-## 19.7 Prompt-to-Code Traceability
+## 23.5 DAG Implementation Matrix
 
-Summary of aligned, modified, rejected, missing, and unclear elements.
-
-## 19.8 Scientific Interpretation
-
-What the LLM contributed and what it did not contribute.
-
-## 19.9 Planning Changes
-
-Every modified audit, literature, and planning file.
-
-## 19.10 Thesis Changes
-
-Exact Chapter 3 and Chapter 5 additions or corrections.
-
-## 19.11 Citation Gaps
-
-Existing sources and new candidate needs.
-
-## 19.12 Placeholders
-
-All new LLM-related placeholders.
-
-## 19.13 Deferred Fixes
-
-All new `DF-4.3R-*` entries.
-
-## 19.14 Build Validation
-
-Final clean-build result and PDF metadata.
-
-## 19.15 Readiness
-
-Use one:
+For each dataset record:
 
 ```text
-READY FOR STAGE 4.4
-READY WITH NON-BLOCKING LLM-PROVENANCE WARNINGS
-BLOCKED BEFORE STAGE 4.4
+source file
+graph function
+background nodes
+proxy-state nodes
+observed nodes
+treatment/care-process nodes
+missingness nodes
+outcome node
+node count
+edge count
+acyclicity check
+pickle output
+PNG output
+artifact provenance
+clinical-review status
 ```
 
-Missing model/version metadata need not block methodological drafting when the limitation is visible, but it must block claims of full prompt reproducibility.
+## 23.6 DAG Figure Audit
 
----
-
-# 20. Validation Requirements
-
-## 20.1 Search for Incorrect Authorship Claims
-
-Search the thesis, audit, and planning files for:
+For each candidate and canonical figure record:
 
 ```text
-clinician-authored
-clinically validated
-expert-validated
-ground-truth DAG
-true latent state
-causal discovery
-learned DAG
-LLM-discovered
-AI-validated
+source path
+SHA-256
+dimensions
+duplicate status
+source-script agreement
+run-summary evidence
+visual readability
+destination path
+destination hash
+insertion status
+limitation
 ```
 
-Correct or qualify every unsupported occurrence.
+## 23.7 Adjustment-Logic Matrix
 
-## 20.2 Prompt-versus-Implementation Validation
+Record:
 
-Confirm that:
+```text
+step
+matching implementation
+CATE implementation
+agreement
+difference
+causal interpretation
+limitation
+```
 
-* the prompt is described as a design protocol;
-* generated reports are described as candidate proposals;
-* source code defines implemented rules and graphs;
-* artifact files support execution or schema only according to their provenance;
-* LLM output is not called clinical evidence;
-* prompt citations are not automatically added to the thesis bibliography;
-* old and final prompts are not conflated.
+Include:
 
-## 20.3 Chapter Validation
+* alias mapping;
+* allowed nodes;
+* candidate pool;
+* backdoor graph;
+* path enumeration;
+* collider handling;
+* expanded-safe mode;
+* minimal fallback;
+* observed-column mapping;
+* missing candidates;
+* open paths;
+* identification diagnostic.
 
-Confirm that:
+## 23.8 Backdoor-Terminology Audit
 
-* Chapter 3 receives only a concise provenance disclosure;
-* Chapter 5 retains all verified rule details;
-* Chapter 5 gains an explicit LLM-assisted method description;
-* Chapter 6 is unchanged;
-* Chapter 7 remains undrafted;
-* no numerical result is added.
+State explicitly:
 
-## 20.4 Citation Validation
+* what edges the code removes;
+* what the source calls the graph;
+* correct causal terminology;
+* thesis wording used;
+* deferred source-documentation issue.
 
-Check all existing citation keys.
+## 23.9 Estimator Implementation Matrix
 
-Do not introduce an unresolved key into LaTeX.
+For each method record:
 
-Use visible placeholders until an approved LLM-methodology citation is added to the canonical bibliography.
+```text
+implementation file
+exposure
+outcome
+W
+X
+nuisance models
+treatment handling
+missing-value handling
+effect output
+interval support
+saved artifacts
+diagnostic support
+primary citation
+limitations
+```
 
-## 20.5 LaTeX Validation
+Include:
+
+```text
+matching
+LinearDML
+CausalForestDML
+CausalPFN
+```
+
+## 23.10 Output-Schema Audit
+
+Record method-only schemas for:
+
+```text
+matched_pairs.csv
+matching global_summary.csv
+cate.csv
+summary_results.txt
+model artifact pickle
+global_summary.csv
+control_messages_cate_estimation.csv
+manager_global_summary.csv
+```
+
+Do not reproduce result values.
+
+## 23.11 Citations Used
+
+List each inserted key and the claim it supports.
+
+## 23.12 Figures and Tables
+
+List:
+
+* copied figures;
+* source and destination hashes;
+* inserted figure labels;
+* inserted table labels;
+* blocked figures.
+
+## 23.13 Placeholders
+
+List:
+
+* resolved generic placeholders;
+* retained precise placeholders;
+* new placeholders;
+* planned resolution stage.
+
+## 23.14 Deferred Fixes
+
+List:
+
+* existing relevant issues confirmed;
+* newly added `DF-4.4-*` issues;
+* issues resolved through evidence only.
+
+## 23.15 Final Build
 
 Run:
 
@@ -1156,7 +2071,156 @@ test -f main.pdf
 pdfinfo main.pdf
 ```
 
-Scan for:
+Record:
+
+* return status;
+* PDF path;
+* page count;
+* citation status;
+* reference status;
+* duplicate-label status;
+* fatal errors;
+* nonfatal warnings;
+* figure inclusion status.
+
+## 23.16 Readiness
+
+Use one:
+
+```text
+READY FOR STAGE 4.5
+READY WITH NON-BLOCKING WARNINGS
+BLOCKED BEFORE STAGE 4.5
+```
+
+Do not begin Stage 4.5.
+
+---
+
+# 24. Validation Requirements
+
+## 24.1 Risky-Wording Search
+
+Search Chapter 7 for:
+
+```text
+clinician-authored
+LLM-discovered
+learned DAG
+true DAG
+ground-truth DAG
+clinically validated DAG
+proven causal
+causes mortality
+eliminates confounding
+all confounders
+identified effect
+randomized
+intervention effect
+treatment recommendation
+clinical actionability
+ATE
+ATT
+risk ratio
+relative risk
+percent reduction
+```
+
+Every occurrence must be:
+
+* removed;
+* explicitly qualified;
+* mathematically and methodologically justified;
+* or documented as a limitation.
+
+## 24.2 DAG Validation
+
+For each graph:
+
+* compare source node set with figure labels;
+* compare source edge set with figure arrows where feasible;
+* verify acyclicity;
+* verify graph outcome name;
+* verify dataset;
+* verify no old or draft graph is used;
+* verify figure caption wording;
+* verify source and destination hashes.
+
+## 24.3 Adjustment Validation
+
+Confirm:
+
+* outgoing, not incoming, treatment edges are removed by the audited helper;
+* the thesis calls this a backdoor graph rather than a `do(T)` graph;
+* candidate-pool intersections match source;
+* treatment descendants are excluded;
+* colliders and descendants are handled as source specifies;
+* fallback behavior is accurate;
+* missing graph nodes are not silently treated as observed;
+* internal identification status is not overstated.
+
+## 24.4 Estimator Validation
+
+Confirm:
+
+* matching is greedy Hamming matching;
+* numeric matching variables are binarized as source specifies;
+* replacement behavior matches source/config;
+* pair effect direction matches source;
+* LinearDML and CausalForestDML nuisance models match source;
+* `discrete_treatment` behavior matches source;
+* `W` and `X` roles match source;
+* CausalPFN feature construction matches source;
+* CausalPFN interval and sensitivity limitations match source;
+* normalized CATE is defined exactly as source;
+* no result values are inserted.
+
+## 24.5 Citation Validation
+
+Confirm:
+
+* every inserted citation key exists;
+* no CausalPFN key is invented;
+* no LLM key is invented;
+* Pearl is not used as approval for the local DAG;
+* estimator papers are not used as local execution evidence;
+* Biber reports no unresolved citations.
+
+## 24.6 Figure Validation
+
+Confirm:
+
+* figures are project evidence, not example-thesis assets;
+* captions are conservative;
+* figures are referenced in text;
+* labels are unique;
+* image paths are stable;
+* images are readable in the compiled PDF;
+* no source image was modified;
+* hashes are recorded.
+
+## 24.7 Table Validation
+
+Use unique stable labels:
+
+```latex
+\label{tab:dag-node-families}
+\label{tab:adjustment-set-logic}
+\label{tab:causal-assumptions}
+\label{tab:causal-estimator-methods}
+```
+
+Confirm:
+
+* no numerical results appear;
+* every cell is source or literature supported;
+* captions describe methods;
+* CausalPFN citation gap remains visible;
+* tables do not create severe overflow.
+
+## 24.8 LaTeX Validation
+
+Run a clean build and scan for:
 
 ```text
 LaTeX Error
@@ -1168,69 +2232,90 @@ multiply defined
 Biber error
 Emergency stop
 Fatal error
+File ... not found
 ```
 
-Record nonfatal layout warnings separately.
+Record overfull and underfull boxes separately.
 
-## 20.6 Scope Validation
+Inspect the compiled pages containing both DAG figures.
 
-Confirm:
+## 24.9 Scope Validation
 
+Confirm that:
+
+* only Chapter 7 contains new substantive prose;
+* only the specific figure-plan correction was made;
+* only verified canonical DAG images were copied;
+* no result value was added;
+* no research code was edited;
+* no config was edited;
+* no result artifact was edited;
 * no prompt artifact was edited;
-* no PDF or DOCX was modified;
-* no research code was modified;
-* no result artifact was modified;
 * no experiment was run;
-* no other substantive thesis chapter was drafted;
+* no other chapter was drafted;
+* no bibliography record was changed;
 * no commit or push occurred.
 
 ---
 
-# 21. Completion Criteria
+# 25. Completion Criteria
 
-This repair is complete only when:
+Stage 4.4 is complete only when:
 
-* the prompt-and-document directory has a complete inventory;
-* old and final prompts have been compared;
-* the relationship between generic and dataset-specific prompts is documented;
-* LLM execution metadata is recorded or visibly missing;
-* the prompt-output-to-code relationship is audited;
-* literature scope no longer incorrectly excludes LLM-assisted methodology;
-* new LLM citation gaps are visible;
-* “clinician-authored DAG” language is corrected unless supported;
-* Chapter 3 discloses the LLM-assisted design process;
-* Chapter 5 explains the prompt-assisted ontology and rule elicitation;
-* Chapter 5 retains source code as the operational authority;
-* Chapter 7 planning is updated for Stage 4.4;
-* prompt reproducibility is planned for Chapter 9 and the appendix;
-* all new placeholders and deferred issues are logged;
-* the thesis compiles successfully.
+* commit `30f137e` is verified;
+* nested repository state is documented;
+* the baseline thesis compiles;
+* the LLM-to-DAG traceability analysis is completed at node and edge level;
+* the PhysioNet DAG is documented from active source;
+* the MIMIC DAG is documented from active source;
+* both verified DAG figures are inserted or precisely blocked;
+* DAG assumptions are not presented as discovered truth;
+* the backdoor graph is described with correct terminology;
+* expanded-safe and minimal adjustment modes are documented;
+* internal identification-status wording is qualified;
+* `W` and `X` are distinguished;
+* matching is described accurately and conservatively;
+* LinearDML and CausalForestDML are documented with valid citations;
+* CausalPFN remains secondary and citation-blocked;
+* `mean_cate` is not automatically called ATE;
+* normalized CATE is not called a risk ratio;
+* no numerical result appears;
+* placeholders and deferred fixes are updated;
+* the evidence report is complete;
+* the final thesis compiles successfully;
+* only allowed files were edited.
 
 ---
 
-# 22. Final Response
+# 26. Final Response
 
 At the end, report:
 
-1. Verified commit.
-2. Prompt-and-document files inspected.
-3. Prompt versions and relationships.
-4. LLM provider/model/run metadata found.
-5. Missing LLM metadata.
-6. Prompt-output-to-code mapping summary.
-7. Audit files changed.
-8. Planning files changed.
-9. Literature-scope correction.
-10. Chapter 3 correction.
-11. Chapter 5 correction.
-12. New tables or figure plans.
-13. Citation gaps.
-14. New placeholders.
-15. New deferred fixes.
-16. Final build command and result.
-17. PDF path and page count.
-18. Stage 4.4 readiness status.
+1. Verified Stage 4.3R commit.
+2. Parent and nested Git states.
+3. Baseline build result and page count.
+4. Files inspected.
+5. Files changed.
+6. LLM-to-DAG traceability conclusion.
+7. PhysioNet DAG structure documented.
+8. MIMIC DAG structure documented.
+9. DAG figure sources, hashes, and insertion status.
+10. Backdoor-graph terminology conclusion.
+11. Expanded-safe and minimal adjustment logic documented.
+12. `W` and `X` roles documented.
+13. Matching method documented.
+14. LinearDML documented.
+15. CausalForestDML documented.
+16. CausalPFN status and citation gap.
+17. Tables created.
+18. Citations inserted.
+19. Remaining placeholders.
+20. Existing and new deferred fixes.
+21. Final build command and result.
+22. Final PDF path and page count.
+23. Remaining LaTeX warnings.
+24. Stage 4.5 readiness status.
 
 Do not commit or push.
 
-Do not proceed to Stage 4.4.
+Do not proceed to Stage 4.5.
