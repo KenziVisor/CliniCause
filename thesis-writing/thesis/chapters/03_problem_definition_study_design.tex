@@ -3,19 +3,43 @@
 
 \section{Units, Time Horizons, and Data Objects}
 \label{sec:problem-definition-study-design:units-time-horizons-data-objects}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
 % Section ID: C3.1.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
+This thesis studies retrospective intensive-care records represented as irregular clinical time series.  The operational study unit is a time-series record or ICU stay, depending on the source dataset and preprocessing path.  PhysioNet 2012 source files use record identifiers, whereas MIMIC-III source tables use ICU-stay and admission identifiers.  The implemented pipelines normalize these source-specific identifiers to the canonical join key \texttt{ts\_id}.  This identifier should be read as the analysis-record identifier used by the software; it is not assumed to be a globally unique person identifier across repeated admissions or stays.
+
+For a study unit \(i\), the observed longitudinal data are represented as a finite collection of measurement events
+\[
+  \mathcal{O}_i = \{(i,t_{ij},v_{ij},x_{ij}) : j=1,\ldots,n_i\},
+\]
+where \(i\) is the normalized \texttt{ts\_id}, \(t_{ij}\) is elapsed time in minutes from record start or ICU admission, \(v_{ij}\in\mathcal{V}\) is the observed variable name, and \(x_{ij}\) is the numeric value recorded for that variable.  In the causal repository this long-format object is stored in \texttt{ts} with the required columns \texttt{ts\_id}, \texttt{minute}, \texttt{variable}, and \texttt{value}.  Static or baseline quantities such as age, sex or gender coding, height, weight, and ICU-type indicators are represented within the same event schema as variables observed at or near the beginning of the record when the preprocessing implementation provides them.
+
+The event representation is intentionally irregular.  Observations occur at nonuniform times, different variables are measured with different frequencies, and most variables are absent at most possible times.  A missing measurement is therefore not interpreted as a normal value.  It may reflect a clinical decision not to measure, an unrecorded observation, a source-table limitation, or a preprocessing exclusion.  The thesis treats informative measurement and missingness processes as important threats to interpretation, not as causal findings established by the repository.
+
+The primary patient- or stay-level outcome used by the downstream causal repository is \texttt{in\_hospital\_mortality}.  In the causal processed artifact, this outcome is stored in \texttt{oc}, the outcome table keyed by \texttt{ts\_id}.  The third object in that processed artifact, \texttt{ts\_ids}, is the sorted collection of normalized identifiers represented in \texttt{ts}.  Later predictive processing uses a distinct split-aware artifact and must not be conflated with this causal contract.
+
 \section{Prediction Task}
 \label{sec:problem-definition-study-design:prediction-task}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
 % Section ID: C3.2.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
+The prediction task is a multi-label proxy-state prediction problem over irregular ICU time series.  For each study unit \(i\) and proxy state \(k\), let \(L^{rule}_{ik}\in\{0,1\}\) denote a rule-derived proxy label.  These labels are clinically inspired analytical constructs generated from observed data and deterministic source-code rules.  They are weak clinical labels or proxy phenotypes, not chart-adjudicated diagnoses, manually verified clinical states, or validated phenotypes unless separate validation evidence is supplied in a later chapter.
+
+The supervised predictive workflow estimates a vector of proxy-state labels from the observed time-series representation.  Its target matrix is loaded from a latent-label CSV keyed by \texttt{ts\_id}; the supervised proxy-label targets are not taken from the mortality column in \texttt{oc}.  For model \(m\), the exported prediction object may contain probabilities \(\hat p^{(m)}_{ik}\) and corresponding binary predicted labels \(\hat L^{(m)}_{ik}\).  These outputs are model estimates of rule-derived proxy labels rather than direct measurements of patient physiology.
+
+At the level of study design, five analytical tasks are distinguished.  First, rule-based proxy-state construction derives binary proxy labels from observed clinical measurements.  Second, multi-label proxy-state prediction estimates those rule-derived labels from irregular time-series inputs.  Third, proxy-label aggregation may combine binary outputs from several voter sources into a single proxy-state table.  Fourth, mortality prediction or association analysis evaluates whether proxy-state representations contain prognostic information about \texttt{in\_hospital\_mortality}.  Fifth, observational causal-effect estimation treats selected proxy-state indicators as modeled exposures and estimates adjusted contrasts under explicit assumptions.  Detailed proxy rules, model architectures, estimator algorithms, and numerical results are intentionally deferred to later chapters.
+
 \section{Causal Question, Exposures, Outcome, Estimands, Assumptions}
 \label{sec:problem-definition-study-design:causal-question-exposures-outcome-estimands-assumptions}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[SUPERVISOR DECISION REQUIRED]}
 % Section ID: C3.3.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+The downstream causal-analysis setting is retrospective and observational.  No intervention is assigned by this study.  The repository uses software parameters named \texttt{treatment} for selected binary \texttt{LAT\_*} columns, but many such columns represent illness-state or organ-dysfunction proxy states rather than well-defined administered therapies.  In the thesis narrative these variables are therefore described as proxy-state exposures or modeled treatment variables unless a later section explicitly defines a manipulable intervention.
+
+Let \(A_i\in\{0,1\}\) denote a selected proxy-state exposure, \(Y_i\) denote the binary outcome \texttt{in\_hospital\_mortality}, \(W_i\) denote observed adjustment variables selected from a project-authored DAG and available columns, and \(X_i\) denote effect-modifier features used to describe heterogeneity.  Potential-outcome notation such as \(Y_i(a)\) is useful as conceptual language, but causal interpretation requires more than the presence of a graph or an estimator.  It depends on assumptions about the causal graph, consistency, exchangeability conditional on observed covariates, positivity or overlap, outcome and exposure measurement, and unmeasured confounding \cite{pearl_1995_causal_diagrams,hernan_robins_2016_target_trial,hernan_taubman_2008_well_defined_interventions}.
+
+Accordingly, later estimates should be interpreted as adjusted effect estimates under project assumptions, not as unconditional clinical effects.  The existence of a DAG, matching script, or CATE estimator does not prove identification.  Proxy states may be useful for structured analysis while still carrying label noise, temporal ambiguity, and intervention-definition limitations.
+
+\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: final estimand wording for proxy-state exposures and aggregated CATE summaries]}
+
+The approved main research question is how irregular ICU time-series data can be converted into clinically interpretable proxy-state representations and used, under explicit causal assumptions, to support DAG-guided adjusted effect estimation for in-hospital mortality.  Within the scope of this chapter and the next, the relevant subquestions are whether rule-derived clinical proxy states can be predicted from irregular ICU time series, which data contracts are needed to connect PhysioNet 2012, MIMIC-III, STraTS, and the causal-analysis pipeline, whether proxy-state representations contain mortality-related information, how adjusted estimates vary across proxy-state exposures or patient characteristics, and how robust those estimates are to modeling and confounding assumptions.  These are study questions and design commitments; their answers are reserved for the results and discussion chapters.
