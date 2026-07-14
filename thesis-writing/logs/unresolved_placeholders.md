@@ -289,3 +289,14 @@ Stage 4.9A replaced the four generic Chapter 2 drafting placeholders, the generi
 | `[LITERATURE REVIEW REQUIRED: verify whether any rule family lacks an adequate clinical source]` | Stage 4.9A literature audit; several rule families remain explicitly project-specific in Chapter 5. | Rule-family-to-primary-clinical-source matrix with gaps retained as project-specific or filled from vetted literature. | open |
 | `[LITERATURE REVIEW REQUIRED: decide whether formal LLM-assisted-design literature is needed]` | Stage 4.9A literature audit; no approved LLM methodology source is in the canonical corpus. | Supervisor-approved scope decision and, only if needed, a separately authorized corpus addition. | open |
 | `[SUPERVISOR RATIFICATION REQUIRED: final related-work framing]` | Stage 4.9A Chapter 2 synthesis. | Supervisor review of emphasis, boundaries, and cross-chapter balance. | open |
+
+## Stage 4.9B Update
+
+The Stage 4.9B audit removed reader-facing citation-gap markers where the same limitation is already stated in prose and tracked precisely here.  This does not resolve the underlying evidence gaps.
+
+| file | former reader-facing marker or decision | tracking disposition | status |
+| --- | --- | --- | --- |
+| `thesis-writing/thesis/chapters/05_proxy_state_construction.tex` | Four `[CITATION REQUIRED]` markers for chronic baseline-risk, hepatic, cardiac, and metabolic PhysioNet clauses | Replaced by a project-specific-rule sentence; exact gaps and clinical-review requirements are recorded in `stage_4_9B_proxy_rule_citation_matrix.csv`, `DF-4.3-004`, `DF-4.3-005`, and `DF-4.7-002`. | MOVE_TO_TRACKING_LOG |
+| `thesis-writing/thesis/chapters/11_discussion.tex` | `[CITATION REQUIRED: primary CausalPFN method source]` | Removed because the exploratory limitation is explicit in prose and remains tracked by `DF-4.7-003` and `DF-4.9A-001`. | MOVE_TO_TRACKING_LOG |
+| Chapters 1, 2, 5, 7, and 11 | Formal LLM-assisted-design literature | `NO FORMAL LLM-ASSISTED-DESIGN LITERATURE ADDED IN THE CURRENT THESIS; PROVENANCE-ONLY FRAMING RETAINED PENDING SEPARATE AUTHOR APPROVAL.` The prompt-run and human-review manifest remains `DF-4.7-011`. | open |
+| All drafted chapters | Generic drafting markers | None remain. Remaining markers are specific supervisor, clinical-review, provenance, validation, ethics, or administrative gates and are retained where reader-facing qualification is necessary. | RESOLVED |
