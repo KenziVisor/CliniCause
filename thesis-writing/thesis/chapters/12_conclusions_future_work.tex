@@ -1,9 +1,47 @@
 \chapter{Conclusions and Future Work}
 \label{chap:conclusions-future-work}
 
-\section{Contribution Summary and Future Work}
-\label{sec:conclusions-future-work:contribution-summary-future-work}
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[RESULT REQUIRED]}
+\section{Summary of the Study}
+\label{sec:conclusions-future-work:summary-of-the-study}
 % Section ID: C12.1.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+
+This thesis addressed the challenge of connecting irregular ICU time-series data to transparent retrospective analysis without concealing the transformations required along the way.  The motivating problem is not only that clinical measurements are sparse, asynchronous, and shaped by the measurement process, but also that prediction and observational analysis can become disconnected when their labels, identifiers, preprocessing contracts, and interpretation boundaries are not explicit.  The study therefore developed and evaluated an evidence-tracked workflow across PhysioNet 2012 and MIMIC-III that moves from dataset-specific preprocessing to project-specific proxy-state construction, multi-label prediction, normalized and aggregated proxy-state inputs, project-authored DAGs, matching, heterogeneous-effect estimation, and available diagnostics.
+
+The resulting framework is a retrospective research workflow.  Its proxy states are rule-derived analytical constructs rather than verified clinical conditions, and its adjusted estimates remain conditional on the measurement, graph, intervention-definition, temporal-ordering, support, and modeling assumptions stated throughout the thesis.  This distinction is central to the contribution: the workflow makes its handoffs, evidence sources, and unresolved requirements visible instead of presenting an apparently seamless output as a clinical fact.
+
+\section{Main Findings and Contributions}
+\label{sec:conclusions-future-work:main-findings-contributions}
+
+The strongest contribution is the integrated, evidence-tracked connection between irregular-time-series representation, proxy-state construction, predictive modeling, algorithmic aggregation, and downstream observational analysis.  The shared proxy-state interface provides a traceable route from deterministic source-code rules to prediction labels, binary voter inputs, and dataset-specific exposure analyses.  Separate causal and split-aware predictive contracts further make identifier, cohort, and export boundaries inspectable.  Checked result tables, manifests, checksums, source packets, and explicit deferred issues complement this workflow by improving numerical traceability, even though they do not yet provide a complete clean-checkout reproduction record.
+
+The empirical predictive comparison covered STraTS, GRU, GRU-D, TCN, and SAnD.  The leading family differed by dataset: STraTS led the archived proxy-label test metrics in MIMIC-III, whereas GRU-D led them in PhysioNet (Chapter~\ref{chap:results}, Section~\ref{sec:results:predictive-performance}).  This result supports a dataset-specific view of representation choice.  It does not establish a universal model ordering, statistical superiority, or clinical validity of the rule-derived targets.
+
+In the primary original-cohort analysis, CausalForestDML produced positive mean model-estimated CATE summaries for all nine MIMIC-III exposures and for nine of ten PhysioNet exposures; the PhysioNet shock summary was negative (Chapter~\ref{chap:results}).  These estimates document systematic variation in the constructed proxy-state analyses after the implemented adjustment procedure; they do not establish that a proxy state caused mortality or that modifying it would change an outcome.  Matching supplied a descriptive empirical-support baseline, not independent confirmation, and its failures and weak-support flags remain part of the evidence.
+
+The comparison between CausalForestDML and LinearDML adds useful but bounded triangulation: their mean summaries had the same direction in all 19 original-cohort dataset--exposure comparisons, while magnitudes and within-dataset rankings still differed (Chapter~\ref{chap:results}).  Thus agreement is informative about the observed sign pattern but not a guarantee of estimator correctness, equal uncertainty, or valid identification.  CausalPFN also agreed in direction with both DML estimators in 18 of 19 comparisons, with PhysioNet shock as the exception (Chapter~\ref{chap:results}).  This is an exploratory complementary finding only: its primary method source is unresolved in the approved corpus, and its sensitivity and permutation stages were intentionally not part of the archived diagnostic workflow.
+
+Together, these results support the thesis's methodological objective: a common proxy-state layer can organize a cross-dataset sequence of prediction and assumption-guided adjusted analysis while preserving dataset-specific definitions, estimator hierarchy, and evidence boundaries.  The contribution is the transparent integration and qualification of these components, not the invention of the underlying predictive, causal, matching, or diagnostic methods.
+
+\section{Limitations of the Conclusions}
+\label{sec:conclusions-future-work:limitations-of-the-conclusions}
+
+The conclusions are constrained first by construct validity.  The proxy states are project-specific rules, not chart-adjudicated labels, and the two datasets differ in measured variables, proxy ontologies, and timing.  Prediction and majority voting can propagate or preserve rule and measurement error; a binary tag can compress distinct trajectories, and a negative tag can reflect unavailable measurement rather than absence of a condition.  Clinical review, reference-standard evaluation, and exact support for several rule families remain incomplete.
+
+Second, the observational analyses do not remove identification uncertainty.  Illness-state proxy exposures are not necessarily well-defined interventions, the DAGs are project-authored assumptions rather than empirically established structures, temporal ordering is incomplete, and unmeasured confounding can remain.  Matching rates, distances, failures, sensitivity analyses, and permutation checks qualify particular risks but do not establish global overlap, balance, exchangeability, or causal certainty.  Estimator agreement must therefore be read alongside estimator disagreement, support gaps, incomplete uncertainty reporting, and the different diagnostic coverage of CausalPFN.
+
+Finally, the present evidence does not establish external clinical utility.  The two datasets support application of the workflow in distinct settings but do not justify numerical pooling or transport claims.  No external or prospective clinical validation, subgroup fairness analysis, safety study, impact evaluation, or patient-level deployment evaluation was performed.  Reproducibility is also incomplete: raw and processed data artifacts, exact numbered causal configurations, predictive split and checkpoint lineage, producing commits, archive-copy history, and full LLM prompt-run and human-review records remain unresolved.
+
+\section{Future Work}
+\label{sec:conclusions-future-work:future-work}
+
+The first priority is clinical and construct validation.  Future work should freeze the proxy rules, obtain qualified clinical review, and, where feasible, compare them with chart-adjudicated reference labels.  This should include dataset-specific assessment of timing, missingness, thresholds, and differences between rule-derived, predicted, and aggregated proxy states.  Such work would clarify whether the shared interface is an appropriate representation for the clinical concepts and analyses that it is intended to support.
+
+The second priority is a stronger observational design.  A future study should specify a target-trial-aligned question with eligibility, time zero, intervention strategies, follow-up, outcome, estimand, and an explicit plan for time-varying confounding.  It should add prespecified overlap and balance diagnostics, support-aware estimands, uncertainty and multiplicity procedures, richer sensitivity analyses, and handoff ablations that quantify how measurement, proxy construction, prediction, and aggregation affect downstream estimates.
+
+The third priority is reproducibility and external evaluation.  Signed per-run manifests should link raw-data access records, processed-artifact hashes, split identifiers, checkpoints, commands, resolved configurations, software environments, source commits, and archived outputs.  Frozen definitions should then be evaluated on temporal and external cohorts and on clinically justified subgroups before any prospective workflow, safety, or impact study is considered.  CausalPFN should remain exploratory until its primary source and implementation version are verified and an appropriate diagnostic and uncertainty plan is available.  LLM-assisted design provenance likewise requires a complete, human-governed record of prompt settings and accepted or rejected rule and graph decisions.
+
+\section{Closing Perspective}
+\label{sec:conclusions-future-work:closing-perspective}
+
+The thesis shows the value of treating integration itself as an object of evidence.  Irregular ICU records, project-specific proxy states, predictive outputs, graph-guided adjustment, and model-estimated contrasts can be connected in a transparent workflow, but none of those handoffs removes the need for clinical review, careful observational design, diagnostic scrutiny, or reproducible provenance.  The appropriate conclusion is therefore measured: transparent integration can make retrospective evidence more inspectable and more useful for hypothesis generation, while the boundaries that prevent stronger clinical or causal claims remain visible and actionable for future research.
