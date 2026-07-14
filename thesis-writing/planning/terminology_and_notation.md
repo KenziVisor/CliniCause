@@ -16,7 +16,8 @@
 | exposure | Preferred causal-analysis term for a `LAT_*` proxy state when intervention meaning is questionable. |
 | treatment | Use only for code/config variables or when explaining estimator input; qualify as "proxy-state treatment variable". |
 | outcome | In-hospital mortality (`in_hospital_mortality`). |
-| confounder | Observed adjustment variable selected under the authored DAG and available in data. |
+| confounder | Observed adjustment variable selected under the project-specified DAG and available in data. |
+| project-specified DAG | Directed acyclic graph informed by project design work, including LLM-assisted elicitation, and encoded in source code for adjustment logic. |
 | adjustment set | The selected observed covariates used for matching/CATE adjustment. |
 | effect modifier | Feature used to model heterogeneous effects/CATE variation. |
 | matching estimate | Matched-pair outcome difference or mean matched-pair contrast. |
@@ -40,6 +41,7 @@
 | treatment recommendation | Do not use; clinical actionability is not established. |
 | clinical actionability | Only in limitations/future work as not yet established. |
 | latent variable | Use only when naming repository `LAT_*` artifacts; preferred thesis term is "proxy state". |
+| LLM-discovered DAG | Avoid; use "project-specified DAG with LLM-assisted design provenance" if discussing prompt artifacts. |
 | unbiased estimate | Avoid unless a formal estimator/assumption proof is provided. |
 | proof | Avoid for empirical/diagnostic findings; use "evidence", "support", or "diagnostic". |
 
@@ -109,4 +111,3 @@
 | SOFA | Sequential Organ Failure Assessment |
 | AKI | Acute Kidney Injury |
 | ARDS | Acute Respiratory Distress Syndrome |
-

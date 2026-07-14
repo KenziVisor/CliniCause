@@ -36,7 +36,7 @@ The E-value papers are retained as optional background. Cinelli-Hazlett and Cher
 
 The early InterpNet workshop paper is optional because the ICLR 2019 Interpolation-Prediction Networks paper is the canonical core citation. Marginal structural models are retained for longitudinal causal-inference background, but they are not the estimator implemented in the current point/binary exposure workflow.
 
-No implemented LLM component was found in the thesis pipeline; LLM literature is intentionally out of scope for this corpus.
+The inspected prompt artifacts show LLM-assisted design provenance for proxy-state and DAG elicitation, but no implemented LLM component in the executed thesis pipeline. Dedicated LLM prompt-engineering/reporting literature is not yet part of the core corpus; candidate needs are tracked in `llm_methodology_candidate_additions.md`.
 
 ## Adding a Future Paper
 

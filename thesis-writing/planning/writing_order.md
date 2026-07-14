@@ -6,7 +6,7 @@ Do not draft in chapter-number order by default. Start with stable methods and c
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | C3.1 Units, time horizons, and data objects | Stable definitions anchor every later chapter. | preprocessing contracts; STraTS loader; terminology plan | none | `thesis-writing/thesis/chapters/ch03_problem_definition.tex` | Correct unit/ID/artifact terminology. |
 | 2 | C4 Data and preprocessing | Implementation-grounded and low result risk. | preprocessing scripts; configs; dataset citations | processed counts remain placeholders | `chapters/ch04_data_preprocessing.tex` | Contract accuracy and no invented counts. |
-| 3 | C5.1-C5.3 Rule-based proxy construction | Central contribution; source-backed. | tagger scripts; proxy table plan; clinical citations | advisor clinical wording | `chapters/ch05_proxy_states.tex` | Proxy vs diagnosis language. |
+| 3 | C5.1-C5.3 Rule-based proxy construction | Central contribution; source-backed. | tagger scripts; proxy table plan; LLM prompt-provenance audit; clinical citations | advisor clinical wording and prompt-review record | `chapters/ch05_proxy_states.tex` | Proxy vs diagnosis language; prompt outputs as design provenance only. |
 | 4 | C5.4 Majority vote and predicted proxy-state sources | Bridges prediction and causal pipeline. | majority vote/split/export scripts; audit | voter manifest [PROVENANCE UNCLEAR] | same chapter or `chapters/ch05_proxy_states.tex` | Do not call majority vote consensus truth. |
 | 5 | C6 Predictive modeling methods | Model code is stable; results can remain deferred. | STraTS source; model citations; wrappers | InterpNet result status | `chapters/ch06_predictive_modeling.tex` | Multi-label task and metric definitions. |
 | 6 | C7 Causal graph and effect-estimation methods | Method assumptions must be settled before results. | DAG/CATE/matching source; causal citations | advisor intervention/estimand gate | `chapters/ch07_causal_methods.tex` | Causal wording under assumptions. |
@@ -29,4 +29,3 @@ Human approval gates:
 - Gate D after C10: result interpretation approval.
 - Gate E after C11-C12 and intro/background: full narrative approval.
 - Gate F before front matter: title, language, administrative pages.
-

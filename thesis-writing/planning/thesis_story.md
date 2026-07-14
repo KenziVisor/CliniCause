@@ -2,7 +2,7 @@
 
 ## A. One-Paragraph Thesis Statement
 
-This thesis should be framed as an evidence-driven methodological framework for causal analysis of irregular ICU time series: raw PhysioNet 2012 and MIMIC-III measurement events are transformed into patient/stay-level data contracts, clinically inspired rule-based proxy states are generated and then predicted from irregular time-series models, prediction outputs are aggregated into majority-vote proxy states, and selected proxy states are analyzed as exposure variables for in-hospital mortality using clinician-authored DAGs, DAG-guided adjustment logic, matching baselines, and heterogeneous-effect estimators. The contribution is the construction and evaluation of this linked prediction-to-causal-analysis pipeline, not proof of validated diagnoses, clinical treatment recommendations, or unconditional causal effects.
+This thesis should be framed as an evidence-driven methodological framework for causal analysis of irregular ICU time series: raw PhysioNet 2012 and MIMIC-III measurement events are transformed into patient/stay-level data contracts, clinically inspired rule-based proxy states are generated and then predicted from irregular time-series models, prediction outputs are aggregated into majority-vote proxy states, and selected proxy states are analyzed as exposure variables for in-hospital mortality using project-specified DAGs, DAG-guided adjustment logic, matching baselines, and heterogeneous-effect estimators. The proxy-state ontology and DAG design have LLM-assisted prompt-provenance artifacts, but the source code and run artifacts define the implemented pipeline. The contribution is the construction and evaluation of this linked prediction-to-causal-analysis pipeline, not proof of validated diagnoses, clinical treatment recommendations, or unconditional causal effects.
 
 ## B. Main Research Question
 
@@ -40,6 +40,7 @@ Currently supported:
 - The repository implements preprocessing, proxy-state construction, proxy-state prediction, majority voting, DAG generation, matching, CATE estimation, sensitivity analysis, permutation checks, and routing/orchestration components.
 - The Stage 2 audit inventories ten final predictive supervised summaries, twelve causal run folders, rule/proxy tag artifacts, DAG images, learning curves, sensitivity contours, and cross-run CSVs.
 - The literature corpus contains validated citation keys for implemented sequence models, datasets, causal foundations, DML/causal forests, weak supervision, overlap, and sensitivity analysis.
+- The prompt-document archive supports a design-provenance claim for LLM-assisted proxy-state and DAG elicitation, with final runs reported by the user as ChatGPT 5.4 with extended reasoning.
 - The example thesis demonstrates practical LaTeX patterns only.
 
 Not currently supported without caveats:
@@ -48,6 +49,7 @@ Not currently supported without caveats:
 - Exact final causal run configuration claims, because numbered config CSVs referenced by `run_summary.json` are missing locally.
 - Out-of-sample claims for exported predicted proxy states without verified export commands for each archived CSV.
 - Any claim that proxy states are verified diagnoses or validated phenotypes.
+- Any claim that LLM prompt outputs are clinical validation, source-code execution, learned causal discovery, or the authoritative implemented DAG.
 - Any claim that `mean_cate` or `mean_pair_effect` is a formal ATE/ATT without advisor-approved estimand wording.
 - Any claim that CausalPFN has sensitivity/permutation diagnostics in this pipeline.
 
@@ -62,6 +64,7 @@ Not currently supported without caveats:
 | ATE | Not a direct artifact name. | Use "mean estimated CATE" or "matched-pair outcome difference" until estimand is approved. |
 | validation | Could imply clinical validation. | Specify "schema validation", "diagnostic validation", "prediction evaluation", or [ADVISOR CHECK]. |
 | majority vote | Could imply clinical consensus. | Describe as algorithmic aggregation of voter CSVs. |
+| LLM-assisted design | Could imply autonomous discovery or validation. | Describe prompt outputs as candidate design provenance; source code is implementation authority. |
 
 ## G. Candidate Thesis Titles
 

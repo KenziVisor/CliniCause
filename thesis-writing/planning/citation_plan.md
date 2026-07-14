@@ -54,7 +54,8 @@ Use `thesis-writing/literature/metadata/catalog.csv` and `thesis-writing/literat
 | CIT-GAP-001 | Primary CausalPFN citation if PFN remains in main methods/results. | [NEEDS CITATION] |
 | CIT-GAP-002 | BGU/faculty current LaTeX/title-page source beyond local PDF and example. | [ADVISOR CHECK] |
 | CIT-GAP-003 | Clinical references for any proxy-state rule not covered by current corpus. | [NEEDS CITATION] during proxy-definition table construction |
+| CIT-GAP-004 | Prompt-engineering, transparent AI-assisted-research reporting, or exact ChatGPT 5.4 extended-reasoning documentation if LLM-assisted elicitation is framed as a formal methodology rather than project provenance. | [NEEDS CITATION] |
 
 ## Out of Scope
 
-LLM literature remains out of scope because no implemented LLM component was found in the thesis pipeline.
+LLM model training or runtime inference remains out of scope for the implemented pipeline. LLM-assisted prompt elicitation is now in scope only as design provenance, with citation needs tracked separately and no claim that the pipeline contains an executed LLM component.

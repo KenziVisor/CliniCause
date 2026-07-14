@@ -1,119 +1,139 @@
-# Stage 4.3 — Draft the Clinical Proxy-State Construction Chapter
+# Stage 4.3R — Repair LLM, Prompt-Engineering, and Method-Provenance Coverage
 
 ## Authoritative Task Declaration
 
-Implement this `prompt.txt` exactly as written.
+Implement this prompt as a corrective task after Stage 4.3 and before Stage 4.4.
 
 The active task is:
 
 ```text
-Stage 4.3 — Chapter 5: Clinical Proxy-State Construction
+Stage 4.3R — LLM and Prompt-Provenance Repair
 ```
 
-There is no conflict between the stage number and the chapter number.
+This is not Stage 4.4.
 
-The approved drafting order is intentionally different from the final thesis chapter order:
+Do not draft the full causal-methodology chapter yet.
+
+The purpose of this repair is to incorporate newly committed evidence under:
 
 ```text
-Stage 4.1 drafted Chapters 3 and 4.
-Stage 4.2 drafted Chapter 6.
-Stage 4.3 now drafts Chapter 5.
+thesis-writing/prompts-and-documents/
 ```
 
-The older granular entries in:
+These materials were not inspected during Stage 2, Stage 3, or Stage 4.3 and materially change the documented provenance of:
+
+* proxy-state ontology design;
+* rule elicitation;
+* causal-DAG design;
+* clinical and causal reasoning;
+* prompt engineering;
+* research-document generation.
+
+The corrected thesis must distinguish:
 
 ```text
-thesis-writing/planning/stage4_prompt_queue.md
+LLM-assisted design proposal
+human or project review
+source-code implementation
+executed artifact
+clinical validation
 ```
 
-are evidence-routing records created during Stage 3. They do not override this prompt.
-
-Stage 4.3 combines the older proxy-state tasks into one coherent chapter-writing task and covers all four approved sections:
-
-```text
-C5.1 — Rationale and Terminology
-C5.2 — PhysioNet Proxy-State Rules
-C5.3 — MIMIC Proxy-State Rules and Validation Artifacts
-C5.4 — Predicted and Majority-Vote Proxy States
-```
-
-Do not stop merely because the old queue divided these topics into separate task IDs.
+These are separate evidence levels.
 
 ---
 
 # 1. Context
 
-Stages 0–3 and Stages 4.0–4.2 are complete.
-
-The latest approved commit is expected to be:
+The latest approved repository commit is expected to be:
 
 ```text
-c9f6b12 step 4.2
+0009d91 step 4.3 + prompts
 ```
 
-Stage 4.2 drafted:
+This commit contains:
+
+* the completed Stage 4.3 Chapter 5 draft;
+* the Stage 4.3 evidence report;
+* updated placeholder and deferred-fix logs;
+* the generated thesis PDF;
+* a newly committed `thesis-writing/prompts-and-documents/` directory.
+
+The Stage 4.3 evidence report states that this directory was outside Stage 4.3 scope. Therefore, Chapter 5 and the existing planning documents do not yet incorporate its methodological implications.
+
+The exact final prompt template appears to include:
 
 ```text
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
+general-purpose-latent-causal-model-prompt.txt
+physionet-prompt.txt
+mimic-prompt.txt
 ```
 
-and verified a successful XeLaTeX/Biber build.
-
-This task covers only:
+Historical variants include:
 
 ```text
-Chapter 5 — Clinical Proxy-State Construction
+old-physionet-prompt.txt
+old-mimic-prompt.txt
 ```
 
-The target file is:
+The directory also includes generated reports, manager summaries, research-question documents, and validation/reference documents in PDF or DOCX form.
 
-```text
-thesis-writing/thesis/chapters/05_proxy_state_construction.tex
-```
-
-This is a methods and construct-definition chapter.
-
-It must explain:
-
-* why proxy states are needed;
-* what the project means by a proxy state;
-* how rule-based states are derived in PhysioNet;
-* how rule-based states are derived in MIMIC-III;
-* how the two datasets differ;
-* which measurements and rule families enter each state;
-* which temporal summaries or aggregation operators are used;
-* how predicted proxy-state outputs differ from rule-derived labels;
-* how binary predictions are normalized for voting;
-* how majority voting aligns records and combines voters;
-* what validation evidence exists;
-* what validation and provenance evidence is still missing.
-
-The chapter must not present final numerical results.
+Do not infer the relationship among these files from their filenames alone. Audit the relationships directly.
 
 ---
 
-# 2. Objective
+# 2. Core Interpretation
 
-Draft an academically rigorous version of:
+The LLM is not an inference-time component of the executable CliniCause pipeline.
+
+It does not:
+
+* process ICU records during normal pipeline execution;
+* generate STraTS predictions during execution;
+* estimate matching or CATE outputs during execution;
+* replace the active tagger scripts;
+* replace the active DAG scripts;
+* provide chart-adjudicated clinical labels.
+
+However, the newly committed prompt evidence indicates that an LLM was used as a **method-design and expert-elicitation instrument** to propose or refine:
+
+* candidate latent clinical states;
+* observed-to-latent mappings;
+* proxy-state decision rules;
+* clinical threshold families;
+* missingness and measurement-process interpretation;
+* candidate causal edges;
+* mortality pathways;
+* adjustment implications;
+* rejected alternatives;
+* implementation specifications.
+
+This use is methodologically relevant and must be documented.
+
+Use conservative terms such as:
 
 ```text
-thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+LLM-assisted expert elicitation
+LLM-assisted evidence synthesis
+LLM-generated candidate ontology
+LLM-proposed rule specification
+LLM-proposed causal structure
+project-reviewed design artifact
+source-code operationalization
 ```
 
-The completed chapter must:
+Do not use:
 
-1. define proxy-state terminology conservatively;
-2. document the active PhysioNet rule implementation;
-3. document the active MIMIC rule implementation;
-4. exclude legacy and draft taggers from the primary method unless execution evidence requires otherwise;
-5. distinguish dataset-specific proxy-state taxonomies;
-6. create a source-supported proxy-state definition table;
-7. explain the available MIMIC validation artifacts without reporting final values;
-8. distinguish rule-derived, model-predicted, and majority-vote proxy states;
-9. document majority-vote input validation, identifier alignment, latent-column alignment, and tie handling;
-10. preserve all unresolved clinical-review and provenance limitations;
-11. use only verified citation keys;
-12. compile successfully with XeLaTeX and Biber.
+```text
+AI-discovered clinical truth
+validated LLM diagnosis
+LLM-proven causal graph
+automatically learned DAG
+clinical expert consensus
+ground-truth latent state
+```
+
+unless discussing why such wording is inappropriate.
 
 ---
 
@@ -126,1272 +146,44 @@ From the repository root, run:
 ```bash
 git status --short
 git branch --show-current
-git log -5 --oneline
-git show --stat --oneline c9f6b12
+git log -6 --oneline
+git show --stat --oneline 0009d91
 ```
 
-Verify that:
+Verify:
 
-* `c9f6b12` exists;
-* its message is `step 4.2`;
-* it follows `d7edc78 step 4.1`;
-* Chapter 6 and the Stage 4.2 evidence report are present;
-* the Chapter 5 skeleton remains present.
+* commit `0009d91` exists;
+* its message is `step 4.3 + prompts`;
+* it follows `c9f6b12 step 4.2`;
+* Chapter 5 and the Stage 4.3 evidence report are present;
+* `thesis-writing/prompts-and-documents/` is tracked in this commit.
 
-Record the initial working-tree state.
+Record the initial and final working-tree states.
 
 Do not:
 
 * reset;
 * clean;
 * checkout another branch;
-* stage files;
-* amend a commit;
-* discard unrelated changes;
+* stage;
 * commit;
-* push.
+* push;
+* discard unrelated changes.
 
-## 3.2 Repository Instructions
+## 3.2 Applicable Instructions
 
-Locate and inspect all applicable instruction files, including:
+Inspect all relevant `AGENTS.md` files.
+
+Also inspect:
 
 ```text
-AGENTS.md
-causal-irregular-time-series/AGENTS.md
 final-results/AGENTS.md
-final-results/causal-outputs/AGENTS.md
+thesis-writing/thesis/README.md
 ```
 
-Apply the instructions governing each inspected path.
+Do not let stale instructions override current source evidence.
 
-The detailed `final-results/AGENTS.md` evidence hierarchy should be used when interpreting result-like proxy artifacts.
-
-Do not treat the directory name `final-results` as proof that an artifact is approved or final.
-
-## 3.3 Toolchain Verification
-
-Confirm that the verified WSL toolchain remains available:
-
-```bash
-command -v pdfinfo
-command -v pdftotext
-command -v latexmk
-command -v xelatex
-command -v biber
-```
-
-Do not reinstall tools when the commands remain available.
-
-## 3.4 Baseline Thesis Build
-
-Before editing, run:
-
-```bash
-cd thesis-writing/thesis
-latexmk -C
-latexmk -xelatex main.tex
-test -f main.pdf
-pdfinfo main.pdf
-```
-
-Record:
-
-* return status;
-* baseline PDF path;
-* page count;
-* citation status;
-* reference status;
-* duplicate-label status;
-* fatal errors;
-* nonfatal warnings.
-
-The expected baseline is approximately 44 pages, but verify the actual current page count.
-
-If the baseline fails, make only the narrowest permitted compilation repair before drafting.
-
----
-
-# 4. Required Planning and Audit Inspection
-
-Inspect:
-
-```text
-thesis-writing/planning/thesis_story.md
-thesis-writing/planning/thesis_outline.md
-thesis-writing/planning/chapter_evidence_map.md
-thesis-writing/planning/terminology_and_notation.md
-thesis-writing/planning/citation_plan.md
-thesis-writing/planning/table_plan.md
-thesis-writing/planning/figure_plan.md
-thesis-writing/planning/writing_order.md
-thesis-writing/planning/stage4_prompt_queue.md
-```
-
-Pay particular attention to:
-
-```text
-C5.1
-C5.2
-C5.3
-C5.4
-T-PROXY-01
-T-PROXY-PREV-01
-T-PROXY-COOC-01
-T-PROXY-MORT-01
-T-PRED-EXPORT-01
-F-TREE-PHY-*
-F-TREE-MIMIC-*
-F-DATAFLOW-01
-```
-
-Inspect:
-
-```text
-thesis-writing/audit/repository_map.md
-thesis-writing/audit/evidence_inventory.md
-thesis-writing/audit/experiment_inventory.csv
-thesis-writing/audit/claim_evidence_ledger.csv
-thesis-writing/audit/terminology_map.md
-thesis-writing/audit/unresolved_questions.md
-thesis-writing/audit/figure_table_inventory.md
-```
-
-Inspect previous Stage 4 reports:
-
-```text
-thesis-writing/logs/stage_4_0_setup_report.md
-thesis-writing/logs/stage_4_1_evidence_report.md
-thesis-writing/logs/stage_4_2_evidence_report.md
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-```
-
-Use the planning and audit files as evidence indexes, but verify technical claims against current source.
-
----
-
-# 5. Required Literature Inspection
-
-Inspect:
-
-```text
-thesis-writing/literature/README.md
-thesis-writing/literature/metadata/catalog.csv
-thesis-writing/literature/metadata/references.bib
-```
-
-Verify exact citation keys before using them.
-
-Expected relevant keys include:
-
-```text
-banda_2018_electronic_phenotyping
-essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping
-ratner_et_al_2020_snorkel
-singer_2016_sepsis3
-kdigo_2012_acute_kidney_injury
-taylor_et_al_2001_isth_dic
-vincent_et_al_1996_sofa
-ranieri_et_al_2012_berlin_ards
-```
-
-Use these sources according to their actual scope.
-
-Important limits:
-
-* Electronic phenotyping literature supports the general construct-design context, not validation of this project’s states.
-* Sepsis-3 supports clinical context for sepsis, shock, organ dysfunction, vasopressor, and lactate concepts; it does not prove that the implemented rule is a formal Sepsis-3 diagnosis.
-* KDIGO supports renal dysfunction and AKI concepts; do not claim full KDIGO staging unless the source code implements it.
-* ISTH DIC and SOFA references provide clinical grounding; do not state that the project computes the complete formal score unless verified.
-* Berlin ARDS and respiratory-failure phenotyping sources provide respiratory grounding; do not call a proxy rule an adjudicated ARDS diagnosis.
-* Snorkel supports weak-supervision and aggregation context; the project does not implement the Snorkel generative label model.
-
-When a proxy-state rule lacks adequate citation coverage:
-
-* use a precise `[CITATION REQUIRED: ...]` placeholder;
-* add it to the placeholder register;
-* record a deferred citation gap;
-* do not invent a clinical citation.
-
-Do not edit the bibliography or literature metadata during this task.
-
----
-
-# 6. Required Active Source Inspection
-
-## 6.1 PhysioNet Tagger
-
-Inspect the complete current active file:
-
-```text
-causal-irregular-time-series/src/tagging_latent_variables_physionet.py
-```
-
-Also inspect:
-
-```text
-causal-irregular-time-series/configs/physionet-global-variables.csv
-causal-irregular-time-series/SCRIPTS.md
-causal-irregular-time-series/src/dataset_config.py
-```
-
-Inspect relevant consumers or renderers only as needed:
-
-```text
-causal-irregular-time-series/src/decision_trees_plot.py
-causal-irregular-time-series/src/mortality_prediction_using_latents.py
-causal-irregular-time-series/src/matching_causal_effect.py
-causal-irregular-time-series/src/cate_estimation.py
-```
-
-Verify:
-
-* input artifact contract;
-* required columns;
-* feature extraction;
-* measurement aliases;
-* time-window behavior;
-* summary statistics;
-* threshold values;
-* logical operators;
-* missing-value behavior;
-* output ordering;
-* command-line options;
-* the meaning of `--optimized`;
-* the role and expected format of `--thresholds-path`;
-* output CSV schema;
-* decision-tree pickle output;
-* any difference between default and optimized thresholds.
-
-Do not assume the optimized-threshold mode was used in final results merely because the option exists.
-
-## 6.2 MIMIC Tagger
-
-Inspect the complete current active file:
-
-```text
-causal-irregular-time-series/src/tagging_latent_variables_mimiciii.py
-```
-
-Also inspect:
-
-```text
-causal-irregular-time-series/configs/mimic-global-variables.csv
-causal-irregular-time-series/src/preprocess_mimic_iii_large_contract.py
-causal-irregular-time-series/SCRIPTS.md
-```
-
-Verify all supported input modes:
-
-```text
-summary CSV
-canonical processed pickle
-raw concept CSV inputs
-```
-
-Verify:
-
-* which input modes are mutually exclusive;
-* how canonical pickle mode reconstructs the required summary features;
-* measurement aliases;
-* GCS reconstruction;
-* window or aggregation behavior;
-* threshold definitions;
-* logical combinations;
-* missing-value handling;
-* output latent ordering;
-* output artifact schemas;
-* validation-summary generation;
-* prevalence output;
-* mortality-by-tag output;
-* co-occurrence output;
-* decision-tree serialization.
-
-Do not infer which MIMIC input mode produced the final archive unless provenance evidence confirms it.
-
-## 6.3 Legacy and Draft Taggers
-
-Inspect, but do not use as the primary method unless execution evidence requires it:
-
-```text
-causal-irregular-time-series/src/draft/
-causal-irregular-time-series/src/draft/tagging_latent_variables_physionet_old.py
-causal-irregular-time-series/src/draft/tagging_latent_variables_mimiciii_old.py
-causal-irregular-time-series/src/draft/clinically_sufficient_tagging_latent_variables.py
-causal-irregular-time-series/src/draft/optimize_latent_thresholds.py
-```
-
-Also search for other similarly named active or historical files.
-
-Determine:
-
-* which files are explicitly designated active;
-* which are legacy;
-* whether any archived artifacts appear inconsistent with the active scripts;
-* whether threshold optimization belongs to the active final workflow or an older experiment.
-
-Do not silently blend rules from multiple implementations.
-
-When final artifact columns or metadata disagree with the active implementation, record the mismatch and limit the chapter wording.
-
----
-
-# 7. Required Artifact Inspection
-
-Read-only inspection is permitted for text, CSV, and JSON artifacts.
-
-## 7.1 PhysioNet Rule Artifacts
-
-Inspect:
-
-```text
-final-results/trees/physionet-tags/physionet-latent-tags.csv
-final-results/trees/physionet-tags/
-causal-irregular-time-series/trees/physionet-trees/
-```
-
-Verify:
-
-* file existence;
-* CSV headers;
-* identifier column;
-* proxy-state columns;
-* row count;
-* duplicate `ts_id` status;
-* whether values are binary;
-* whether column names and ordering match the active tagger;
-* matching tree pickle or image availability;
-* provenance evidence.
-
-Do not report prevalence values or cohort counts in Chapter 5.
-
-Do not deserialize a decision-tree pickle naively. Saved callables may depend on the producing script’s module context.
-
-## 7.2 MIMIC Rule and Validation Artifacts
-
-Inspect:
-
-```text
-final-results/trees/mimic-tags/latent_tags.csv
-final-results/trees/mimic-tags/latent_tags_with_features.csv
-final-results/trees/mimic-tags/prevalence.csv
-final-results/trees/mimic-tags/mortality_by_tag.csv
-final-results/trees/mimic-tags/cooccurrence_phi.csv
-final-results/trees/mimic-tags/validation_summary.json
-final-results/trees/mimic-tags/
-causal-irregular-time-series/trees/mimic-trees/
-```
-
-Verify schemas and internal consistency.
-
-Expected artifact meanings must be confirmed rather than assumed:
-
-```text
-latent_tags.csv
-    one row per ts_id with binary proxy-state columns
-
-latent_tags_with_features.csv
-    feature summaries plus proxy-state outputs
-
-prevalence.csv
-    counts and prevalence by proxy state
-
-mortality_by_tag.csv
-    unadjusted mortality association by proxy-state value
-
-cooccurrence_phi.csv
-    pairwise proxy-state association matrix
-
-validation_summary.json
-    summary metadata, sanity checks, prevalence and association records
-```
-
-Do not insert numerical values from these files into Chapter 5.
-
-Numerical prevalence, mortality association, and co-occurrence findings belong to the Results chapter after result-manifest validation.
-
-State clearly that `mortality_by_tag.csv` is associational and not causal evidence.
-
-## 7.3 Majority-Vote Artifacts
-
-Inspect:
-
-```text
-final-results/causal-outputs/outputs-*/majority_vote/latent_tags_majority_vote.csv
-final-results/causal-outputs/outputs-*/run_summary.json
-```
-
-Use `run_summary.json` where available to determine:
-
-* the voter input directory;
-* command invocation;
-* stage status;
-* output path;
-* dataset;
-* config reference.
-
-Do not assume that multiple identical majority-vote outputs are independent experimental results.
-
----
-
-# 8. Majority-Vote and Prediction-Handoff Source Inspection
-
-Inspect:
-
-```text
-causal-irregular-time-series/src/majority_vote_latents.py
-causal-irregular-time-series/src/split_predicted_latent_tags.py
-causal-irregular-time-series/main.py
-causal-irregular-time-series/scripts/run_main.sh
-router.py
-STraTS/src/main.py
-```
-
-Verify:
-
-* accepted voter file extension and discovery order;
-* required `ts_id` column;
-* duplicate-ID handling;
-* binary-value validation;
-* probability-column rejection or exclusion;
-* latent-column comparison;
-* treatment of additional or missing columns;
-* identifier intersection or join behavior;
-* output row ordering;
-* voter count;
-* majority threshold;
-* exact tie convention;
-* output schema;
-* output path;
-* how the output becomes the latent input for mortality, matching, and CATE stages.
-
-The expected behavior is that voting occurs over binary-only voter CSVs aligned on shared `ts_id`, with ties assigned to 1, but confirm this directly from current source before writing it as fact.
-
-Do not describe majority vote as:
-
-* clinical consensus;
-* expert adjudication;
-* ground truth;
-* validated ensemble superiority;
-* a probabilistic label model.
-
-It is a deterministic aggregation rule over available binary voters.
-
----
-
-# 9. Allowed Edit Scope
-
-You may edit:
-
-```text
-thesis-writing/thesis/chapters/05_proxy_state_construction.tex
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-```
-
-You may create:
-
-```text
-thesis-writing/logs/stage_4_3_evidence_report.md
-```
-
-The clean build may update:
-
-```text
-thesis-writing/thesis/main.pdf
-```
-
-Do not manually edit the PDF.
-
-A narrow compilation-only repair may be made to:
-
-```text
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/latexmkrc
-```
-
-only when required by a fatal build error and fully documented.
-
-Do not edit:
-
-```text
-Chapters 1–4
-Chapter 6
-Chapters 7–12
-front matter
-appendices
-planning files
-audit files
-literature metadata
-bibliography
-research code
-config files
-result artifacts
-```
-
-Do not update the stale thesis README during this task. That is already recorded as a deferred issue.
-
----
-
-# 10. Forbidden Actions
-
-Do not:
-
-* modify proxy-state thresholds;
-* optimize thresholds;
-* run Optuna;
-* rerun the taggers;
-* regenerate majority-vote outputs;
-* run mortality prediction;
-* run matching or causal estimation;
-* regenerate decision trees;
-* deserialize unknown tree pickles directly;
-* modify result CSVs or JSON;
-* add clinical claims absent from code or literature;
-* call proxy states diagnoses or ground truth;
-* call majority vote clinical consensus;
-* present prevalence values;
-* present mortality rates or risk ratios;
-* present co-occurrence values;
-* present predictive metrics;
-* present causal estimates;
-* claim final artifact provenance where it remains incomplete;
-* repair research code;
-* add bibliography entries;
-* commit or push.
-
----
-
-# 11. Evidence-Strength Policy
-
-For each technical statement, classify its evidence internally as:
-
-```text
-LITERATURE-GROUNDED
-IMPLEMENTATION-CONFIRMED
-CONFIGURATION-CONFIRMED
-ARTIFACT-SCHEMA-CONFIRMED
-EXECUTION-SUPPORTED
-PROVENANCE-INCOMPLETE
-CLINICAL-VALIDATION-INCOMPLETE
-BLOCKED
-```
-
-The evidence report must show these classifications.
-
-The main prose should use wording no stronger than the evidence supports.
-
-Acceptable:
-
-```text
-The implementation defines a renal-dysfunction proxy using creatinine- and urine-related measurements.
-```
-
-```text
-The rule is clinically inspired by renal-dysfunction criteria but is not a complete adjudicated KDIGO diagnosis.
-```
-
-```text
-The archived CSV has the schema expected from the active tagger, although the producing command and input-artifact hash are not fully documented.
-```
-
-Not acceptable:
-
-```text
-Patients with this tag had confirmed acute kidney injury.
-```
-
-```text
-The proxy states were clinically validated.
-```
-
-```text
-The majority vote produces the true patient state.
-```
-
-```text
-The tree figures prove that the active tagger generated the final CSVs.
-```
-
----
-
-# 12. Chapter 5 Requirements
-
-## 12.1 Chapter Opening
-
-Open with a concise explanation that:
-
-* the project transforms heterogeneous irregular ICU measurements into a smaller set of interpretable binary constructs;
-* these constructs provide supervised targets for the predictive models and exposures for downstream observational analyses;
-* their interpretability comes from explicit rules;
-* their labels are proxies rather than verified diagnoses;
-* their value depends on construct validity, data availability, measurement quality, and clinical review.
-
-Cross-reference Chapter 3 for formal task definitions and Chapter 6 for predictive-model mechanics.
-
-Do not repeat the complete preprocessing chapter.
-
----
-
-## 12.2 C5.1 — Rationale and Terminology
-
-Define and distinguish:
-
-```text
-proxy state
-proxy phenotype
-clinically inspired proxy label
-rule-based proxy state
-predicted proxy state
-majority-vote proxy state
-binary proxy-state tag
-```
-
-Explain the repository’s historical use of:
-
-```text
-latent
-latent variable
-LAT_*
-```
-
-State that the thesis retains `LAT_*` as stable implementation column names while using “proxy state” in explanatory prose.
-
-Explain that the proxy-state framework is intended to:
-
-* compress multivariate measurements into interpretable constructs;
-* supply weak or rule-derived supervised targets;
-* establish consistent variables for downstream analyses;
-* preserve a transparent mapping to source measurements.
-
-Explain limitations:
-
-* no chart-adjudicated reference labels were found;
-* thresholds approximate clinical criteria;
-* source-variable availability differs between datasets;
-* missing measurements can prevent rules from firing;
-* a negative proxy tag does not prove absence of disease;
-* a positive proxy tag does not establish a diagnosis;
-* cross-dataset states with similar names need not be identical constructs.
-
-Use:
-
-```text
-banda_2018_electronic_phenotyping
-```
-
-for general electronic-phenotyping context.
-
-Use:
-
-```text
-ratner_et_al_2020_snorkel
-```
-
-only for weak-label and aggregation context, not to claim the project implements Snorkel.
-
-Retain a clinical-review placeholder when final terminology or construct validity requires advisor or clinician approval.
-
----
-
-## 12.3 C5.2 — PhysioNet Proxy-State Rules
-
-Document the exact active PhysioNet proxy-state set.
-
-The expected active columns include:
-
-```text
-LAT_CHRONIC_BASELINE_RISK
-LAT_GLOBAL_SEVERITY
-LAT_SHOCK
-LAT_RESPIRATORY_FAILURE
-LAT_RENAL_DYSFUNCTION
-LAT_HEPATIC_DYSFUNCTION
-LAT_COAG_HEME_DYSFUNCTION
-LAT_INFLAMMATION_SEPSIS_BURDEN
-LAT_NEUROLOGIC_DYSFUNCTION
-LAT_CARDIAC_INJURY_STRAIN
-LAT_METABOLIC_DERANGEMENT
-```
-
-Verify this list from current source and artifact headers.
-
-For each state, determine:
-
-* exact output column;
-* clinical construct;
-* source measurement families;
-* temporal summary or aggregation;
-* threshold or logical rule;
-* handling of missing inputs;
-* clinical grounding citation;
-* implementation status;
-* validation limitation.
-
-Do not copy large blocks of Python into the thesis.
-
-Translate the implementation into readable scientific prose and a compact table.
-
-### PhysioNet Rule Table
-
-Create a table or a set of tables corresponding to:
-
-```text
-T-PROXY-01
-```
-
-Suggested columns:
-
-```text
-Proxy-state column
-Construct represented
-Input measurements
-Rule structure or threshold family
-Temporal aggregation
-Clinical grounding
-Validation status
-```
-
-Include exact numeric thresholds where they are central to reproducibility and clearly verified from active source.
-
-Do not include prevalence or mortality results.
-
-When a state combines several clauses, summarize the logical structure accurately using terms such as:
-
-```text
-any-of
-all-of
-threshold exceedance
-minimum
-maximum
-mean
-last observed value
-early-window summary
-record-level summary
-```
-
-Use equations only when they improve clarity.
-
-### PhysioNet Optimized Mode
-
-Explain `--optimized` and `--thresholds-path` only after verifying them.
-
-Distinguish:
-
-```text
-default clinically inspired thresholds
-optional externally supplied optimized thresholds
-```
-
-Do not state which was used for final artifacts without evidence.
-
-When the producing threshold file is unavailable, retain:
-
-```text
-[VALIDATION REQUIRED: identify whether the archived PhysioNet proxy-state CSV used default or externally optimized thresholds and record the threshold-file provenance]
-```
-
-### PhysioNet Tree Artifacts
-
-Do not include decision-tree images unless their provenance and correspondence with the active rule set are verified.
-
-When unverified, retain a precise figure placeholder rather than inserting the image.
-
----
-
-## 12.4 C5.3 — MIMIC Proxy-State Rules and Validation Artifacts
-
-Document the exact active MIMIC proxy-state set.
-
-The expected active columns include:
-
-```text
-LAT_CHRONIC_BURDEN
-LAT_INFLAMMATION_SEPSIS
-LAT_GLOBAL_SEVERITY
-LAT_SHOCK
-LAT_RESPIRATORY_FAILURE
-LAT_RENAL_DYSFUNCTION
-LAT_HEPATIC_COAG_DYSFUNCTION
-LAT_NEUROLOGIC_DYSFUNCTION
-LAT_METABOLIC_DERANGEMENT
-LAT_CARDIAC_STRAIN
-```
-
-Verify the list from current source and artifact headers.
-
-Explain differences from PhysioNet, including where verified:
-
-* chronic burden versus chronic baseline risk;
-* combined hepatic/coagulation state versus separate states;
-* inflammation/sepsis naming;
-* cardiac strain naming;
-* differences in available measurement families;
-* reconstruction of MIMIC summary features from canonical events;
-* source-table or concept aliases.
-
-Do not imply the two datasets use identical definitions simply because constructs have similar names.
-
-### MIMIC Input Modes
-
-Explain the three supported input paths:
-
-```text
-precomputed summary CSV
-canonical processed pickle
-raw concept CSVs
-```
-
-Describe:
-
-* how exactly one input mode is selected;
-* how the canonical pickle is transformed into rule-needed summaries;
-* relevant measurement aliases;
-* GCS reconstruction;
-* any differences in available features by input mode.
-
-Do not state which mode generated the final archive unless execution evidence proves it.
-
-### MIMIC Rule Table
-
-Extend `T-PROXY-01` with MIMIC rows or create a separate MIMIC table using the same schema.
-
-For every state, record:
-
-* output name;
-* input feature families;
-* rule logic;
-* temporal or record aggregation;
-* clinical grounding;
-* cross-dataset correspondence;
-* validation status.
-
-### Validation Artifacts
-
-Explain the purpose and schema of:
-
-```text
-prevalence.csv
-mortality_by_tag.csv
-cooccurrence_phi.csv
-validation_summary.json
-latent_tags_with_features.csv
-```
-
-Do not insert their numerical contents.
-
-State explicitly:
-
-* prevalence is a descriptive property of the proxy labels;
-* mortality-by-tag is an unadjusted association;
-* risk ratios in that file are not causal estimates;
-* co-occurrence measures association between proxy states;
-* validation summaries provide sanity checks, not clinical adjudication;
-* no expert chart-review validation artifact was found unless new evidence proves otherwise.
-
-Use citations conservatively for clinical grounding.
-
-Add a supervisor or clinical-review placeholder for combined or ambiguous constructs where needed.
-
----
-
-## 12.5 C5.4 — Predicted and Majority-Vote Proxy States
-
-Begin by distinguishing three sources:
-
-```text
-rule-derived proxy state
-model-predicted proxy state
-majority-vote proxy state
-```
-
-Explain that these can share `LAT_*` column names while representing different generation mechanisms.
-
-### Prediction Normalization
-
-Cross-reference Chapter 6 rather than repeating model architecture.
-
-Explain:
-
-* prediction exports contain `ts_id`, probability columns, and thresholded binary columns;
-* the downstream voter format requires only `ts_id` and binary proxy columns;
-* `split_predicted_latent_tags.py` separates probabilities and binary tags;
-* probability outputs are not directly supplied as binary voters;
-* target column ordering must remain consistent.
-
-Do not claim that final predictions are test-only or out-of-sample while export provenance remains incomplete.
-
-### Majority-Vote Algorithm
-
-Describe the exact verified algorithm.
-
-At minimum establish:
-
-* voter file discovery;
-* number of voters;
-* ID normalization;
-* duplicate handling;
-* use of shared `ts_id`;
-* whether the output uses the intersection of IDs;
-* latent-column matching;
-* binary-value validation;
-* vote threshold;
-* tie handling;
-* deterministic output schema.
-
-When verified, define the vote mathematically.
-
-For record (i), proxy state (k), and (M) voter files, a suitable expression is:
-
-```latex
-\[
-\widetilde{Z}_{ik}
-=
-\mathbb{I}
-\left(
-\sum_{m=1}^{M} Z_{ik}^{(m)}
-\geq \tau_M
-\right),
-\]
-```
-
-where `\tau_M` must match the exact code.
-
-Explain explicitly whether an even-voter tie is mapped to 1.
-
-Do not use this equation until the current source confirms the threshold.
-
-### Interpretation Boundary
-
-State that majority voting:
-
-* aggregates model outputs;
-* does not establish clinical truth;
-* does not remove shared model bias;
-* does not guarantee independence among voters;
-* can amplify correlated errors;
-* depends on identical construct definitions and aligned IDs;
-* depends on the exact voter set supplied to each causal run.
-
-Use the Snorkel citation only as broad weak-supervision context and explain that no generative label model is used.
-
-### Voter Provenance
-
-Retain an actionable placeholder such as:
-
-```text
-[VALIDATION REQUIRED: create a per-run voter manifest listing every binary voter CSV, source predictive model, export split, checkpoint hash, input-artifact hash, row count, latent ordering, and majority-vote output hash]
-```
-
-Do not claim a specific final voter composition without a manifest or run-summary evidence.
-
----
-
-# 13. Clinical Citation-Coverage Matrix
-
-As part of the evidence report, create a citation-coverage matrix.
-
-For each proxy state record:
-
-```text
-dataset
-proxy-state column
-clinical construct
-implemented measurements
-implemented threshold/rule family
-candidate clinical citation
-degree of alignment with citation
-limitations
-citation status
-```
-
-Use statuses:
-
-```text
-SUPPORTED FOR BROAD CLINICAL GROUNDING
-PARTIALLY ALIGNED
-CITATION EXISTS BUT LOCAL PDF MISSING
-CITATION GAP
-CLINICAL REVIEW REQUIRED
-```
-
-Do not claim that a citation validates the exact implementation merely because the clinical topic is similar.
-
-When an exact threshold or combination is project-specific, state that explicitly.
-
----
-
-# 14. Placeholder Policy
-
-Remove the generic Chapter 5 placeholders:
-
-```text
-[STAGE 4 DRAFT REQUIRED]
-[VALIDATION REQUIRED]
-[TABLE REQUIRED]
-```
-
-when the associated material is drafted or replaced by a precise evidence gate.
-
-Appropriate remaining placeholders may include:
-
-```text
-[SUPERVISOR DECISION REQUIRED: approve “proxy state” as the primary thesis term and review the construct-level wording]
-```
-
-```text
-[VALIDATION REQUIRED: identify whether the archived PhysioNet proxy-state CSV used default or optimized thresholds]
-```
-
-```text
-[VALIDATION REQUIRED: identify the MIMIC tagger input mode, source artifact hash, producing command, and source commit for the archived tag CSV]
-```
-
-```text
-[VALIDATION REQUIRED: verify the provenance and active-rule correspondence of the planned proxy-state decision-tree figures]
-```
-
-```text
-[VALIDATION REQUIRED: create a per-run majority-vote voter manifest]
-```
-
-```text
-[CITATION REQUIRED: clinical grounding for <specific proxy state or rule clause>]
-```
-
-Every placeholder must be added to:
-
-```text
-thesis-writing/logs/unresolved_placeholders.md
-```
-
-For each entry record:
-
-* file;
-* section;
-* exact placeholder;
-* reason;
-* required evidence;
-* expected resolution stage;
-* status.
-
-Do not leave generic placeholders without context.
-
----
-
-# 15. Deferred-Fix Collection
-
-Review all existing deferred issues.
-
-Do not silently resolve unrelated issues from Stages 4.0–4.2.
-
-Pay particular attention to the existing predictive-provenance issues because C5.4 depends on them:
-
-```text
-DF-4.1-002
-DF-4.2-002
-DF-4.2-003
-DF-4.2-004
-```
-
-Append new Stage 4.3 issues with IDs beginning:
-
-```text
-DF-4.3-
-```
-
-Potential issues to assess include:
-
-* active tagger disagreeing with archived CSV columns;
-* archived artifacts matching a legacy tagger rather than the active tagger;
-* unknown PhysioNet default-versus-optimized threshold provenance;
-* unavailable optimized threshold file;
-* unknown MIMIC input mode;
-* MIMIC feature reconstruction differing by input mode;
-* incomplete clinical citation coverage;
-* no clinician or chart-review validation;
-* decision-tree figure provenance absent;
-* decision-tree pickle portability;
-* MIMIC and PhysioNet constructs sharing names but using materially different definitions;
-* majority-vote tie-to-one convention requiring justification;
-* voter input directories not archived;
-* incomplete voter-file manifests;
-* probability columns accidentally entering voter inputs;
-* mismatched latent ordering between voters;
-* inconsistent row intersections across causal runs;
-* duplicate or nonbinary voter values;
-* result artifacts existing without input hashes or source commits.
-
-For every item record:
-
-```text
-ID
-area
-path
-issue
-evidence
-impact
-recommended later action
-urgency
-```
-
-Do not fix research code or regenerate artifacts during this task.
-
----
-
-# 16. Stage 4.3 Evidence Report
-
-Create:
-
-```text
-thesis-writing/logs/stage_4_3_evidence_report.md
-```
-
-It must contain:
-
-## 16.1 Git State
-
-Record:
-
-* branch;
-* verification of `c9f6b12`;
-* initial status;
-* final status;
-* Stage 4.3 files changed;
-* unrelated pre-existing changes.
-
-## 16.2 Baseline Build
-
-Record:
-
-* commands;
-* return status;
-* PDF path;
-* baseline page count;
-* warnings.
-
-## 16.3 Files Inspected
-
-Group by:
-
-* thesis and logs;
-* planning;
-* audit;
-* literature;
-* active PhysioNet tagging;
-* active MIMIC tagging;
-* legacy taggers;
-* prediction normalization;
-* majority voting;
-* orchestration;
-* rule artifacts;
-* validation artifacts;
-* tree artifacts.
-
-## 16.4 Active-Implementation Decision
-
-State explicitly:
-
-* the active PhysioNet tagger;
-* the active MIMIC tagger;
-* which files were classified legacy;
-* evidence supporting the classification;
-* whether archived artifacts match the active implementations.
-
-## 16.5 PhysioNet Rule Matrix
-
-For each PhysioNet proxy state list:
-
-```text
-column
-construct
-source features
-time or record summary
-threshold logic
-missingness behavior
-clinical citation
-implementation evidence
-artifact evidence
-validation limitation
-```
-
-## 16.6 MIMIC Rule Matrix
-
-For each MIMIC proxy state list the same fields, plus:
-
-```text
-available input modes
-canonical-pickle aliasing or reconstruction behavior
-cross-dataset correspondence
-```
-
-## 16.7 Clinical Citation-Coverage Matrix
-
-Include the matrix required above.
-
-## 16.8 Artifact-Schema Audit
-
-Record schemas and checks for:
-
-```text
-PhysioNet proxy tags
-MIMIC proxy tags
-MIMIC proxy tags with features
-MIMIC prevalence
-MIMIC mortality by tag
-MIMIC co-occurrence
-MIMIC validation summary
-majority-vote tags
-```
-
-Include:
-
-* row granularity;
-* key columns;
-* binary validation;
-* duplicate-ID status;
-* row counts for audit only;
-* provenance status.
-
-Do not copy audit row counts into the thesis chapter unless explicitly approved later.
-
-## 16.9 Majority-Vote Contract
-
-Record:
-
-* voter discovery;
-* required schema;
-* binary validation;
-* ID alignment;
-* latent alignment;
-* vote threshold;
-* tie handling;
-* output schema;
-* run-summary linkage;
-* provenance limitations.
-
-## 16.10 Citations Used
-
-List every citation key inserted and the exact claim type it supports.
-
-## 16.11 Placeholders
-
-List:
-
-* generic placeholders resolved;
-* precise placeholders retained;
-* new placeholders;
-* expected resolution stage.
-
-## 16.12 Deferred Fixes
-
-List:
-
-* previously known issues confirmed;
-* issues resolved through evidence only;
-* new `DF-4.3-*` items.
-
-## 16.13 Final Build
+## 3.3 Baseline Thesis Build
 
 Run:
 
@@ -1406,171 +198,965 @@ pdfinfo main.pdf
 Record:
 
 * return status;
-* PDF path;
-* final page count;
-* citation status;
-* reference status;
+* page count;
+* citation and reference status;
 * duplicate-label status;
 * fatal errors;
-* nonfatal warnings.
-
-## 16.14 Readiness
-
-Use one of:
-
-```text
-READY FOR STAGE 4.4
-READY WITH NON-BLOCKING WARNINGS
-BLOCKED BEFORE STAGE 4.4
-```
-
-Stage 4.4 will draft the causal graph and causal-effect methodology chapter.
-
-Do not begin Stage 4.4.
+* existing nonfatal warnings.
 
 ---
 
-# 17. Validation Requirements
+# 4. Complete Prompt-and-Document Inventory
 
-## 17.1 Terminology Validation
-
-Search Chapter 5 for:
+Inspect every file under:
 
 ```text
-diagnosis
-diagnosed
-confirmed disease
+thesis-writing/prompts-and-documents/
+```
+
+Create an inventory containing:
+
+```text
+path
+file type
+size
+SHA-256
+apparent role
+dataset
+prompt/output/internal-document classification
+version status
+relationship to another file
+author or generator metadata, when available
+creation/modification metadata, when available
+text extraction status
+provenance confidence
+```
+
+Use commands such as:
+
+```bash
+find thesis-writing/prompts-and-documents -maxdepth 1 -type f -printf '%f\t%s bytes\n' | sort
+sha256sum thesis-writing/prompts-and-documents/*
+file thesis-writing/prompts-and-documents/*
+```
+
+Do not edit the prompt or document artifacts.
+
+---
+
+# 5. PDF and DOCX Inspection
+
+## 5.1 PDF Files
+
+For each PDF, run:
+
+```bash
+pdfinfo "<file>"
+pdftotext -layout "<file>" -
+```
+
+Save temporary extracted text outside tracked thesis directories when useful.
+
+Determine:
+
+* title;
+* page count;
+* whether it appears to be an LLM output;
+* whether it contains a model/product identifier;
+* whether it contains citations;
+* whether it contains prompt text or only generated results;
+* whether it is duplicated by a DOCX;
+* whether it is an old or final report;
+* whether it directly informed source code.
+
+Do not treat PDF formatting as scientific validation.
+
+## 5.2 DOCX Files
+
+Inspect DOCX contents without modifying them.
+
+Use an appropriate method such as:
+
+```bash
+python - <<'PY'
+from pathlib import Path
+from docx import Document
+
+for path in sorted(Path("thesis-writing/prompts-and-documents").glob("*.docx")):
+    doc = Document(path)
+    print(f"\n===== {path} =====")
+    for paragraph in doc.paragraphs:
+        text = paragraph.text.strip()
+        if text:
+            print(text)
+PY
+```
+
+Also inspect document metadata when available.
+
+Determine whether PDF/DOCX pairs contain equivalent content.
+
+When they differ, identify which appears newer and do not silently choose one as authoritative.
+
+---
+
+# 6. Prompt-Version Audit
+
+Compare:
+
+```text
+general-purpose-latent-causal-model-prompt.txt
+physionet-prompt.txt
+mimic-prompt.txt
+old-physionet-prompt.txt
+old-mimic-prompt.txt
+```
+
+Establish:
+
+1. Whether the final dataset-specific prompts are derived from the general template.
+2. Which global substitutions were made.
+3. Whether the final PhysioNet and MIMIC prompts differ only in dataset variables or have substantive differences.
+4. How each final prompt differs from its `old-*` version.
+5. Which version was actually used to produce each generated report.
+6. Whether follow-up prompts or manual edits occurred.
+7. Whether the exact prompt text is sufficient to reproduce the documented output.
+
+Generate unified diffs for audit purposes:
+
+```bash
+diff -u \
+  thesis-writing/prompts-and-documents/old-physionet-prompt.txt \
+  thesis-writing/prompts-and-documents/physionet-prompt.txt || true
+
+diff -u \
+  thesis-writing/prompts-and-documents/old-mimic-prompt.txt \
+  thesis-writing/prompts-and-documents/mimic-prompt.txt || true
+```
+
+Do not paste the full 700-plus-line prompt into the main thesis chapter.
+
+Instead, document its structure and preserve the exact files as versioned supplementary artifacts.
+
+---
+
+# 7. Extract the Actual Prompt Protocol
+
+From the final prompt template, document the verified protocol.
+
+At minimum identify:
+
+* assigned expert role;
+* declared research mission;
+* dataset variables and official dataset-documentation link;
+* dataset audit;
+* deep-research requirements;
+* candidate latent-state discovery;
+* observed-to-latent measurement model;
+* mortality mechanism;
+* missingness and irregular-sampling analysis;
+* latent-state selection;
+* rule-based binary proxy construction;
+* leakage restrictions;
+* causal-DAG construction;
+* confounder, mediator, and collider analysis;
+* iterative validation;
+* adversarial critique;
+* required report structure;
+* implementation specification.
+
+Also record risky wording inside the prompt, including language such as:
+
+```text
+true hidden clinical states
+most clinically plausible DAG
+causal correctness
+clinically justified latent DAG
+```
+
+Explain that these are **prompt objectives**, not evidence that the returned constructs are true, identified, clinically validated, or causally correct.
+
+---
+
+# 8. Determine the Actual LLM Execution Provenance
+
+Search all new documents and repository history for:
+
+```text
+model provider
+product or interface
+model name
+model version
+run date
+conversation date
+deep-research mode
+browsing mode
+temperature
+reasoning setting
+system prompt
+follow-up prompts
+human edits
+reviewer names or roles
+clinical reviewer
+output export method
+```
+
+Do not infer these values.
+
+When undocumented, create precise placeholders:
+
+```text
+[VALIDATION REQUIRED: identify the LLM provider, product, and exact model/version used for the final PhysioNet prompt run]
+```
+
+```text
+[VALIDATION REQUIRED: identify the LLM provider, product, and exact model/version used for the final MIMIC-III prompt run]
+```
+
+```text
+[VALIDATION REQUIRED: record run dates, research/browsing mode, available generation settings, follow-up prompts, and export procedure]
+```
+
+```text
+[SUPERVISOR DECISION REQUIRED: document the human and clinical review applied to LLM-proposed ontology, rules, and DAG edges]
+```
+
+A prompt file alone does not prove which model executed it.
+
+A generated PDF alone does not prove that all recommendations were accepted into the implementation.
+
+---
+
+# 9. Prompt-Output-to-Code Traceability
+
+Create a traceability matrix mapping:
+
+```text
+prompt requirement
+generated-report recommendation
+implemented source location
+implemented proxy/DAG element
+agreement status
+difference
+human-review evidence
+artifact evidence
+confidence
+```
+
+Cover at minimum:
+
+* PhysioNet latent-state set;
+* MIMIC latent-state set;
+* PhysioNet rule families;
+* MIMIC rule families;
+* PhysioNet DAG nodes and edges;
+* MIMIC DAG nodes and edges;
+* measurement-process or missingness nodes;
+* mortality pathways;
+* confounder/mediator/collider recommendations;
+* rejected prompt recommendations;
+* recommendations that were never implemented;
+* implementation elements absent from the LLM reports.
+
+Use statuses:
+
+```text
+DIRECTLY ALIGNED
+PARTIALLY ALIGNED
+IMPLEMENTATION MODIFIED
+PROMPT RECOMMENDATION NOT IMPLEMENTED
+IMPLEMENTATION NOT FOUND IN PROMPT OUTPUT
+RELATIONSHIP UNCLEAR
+```
+
+Do not assume that textual similarity proves direct provenance.
+
+The active source code remains authoritative for what the executable pipeline implements.
+
+The LLM output remains authoritative only for documenting the design proposal it contains.
+
+---
+
+# 10. Correct the Literature Scope
+
+The current literature README and citation plan state that LLM literature is out of scope.
+
+That statement is now incomplete.
+
+Update:
+
+```text
+thesis-writing/literature/README.md
+thesis-writing/planning/citation_plan.md
+```
+
+The corrected distinction should be:
+
+```text
+No LLM is used as an execution-time predictive or causal estimator in the CliniCause pipeline. However, an LLM-assisted research and expert-elicitation process was used during proxy-ontology, rule, and DAG design. Literature concerning LLM use as a domain expert, clinical reasoning aid, prompt engineering, reliability, hallucination, and human oversight is therefore relevant to the methodology and limitations discussion.
+```
+
+Do not automatically add new BibTeX records from generated reports.
+
+First inspect whether the current corpus already contains suitable sources.
+
+When it does not, create:
+
+```text
+thesis-writing/literature/llm_methodology_candidate_additions.md
+```
+
+The candidate-additions file should specify the literature roles needed:
+
+* LLMs as medical or domain-expert assistants;
+* evaluation of LLM medical reasoning reliability;
+* prompt-engineering methodology;
+* reproducibility and reporting of LLM-assisted research;
+* human oversight and hallucination risk;
+* LLM-assisted causal or ontology construction, when supported by appropriate literature.
+
+Add explicit citation gaps to the citation plan, for example:
+
+```text
+CIT-GAP-004 — Evidence for using LLMs as domain-expert or evidence-synthesis assistants in medicine.
+CIT-GAP-005 — Prompt-engineering and reproducibility guidance for the exact multi-phase elicitation protocol.
+CIT-GAP-006 — Limitations, hallucination, bias, and human-validation requirements for LLM-generated clinical and causal structures.
+```
+
+Do not invent citation keys.
+
+Do not add a paper merely because it appears in an LLM-generated bibliography.
+
+---
+
+# 11. Correct the Stage 2 and Stage 3 Evidence Base
+
+## 11.1 New Audit File
+
+Create:
+
+```text
+thesis-writing/audit/llm_prompt_provenance_audit.md
+```
+
+It must contain:
+
+1. Artifact inventory.
+2. Prompt version comparison.
+3. Prompt execution metadata.
+4. Output-document relationships.
+5. Prompt-output-to-code traceability.
+6. Scientific role.
+7. Clinical and causal limitations.
+8. Missing provenance.
+9. Citation needs.
+10. Recommended thesis wording.
+
+## 11.2 Existing Audit Files
+
+Update only where necessary:
+
+```text
+thesis-writing/audit/repository_map.md
+thesis-writing/audit/evidence_inventory.md
+thesis-writing/audit/terminology_map.md
+thesis-writing/audit/unresolved_questions.md
+thesis-writing/audit/claim_evidence_ledger.csv
+```
+
+Add a distinct evidence class for:
+
+```text
+LLM-DESIGN-ARTIFACT
+```
+
+Do not classify an LLM report as:
+
+```text
+clinical validation
+execution evidence
 ground truth
-gold standard
-true state
-clinically validated
-clinical consensus
-latent disease
-causes mortality
-causal validation
-treatment recommendation
-actionable
+result-confirmed
+causal identification
 ```
 
-Every occurrence must be:
-
-* removed;
-* explicitly qualified;
-* part of a literature discussion;
-* or documented as a problem.
-
-Ensure consistent distinction among:
+Recommended wording-strength categories include:
 
 ```text
-rule-derived proxy state
-predicted proxy state
-majority-vote proxy state
-probability output
-binary prediction
-proxy-state exposure
+LLM-PROPOSED
+PROJECT-REVIEWED
+IMPLEMENTATION-CONFIRMED
+CLINICAL-REVIEW-INCOMPLETE
+PROVENANCE-INCOMPLETE
 ```
 
-## 17.2 Rule Validation
+---
 
-For every table row and every threshold in prose:
+# 12. Correct the Thesis Story and Planning Files
 
-* verify it against the active source;
-* verify units;
-* verify comparison direction;
-* verify any AND/OR grouping;
-* verify temporal summary;
-* verify missing-input handling;
-* verify dataset;
-* verify output column.
-
-Do not infer a clinical threshold from a citation when the implementation differs.
-
-## 17.3 Dataset-Difference Validation
-
-Confirm that the chapter does not conflate:
+Update:
 
 ```text
-LAT_CHRONIC_BASELINE_RISK
-LAT_CHRONIC_BURDEN
+thesis-writing/planning/thesis_story.md
+thesis-writing/planning/thesis_outline.md
+thesis-writing/planning/chapter_evidence_map.md
+thesis-writing/planning/terminology_and_notation.md
+thesis-writing/planning/citation_plan.md
+thesis-writing/planning/table_plan.md
+thesis-writing/planning/figure_plan.md
+thesis-writing/planning/writing_order.md
+thesis-writing/planning/stage4_prompt_queue.md
 ```
+
+## 12.1 Thesis Story
+
+Replace unqualified claims such as:
 
 ```text
-LAT_HEPATIC_DYSFUNCTION
-LAT_COAG_HEME_DYSFUNCTION
-LAT_HEPATIC_COAG_DYSFUNCTION
+clinician-authored DAG
 ```
+
+with wording supported by the new evidence, such as:
 
 ```text
-LAT_INFLAMMATION_SEPSIS_BURDEN
-LAT_INFLAMMATION_SEPSIS
+project-specified, LLM-assisted DAG
 ```
+
+or:
 
 ```text
-LAT_CARDIAC_INJURY_STRAIN
-LAT_CARDIAC_STRAIN
+dataset-specific project DAG developed through LLM-assisted evidence synthesis and subsequently encoded in source code
 ```
 
-Explain differences only to the degree supported by source.
+Do not claim clinical authorship or approval unless a named clinical-review process is documented.
 
-## 17.4 Majority-Vote Validation
+The main thesis story should now include:
 
-Confirm:
+* LLM-assisted ontology and DAG elicitation as a methodological component;
+* source-code implementation as the operational layer;
+* evidence tracking and human review as safeguards;
+* explicit separation from automated causal discovery and clinical validation.
 
-* only binary columns are treated as voters;
-* probability columns are excluded;
-* all voter files contain `ts_id`;
-* latent columns are aligned;
-* tie handling matches source;
-* output is not called truth;
-* final voter provenance remains qualified.
+## 12.2 Research Questions
 
-## 17.5 Citation Validation
+Consider adding or refining a secondary research question such as:
 
-Confirm that:
+```text
+How can a structured LLM-assisted elicitation protocol be used to propose clinically interpretable proxy states and causal structures, and how do those proposals differ from the final source-code implementation?
+```
 
-* every inserted key exists in `references.bib`;
-* no key is invented;
-* clinical sources are not presented as validation of the exact proxy implementation;
-* missing local PDFs are handled according to the citation plan;
-* Biber reports no unresolved citations.
+Do not make this a research question when the available evidence cannot answer it. In that case, classify it as a methodology or reproducibility question.
 
-## 17.6 Table Validation
+## 12.3 Chapter Allocation
 
-Use stable unique labels, for example:
+Plan LLM-related material across:
+
+### Chapter 5
+
+* prompt-assisted proxy-state ontology and rule elicitation;
+* distinction between LLM proposal and implemented rule;
+* prompt-output-to-code traceability;
+* clinical-validation limitations.
+
+### Chapter 7
+
+* prompt-assisted causal ontology and DAG elicitation;
+* distinction from causal discovery or graph learning;
+* final source-code graph as the implemented object;
+* human/clinical review status;
+* prompt wording risks and causal assumptions.
+
+### Chapter 9
+
+* exact prompt version;
+* prompt hashes;
+* model/provider/version;
+* run date and settings;
+* report files;
+* prompt-version history;
+* human review;
+* reproducibility protocol.
+
+### Chapter 11
+
+* hallucination risk;
+* anchoring and confirmation bias;
+* opaque model updates;
+* non-determinism;
+* clinical expertise limitations;
+* source-selection bias;
+* causal-direction errors;
+* need for independent review.
+
+### Appendix
+
+* exact final generic prompt;
+* exact final PhysioNet prompt;
+* exact final MIMIC prompt;
+* prompt hashes;
+* old-versus-final change summary;
+* report and manager-summary inventory.
+
+Do not insert the entire prompts into the main methods narrative.
+
+---
+
+# 13. Add Figure and Table Plans
+
+Add a planned non-result methods figure:
+
+```text
+F-LLM-ELICITATION-01
+```
+
+Suggested purpose:
+
+```text
+Show the traceable workflow from general prompt template, through dataset-specific prompt execution and generated candidate report, to human/project review, source-code implementation, artifact validation, and thesis claims.
+```
+
+The figure must make clear that:
+
+```text
+LLM output ≠ implemented code ≠ clinical validation
+```
+
+Do not generate the figure during this repair unless the existing planning policy clearly permits it.
+
+Add planned tables:
+
+```text
+T-LLM-PROVENANCE-01
+    Prompt, model, run, output, hash, and review provenance.
+
+T-LLM-TRACEABILITY-01
+    Mapping from LLM-proposed ontology/rules/DAG elements to active source implementation.
+
+T-PROMPT-VERSION-01
+    Old versus final prompt differences and methodological implications.
+```
+
+Do not insert invented model metadata.
+
+---
+
+# 14. Repair Chapter 3
+
+Edit narrowly:
+
+```text
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
+```
+
+Do not rewrite the chapter.
+
+Add a concise study-design disclosure explaining:
+
+* candidate proxy-state definitions and DAG structure were informed by a structured LLM-assisted elicitation process;
+* the LLM did not learn labels or a graph from patient-level data;
+* the active tagger and DAG source files define the implemented objects;
+* LLM-generated recommendations are design evidence, not validation;
+* final causal interpretation still depends on assumptions and review.
+
+Revise this type of wording:
+
+```text
+project-authored DAG
+```
+
+to reflect LLM assistance without overstating provenance.
+
+A suitable form is:
+
+```text
+project-specified DAG developed through an LLM-assisted clinical and causal elicitation protocol and subsequently encoded in source code
+```
+
+Use a more conservative alternative when human-review evidence is incomplete.
+
+Do not add a literature citation until an approved key exists. Use a precise citation placeholder when necessary.
+
+---
+
+# 15. Repair Chapter 5
+
+Edit:
+
+```text
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+```
+
+Do not discard the verified rule tables already drafted.
+
+## 15.1 Add an LLM-Assisted Elicitation Subsection
+
+Within C5.1, add an appropriately titled subsection such as:
+
+```text
+LLM-Assisted Ontology and Rule Elicitation
+```
+
+Explain:
+
+1. A reusable general-purpose prompt template was prepared.
+2. Dataset-specific prompts configured the dataset name and official dataset-description source.
+3. The prompt required a staged process involving dataset audit, literature-guided clinical reasoning, candidate-state selection, rule design, DAG construction, missingness analysis, and adversarial critique.
+4. Generated reports were treated as candidate methodological design documents.
+5. Proposed states and rules were subsequently represented in repository source code.
+6. The active source code, not the generated prose, defines the implemented rules.
+7. No claim of chart-adjudicated validation follows from LLM generation.
+8. Mismatches between prompt outputs and code must be documented.
+9. Model/provider/version and human-review provenance remain explicit limitations when not recoverable.
+
+## 15.2 Add a Prompt-Artifact Table
+
+Create a compact table such as:
 
 ```latex
-\label{tab:physionet-proxy-definitions}
-\label{tab:mimic-proxy-definitions}
-\label{tab:proxy-source-types}
+\label{tab:llm-prompt-artifact-provenance}
 ```
+
+Suggested columns:
+
+```text
+Artifact
+Dataset
+Role
+Version status
+Relation to implementation
+Provenance status
+```
+
+Do not include unsupported metadata.
+
+## 15.3 Correct Causal and Clinical Language
+
+The exact prompt includes aspirational language concerning:
+
+* “true hidden clinical states”;
+* the “most clinically plausible” graph;
+* “causal correctness.”
+
+The chapter must explain that these phrases directed the LLM’s search objective but do not establish:
+
+* latent-state identifiability;
+* clinical validity;
+* graph correctness;
+* causal identification;
+* clinician agreement.
+
+## 15.4 Preserve Existing Rule Evidence
+
+Keep the current source-code-derived rule tables unless the new traceability audit finds a concrete discrepancy.
+
+When a prompt recommendation and implemented rule differ:
+
+* describe the implemented rule in Chapter 5;
+* document the LLM recommendation in the evidence report or appendix plan;
+* do not merge the two;
+* record the discrepancy.
+
+---
+
+# 16. Do Not Repair Chapter 7 Yet
+
+Do not draft:
+
+```text
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+```
+
+during this repair.
+
+Instead, update its Stage 4.4 planning packet so the next prompt requires inspection of:
+
+```text
+general-purpose-latent-causal-model-prompt.txt
+physionet-prompt.txt
+mimic-prompt.txt
+the corresponding generated reports
+the active DAG source files
+the generated DAG artifacts
+the LLM prompt-provenance audit
+```
+
+Stage 4.4 must distinguish:
+
+```text
+LLM-proposed DAG
+project-reviewed DAG
+source-code DAG
+rendered run artifact
+clinically approved DAG
+```
+
+Do not assume those objects are identical.
+
+---
+
+# 17. Placeholder Updates
+
+Update:
+
+```text
+thesis-writing/logs/unresolved_placeholders.md
+```
+
+Add all unresolved LLM-provenance fields, including:
+
+```text
+[VALIDATION REQUIRED: identify the exact LLM provider, product, and model/version used for the final PhysioNet prompt run]
+```
+
+```text
+[VALIDATION REQUIRED: identify the exact LLM provider, product, and model/version used for the final MIMIC-III prompt run]
+```
+
+```text
+[VALIDATION REQUIRED: record the execution dates, research/browsing mode, settings, follow-up prompts, and output-export procedure]
+```
+
+```text
+[VALIDATION REQUIRED: map every implemented proxy state and DAG component to the corresponding generated-report recommendation or mark it as independently added]
+```
+
+```text
+[SUPERVISOR DECISION REQUIRED: document the human and clinical review applied to the LLM-generated design proposals]
+```
+
+```text
+[CITATION REQUIRED: LLM-assisted domain-expert elicitation and prompt-engineering methodology]
+```
+
+```text
+[CITATION REQUIRED: limitations and validation requirements for LLM-generated medical and causal structures]
+```
+
+Every entry must include:
+
+* file;
+* section;
+* reason;
+* evidence needed;
+* expected resolution stage;
+* status.
+
+---
+
+# 18. Deferred-Fix Updates
+
+Append a new section to:
+
+```text
+thesis-writing/logs/deferred_fixes.md
+```
+
+Use IDs:
+
+```text
+DF-4.3R-001
+DF-4.3R-002
+...
+```
+
+At minimum assess:
+
+### LLM execution provenance
+
+Model/provider/version, dates, modes, settings, and follow-up prompts may be missing.
+
+### Human-review provenance
+
+The identity and qualifications of reviewers may be undocumented.
+
+### Prompt-output-to-code provenance
+
+The mapping between generated recommendations and active source code may be incomplete.
+
+### Clinical-validation status
+
+LLM generation must not be treated as clinical validation.
+
+### Causal-graph authorship wording
+
+“Clinician-authored” may be unsupported and must be corrected unless evidence exists.
+
+### Prompt-version provenance
+
+The producing old/final prompt version for each report may be unclear.
+
+### Literature coverage
+
+The corpus lacks an approved LLM methodology and reliability evidence packet.
+
+### Reproducibility
+
+The exact prompts are available, but model behavior may not be reproducible without provider/version/date/settings.
+
+For every item include:
+
+```text
+ID
+area
+path
+issue
+evidence
+impact
+recommended later action
+urgency
+```
+
+---
+
+# 19. Repair Evidence Report
+
+Create:
+
+```text
+thesis-writing/logs/stage_4_3_llm_prompt_repair_report.md
+```
+
+It must include:
+
+## 19.1 Git State
+
+* verified commit;
+* initial status;
+* final status;
+* files changed.
+
+## 19.2 Artifact Inventory
+
+All files in `prompts-and-documents/`, with classifications and hashes.
+
+## 19.3 Prompt Architecture
+
+The exact phases and expected outputs of the final template.
+
+## 19.4 Version Comparison
+
+* general versus dataset-specific;
+* old versus final;
+* producing-version conclusions.
+
+## 19.5 LLM Execution Metadata
+
+Known, unknown, and conflicting metadata.
+
+## 19.6 Output-Document Relationships
+
+Which prompt appears related to which report or manager summary.
+
+## 19.7 Prompt-to-Code Traceability
+
+Summary of aligned, modified, rejected, missing, and unclear elements.
+
+## 19.8 Scientific Interpretation
+
+What the LLM contributed and what it did not contribute.
+
+## 19.9 Planning Changes
+
+Every modified audit, literature, and planning file.
+
+## 19.10 Thesis Changes
+
+Exact Chapter 3 and Chapter 5 additions or corrections.
+
+## 19.11 Citation Gaps
+
+Existing sources and new candidate needs.
+
+## 19.12 Placeholders
+
+All new LLM-related placeholders.
+
+## 19.13 Deferred Fixes
+
+All new `DF-4.3R-*` entries.
+
+## 19.14 Build Validation
+
+Final clean-build result and PDF metadata.
+
+## 19.15 Readiness
+
+Use one:
+
+```text
+READY FOR STAGE 4.4
+READY WITH NON-BLOCKING LLM-PROVENANCE WARNINGS
+BLOCKED BEFORE STAGE 4.4
+```
+
+Missing model/version metadata need not block methodological drafting when the limitation is visible, but it must block claims of full prompt reproducibility.
+
+---
+
+# 20. Validation Requirements
+
+## 20.1 Search for Incorrect Authorship Claims
+
+Search the thesis, audit, and planning files for:
+
+```text
+clinician-authored
+clinically validated
+expert-validated
+ground-truth DAG
+true latent state
+causal discovery
+learned DAG
+LLM-discovered
+AI-validated
+```
+
+Correct or qualify every unsupported occurrence.
+
+## 20.2 Prompt-versus-Implementation Validation
 
 Confirm that:
 
-* labels are unique;
-* every row is source-supported;
-* tables contain methods, not numerical results;
-* captions use “proxy state” rather than “diagnosis”;
-* wide tables do not create severe layout failures;
-* existing packages and table environments are preferred.
+* the prompt is described as a design protocol;
+* generated reports are described as candidate proposals;
+* source code defines implemented rules and graphs;
+* artifact files support execution or schema only according to their provenance;
+* LLM output is not called clinical evidence;
+* prompt citations are not automatically added to the thesis bibliography;
+* old and final prompts are not conflated.
 
-Do not add a new LaTeX package unless necessary.
+## 20.3 Chapter Validation
 
-## 17.7 Figure Validation
+Confirm that:
 
-Do not include a tree or dataflow figure unless:
+* Chapter 3 receives only a concise provenance disclosure;
+* Chapter 5 retains all verified rule details;
+* Chapter 5 gains an explicit LLM-assisted method description;
+* Chapter 6 is unchanged;
+* Chapter 7 remains undrafted;
+* no numerical result is added.
 
-* source artifact is identified;
-* producing code is identified;
-* active-rule correspondence is verified;
-* labels are legible;
-* caption does not overclaim;
-* path is stable.
+## 20.4 Citation Validation
 
-Otherwise retain a precise figure placeholder.
+Check all existing citation keys.
 
-## 17.8 LaTeX Validation
+Do not introduce an unresolved key into LaTeX.
 
-Run a clean final build and scan logs for:
+Use visible placeholders until an approved LLM-methodology citation is added to the canonical bibliography.
+
+## 20.5 LaTeX Validation
+
+Run:
+
+```bash
+cd thesis-writing/thesis
+latexmk -C
+latexmk -xelatex main.tex
+test -f main.pdf
+pdfinfo main.pdf
+```
+
+Scan for:
 
 ```text
 LaTeX Error
@@ -1584,78 +1170,66 @@ Emergency stop
 Fatal error
 ```
 
-Record overfull and underfull boxes separately.
+Record nonfatal layout warnings separately.
 
-The high count of nonfatal underfull boxes from existing tables should not be mistaken for a failed build, but new severe table overflow should be minimized.
+## 20.6 Scope Validation
 
-## 17.9 Scope Validation
+Confirm:
 
-Confirm that:
-
-* only Chapter 5 contains new substantive prose;
-* no numerical result was inserted;
-* no tagger or voting code was edited;
+* no prompt artifact was edited;
+* no PDF or DOCX was modified;
+* no research code was modified;
 * no result artifact was modified;
-* no thresholds were optimized;
-* no proxy-state generation was run;
-* no majority-vote generation was run;
-* no other chapter was drafted;
-* no bibliography entry was changed;
+* no experiment was run;
+* no other substantive thesis chapter was drafted;
 * no commit or push occurred.
 
 ---
 
-# 18. Completion Criteria
+# 21. Completion Criteria
 
-Stage 4.3 is complete only when:
+This repair is complete only when:
 
-* `c9f6b12` is verified;
-* the baseline thesis compiles;
-* all four Chapter 5 sections are drafted;
-* active and legacy tagging implementations are distinguished;
-* all PhysioNet proxy states are documented;
-* all MIMIC proxy states are documented;
-* dataset-specific definitions are not conflated;
-* exact thresholds and logical rules are source-verified;
-* proxy labels are never presented as diagnoses;
-* the methods table is complete and source-supported;
-* validation artifacts are described without numerical findings;
-* mortality-by-tag is explicitly identified as associational;
-* predicted and majority-vote states are distinguished;
-* majority-vote alignment and tie handling are documented accurately;
-* voter provenance limitations remain visible;
-* clinical citation gaps remain visible;
-* placeholders are updated centrally;
-* new repository issues are added to the deferred-fix register;
-* the final thesis compiles successfully;
-* the Stage 4.3 evidence report is complete;
-* only allowed files were edited.
+* the prompt-and-document directory has a complete inventory;
+* old and final prompts have been compared;
+* the relationship between generic and dataset-specific prompts is documented;
+* LLM execution metadata is recorded or visibly missing;
+* the prompt-output-to-code relationship is audited;
+* literature scope no longer incorrectly excludes LLM-assisted methodology;
+* new LLM citation gaps are visible;
+* “clinician-authored DAG” language is corrected unless supported;
+* Chapter 3 discloses the LLM-assisted design process;
+* Chapter 5 explains the prompt-assisted ontology and rule elicitation;
+* Chapter 5 retains source code as the operational authority;
+* Chapter 7 planning is updated for Stage 4.4;
+* prompt reproducibility is planned for Chapter 9 and the appendix;
+* all new placeholders and deferred issues are logged;
+* the thesis compiles successfully.
 
 ---
 
-# 19. Final Response
+# 22. Final Response
 
 At the end, report:
 
-1. Verified Stage 4.2 commit.
-2. Initial and final Git status.
-3. Baseline build result and page count.
-4. Files inspected.
-5. Files changed.
-6. Active versus legacy tagger decision.
-7. C5.1 terminology content drafted.
-8. PhysioNet states documented.
-9. MIMIC states documented.
-10. Proxy-definition tables created.
-11. Validation artifacts documented.
-12. Majority-vote algorithm documented.
-13. Clinical citation coverage and gaps.
-14. Remaining placeholders.
-15. Existing and new deferred fixes.
+1. Verified commit.
+2. Prompt-and-document files inspected.
+3. Prompt versions and relationships.
+4. LLM provider/model/run metadata found.
+5. Missing LLM metadata.
+6. Prompt-output-to-code mapping summary.
+7. Audit files changed.
+8. Planning files changed.
+9. Literature-scope correction.
+10. Chapter 3 correction.
+11. Chapter 5 correction.
+12. New tables or figure plans.
+13. Citation gaps.
+14. New placeholders.
+15. New deferred fixes.
 16. Final build command and result.
-17. Final PDF path and page count.
-18. Remaining LaTeX warnings.
-19. Stage 4.4 readiness status.
+17. PDF path and page count.
+18. Stage 4.4 readiness status.
 
 Do not commit or push.
 

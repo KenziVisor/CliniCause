@@ -18,6 +18,34 @@ The proxy-state layer serves four methodological roles.  First, it compresses mu
 
 The limitations are equally central.  No chart-adjudicated reference labels or clinician-reviewed gold-standard labels were found in the inspected archive.  Thresholds approximate clinical ideas but are not equivalent to complete formal clinical definitions.  Missing measurements can prevent rule clauses from firing; a negative tag therefore does not prove absence of the condition, and a positive tag does not establish a clinical diagnosis.  Source-variable availability differs between PhysioNet and MIMIC-III, so similarly named cross-dataset states are not automatically identical constructs.  Weak-supervision literature supports the broad idea that noisy labeling sources and aggregation can be useful, but this project does not implement the Snorkel generative label model \cite{ratner_et_al_2020_snorkel}.
 
+\subsection{LLM-Assisted Ontology and Rule Elicitation}
+\label{subsec:clinical-proxy-state-construction:llm-assisted-elicitation}
+
+The proxy-state ontology and dataset-specific DAGs also have prompt-provenance artifacts under \texttt{thesis-writing/prompts-and-documents/}.  Those artifacts document an LLM-assisted elicitation process used to propose candidate latent/proxy clinical states, rule families, missingness and measurement-process considerations, and DAG structures for PhysioNet 2012 and MIMIC-III.  The final dataset prompts instantiate a generic prompt template with only the dataset name and official dataset-description URL changed.  The exported prompt runs are documented, based on user-supplied project metadata, as ChatGPT 5.4 with extended reasoning; the PDF exports themselves record browser-export metadata but do not independently encode the model-version field.
+
+This prompt layer is treated as design provenance rather than clinical validation or source-code authority.  The LLM did not learn labels or graphs from patient-level records in this repository, did not execute the preprocessing, prediction, majority-vote, or causal-estimation pipeline, and did not produce chart-adjudicated reference labels.  The implemented rule-derived proxy states are defined by the active tagger source files, and the implemented DAG artifacts are defined by the active graph scripts.  The prompt outputs are therefore useful for explaining how candidate constructs were elicited and refined, but any final thesis claim about implemented behavior must trace to source code, configuration, and run artifacts.
+
+\begin{table}[htbp]
+\centering
+\caption{Prompt and document artifacts used as design provenance for proxy-state and DAG construction.}
+\label{tab:llm-prompt-artifact-provenance}
+\small
+\begin{tabular}{@{}p{0.20\textwidth}p{0.12\textwidth}p{0.25\textwidth}p{0.15\textwidth}p{0.20\textwidth}@{}}
+\toprule
+Artifact & Dataset & Role & Version status & Thesis relation \\
+\midrule
+Generic prompt template & Generic & Template for staged ontology, rule, missingness, and DAG elicitation. & Final template & Prompt-engineering provenance only. \\
+PhysioNet prompt and run export & PhysioNet & Dataset-specific prompt and exported ChatGPT run. & Final run & Candidate design proposal; not implementation authority. \\
+MIMIC prompt and run export & MIMIC-III & Dataset-specific prompt and exported ChatGPT run. & Final run & Candidate design proposal; not implementation authority. \\
+Earlier prompt-result exports & Both & Earlier prompt outputs. & Superseded & Historical design trace only. \\
+Manager-summary documents & Project & Management summaries of proxy/DAG and clinical CATE review concepts. & Review documents & Human/project review context; not source execution. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\StagePlaceholder{[VALIDATION REQUIRED: record the final prompt execution settings, research or browsing mode, follow-up prompts, and output-export procedure for the ChatGPT 5.4 extended-reasoning runs]}
+\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: document the human and clinical review applied to the LLM-generated proxy-state and DAG design proposals]}
+
 \StagePlaceholder{[SUPERVISOR DECISION REQUIRED: approve proxy state as the primary thesis term and review construct-level clinical wording]}
 
 \begin{table}[htbp]

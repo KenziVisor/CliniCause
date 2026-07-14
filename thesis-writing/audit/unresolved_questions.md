@@ -120,6 +120,20 @@ This file records repository-specific uncertainty. Do not silently resolve these
 
 ## Missing Provenance
 
+### UQ-PROV-000
+
+| Field | Value |
+| --- | --- |
+| Question | What exact prompt execution settings and human-review steps accompanied the final ChatGPT prompt runs? |
+| Relevant paths | `thesis-writing/prompts-and-documents/physionet-prompt-running.pdf`; `thesis-writing/prompts-and-documents/mimic-prompt-running.pdf`; `thesis-writing/audit/llm_prompt_provenance_audit.md` |
+| Why it matters | The prompt artifacts support design provenance, but exact research/browsing mode, settings, follow-up prompts, export procedure, and human/clinical review are not fully documented. |
+| Evidence already inspected | Prompt text files, final and old prompt-result PDFs, manager summaries, PDF metadata, and user-supplied model metadata: ChatGPT 5.4 with extended reasoning. |
+| Current best-supported interpretation | Final prompt runs used ChatGPT 5.4 with extended reasoning, based on user report; prompt outputs are candidate design artifacts, not implemented source or validation. |
+| Risk if unresolved | Later thesis prose may overstate LLM outputs as validation, causal discovery, or implementation authority. |
+| Recommended resolution | Archive a prompt-run manifest recording model, settings, research mode, dates, follow-ups, export procedure, reviewer names/roles, and design decisions accepted or rejected. |
+| Owner | user/advisor |
+| Stage blocked | Final methods provenance and clinical-review wording |
+
 ### UQ-PROV-001
 
 | Field | Value |
