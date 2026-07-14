@@ -1,111 +1,133 @@
-# Stage 4.1 — Draft the Problem Formulation, Study Design, Data, and Preprocessing Chapters
+# Stage 4.2 — Draft the Predictive Modeling of Proxy States Chapter
 
 ## Context
 
-Stages 0–3 and Stage 4.0 of the CliniCause thesis workflow are complete.
+Stages 0–3, Stage 4.0, and Stage 4.1 of the CliniCause thesis workflow are complete.
 
-Stage 4.0 created the modular thesis workspace under:
-
-```text
-thesis-writing/thesis/
-```
-
-The latest approved Stage 4.0 commit is expected to be:
+The latest approved commit is expected to be:
 
 ```text
-a1e7634 step 4.0
+d7edc78 step 4.1
 ```
 
-Since Stage 4.0, the required PDF and LaTeX packages have been installed in WSL.
-
-Assume that the WSL environment should now provide:
-
-```text
-pdfinfo
-pdftotext
-latexmk
-xelatex
-biber
-```
-
-Do not rely on that statement without verification. Check the installed commands at the beginning of the task.
-
-The previous Stage 4.0 compile blocker should now be treated as potentially resolved. A clean thesis compilation is mandatory during this task unless a new concrete technical error is discovered and documented.
-
-This task is the first substantive thesis-writing task.
-
-It covers only:
+Stage 4.1 drafted:
 
 ```text
 Chapter 3 — Problem Definition and Study Design
 Chapter 4 — Data and Preprocessing
 ```
 
-Do not draft any other chapter.
+It also verified the WSL PDF and LaTeX toolchain and produced a successful XeLaTeX/Biber build.
 
-The purpose of this task is to establish the precise research objects, notation, datasets, artifact contracts, study boundaries, and preprocessing workflow on which all later predictive and causal chapters depend.
-
----
-
-## Objective
-
-Draft academically rigorous versions of:
+This task covers only:
 
 ```text
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
+Chapter 6 — Predictive Modeling of Proxy States
 ```
 
-The chapters must:
+The target file is:
 
-* define the study units and data objects;
-* define the observed irregular time-series representation;
-* distinguish the processed-data contracts used by the causal and STraTS repositories;
-* define the proxy-label prediction task at a high level without describing model implementations;
-* define the downstream observational causal-analysis setting at a high level without presenting estimator details;
-* document the PhysioNet 2012 and MIMIC-III datasets;
-* document preprocessing separately for the causal and predictive workflows;
-* explain identifier normalization and split handling;
-* explain missingness and irregular sampling without inventing cohort statistics;
-* record limitations and unresolved provenance visibly;
-* use only verified repository evidence and approved literature;
-* compile successfully through XeLaTeX and Biber after the edits.
+```text
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
+```
 
-This task must not present experimental results.
+The approved section structure is:
+
+```text
+C6.1 — Self-Supervised STraTS Pretraining
+C6.2 — Supervised Multi-Label Models
+C6.3 — Prediction Export and Normalization
+```
+
+Do not draft Chapter 5 or any later methods, experiments, results, discussion, introduction, or background chapter.
+
+This chapter is a methodology chapter. It must explain what the predictive implementation does, but it must not report final model performance.
 
 ---
 
-# 1. Mandatory Initial Inspection
+# 1. Objective
 
-Before editing anything:
+Draft a technically accurate and academically written Chapter 6 that explains:
 
-## 1.1 Repository State
+* the self-supervised STraTS pretraining task;
+* the STraTS and iSTraTS representations;
+* the common supervised multi-label proxy-prediction task;
+* the GRU, GRU-D, TCN, SAnD, and InterpNet baselines;
+* model-specific handling of irregular observations and missingness;
+* the shared target and output interface;
+* evaluation-metric definitions without numerical values;
+* checkpointing and transfer/fine-tuning behavior as actually implemented;
+* prediction CSV export;
+* conversion of combined probability/binary exports into downstream voter inputs;
+* limitations in final split, checkpoint, and archive provenance.
 
-Confirm the repository root and run:
+The chapter must distinguish clearly between:
+
+```text
+method described in a paper
+method implemented in the repository
+method configured in wrapper scripts
+method apparently executed
+method with an approved final result artifact
+```
+
+Do not collapse these evidence levels.
+
+---
+
+# 2. Mandatory Initial Inspection
+
+## 2.1 Repository and Commit State
+
+From the repository root, run:
 
 ```bash
 git status --short
 git branch --show-current
-git log -3 --oneline
-git show --stat --oneline a1e7634
+git log -4 --oneline
+git show --stat --oneline d7edc78
 ```
 
 Verify that:
 
-* the current branch is the expected branch;
-* commit `a1e7634` exists;
-* it is the relevant Stage 4.0 commit;
-* the thesis skeleton created by that commit is present.
+* `d7edc78` exists;
+* its message is `step 4.1`;
+* it follows the Stage 4.0 commit;
+* Chapters 3 and 4 and the Stage 4.1 evidence report are present;
+* the Chapter 6 skeleton is present.
 
-Do not reset, clean, checkout, stage, commit, or discard changes.
+Do not:
 
-Record unrelated pre-existing working-tree changes, but do not repair them.
+* reset;
+* checkout another branch;
+* clean the working tree;
+* stage files;
+* amend commits;
+* commit;
+* push;
+* discard unrelated local changes.
 
-## 1.2 WSL PDF and LaTeX Toolchain
+Record the pre-existing working-tree state.
 
-The user has installed the required PDF and LaTeX packages in WSL.
+## 2.2 Repository Instructions
 
-Verify them explicitly:
+Locate and inspect all applicable instruction files before editing, including:
+
+```text
+AGENTS.md
+STraTS/AGENTS.md
+causal-irregular-time-series/AGENTS.md
+```
+
+Apply the instructions governing each inspected path.
+
+When instructions conflict with this prompt, stop and report the conflict rather than silently choosing one.
+
+## 2.3 WSL Toolchain
+
+The WSL PDF and LaTeX toolchain was successfully installed and verified during Stage 4.1.
+
+Confirm that these commands remain available:
 
 ```bash
 command -v pdfinfo
@@ -113,92 +135,44 @@ command -v pdftotext
 command -v latexmk
 command -v xelatex
 command -v biber
-
-pdfinfo -v
-pdftotext -v
-latexmk --version
-xelatex --version
-biber --version
 ```
 
-Some version commands may write to stderr. Treat a valid version response as success.
+Record only material changes from the Stage 4.1 environment.
 
-Record:
+Do not reinstall the toolchain when all commands are present.
 
-* resolved executable paths;
-* versions;
-* any missing command;
-* any unexpected environment conflict.
+## 2.4 Baseline Thesis Build
 
-Do not silently fall back to another operating-system installation. Use the WSL tools.
-
-If a required command is still missing, classify that as a concrete environment blocker and record it. Do not repeat the old Stage 4.0 statement that the tools are not installed without performing these checks.
-
-## 1.3 Baseline Thesis Compilation
-
-Before editing the chapters, run a clean baseline build from:
-
-```text
-thesis-writing/thesis/
-```
-
-Use:
+Before drafting, run:
 
 ```bash
+cd thesis-writing/thesis
 latexmk -C
 latexmk -xelatex main.tex
-```
-
-Verify:
-
-* `main.pdf` is generated;
-* XeLaTeX runs;
-* Biber runs;
-* the bibliography is processed;
-* no fatal LaTeX error occurs;
-* no missing input file blocks compilation;
-* no duplicate label error is reported.
-
-Record the baseline result.
-
-Do not modify thesis prose merely to suppress harmless layout warnings.
-
-If the baseline build fails:
-
-1. identify the exact error;
-2. determine whether it is a Stage 4.0 skeleton issue, a missing package, a font issue, a bibliography path issue, or another cause;
-3. make only the narrowest thesis-workspace repair needed when it falls within the allowed edit scope;
-4. rerun the clean build;
-5. record the repair and result.
-
-Do not begin substantive drafting while the skeleton has an unresolved fatal compile error.
-
-## 1.4 Stage 4.0 Outputs
-
-Inspect:
-
-```text
-thesis-writing/logs/stage_4_0_setup_report.md
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/latexmkrc
-thesis-writing/thesis/README.md
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
+test -f main.pdf
+pdfinfo main.pdf
 ```
 
 Confirm:
 
-* the chapter files included by `main.tex`;
-* the bibliography backend and path;
-* the established label conventions;
-* the placeholder conventions;
-* the expected front- and back-matter order.
+* the baseline build succeeds;
+* Biber executes;
+* the PDF is generated;
+* no fatal LaTeX error exists;
+* there are no undefined citations or references;
+* chapter and section labels are unique.
 
-## 1.5 Stage 3 Planning Files
+Record the baseline page count.
 
-Inspect:
+If the baseline fails, identify and repair only a narrow thesis-workspace compilation defect before drafting.
+
+Do not edit scientific prose in another chapter to fix a build problem.
+
+---
+
+# 3. Required Planning and Audit Inspection
+
+Inspect the relevant Stage 3 planning files:
 
 ```text
 thesis-writing/planning/thesis_story.md
@@ -207,39 +181,49 @@ thesis-writing/planning/chapter_evidence_map.md
 thesis-writing/planning/terminology_and_notation.md
 thesis-writing/planning/citation_plan.md
 thesis-writing/planning/table_plan.md
+thesis-writing/planning/figure_plan.md
 thesis-writing/planning/writing_order.md
 thesis-writing/planning/stage4_prompt_queue.md
-thesis-writing/planning/bgu_requirements_map.md
 ```
 
-Treat the approved Stage 3 plan as the source of truth for:
+Pay particular attention to:
 
-* chapter purpose;
-* section hierarchy;
-* research questions;
-* terminology;
-* notation;
-* planned citations;
-* evidence boundaries.
+```text
+C6.1
+C6.2
+C6.3
+T-MODEL-01
+T-TRAIN-CFG-01
+T-PRED-TASK-01
+T-PRED-EXPORT-01
+T-PRED-METRICS-01
+```
 
-Do not substantially redesign Chapters 3 or 4 during this task.
-
-## 1.6 Stage 2 Audit Files
-
-Inspect:
+Inspect the relevant audit files:
 
 ```text
 thesis-writing/audit/repository_map.md
 thesis-writing/audit/evidence_inventory.md
 thesis-writing/audit/experiment_inventory.csv
+thesis-writing/audit/claim_evidence_ledger.csv
 thesis-writing/audit/terminology_map.md
 thesis-writing/audit/unresolved_questions.md
-thesis-writing/audit/claim_evidence_ledger.csv
 ```
 
-Use the audit as an evidence index, but verify important implementation claims against current source files.
+Inspect the previous Stage 4 logs:
 
-## 1.7 Literature Corpus
+```text
+thesis-writing/logs/stage_4_0_setup_report.md
+thesis-writing/logs/stage_4_1_evidence_report.md
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
+```
+
+Use these documents as evidence indexes, not as substitutes for current source inspection.
+
+---
+
+# 4. Literature Inspection
 
 Inspect:
 
@@ -249,136 +233,152 @@ thesis-writing/literature/metadata/catalog.csv
 thesis-writing/literature/metadata/references.bib
 ```
 
-Use `references.bib` as the authoritative source for citation keys.
+Verify the exact citation keys before inserting them.
 
-Do not invent or rename keys.
-
-## 1.8 Official PDF Instructions
-
-Use the installed WSL PDF tools to inspect:
+Expected primary method keys include:
 
 ```text
-thesis-writing/general-instructions.pdf
+tipirneni2022strats
+cho2014gru
+che2018grud
+bai2018tcn
+song2018sand
+shukla2019interpolation
 ```
 
-At minimum run:
+The MIMIC benchmark citation may be used for dataset or benchmark context when relevant:
 
-```bash
-pdfinfo thesis-writing/general-instructions.pdf
-pdftotext -layout thesis-writing/general-instructions.pdf -
+```text
+harutyunyan_2019_mimiciii_benchmark
 ```
 
-Confirm that the relevant BGU requirements used in Chapters 3 and 4 remain correctly represented.
+Do not use the optional early InterpNet workshop paper as the main InterpNet citation when the canonical 2019 source is available.
 
-Do not rely solely on an earlier extracted summary when the PDF can now be inspected directly.
+Academic citations support method definitions and context. They do not prove local execution, checkpoint use, or result values.
 
 ---
 
-# 2. Required Repository Evidence
+# 5. Required STraTS Source Inspection
 
-## 2.1 Parent Repository
+Inspect the current STraTS repository rather than relying only on copied context documents.
 
-Inspect as needed:
-
-```text
-README.md
-SCRIPTS.md
-router.py
-```
-
-Use these files only to explain the relationship between:
-
-* the parent orchestration layer;
-* the causal repository;
-* the STraTS repository.
-
-Do not describe the router as a scientifically validated contribution unless the approved thesis story explicitly supports that claim.
-
-## 2.2 Causal Repository — Data Contracts and Preprocessing
-
-Inspect:
-
-```text
-causal-irregular-time-series/README.md
-causal-irregular-time-series/SCRIPTS.md
-causal-irregular-time-series/configs/physionet-global-variables.csv
-causal-irregular-time-series/configs/mimic-global-variables.csv
-causal-irregular-time-series/docs/global-variables-parameters.txt
-causal-irregular-time-series/src/preprocess_physionet_2012.py
-causal-irregular-time-series/src/preprocess_mimic_iii_large.py
-causal-irregular-time-series/src/preprocess_mimic_iii_large_contract.py
-causal-irregular-time-series/src/dataset_config.py
-```
-
-Confirm the current canonical processed-data contract:
-
-```text
-[ts, oc, ts_ids]
-```
-
-Verify the expected columns rather than copying them from memory.
-
-Pay particular attention to:
-
-* `ts_id`;
-* `minute`;
-* `variable`;
-* `value`;
-* patient-level outcome columns;
-* PhysioNet ICU-type normalization;
-* MIMIC compatibility conversion;
-* handling of invalid or negative observations;
-* time conversion;
-* output paths and external data assumptions.
-
-Distinguish current active files from legacy or draft implementations.
-
-## 2.3 STraTS Repository — Predictive Data Contract
-
-Inspect:
+At minimum inspect:
 
 ```text
 STraTS/SCRIPTS.md
+STraTS/requirements.txt
 STraTS/src/main.py
-STraTS/src/dataset.py
 STraTS/src/dataset_pretrain.py
-STraTS/src/preprocess_physionet_2012.py
-STraTS/src/preprocess_mimic_iii_large.py
+STraTS/src/dataset.py
+STraTS/src/models.py
+STraTS/src/evaluator_pretrain.py
+STraTS/src/evaluator.py
+STraTS/src/learning_curves.py
+STraTS/src/modeling_strats.py
+STraTS/src/modeling_gru.py
+STraTS/src/modeling_grud.py
+STraTS/src/modeling_tcn.py
+STraTS/src/modeling_sand.py
+STraTS/src/modeling_interpnet.py
 ```
 
-Confirm the current STraTS processed-data contract:
+Inspect all current predictive wrapper scripts, including where present:
 
 ```text
-events, oc, train_ids, val_ids, test_ids
+STraTS/run_main.sh
+STraTS/run_main_rest.sh
+STraTS/run_main_mimic.sh
+STraTS/run_full_main.sh
+STraTS/run_strats_job.sbatch
 ```
 
-Explain clearly that this differs from the causal repository’s unsplit contract:
+Verify every model name and filename against the actual tree.
 
-```text
-ts, oc, ts_ids
-```
-
-Verify:
-
-* how stay identifiers are normalized;
-* how train, validation, and test splits are represented;
-* which identifiers are accepted at loader boundaries;
-* how the supervised latent CSV is joined to split IDs;
-* whether outcomes are used as supervised prediction targets;
-* how variables and normalization statistics are learned from training data;
-* broad dataset time-window restrictions.
-
-Do not describe predictive model architectures or training algorithms in this task.
+Do not assume that documentation filenames are correct when they conflict with current source.
 
 ---
 
-# 3. Allowed Edit Scope
+# 6. Required Export and Orchestration Inspection
 
-You may edit only:
+For prediction export, normalization, and downstream handoff, inspect:
 
 ```text
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
+router.py
+SCRIPTS.md
+causal-irregular-time-series/src/split_predicted_latent_tags.py
+causal-irregular-time-series/src/majority_vote_latents.py
+causal-irregular-time-series/main.py
+```
+
+Use these files to establish:
+
+* how STraTS predictions are exported;
+* the structure of probability and binary columns;
+* how combined prediction CSVs are split;
+* what files are suitable as binary voter inputs;
+* how the router collects or normalizes predictive artifacts;
+* where majority-vote aggregation occurs.
+
+Do not draft the detailed majority-vote methodology in Chapter 6. That belongs in Chapter 5.
+
+Chapter 6 may explain only the predictive-output handoff and cross-reference the later or earlier proxy-aggregation section using the existing thesis structure.
+
+---
+
+# 7. Result-Artifact Inspection Boundary
+
+You may inspect predictive result artifacts only to classify provenance and implementation status.
+
+Relevant locations may include:
+
+```text
+final-results/strats-outputs/
+STraTS/outputs/
+training_summary.txt
+log.txt
+checkpoint_best.bin
+pt_saved_variables.pkl
+predicted*_latent_tags*.csv
+learning_curve_history.csv
+```
+
+Do not extract or write performance values in Chapter 6.
+
+Do not write:
+
+* AUROC values;
+* AUPRC values;
+* minRP values;
+* losses;
+* comparative rankings;
+* claims that one model outperformed another;
+* claims of statistical significance.
+
+Those belong to the experimental-design and results stages after a result manifest and approved source selection exist.
+
+You may state evidence status, for example:
+
+* implementation present;
+* wrapper configuration present;
+* checkpoint artifact present;
+* final result artifact missing;
+* final archive provenance incomplete.
+
+Treat InterpNet carefully:
+
+* describe the implemented method when verified;
+* cite the canonical paper;
+* do not claim an approved final performance result when none exists;
+* retain an actionable result placeholder for Chapter 10 or the central placeholder log.
+
+---
+
+# 8. Allowed Edit Scope
+
+You may edit:
+
+```text
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
 thesis-writing/logs/unresolved_placeholders.md
 thesis-writing/logs/deferred_fixes.md
 ```
@@ -386,566 +386,631 @@ thesis-writing/logs/deferred_fixes.md
 You may create:
 
 ```text
-thesis-writing/logs/stage_4_1_evidence_report.md
+thesis-writing/logs/stage_4_2_evidence_report.md
 ```
 
-You may make a narrow repair to these files only when required for compilation:
+A clean build may update the generated file:
+
+```text
+thesis-writing/thesis/main.pdf
+```
+
+Do not manually edit the PDF.
+
+You may make a narrow compilation-only repair to:
 
 ```text
 thesis-writing/thesis/main.tex
 thesis-writing/thesis/latexmkrc
-thesis-writing/thesis/README.md
 ```
 
-A compilation repair is permitted only when:
+only when a fatal build error requires it. Document any such repair.
 
-* the baseline or final build has a fatal error;
-* the error is within the thesis workspace;
-* the repair does not alter the approved thesis structure;
-* the repair is documented in the Stage 4.1 evidence report.
+Do not edit:
 
-Do not edit any other thesis chapter.
+```text
+Chapter 1
+Chapter 2
+Chapter 3
+Chapter 4
+Chapter 5
+Chapters 7–12
+front matter
+appendices
+planning files
+audit files
+bibliography metadata
+research code
+configuration files
+results
+```
 
-Do not modify planning, audit, literature, code, configuration, data, or result files.
-
----
-
-# 4. Forbidden Actions
-
-Do not:
-
-* draft the Introduction;
-* draft Background or Related Work;
-* describe proxy-state threshold rules in detail;
-* describe STraTS or baseline architectures;
-* describe causal estimators in detail;
-* present final experiment configurations;
-* present performance metrics;
-* present cohort counts unless directly verified from an approved artifact;
-* invent train, validation, or test sample sizes;
-* infer that scripts were executed merely because they exist;
-* claim that raw or processed datasets are stored in the repository;
-* claim that the two repositories share one processed-pickle format;
-* call proxy states diagnoses, ground truth, or validated phenotypes;
-* imply causal identification merely because a DAG or causal estimator exists;
-* add citations absent from the canonical bibliography;
-* rename citation keys or established LaTeX labels;
-* modify research code;
-* run preprocessing, training, causal estimation, or expensive experiments;
-* install unrelated software packages;
-* commit or push changes.
+Do not update the stale thesis README during this task. It is already recorded as a deferred cleanup item.
 
 ---
 
-# 5. Chapter 3 Requirements
+# 9. Evidence Policy
 
-## Chapter Purpose
+For every technical statement, classify the basis internally as one of:
 
-Chapter 3 must formalize the research setting before implementation details are introduced.
+```text
+PAPER-DESCRIBED
+IMPLEMENTATION-CONFIRMED
+CONFIGURATION-CONFIRMED
+EXECUTION-SUPPORTED
+RESULT-ARTIFACT-PRESENT
+PROVENANCE-INCOMPLETE
+BLOCKED
+```
 
-It should define:
+The main prose does not need to display these labels repeatedly, but the evidence report must.
 
-* study units;
-* irregular clinical observations;
-* record identifiers;
-* time representation;
-* variable representation;
-* patient-level outcomes;
-* proxy-state labels;
-* prediction outputs;
-* observational exposures used later in causal analysis;
-* the broad analytical tasks;
-* interpretation boundaries.
+Use the strongest wording justified by the evidence.
 
-Use the approved Stage 3 chapter hierarchy.
+Examples:
+
+### Acceptable
+
+```text
+The implementation represents each STraTS observation using learned embeddings of time, value, and variable identity.
+```
+
+```text
+The wrapper scripts configure self-supervised pretraining before supervised proxy-label prediction.
+```
+
+```text
+Archived checkpoint-related artifacts are present, although the exact provenance of the final copied outputs remains incomplete.
+```
+
+### Not acceptable without stronger evidence
+
+```text
+All final models were correctly pretrained.
+```
+
+```text
+Pretraining improved predictive accuracy.
+```
+
+```text
+Every exported prediction was out-of-sample.
+```
+
+```text
+The pretrained weights were successfully transferred.
+```
+
+```text
+The final InterpNet model achieved competitive performance.
+```
 
 ---
 
-## 5.1 Units of Analysis and Data Objects
+# 10. Special Audit: Checkpoint Loading and Fine-Tuning
 
-Define the primary operational study unit carefully.
+Inspect the complete checkpoint-loading path in:
 
-The text should state whether the repository operates on:
+```text
+STraTS/src/main.py
+STraTS/src/models.py
+```
 
-* ICU stays;
-* patient records;
-* time-series records;
-* or another verified unit.
+Determine separately:
 
-Where datasets or repositories use different source identifiers, explain that the implementation normalizes them to:
+1. the intended warm-start or fine-tuning behavior;
+2. the state dictionary constructed from `--load_ckpt_path`;
+3. which state dictionary is actually passed to `load_state_dict`;
+4. how `checkpoint_best.bin` is selected and reloaded;
+5. whether the pretraining checkpoint is demonstrably used to initialize the supervised model;
+6. whether only STraTS/iSTraTS have compatible self-supervised pretraining paths;
+7. whether wrapper scripts and archived artifacts prove successful transfer.
+
+Do not infer successful transfer from the presence of a `--load_ckpt_path` argument.
+
+When the suspected warm-start issue remains present:
+
+* distinguish intended design from actual active code;
+* avoid claiming successful pretrained initialization;
+* log a new deferred fix;
+* use conservative thesis wording;
+* retain a validation placeholder if needed.
+
+Do not repair the training code during this task.
+
+---
+
+# 11. Chapter 6 Requirements
+
+## 11.1 Chapter Opening
+
+Open the chapter with a concise explanation that:
+
+* the prediction task uses rule-derived proxy-state vectors as supervised targets;
+* the input consists of irregular ICU measurement histories and static covariates;
+* the implementation compares STraTS-family models with recurrent, convolutional, attention-based, decay-based, and interpolation-based baselines;
+* Chapter 6 defines model and output mechanics;
+* final training configurations and numerical comparisons are deferred to Chapters 9 and 10.
+
+Do not repeat the full dataset description from Chapter 4.
+
+Use a cross-reference to the data-contract discussion rather than restating it at length.
+
+---
+
+## 11.2 Section C6.1 — Self-Supervised STraTS Pretraining
+
+Explain the verified STraTS pretraining pipeline.
+
+### Observation Representation
+
+Verify and describe how a single irregular observation is represented.
+
+The implementation is expected to combine components corresponding to:
+
+* measurement time;
+* measurement value;
+* variable identity.
+
+Explain continuous-value embeddings only to the level supported by source and the STraTS paper.
+
+Describe:
+
+* token construction;
+* contextualization of irregular observation tokens;
+* pooling into a fixed-dimensional time-series representation;
+* integration of static demographic features;
+* the difference between STraTS and iSTraTS when verified.
+
+Do not describe iSTraTS as a separately pretrained architecture unless current source supports that statement.
+
+### Forecasting Task
+
+Verify and explain:
+
+* how forecast anchors are chosen;
+* the minimum-history condition;
+* which observations form the historical context;
+* the future prediction window;
+* how the target for each variable is selected;
+* how variables with no future observation are masked;
+* dataset-specific time-horizon or context restrictions;
+* training-derived value normalization;
+* training-split variable vocabulary construction.
+
+Where the implementation uses a two-hour prediction window or a 12-hour minimum anchor, state it only after confirming it in current source.
+
+### Pretraining Objective and Evaluation
+
+Explain:
+
+* the forecasting head;
+* the masked regression objective;
+* the role of the pretraining evaluator;
+* how validation windows are materialized or cached, when relevant;
+* the meaning of `loss_neg` if that remains the checkpoint metric.
+
+Do not report loss values.
+
+### Saved Pretraining State
+
+Verify the role and contents of:
+
+```text
+pt_saved_variables.pkl
+checkpoint_best.bin
+```
+
+Explain what metadata can be reused during supervised loading, including where verified:
+
+* variable vocabulary;
+* means and standard deviations;
+* maximum time.
+
+Do not claim that a pretraining checkpoint successfully initialized final supervised models until the checkpoint-loading audit supports that statement.
+
+### Citation
+
+Use:
+
+```text
+tipirneni2022strats
+```
+
+for the STraTS method.
+
+Do not cite the paper as proof of local code execution.
+
+---
+
+## 11.3 Section C6.2 — Supervised Multi-Label Models
+
+### Supervised Target Definition
+
+Explain that the supervised label matrix is loaded from a separate proxy-label CSV.
+
+Verify and describe:
+
+* accepted identifier column names;
+* normalization to `ts_id`;
+* row alignment with split IDs;
+* duplicate-ID checks;
+* missing-label checks;
+* treatment of all non-ID columns as target columns;
+* binary multi-label target structure;
+* per-target positive-class weighting;
+* the shared supervised loss.
+
+Use “proxy labels” or “proxy states,” not diagnoses or ground truth.
+
+### Shared Output Interface
+
+Verify that the supervised backends produce one output per proxy-state target.
+
+Explain:
+
+* number of targets determined at runtime;
+* sigmoid or probability conversion;
+* shared binary or multi-label head;
+* whether fine-tuning uses an intermediate forecasting head;
+* how static features are combined with the time-series representation.
+
+When behavior differs between scratch training and checkpoint-loaded training, describe each path separately.
+
+Do not claim that every model uses identical internal architecture merely because the output head is shared.
+
+### Model Families
+
+Describe each implemented family accurately.
+
+#### STraTS and iSTraTS
+
+Cover:
+
+* irregular observation triplets;
+* learned time/value embeddings;
+* variable embeddings;
+* transformer-style contextualization;
+* fusion attention;
+* static-feature concatenation;
+* verified distinction between STraTS and iSTraTS.
+
+Use:
+
+```text
+tipirneni2022strats
+```
+
+#### GRU
+
+Cover:
+
+* recurrent sequence processing;
+* the dense hourly representation used by this implementation;
+* included observation-mask and elapsed-time channels where verified.
+
+Use:
+
+```text
+cho2014gru
+```
+
+#### GRU-D
+
+Cover:
+
+* missingness masks;
+* elapsed time since previous observation;
+* decay-based handling of missing values;
+* the actual tensors supplied by the loader.
+
+Use:
+
+```text
+che2018grud
+```
+
+#### TCN
+
+Cover:
+
+* temporal convolution;
+* the dense time-grid input;
+* shared value, mask, and elapsed-time representation where verified.
+
+Use:
+
+```text
+bai2018tcn
+```
+
+#### SAnD
+
+Cover:
+
+* attention-based sequence modeling;
+* dense time-grid representation;
+* positional or temporal structure as implemented.
+
+Use:
+
+```text
+song2018sand
+```
+
+#### InterpNet
+
+Cover:
+
+* continuous-time interpolation or cross-channel interpolation concepts;
+* irregular time, value, mask, and holdout inputs;
+* the current implementation interface.
+
+Use:
+
+```text
+shukla2019interpolation
+```
+
+State clearly that implementation presence does not establish an approved final performance artifact.
+
+### Model Comparison Table
+
+Create a non-numeric methods table corresponding to:
+
+```text
+T-MODEL-01
+```
+
+Suggested columns:
+
+```text
+Model
+Temporal representation
+Missingness or irregularity handling
+Static-feature use
+Self-supervised pretraining support
+Primary citation
+Repository evidence status
+```
+
+Verify each cell against current source.
+
+Do not put final AUROC, AUPRC, or loss values in this table.
+
+Use a stable label such as:
+
+```latex
+\label{tab:predictive-model-comparison}
+```
+
+after confirming that the label is unused.
+
+### Evaluation Metrics
+
+Define, without reporting values:
+
+* per-target AUROC;
+* per-target AUPRC;
+* maximum minimum of precision and recall, where implemented;
+* averaging across valid non-degenerate target columns;
+* the supervised checkpoint-selection score;
+* the limited `eval_train` subset behavior if it affects interpretation.
+
+Do not call averaged multi-label metrics micro- or macro-averages unless the evaluator implementation supports that exact term.
+
+Do not imply that validation metrics are test metrics.
+
+### Training Mechanics
+
+Describe only stable implementation mechanics suitable for a methods chapter, such as:
+
+* optimizer family;
+* binary multi-label objective;
+* gradient clipping;
+* checkpoint selection;
+* deterministic seed construction;
+* early or periodic validation behavior.
+
+Move run-specific hyperparameters, selected train fractions, run identifiers, epoch counts, and final configurations to Chapter 9 unless the Stage 3 plan explicitly requires them here.
+
+Do not infer the final experiment configuration from parser defaults alone.
+
+---
+
+## 11.4 Section C6.3 — Prediction Export and Normalization
+
+### Export Trigger and Checkpoint Selection
+
+Verify and explain:
+
+* the flag that requests CSV export;
+* whether export occurs after training or in an export-only invocation;
+* whether an existing best checkpoint is reloaded;
+* which data split is exported;
+* how wrapper scripts set the split;
+* whether final archived provenance proves those settings.
+
+Do not describe an export as test-only or out-of-sample unless verified.
+
+### CSV Schema
+
+Explain the verified schema:
 
 ```text
 ts_id
+<label>_prob
+<label>
 ```
 
-Do not claim that `ts_id` necessarily represents a globally unique person across multiple admissions unless that is explicitly established.
-
-Define an irregular multivariate time series using notation consistent with:
-
-```text
-thesis-writing/planning/terminology_and_notation.md
-```
-
-A possible representation is an observation tuple:
-
-```text
-(i, t, v, x)
-```
-
-where:
-
-* `i` identifies the study unit;
-* `t` is elapsed time from admission or record start;
-* `v` identifies the measured variable;
-* `x` is the observed value.
-
-Use the approved notation when it differs.
+for each target label.
 
 Explain that:
 
-* observations occur at nonuniform times;
-* not every variable is measured at every time;
-* measurement frequencies differ across variables and records;
-* a missing measurement is not automatically equivalent to a normal value.
+* probability columns contain model outputs;
+* binary columns are produced through the implemented threshold;
+* the current threshold is `0.5` when verified;
+* the binary columns are model predictions, not rule labels or clinical truth;
+* export rows are identified using normalized `ts_id`.
 
-Treat informative measurement or missingness processes as possible concerns rather than established causal findings.
-
----
-
-## 5.2 Outcomes, Proxy States, and Analytical Tasks
-
-Define the patient-level outcome used by the downstream causal repository:
+Create a concise non-numeric schema table corresponding to:
 
 ```text
-in_hospital_mortality
+T-PRED-TASK-01
+T-PRED-EXPORT-01
 ```
 
-Describe it according to the verified processed-data contract.
+when useful.
 
-Define the clinical state columns using approved terminology such as:
-
-* derived proxy states;
-* rule-based proxy labels;
-* clinically inspired proxy phenotypes;
-* weak clinical labels.
-
-Explicitly state that they are not:
-
-* verified diagnoses;
-* manually adjudicated ground truth;
-* confirmed physiological states;
-* validated clinical phenotypes unless separate evidence exists.
-
-At a high level, distinguish these tasks:
-
-1. **Rule-based proxy-state construction**
-   Binary proxy labels are derived from observed clinical data.
-
-2. **Multi-label proxy-state prediction**
-   Predictive models estimate the rule-derived proxy labels from irregular time-series inputs.
-
-3. **Proxy-label aggregation**
-   Binary outputs from multiple predictive models may be normalized or combined.
-
-4. **Mortality prediction or association analysis**
-   Proxy-state representations are assessed for prognostic or associative information.
-
-5. **Observational causal-effect estimation**
-   Selected proxy-state indicators are modeled as exposures, with adjusted contrasts estimated under explicit assumptions.
-
-Do not describe the detailed implementation of these tasks here.
-
----
-
-## 5.3 Study Design and Interpretation Boundaries
-
-Describe the work as a retrospective observational analysis of ICU time-series datasets.
-
-State clearly that:
-
-* no intervention is assigned by the study;
-* proxy-state variables are analytical constructs;
-* software parameters named `treatment` may represent modeled binary exposures rather than administered therapies;
-* later causal interpretation depends on assumptions concerning the DAG, adjustment set, overlap, consistency, and unmeasured confounding;
-* these assumptions are not proven by the existence of the implementation.
-
-Prefer wording such as:
-
-```text
-exposure
-modeled treatment variable
-proxy-state exposure
-adjusted effect estimate
-conditional causal interpretation
-```
-
-Avoid clinical-actionability language.
-
----
-
-## 5.4 Research Questions
-
-Include only the research questions approved during Stage 3.
-
-They should align with the actual thesis story, including questions such as:
-
-* whether rule-derived clinical proxy states can be predicted from irregular ICU time series;
-* whether proxy-state representations contain mortality-related information;
-* how adjusted effect estimates vary across proxy-state exposures or patient characteristics;
-* how robust the estimates are to modeling and confounding assumptions.
-
-Do not invent hypotheses.
-
-Do not state or imply that a research question has been answered before the Results chapter.
-
----
-
-# 6. Chapter 4 Requirements
-
-## Chapter Purpose
-
-Chapter 4 must document:
-
-* data sources;
-* data-access boundaries;
-* source identifiers;
-* preprocessing stages;
-* processed artifact formats;
-* dataset-specific handling;
-* split logic;
-* missingness and normalization;
-* reproducibility limitations.
-
-It must clearly distinguish causal-repository preprocessing from STraTS preprocessing.
-
----
-
-## 6.1 PhysioNet/Computing in Cardiology Challenge 2012
-
-Use the exact approved citation key from the canonical bibliography.
-
-Describe only verified characteristics necessary for the thesis, such as:
-
-* the ICU time-series context;
-* patient or record files and associated outcomes;
-* irregularly sampled physiological and laboratory measurements;
-* the relationship between source files and preprocessing.
-
-Do not reproduce dataset cohort counts from memory.
-
-Do not imply that every source record or variable is included in the thesis analysis.
-
-Where final included cohort counts are unavailable, use an actionable placeholder such as:
-
-```text
-[RESULT REQUIRED: final number of included PhysioNet records after preprocessing]
-```
-
----
-
-## 6.2 MIMIC-III
-
-Use the exact approved MIMIC-III citation key.
-
-Describe:
-
-* its role as a critical-care EHR database;
-* broad categories of source tables actually used by the current preprocessing implementation;
-* transformation into the canonical time-series contract;
-* separation between source identifiers and normalized `ts_id`.
-
-Do not claim:
-
-* access dates;
-* extraction dates;
-* exact database release details;
-* credential status;
-* final cohort size;
-
-unless directly supported by approved evidence.
-
-Use the benchmark citation only where benchmark-style preprocessing or task framing is relevant to the implemented workflow.
-
----
-
-## 6.3 Causal-Repository Preprocessing
-
-Describe PhysioNet and MIMIC separately.
-
-### PhysioNet Path
-
-Verify and document:
-
-* raw file traversal;
-* outcome-file handling;
-* invalid or missing parameter filtering;
-* negative-value filtering;
-* time conversion into elapsed minutes;
-* ICU-type representation;
-* minimum-record handling, where implemented;
-* construction of `ts`, `oc`, and `ts_ids`;
-* expected output artifact.
-
-Where execution provenance is absent, use implementation wording:
-
-```text
-The preprocessing implementation performs...
-```
-
-Do not write:
-
-```text
-All thesis experiments used...
-```
-
-unless run evidence directly confirms it.
-
-### MIMIC-III Path
-
-Verify and document:
-
-* source-table processing;
-* chunked large-table handling, where implemented;
-* variable mapping;
-* canonicalization into the PhysioNet-compatible contract;
-* outcome construction;
-* identifier normalization;
-* schema validation;
-* temporary and external path assumptions.
-
-Do not describe obsolete intermediate arrays as part of the current final contract.
-
----
-
-## 6.4 STraTS Preprocessing and Split-Aware Contract
-
-Explain that STraTS uses a distinct processed pickle:
-
-```text
-events, oc, train_ids, val_ids, test_ids
-```
-
-Describe:
-
-* explicit train, validation, and test identifiers;
-* filtering of the latent-label CSV to split IDs;
-* normalization of accepted stay-ID names to `ts_id`;
-* duplicate-label and missing-label validation;
-* training-only variable selection;
-* training-derived normalization;
-* broad dataset-specific time restrictions;
-* broad handling of static variables.
-
-Do not describe model-specific tensors or architectures.
-
-State explicitly, when verified, that the supervised proxy-label targets come from the latent CSV rather than from the mortality column in `oc`.
-
----
-
-## 6.5 Relationship Between the Artifact Contracts
-
-Include a concise comparison table when consistent with the approved table plan.
-
-The table may use this structure:
-
-| Property              | Causal repository              | STraTS repository                            |
-| --------------------- | ------------------------------ | -------------------------------------------- |
-| Processed artifact    | `[ts, oc, ts_ids]`             | `[events, oc, train_ids, val_ids, test_ids]` |
-| Split representation  | Unsplit ID collection          | Explicit train/validation/test IDs           |
-| Main use              | Tagging and causal analysis    | Predictive training and export               |
-| Identifier convention | Canonical `ts_id`              | Loader-normalized `ts_id`                    |
-| Proxy-label source    | Separate latent CSV downstream | Separate latent CSV joined to split IDs      |
-
-Verify every cell.
-
-Do not imply that the artifacts are directly interchangeable.
-
-Use the stable label:
+Use a unique stable label such as:
 
 ```latex
-\label{tab:data-contracts}
+\label{tab:prediction-export-schema}
 ```
 
-unless that label already exists.
+### Downstream Normalization
+
+Explain at a high level:
+
+* why probability and binary columns may need to be separated;
+* how `split_predicted_latent_tags.py` performs this separation;
+* why majority-vote inputs must contain only `ts_id` and binary proxy columns;
+* how the router prepares or collects voter CSVs;
+* that majority-vote semantics are described in Chapter 5 rather than here.
+
+Do not present majority-vote aggregation as model ensembling performance.
+
+### Provenance Limitation
+
+Retain a precise limitation concerning:
+
+* the exact split exported by the final archived commands;
+* the source processed-pickle hash;
+* split-generation seed or ID lists;
+* checkpoint-to-export mapping;
+* archive-copy provenance.
+
+Do not hide this limitation behind vague wording.
 
 ---
 
-## 6.6 Missingness, Irregularity, and Leakage Controls
+# 12. Citation Requirements
 
-Describe only implemented controls.
+Use exact verified bibliography keys.
 
-Possible verified elements include:
-
-* nonuniform observation times;
-* split-aware ID handling;
-* training-derived normalization;
-* training-split variable vocabularies;
-* validation of label alignment;
-* static-variable separation;
-* dataset-specific time-window restrictions;
-* explicit masks used later by some predictive representations.
-
-Do not claim that the pipeline guarantees the absence of leakage.
-
-Prefer:
+At minimum, when their methods are described, cite:
 
 ```text
-The implementation reduces this potential source of leakage by...
+tipirneni2022strats
+cho2014gru
+che2018grud
+bai2018tcn
+song2018sand
+shukla2019interpolation
 ```
 
-Detailed model-specific missingness handling belongs in the predictive-modeling chapter.
-
----
-
-## 6.7 Data Provenance and Reproducibility Limitations
-
-State visibly that:
-
-* raw clinical data are not tracked in Git;
-* processed pickles are external or absent from the audited repository;
-* some run records contain machine-specific absolute paths;
-* final cohort counts require verified processed artifacts or manifests;
-* clean-checkout reproduction requires authorized data access;
-* artifact hashes or cohort manifests remain missing where documented.
-
-Use actionable placeholders, for example:
+Use:
 
 ```text
-[RESULT REQUIRED: final PhysioNet analysis cohort count]
-[RESULT REQUIRED: final MIMIC-III analysis cohort count]
-[VALIDATION REQUIRED: checksums for processed dataset artifacts]
-[VALIDATION REQUIRED: provenance of train/validation/test split generation]
+harutyunyan_2019_mimiciii_benchmark
 ```
 
-Add each unresolved item to the central placeholder log.
+only for relevant benchmark context, not as the source of the local model implementation.
+
+Do not insert:
+
+* nonexistent citation keys;
+* citations copied from comments without checking `references.bib`;
+* an optional source in place of the approved primary source;
+* citations for local execution claims;
+* citations for numerical results.
+
+Run Biber validation after editing.
 
 ---
 
-# 7. Citation Requirements
+# 13. Placeholder Policy
 
-Use only keys verified in:
-
-```text
-thesis-writing/literature/metadata/references.bib
-```
-
-Expected dataset citations include the approved keys for:
-
-* PhysioNet Challenge 2012;
-* MIMIC-III;
-* the MIMIC-III benchmark paper, where relevant.
-
-Do not guess keys.
-
-Each dataset should be cited at its first substantive introduction.
-
-Do not cite academic papers as evidence for repository-specific implementation behavior.
-
-Implementation claims must be traced in the Stage 4.1 evidence report to repository files.
-
-Do not insert citations merely to make the bibliography nonempty; the chapter text should naturally cite the datasets and any necessary methodological background.
-
----
-
-# 8. Writing Requirements
-
-Use formal academic English.
-
-The prose must:
-
-* distinguish raw data, processed artifacts, labels, predictions, exposures, and outcomes;
-* distinguish code behavior from verified execution evidence;
-* define notation before use;
-* use the approved terminology consistently;
-* avoid promotional language;
-* avoid excessive repository-path references in the main narrative;
-* contain enough methodological detail to support reproducibility;
-* remain readable as thesis prose rather than code documentation.
-
-Repository filenames may appear:
-
-* where necessary to distinguish implementations;
-* in a concise implementation note;
-* in footnotes;
-* or in the evidence report.
-
----
-
-# 9. Placeholder Policy
-
-Remove:
+Remove the generic placeholders:
 
 ```text
 [STAGE 4 DRAFT REQUIRED]
-```
-
-from sections fully drafted during this task.
-
-Retain or add precise placeholders where evidence remains missing.
-
-Allowed placeholders include:
-
-```text
 [RESULT REQUIRED]
-[CITATION REQUIRED]
-[FIGURE REQUIRED]
-[TABLE REQUIRED]
 [VALIDATION REQUIRED]
-[SUPERVISOR DECISION REQUIRED]
-[ADMINISTRATIVE DETAILS REQUIRED]
 ```
 
-Every placeholder must be actionable.
+from Chapter 6 when the associated content has been drafted or replaced by a more precise evidence gate.
 
-Avoid:
+Retain precise placeholders where needed, such as:
 
 ```text
-[RESULT REQUIRED]
+[VALIDATION REQUIRED: confirm that the final supervised checkpoints were initialized from the intended self-supervised STraTS checkpoint]
 ```
-
-Prefer:
 
 ```text
-[RESULT REQUIRED: final number of MIMIC-III ICU stays included after all filters]
+[VALIDATION REQUIRED: record the final export split, split-generation seed or ID manifest, source checkpoint, and archive-copy provenance]
 ```
 
-Update:
+```text
+[RESULT REQUIRED: approved final InterpNet evaluation artifact before inclusion in the predictive performance comparison]
+```
+
+Every placeholder must be added to:
 
 ```text
 thesis-writing/logs/unresolved_placeholders.md
 ```
 
-For each placeholder record:
+Record:
 
 * file;
-* chapter and section;
+* section;
 * exact placeholder;
 * reason;
-* evidence needed;
-* expected resolution stage;
+* required evidence;
+* planned resolution stage;
 * status.
 
-Do not remove an earlier placeholder unless the supporting evidence was actually found.
+Do not leave a generic placeholder without an actionable description.
 
 ---
 
-# 10. Deferred-Fix Collection
+# 14. Deferred-Fix Collection
 
-While inspecting the repository, collect issues that should be addressed only after all Stage 4 prompts are complete.
+Review all existing deferred issues.
 
-Append new items to:
-
-```text
-thesis-writing/logs/deferred_fixes.md
-```
-
-Use IDs beginning with:
+The following remain open and must not be silently resolved:
 
 ```text
-DF-4.1-
+DF-4.1-001 — MIMIC preprocessing outcome-column mismatch
+DF-4.1-002 — predictive split and archive provenance
+DF-4.1-003 — stale thesis README toolchain statement
 ```
 
-For each item include:
+Stage 4.2 is directly responsible for reassessing `DF-4.1-002`.
+
+Mark it resolved only when a complete predictive manifest or equivalent evidence is actually found.
+
+Append newly discovered issues using IDs beginning with:
+
+```text
+DF-4.2-
+```
+
+Potential issues that must be checked include:
+
+* ineffective or incorrect warm-start checkpoint loading;
+* mismatch between wrapper intent and active checkpoint behavior;
+* model documentation disagreeing with source;
+* prediction export using a different split than described;
+* missing mapping from checkpoint to exported CSV;
+* inconsistent target ordering across latent CSVs and exports;
+* unclear status of iSTraTS final experiments;
+* misleading use of “fine-tuning” when initialization is unverified;
+* generated `main.pdf` being tracked without an explicit repository policy;
+* result summaries existing without command or source-commit provenance.
+
+For every deferred item record:
 
 ```text
 ID
@@ -958,262 +1023,316 @@ recommended later action
 urgency
 ```
 
-Do not duplicate Stage 4.0 entries.
+Do not repair predictive source code during this task.
 
-When the LaTeX toolchain now works, update the status of:
-
-```text
-DF-4.0-001
-```
-
-Do not delete the historical entry. Mark it as resolved during Stage 4.1 and record:
-
-* command paths;
-* versions;
-* successful build command;
-* generated PDF path.
-
-Appropriate new deferred issues may include:
-
-* disagreement between documentation and source;
-* obsolete preprocessing paths;
-* ambiguous identifier semantics;
-* missing artifact hashes;
-* undocumented split provenance;
-* stale or conflicting data contracts;
-* unavailable external files;
-* nonfatal LaTeX warnings that should be polished later.
-
-Do not fix unrelated repository issues during this task.
+Do not untrack or ignore `main.pdf` during this task. Record the policy question for later cleanup when it remains unresolved.
 
 ---
 
-# 11. Stage 4.1 Evidence Report
+# 15. Stage 4.2 Evidence Report
 
 Create:
 
 ```text
-thesis-writing/logs/stage_4_1_evidence_report.md
+thesis-writing/logs/stage_4_2_evidence_report.md
 ```
 
-It must include the following sections.
+It must contain the following sections.
 
-## 11.1 Git State
+## 15.1 Git State
 
 Record:
 
 * branch;
 * inspected commit;
-* verification of `a1e7634`;
-* initial Git status;
-* final Git status.
+* verification of `d7edc78`;
+* initial status;
+* final status;
+* files changed by Stage 4.2;
+* unrelated pre-existing modifications.
 
-## 11.2 Toolchain Verification
-
-Record:
-
-* path and version of `pdfinfo`;
-* path and version of `pdftotext`;
-* path and version of `latexmk`;
-* path and version of `xelatex`;
-* path and version of `biber`;
-* any package or font warnings.
-
-## 11.3 Baseline Compilation
+## 15.2 Toolchain and Baseline Build
 
 Record:
 
-* working directory;
-* exact commands;
-* return status;
-* whether `main.pdf` was generated;
-* whether Biber executed;
-* fatal errors;
-* nonfatal warnings;
-* any narrow repair made.
+* command paths;
+* baseline build command;
+* baseline build result;
+* initial PDF page count;
+* baseline warnings.
 
-## 11.4 Files Inspected
+## 15.3 Files Inspected
 
-Group the list by:
+Group by:
 
-* Stage 4.0 outputs;
+* thesis and logs;
 * planning;
 * audit;
 * literature;
-* BGU PDF;
-* parent repository;
-* causal preprocessing;
-* STraTS preprocessing and loaders;
-* thesis source.
+* STraTS data loaders;
+* STraTS models;
+* STraTS evaluators;
+* STraTS wrappers;
+* parent router;
+* downstream export-normalization scripts;
+* predictive artifacts.
 
-## 11.5 Claims and Evidence
+## 15.4 Model Implementation Matrix
 
-For every substantive Chapter 3 and Chapter 4 subsection, list:
-
-* thesis claim or topic;
-* repository evidence;
-* literature citation;
-* confidence;
-* unresolved limitation.
-
-## 11.6 Artifact Contracts
-
-Record the verified schemas for:
+For each model record:
 
 ```text
-causal: [ts, oc, ts_ids]
-STraTS: [events, oc, train_ids, val_ids, test_ids]
-latent-label CSV
+model name
+source file
+input representation
+irregularity/missingness handling
+static-feature handling
+pretraining support
+supervised head
+primary citation
+implementation status
+execution evidence
+approved final-result status
+limitations
 ```
 
 Include:
 
-* required columns;
+```text
+STraTS
+iSTraTS
+GRU
+GRU-D
+TCN
+SAnD
+InterpNet
+```
+
+## 15.5 Pretraining Contract
+
+Record:
+
+* input fields;
+* forecast-anchor logic;
+* context window;
+* target window;
+* target construction;
+* masks;
+* normalization;
+* variable vocabulary;
+* objective;
+* evaluator behavior;
+* saved metadata;
+* checkpoint-selection rule.
+
+## 15.6 Supervised Contract
+
+Record:
+
+* latent CSV schema;
+* accepted ID names;
 * ID normalization;
-* split representation;
-* target source;
-* known compatibility boundaries.
+* target-column derivation;
+* loss;
+* class weighting;
+* output shape;
+* metric calculations;
+* checkpoint-selection rule.
 
-## 11.7 Citations Used
+## 15.7 Checkpoint-Loading Audit
 
-List every citation key inserted and the exact type of claim it supports.
+Record:
 
-## 11.8 Placeholders
+* intended warm-start flow;
+* actual active code flow;
+* state dictionaries loaded;
+* any ignored or overwritten state dictionary;
+* supported model types;
+* wrapper assumptions;
+* artifact evidence;
+* conclusion on whether successful pretrained initialization is verified.
+
+Do not soften an implementation defect.
+
+## 15.8 Export Contract
+
+Record:
+
+* export flag;
+* split selection;
+* checkpoint reload behavior;
+* probability columns;
+* binary columns;
+* threshold;
+* output naming;
+* normalization/splitting scripts;
+* downstream voter requirements;
+* provenance limitations.
+
+## 15.9 Citations Used
+
+List each inserted citation key and the method claim it supports.
+
+## 15.10 Placeholders
 
 List:
 
-* resolved placeholders;
+* resolved Chapter 6 placeholders;
 * retained placeholders;
-* newly added placeholders.
+* newly added placeholders;
+* where each will be resolved.
 
-## 11.9 Deferred Fixes
+## 15.11 Deferred Fixes
 
 List:
 
-* the resolution status of `DF-4.0-001`;
-* new `DF-4.1-*` entries;
-* existing deferred issues confirmed during inspection.
+* existing predictive issues confirmed;
+* issues resolved through evidence;
+* new `DF-4.2-*` entries;
+* generated-PDF tracking-policy status.
 
-## 11.10 Final Compilation
+## 15.12 Final Build
 
 Record:
 
 ```bash
+cd thesis-writing/thesis
 latexmk -C
 latexmk -xelatex main.tex
+test -f main.pdf
+pdfinfo main.pdf
 ```
 
 Include:
 
-* whether `main.pdf` was generated;
+* return status;
 * PDF path;
-* PDF page count from `pdfinfo`;
-* whether citations and references resolved;
+* page count;
+* citation status;
+* reference status;
 * duplicate-label status;
-* undefined-reference status;
-* remaining warnings.
+* fatal errors;
+* remaining nonfatal warnings.
 
-## 11.11 Readiness
+## 15.13 Readiness
 
 Use one of:
 
 ```text
-READY FOR STAGE 4.2
+READY FOR STAGE 4.3
 READY WITH NON-BLOCKING WARNINGS
-BLOCKED BEFORE STAGE 4.2
+BLOCKED BEFORE STAGE 4.3
 ```
 
-Stage 4.2 will cover predictive modeling. Do not begin it.
+Stage 4.3 will draft the clinical proxy-state construction chapter.
 
-A missing or failed final PDF build is a blocker unless the failure is clearly external, newly discovered, and cannot be repaired within the allowed thesis-workspace scope.
+Do not begin Stage 4.3.
 
 ---
 
-# 12. Validation Requirements
+# 16. Validation Requirements
 
-## 12.1 Terminology Validation
+## 16.1 Source-to-Prose Validation
 
-Search the edited chapters for risky wording:
+For every paragraph containing implementation details, verify that the source file named in the evidence report supports it.
+
+Specifically verify:
+
+* STraTS versus iSTraTS pooling;
+* which models support pretraining;
+* each model’s input tensors;
+* shared versus model-specific heads;
+* class-weight calculation;
+* metric averaging;
+* checkpoint-selection score;
+* export threshold;
+* export split behavior;
+* checkpoint reload behavior.
+
+## 16.2 Risky-Wording Search
+
+Search the edited chapter for wording including:
 
 ```text
 ground truth
-verified diagnosis
-true diagnosis
-causes mortality
-clinically actionable
-randomized
-intervention effect
-treatment recommendation
-learned causal graph
-complete-case guarantee
-no leakage
+diagnosis
+clinically validated
+state of the art
+outperformed
+best model
+significantly better
+causal
+treatment effect
+all models were pretrained
+successfully fine-tuned
+out-of-sample
+test-set predictions
+fully reproducible
+guarantees
 ```
 
-Each occurrence must be:
+Every occurrence must be:
 
+* justified;
+* qualified;
 * removed;
-* explicitly qualified;
-* or documented in the evidence report.
+* or recorded as an unresolved issue.
 
-Verify consistent use of:
+The word “causal” may appear only in a cross-reference to the downstream pipeline, not as a property of the predictive model.
+
+## 16.3 Citation Validation
+
+Confirm that:
+
+* every inserted key exists;
+* all model descriptions have the appropriate primary citation;
+* no citation is used as proof of local performance;
+* Biber reports no unresolved key.
+
+## 16.4 Table Validation
+
+Confirm that:
+
+* `tab:predictive-model-comparison` is unique;
+* `tab:prediction-export-schema` is unique when used;
+* every table cell is source-supported;
+* no numerical result is included;
+* InterpNet status is not overstated;
+* captions describe methods, not findings.
+
+## 16.5 Terminology Validation
+
+Use consistently:
 
 ```text
-ICU stay
-record
-study unit
-ts_id
-irregular time series
 proxy state
 proxy label
-exposure
-outcome
-processed artifact
+multi-label prediction
+probability output
+binary prediction
+irregular observation
+static covariate
+pretraining
+scratch supervised training
+checkpoint-loaded training
+prediction export
 ```
 
-## 12.2 Contract Validation
-
-Verify that the chapters never conflate:
+Distinguish:
 
 ```text
-[ts, oc, ts_ids]
+rule-derived proxy label
+model-predicted proxy label
+probability prediction
+thresholded binary prediction
+majority-vote proxy label
 ```
 
-with:
+Do not call a thresholded model prediction a clinical label without qualification.
 
-```text
-[events, oc, train_ids, val_ids, test_ids]
-```
+## 16.6 LaTeX Validation
 
-Verify that:
-
-* `ts_id` is described accurately;
-* the outcome column is correctly named;
-* STraTS supervised targets are described as coming from the latent CSV;
-* source identifiers are not declared interchangeable without normalization.
-
-## 12.3 Citation Validation
-
-Check that:
-
-* every inserted key exists in `references.bib`;
-* no citation key is invented;
-* dataset claims use the correct source;
-* repository behavior is not attributed to unrelated papers;
-* Biber resolves the inserted citations.
-
-## 12.4 Label and Reference Validation
-
-Check that:
-
-* chapter labels remain unchanged unless a documented repair is necessary;
-* all section labels are unique;
-* `tab:data-contracts` is unique;
-* no duplicate labels are reported;
-* no undefined references remain after the final build.
-
-## 12.5 LaTeX and PDF Validation
-
-A final clean build is mandatory:
+Run a clean final build:
 
 ```bash
 cd thesis-writing/thesis
@@ -1221,14 +1340,7 @@ latexmk -C
 latexmk -xelatex main.tex
 ```
 
-Then run:
-
-```bash
-test -f main.pdf
-pdfinfo main.pdf
-```
-
-Inspect the LaTeX log for:
+Scan the build logs for:
 
 ```text
 LaTeX Error
@@ -1242,75 +1354,76 @@ Emergency stop
 Fatal error
 ```
 
-Rerun `latexmk -xelatex main.tex` if required to settle references.
+Confirm:
 
-Do not report success based only on a zero-length or stale PDF. Verify that `main.pdf` was created or updated by the current build.
+```bash
+test -f main.pdf
+pdfinfo main.pdf
+```
 
-Record nonfatal warnings separately, including:
+Record overfull and underfull boxes separately as nonfatal layout issues.
 
-* overfull boxes;
-* underfull boxes;
-* font substitutions;
-* language warnings;
-* empty front-matter placeholders.
-
-## 12.6 Scope Validation
+## 16.7 Scope Validation
 
 Confirm that:
 
-* only Chapters 3 and 4 contain new substantive prose;
-* no results were written;
-* no unrelated chapter was edited;
-* no research code, data, results, planning files, audit files, or literature metadata were changed;
-* no scientific experiment was run;
-* no commit or push occurred.
+* only Chapter 6 contains new substantive prose;
+* no performance values were inserted;
+* no other chapter was drafted;
+* no research code was changed;
+* no configuration was changed;
+* no training or prediction job was run;
+* no result file was modified;
+* no bibliography record was changed;
+* no commit or push was performed.
 
 ---
 
-# 13. Completion Criteria
+# 17. Completion Criteria
 
-Stage 4.1 is complete only when:
+Stage 4.2 is complete only when:
 
-* the WSL PDF and LaTeX tools have been verified;
-* the previous compilation blocker is resolved or replaced by a newly documented concrete blocker;
-* a baseline thesis build has been attempted;
-* Chapter 3 defines study units, notation, tasks, and interpretation boundaries;
-* Chapter 4 documents both datasets and both preprocessing contracts;
-* the causal and STraTS artifact formats are explicitly distinguished;
-* cohort numbers are verified or visibly marked;
-* proxy states are never presented as diagnoses;
-* causal terminology remains conditional and conservative;
-* all citation keys are validated;
+* commit `d7edc78` is verified;
+* the baseline thesis compiles;
+* C6.1 accurately describes the self-supervised STraTS task;
+* C6.2 accurately describes every implemented supervised model family;
+* pretraining support is not attributed to unsupported baselines;
+* the checkpoint-loading path is audited explicitly;
+* C6.3 documents export and normalization without overstating split provenance;
+* method tables contain no performance values;
+* all model citations are valid;
+* InterpNet’s missing final result remains visible;
+* predictive provenance limitations remain visible;
+* new repository issues are added to the deferred-fix register;
 * placeholders are centrally tracked;
-* newly found repository issues are added to the deferred-fix register;
-* a final clean XeLaTeX/Biber build succeeds;
-* `main.pdf` is verified with `pdfinfo`;
-* the Stage 4.1 evidence report is complete;
-* only allowed files were edited.
+* the final thesis compiles successfully;
+* the evidence report is complete;
+* only permitted files were edited.
 
 ---
 
-# 14. Final Response
+# 18. Final Response
 
 At the end, report:
 
-1. Verified Stage 4.0 commit.
+1. Verified Stage 4.1 commit.
 2. Initial and final Git status.
-3. WSL PDF and LaTeX command paths and versions.
-4. Baseline compilation result.
-5. Files inspected.
-6. Files changed.
-7. Chapter 3 sections drafted.
-8. Chapter 4 sections drafted.
-9. Artifact contracts documented.
-10. Citations inserted.
-11. Remaining placeholders.
-12. Resolved and newly added deferred fixes.
-13. Final compilation command and result.
-14. Generated PDF path and page count.
-15. Remaining LaTeX warnings.
-16. Stage 4.2 readiness status.
+3. Baseline compilation result and page count.
+4. Files inspected.
+5. Files changed.
+6. C6.1 content drafted.
+7. C6.2 models documented.
+8. C6.3 export and normalization documented.
+9. Model-comparison and export-schema tables created.
+10. Checkpoint-loading audit conclusion.
+11. Citations inserted.
+12. Remaining placeholders.
+13. Existing and new deferred fixes.
+14. Final build command and result.
+15. Final PDF path and page count.
+16. Remaining LaTeX warnings.
+17. Stage 4.3 readiness status.
 
 Do not commit or push.
 
-Do not proceed to Stage 4.2.
+Do not proceed to Stage 4.3.
