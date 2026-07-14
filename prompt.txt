@@ -1,4 +1,4 @@
-# Stage 4.5 — Draft Robustness, Sensitivity, Validation, Experimental Design, and Reproducibility
+# Stage 4.6A — Results Manifest, Checked Tables, and Admissible Source Packet
 
 ## Model
 
@@ -11,123 +11,127 @@ Reasoning: High
 
 ## Authoritative Task Declaration
 
-Implement this prompt as:
+Implement this task as:
 
 ```text
-Stage 4.5 — Chapters 8 and 9:
-Robustness, Sensitivity, Validation, Experimental Design, and Reproducibility
+Stage 4.6A — Results Manifest, Checked Tables, and Admissible Source Packet
 ```
 
 The latest approved commit is expected to be:
 
 ```text
-a96d475 step 4.4S
+7f5206a step 4.5
 ```
 
-This task follows:
+This task combines the previously planned preparation tasks:
 
 ```text
-50b883f step 4.4
-a96d475 step 4.4S
+S4-010 — Results manifest preparation
+S4-011 — Predictive result-table preparation
+S4-012 — Proxy result-table preparation
+S4-013 — Causal result-table preparation
 ```
 
-Stage 4.4S repaired Chapter 7’s treatment of outcome-class downsampling, target-population interpretation, causal assumptions, and related placeholders.
+This stage prepares validated result inputs for the later numerical Results chapter.
 
-This Stage 4.5 task has two internal parts, completed in one Codex run:
+It does not draft Chapter 10.
+
+The next stage is:
 
 ```text
-Stage 4.5A — Chapter 8: Robustness, Sensitivity, and Validation Design
-Stage 4.5B — Chapter 9: Experimental Design and Reproducibility
+Stage 4.6B — Draft Chapter 10 from the checked Stage 4.6A packet
+Model: GPT-5.6 Sol
+Reasoning: High
 ```
 
-Target files:
-
-```text
-thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
-thesis-writing/thesis/chapters/09_experimental_design.tex
-```
-
-Do not draft the numerical Results chapter.
-
-The next stage after this task is:
-
-```text
-Stage 4.6A — Results Manifest and Source-Packet Validation
-```
-
-Stage 4.6A must occur before numerical results are written.
+Stage 4.6B must not begin until this manifest and source packet are complete and the required human result-selection decisions are explicit.
 
 ---
 
-# 1. Core Objective
+# 1. Objective
 
-Draft academically rigorous methods and design chapters that explain:
+Construct a traceable, machine-readable and human-readable results package that:
 
-1. which overlap and support diagnostics are implemented or archived;
-2. which important overlap diagnostics are currently absent;
-3. how estimator-native sensitivity quantities are collected;
-4. how saved-estimator analysis and fallback diagnostics are distinguished;
-5. how benchmark-confounder analyses and sensitivity contours are produced;
-6. how treatment and outcome permutation checks are implemented;
-7. what those checks can and cannot establish;
-8. how configuration validation and stage-control outputs support reproducibility;
-9. the predictive experimental matrix;
-10. the causal experimental matrix;
-11. the distinction between original and outcome-downsampled causal analyses;
-12. the role of random seeds, model configurations, and archived commands;
-13. the computational and software environment captured by the repository;
-14. which provenance elements remain unavailable;
-15. the exact boundary between experimental design and numerical results.
+1. inventories every thesis-relevant result artifact;
+2. computes stable hashes and structural metadata;
+3. identifies the producing run and experiment family;
+4. validates path existence and artifact schemas;
+5. identifies canonical source artifacts when duplicates exist;
+6. distinguishes primary/full summaries from reduced manager summaries;
+7. validates predictive metrics against archived summaries and logs;
+8. validates proxy-result artifacts without recomputing missing results;
+9. validates causal cross-run tables against their per-run source artifacts;
+10. distinguishes original and outcome-downsampled populations;
+11. distinguishes estimator-native, saved-training, recomputed, fallback, skipped, and failed diagnostics;
+12. prepares checked numerical CSVs for later thesis tables;
+13. records unresolved scientific and advisor decisions separately from artifact validity;
+14. produces a nonbinding recommended results hierarchy;
+15. prevents Chapter 10 from using unverified, duplicated, mislabeled, or provenance-incomplete values without explicit qualification.
 
-The chapters must describe methods, contracts, design choices, archived evidence, and limitations.
+No research experiment may be rerun.
 
-They must not present final effect estimates, predictive metrics, robustness values, permutation statistics, rankings, or substantive empirical conclusions.
+No missing result may be regenerated.
+
+No thesis result prose may be drafted.
 
 ---
 
-# 2. Required Interpretation Boundary
+# 2. Evidence Classes
 
-Use language such as:
-
-```text
-diagnostic
-sanity check
-sensitivity analysis
-robustness analysis
-support indicator
-indirect overlap evidence
-archived run family
-execution-supported
-configuration-confirmed
-provenance incomplete
-planned result selection
-```
-
-Avoid language such as:
+Use these artifact-admission statuses consistently:
 
 ```text
-proof of causality
-validated causal effect
-confounding eliminated
-positivity established
-robust causal conclusion
-permutation proves identification
-sensitivity analysis validates the DAG
-statistically significant effect
-best estimator
-superior model
+ADMISSIBLE
+ADMISSIBLE_WITH_QUALIFICATIONS
+PENDING_HUMAN_SELECTION
+BLOCKED_MISSING_PROVENANCE
+BLOCKED_MISSING_CONFIGURATION
+BLOCKED_MISSING_RESULT
+BLOCKED_SCHEMA_CONFLICT
+BLOCKED_VALUE_CONFLICT
+EXCLUDED_DUPLICATE
+EXCLUDED_MISLABELED
+EXCLUDED_LEGACY
+EXCLUDED_FAILED
+NOT_APPLICABLE
 ```
 
-Robustness and validation procedures do not compensate automatically for:
+Use separate provenance classifications:
 
-* an incorrect DAG;
-* an ill-defined proxy-state exposure;
-* unmeasured confounding;
-* measurement error;
-* selection bias;
-* insufficient overlap;
-* incorrect target-population interpretation;
-* missing run provenance.
+```text
+SOURCE_CONFIRMED
+EXECUTION_SUPPORTED
+ARTIFACT_SUPPORTED
+CONFIGURATION_PARTIAL
+PROVENANCE_PARTIAL
+HUMAN_DECISION_REQUIRED
+MISSING
+CONFLICTING
+```
+
+Do not equate:
+
+```text
+artifact exists
+```
+
+with:
+
+```text
+artifact is admissible for an unqualified thesis claim
+```
+
+Do not equate:
+
+```text
+stage status = success
+```
+
+with:
+
+```text
+scientifically valid or causally identified
+```
 
 ---
 
@@ -140,23 +144,25 @@ From the CliniCause repository root, run:
 ```bash
 git status --short
 git branch --show-current
-git log -8 --oneline
-git show --stat --oneline a96d475
-git diff 50b883f..a96d475 -- \
-  thesis-writing/thesis/chapters/07_causal_methodology.tex \
-  thesis-writing/logs/stage_4_4_evidence_report.md \
+git log -9 --oneline
+git show --stat --oneline 7f5206a
+git diff a96d475..7f5206a -- \
+  thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex \
+  thesis-writing/thesis/chapters/09_experimental_design.tex \
+  thesis-writing/logs/stage_4_5_evidence_report.md \
   thesis-writing/logs/deferred_fixes.md \
   thesis-writing/logs/unresolved_placeholders.md
 ```
 
 Verify:
 
-* `a96d475` exists;
-* its message is `step 4.4S`;
-* it follows `50b883f step 4.4`;
-* Chapter 7 contains the outcome-downsampling repair;
-* the Stage 4.4 evidence report contains its focused-review addendum;
-* the new downsampling placeholder and deferred fix exist.
+* `7f5206a` exists;
+* its message is `step 4.5`;
+* it follows `a96d475 step 4.4S`;
+* Chapters 8 and 9 are drafted;
+* `stage_4_5_evidence_report.md` exists;
+* Stage 4.5 reports readiness for manifest validation;
+* Chapter 10 remains undrafted.
 
 Record the initial and final worktree states.
 
@@ -171,42 +177,50 @@ Do not:
 * commit;
 * push.
 
-## 3.2 Nested Causal Repository State
+## 3.2 Nested Repositories
 
-Run:
+Inspect:
 
 ```bash
 git -C causal-irregular-time-series status --short
 git -C causal-irregular-time-series branch --show-current
 git -C causal-irregular-time-series log -5 --oneline
 git ls-files --stage causal-irregular-time-series
+
+git -C STraTS status --short
+git -C STraTS branch --show-current
+git -C STraTS log -5 --oneline
+git ls-files --stage STraTS
 ```
 
-Record:
+Record separately:
 
-* nested branch;
-* nested HEAD;
-* parent gitlink SHA;
-* local nested modifications;
-* whether active files differ from committed nested HEAD.
+* parent commit;
+* causal gitlink SHA;
+* causal active HEAD;
+* causal dirty-worktree state;
+* STraTS gitlink or repository state;
+* STraTS active HEAD;
+* whether active source differs from committed source.
 
-Do not modify or commit the nested repository.
+Do not modify either nested repository.
 
 ## 3.3 Applicable Instructions
 
-Inspect all applicable instructions, including:
+Locate and inspect:
 
 ```text
 AGENTS.md
 causal-irregular-time-series/AGENTS.md
+STraTS/AGENTS.md
 final-results/AGENTS.md
 final-results/causal-outputs/AGENTS.md
 thesis-writing/thesis/README.md
 ```
 
-Apply the final-results evidence hierarchy.
+The `final-results/` instructions are available locally even when the directory is ignored and absent from GitHub.
 
-An artifact stored under `final-results/` is not automatically authoritative for every claim.
+Apply the documented evidence hierarchy.
 
 ## 3.4 Baseline Thesis Build
 
@@ -222,16 +236,16 @@ pdfinfo main.pdf
 
 Record:
 
-* return status;
+* result;
 * PDF path;
 * page count;
-* citations;
-* references;
-* duplicate labels;
+* citation status;
+* reference status;
+* duplicate-label status;
 * fatal errors;
 * layout warnings.
 
-The prior Stage 4.4 build was approximately 64 pages, but verify the current Stage 4.4S baseline directly.
+Do not edit thesis prose during this task.
 
 ---
 
@@ -240,33 +254,13 @@ The prior Stage 4.4 build was approximately 64 pages, but verify the current Sta
 Inspect:
 
 ```text
-thesis-writing/planning/thesis_story.md
 thesis-writing/planning/thesis_outline.md
 thesis-writing/planning/chapter_evidence_map.md
-thesis-writing/planning/terminology_and_notation.md
-thesis-writing/planning/citation_plan.md
 thesis-writing/planning/table_plan.md
 thesis-writing/planning/figure_plan.md
 thesis-writing/planning/writing_order.md
 thesis-writing/planning/stage4_prompt_queue.md
-thesis-writing/planning/stage3_validation_report.md
-```
-
-Pay particular attention to:
-
-```text
-C8.1 — Overlap and Support Diagnostics
-C8.2 — Sensitivity and Robustness Values
-C8.3 — Permutation Checks and Reproducibility Validation
-Chapter 9 experimental-design sections
-T-CAUSAL-MATRIX-01
-T-OVERLAP-01
-T-SENS-01
-T-PERM-01
-T-REPRO-01
-F-OVERLAP-01
-F-SENS-SELECT
-F-PERM-01
+thesis-writing/planning/terminology_and_notation.md
 ```
 
 Inspect:
@@ -281,590 +275,243 @@ thesis-writing/audit/terminology_map.md
 thesis-writing/audit/unresolved_questions.md
 ```
 
-Use these files as indexes. Verify important behavior against active source and archived artifacts.
+Inspect all previous Stage 4 evidence reports relevant to result provenance:
+
+```text
+thesis-writing/logs/stage_4_2_evidence_report.md
+thesis-writing/logs/stage_4_3_evidence_report.md
+thesis-writing/logs/stage_4_3_llm_prompt_repair_report.md
+thesis-writing/logs/stage_4_4_evidence_report.md
+thesis-writing/logs/stage_4_5_evidence_report.md
+thesis-writing/logs/deferred_fixes.md
+thesis-writing/logs/unresolved_placeholders.md
+```
+
+Use these as audit indexes, not replacements for direct artifact inspection.
 
 ---
 
-# 5. Required Literature Inspection
-
-Inspect:
-
-```text
-thesis-writing/literature/README.md
-thesis-writing/literature/metadata/catalog.csv
-thesis-writing/literature/metadata/references.bib
-```
-
-Expected relevant citation keys include:
-
-```text
-crump_et_al_2009_limited_overlap
-cinelli_hazlett_2020_sensitivity
-chernozhukov_et_al_2026_ovb_causal_ml
-sharma_kiciman_2020_dowhy
-oprescu_et_al_2019_econml
-pearl_1995_causal_diagrams
-hernan_robins_2016_target_trial
-hernan_taubman_2008_well_defined_interventions
-```
-
-Use them conservatively:
-
-* `crump_et_al_2009_limited_overlap` supports overlap and common-support concerns, not proof that this repository satisfies positivity.
-* `cinelli_hazlett_2020_sensitivity` supports omitted-variable-bias and robustness-value concepts, not every local implementation detail.
-* `chernozhukov_et_al_2026_ovb_causal_ml` may support causal-ML sensitivity context when the exact approved key and metadata are present.
-* `sharma_kiciman_2020_dowhy` supports a general model-identify-estimate-refute workflow, not proof that the repository implements DoWhy.
-* `oprescu_et_al_2019_econml` supports EconML software context.
-* causal-identification sources do not validate the project DAG or proxy exposures.
-
-Verify every key before inserting it.
-
-Do not invent citations.
-
-Do not edit bibliography files during this task.
-
----
-
-# 6. Required Active-Source Inspection
-
-Inspect the full relevant portions of:
-
-```text
-causal-irregular-time-series/main.py
-causal-irregular-time-series/src/cate_estimation.py
-causal-irregular-time-series/src/matching_causal_effect.py
-causal-irregular-time-series/src/analyze_cate_results.py
-causal-irregular-time-series/src/permutations_test.py
-causal-irregular-time-series/src/dataset_config.py
-causal-irregular-time-series/scripts/validate_global_variables_config.py
-causal-irregular-time-series/scripts/validate_global_variables_config.sh
-causal-irregular-time-series/scripts/run_main.sh
-causal-irregular-time-series/SCRIPTS.md
-causal-irregular-time-series/requirements.txt
-router.py
-tests/test_router.py
-```
-
-Inspect dataset configs:
-
-```text
-causal-irregular-time-series/configs/physionet-global-variables.csv
-causal-irregular-time-series/configs/mimic-global-variables.csv
-causal-irregular-time-series/docs/global-variables-parameters.txt
-```
-
-Verify:
-
-* stage sequence;
-* default and configured stage enabling;
-* input/output paths;
-* estimator selection;
-* downsampling selection;
-* random-seed handling;
-* sensitivity settings;
-* benchmark settings;
-* permutation trial settings;
-* subprocess invocation;
-* environment recording;
-* failure and skip behavior;
-* run-summary writing;
-* configuration-only validation behavior.
-
-Do not rely on comments when executable behavior differs.
-
----
-
-# 7. Required Archived-Artifact Inspection
-
-Inspect the complete causal output archive:
-
-```text
-final-results/causal-outputs/
-```
-
-At minimum inspect:
-
-```text
-final-results/causal-outputs/outputs-*/run_summary.json
-final-results/causal-outputs/outputs-*/logs/
-final-results/causal-outputs/outputs-*/matching/
-final-results/causal-outputs/outputs-*/cate_estimation/
-final-results/causal-outputs/outputs-*/analyze_cate_results/
-final-results/causal-outputs/outputs-*/permutations_test/
-```
-
-Inspect cross-run files:
-
-```text
-final-results/causal-outputs/cate_cross_run_unified_table.csv
-final-results/causal-outputs/cate_cross_run_summary.csv
-final-results/causal-outputs/cate_cross_run_cate_vs_matching.csv
-final-results/causal-outputs/cate_cross_run_matching_table.csv
-final-results/causal-outputs/cate_cross_run_matching_failures.csv
-```
-
-Also locate all files named or equivalent to:
-
-```text
-global_summary.csv
-manager_global_summary.csv
-control_messages_cate_estimation.csv
-control_messages_analyze_cate_results.csv
-benchmark_summary.csv
-treatment_permutation_results.csv
-outcome_permutation_results.csv
-run_summary.json
-summary_results.txt
-*_sensitivity_contour.png
-```
-
-For every inspected artifact, determine:
-
-* schema;
-* row count;
-* producing stage;
-* dataset;
-* estimator;
-* sampling condition;
-* source run;
-* status fields;
-* whether it contains method metadata or numerical results;
-* whether provenance is complete enough for methods prose;
-* whether it must be deferred to Stage 4.6A.
-
-Do not copy numerical result values into Chapters 8 or 9.
-
----
-
-# 8. Stage 4.5A — Chapter 8
-
-Target:
-
-```text
-thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
-```
-
-Draft only the planned Chapter 8 sections.
-
-## 8.1 Chapter Opening
-
-Explain that the chapter documents the diagnostic framework used to assess:
-
-* empirical support;
-* sensitivity to omitted confounding;
-* estimator diagnostic availability;
-* benchmark-confounder comparisons;
-* treatment and outcome permutation behavior;
-* run and configuration integrity.
-
-State explicitly that these procedures:
-
-* supplement rather than replace causal assumptions;
-* do not validate the DAG;
-* do not prove exchangeability;
-* do not prove the proxy-state exposure is well defined;
-* do not establish clinical actionability.
-
-Cross-reference Chapter 7 for the DAG, estimators, and causal assumptions.
-
----
-
-# 9. C8.1 — Overlap and Support Diagnostics
-
-## 9.1 Implemented Evidence
-
-Explain the support-related information currently available from matching, including verified fields such as:
-
-```text
-number of treated records
-number of control records
-number of matched pairs
-match rate
-final allowed Hamming distance
-sufficient-pair flag
-maximum-distance failure flag
-matching failure reason
-```
-
-Describe matching support as:
-
-```text
-indirect empirical support evidence under the implemented matching representation
-```
-
-Do not call it a propensity-score overlap analysis.
-
-## 9.2 Missing Dedicated Diagnostics
-
-State clearly that dedicated diagnostics such as the following were not found in the approved archive:
-
-```text
-propensity-score distributions
-common-support plots
-covariate balance before and after matching
-standardized mean differences
-effective sample size under weighting
-treatment-probability histograms
-formal positivity diagnostics
-```
-
-Do not imply that all of these must necessarily be used. State that their absence limits the strength of overlap claims.
-
-## 9.3 Matching Failures
-
-Explain:
-
-* failure to obtain enough matched pairs is a support warning;
-* a failed matching run is not a zero effect;
-* larger accepted Hamming distances represent weaker exact similarity under the binary matching representation;
-* adequate matching rates do not prove positivity in the target population;
-* median binarization and greedy matching affect the diagnostic.
-
-Do not present run-specific values.
-
-## 9.4 Planned Table
+# 5. Output Directory and Required Files
 
 Create:
 
-```latex
-\label{tab:overlap-support-design}
+```text
+thesis-writing/results/
 ```
 
-Suggested columns:
+Create all of the following:
 
 ```text
-Diagnostic
-Repository source
-What it assesses
-What it does not establish
-Result status
+thesis-writing/results/results_manifest.csv
+thesis-writing/results/results_manifest.md
+thesis-writing/results/results_source_packet.md
+thesis-writing/results/results_decision_register.md
+thesis-writing/results/results_checksums.sha256
+thesis-writing/results/checked_cohort_candidates.csv
+thesis-writing/results/checked_proxy_prevalence.csv
+thesis-writing/results/checked_proxy_cooccurrence.csv
+thesis-writing/results/checked_proxy_mortality_association.csv
+thesis-writing/results/checked_predictive_metrics.csv
+thesis-writing/results/checked_predictive_exports.csv
+thesis-writing/results/checked_mortality_prediction.csv
+thesis-writing/results/checked_matching_results.csv
+thesis-writing/results/checked_matching_failures.csv
+thesis-writing/results/checked_cate_candidates.csv
+thesis-writing/results/checked_heterogeneity_candidates.csv
+thesis-writing/results/checked_sensitivity_candidates.csv
+thesis-writing/results/checked_permutation_candidates.csv
+thesis-writing/results/checked_figure_candidates.csv
+thesis-writing/logs/stage_4_6A_evidence_report.md
 ```
 
-Use status phrases such as:
+A required checked CSV may contain only its header and a documented blocked status when no admissible source exists.
 
-```text
-implemented
-archived
-indirect only
-not found
-requires Stage 4.6A selection
-```
-
-Do not populate numerical results.
-
-## 9.5 Figure Policy
-
-Do not create `F-OVERLAP-01` during Stage 4.5.
-
-Retain an actionable placeholder when a dedicated overlap figure is still required.
+Do not create fake rows to make a table appear complete.
 
 ---
 
-# 10. C8.2 — Sensitivity and Robustness Values
+# 6. General Artifact-Manifest Contract
 
-## 10.1 Sensitivity Evidence Layers
+## 6.1 Required Columns
 
-Distinguish at least these layers:
+`results_manifest.csv` must contain one row per thesis-relevant source artifact.
 
-```text
-1. estimator method availability recorded during fitting
-2. values called directly from the fitted estimator during training
-3. serialized estimator parameters or residuals
-4. later saved-artifact analysis
-5. fallback or reconstructed diagnostic
-6. benchmark-confounder comparison
-7. rendered sensitivity contour
-```
-
-Do not combine these layers under one generic phrase such as “the estimator produced sensitivity results.”
-
-## 10.2 Training-Time Collection
-
-Verify and explain how `cate_estimation.py` records:
-
-* whether methods such as `robustness_value`, `sensitivity_interval`, `sensitivity_summary`, and `summary` exist;
-* whether residuals are available;
-* source labels for direct diagnostic values;
-* errors or unavailable APIs;
-* serialized sensitivity parameters;
-* estimator metadata and package versions.
-
-Explain that a non-null field and its recorded source must be interpreted together.
-
-## 10.3 Saved-Artifact Analysis
-
-Inspect `analyze_cate_results.py` and describe:
-
-* required CATE result directory;
-* model-artifact loading;
-* latent-tag and processed-data reconstruction;
-* direct saved values;
-* residual-dependent calculations;
-* benchmark-variable selection;
-* report and CSV output;
-* contour generation;
-* error and partial-status handling;
-* run-level aggregation.
-
-Do not claim every archived treatment has a complete sensitivity analysis.
-
-## 10.4 Estimator-Native Versus Fallback
-
-Create an explicit terminology distinction:
+Include at minimum:
 
 ```text
-estimator-native
-saved-training direct
-saved-artifact recomputed
-fallback diagnostic
-unavailable
-partial
-failed
-not applicable
+artifact_id
+result_family
+planned_chapter_section
+planned_table_or_figure_id
+pipeline
+dataset
+model_or_estimator
+sampling_condition
+run_name
+treatment_or_proxy
+artifact_role
+relative_path
+recorded_absolute_path
+file_type
+file_size_bytes
+sha256
+row_count
+column_count
+column_names_or_schema_signature
+image_width
+image_height
+producing_stage
+producing_script
+run_summary_path
+log_path
+configuration_path
+configuration_available
+configuration_hash
+source_commit
+source_commit_status
+command_available
+input_provenance_status
+execution_status
+artifact_status
+duplicate_group
+canonical_source
+admission_status
+provenance_class
+caveat_codes
+human_decision_required
+notes
 ```
 
-When the active code includes fallback behavior, explain:
+Use blank values rather than invented values.
 
-* why the fallback exists;
-* which assumptions it makes;
-* why it cannot be presented as identical to an estimator-native calculation;
-* how the source/status field should be reported in the Results chapter.
+## 6.2 Canonical Paths
 
-## 10.5 Benchmark Confounders
+Use repository-relative paths as canonical paths.
 
-Explain the purpose of benchmark-confounder analysis:
-
-* compare hypothetical omitted-confounding strength against an observed covariate benchmark;
-* provide a scale for interpretation;
-* expose sensitivity rather than eliminate it.
-
-Verify:
-
-* benchmark variable selection;
-* available-variable checks;
-* missing benchmark behavior;
-* output schema;
-* relationship to robustness values and sensitivity intervals.
-
-Do not imply that observed benchmarks bound every possible unmeasured confounder.
-
-## 10.6 CausalPFN Boundary
-
-State that the current CausalPFN branch does not provide the same EconML residual, interval, sensitivity, or permutation workflow.
-
-Do not describe missing PFN diagnostics as zero sensitivity or robustness.
-
-Retain the citation and validation limitation already recorded in Chapter 7.
-
-## 10.7 Planned Table
-
-Create:
-
-```latex
-\label{tab:sensitivity-diagnostic-design}
-```
-
-Suggested columns:
+Absolute `/truenas/`, `/workspace/`, or other producing-machine paths belong only in:
 
 ```text
-Diagnostic type
-Source stage
-Applicable estimators
-Required saved object
-Output form
-Interpretation boundary
+recorded_absolute_path
 ```
 
-Do not include numerical diagnostic values.
+Do not treat an absolute historical path as locally available.
 
-## 10.8 Sensitivity Figures
+## 6.3 Hashing
 
-Do not insert a selected sensitivity contour yet.
+Compute SHA-256 for:
 
-The selected contour depends on:
+* every manifest-listed source artifact;
+* every generated checked CSV;
+* each human-readable Stage 4.6A result file.
 
-* approved dataset;
-* estimator;
-* sampling condition;
-* exposure;
-* artifact status;
-* source classification;
-* primary-analysis decision.
+Write a standard checksum file:
 
-Retain `F-SENS-SELECT` as a Stage 4.6 decision.
+```text
+<sha256>  <relative-path>
+```
+
+Do not hash temporary build files.
+
+## 6.4 Structural Metadata
+
+For CSV and TSV files, record:
+
+* row count excluding header;
+* column count;
+* exact ordered headers;
+* duplicate-header status;
+* duplicate-row status when practical;
+* parsing errors;
+* empty-file status.
+
+For JSON files, record:
+
+* top-level type;
+* principal key names;
+* parse status;
+* run/stage status fields.
+
+For text summaries, record:
+
+* parse status;
+* expected field presence;
+* relevant source or command lines;
+* whether a paired log exists.
+
+For PNG files, record:
+
+* width;
+* height;
+* file mode when available;
+* source relation;
+* whether it is a direct archived figure or a future generated figure.
+
+For binary artifacts, record only:
+
+* path;
+* size;
+* hash;
+* expected role;
+* trusted reader/writer source when known.
+
+Do not deserialize:
+
+```text
+*.pkl
+*.pickle
+*.bin
+*.pt
+*.pth
+```
+
+unless an essential value is available nowhere else and the file is a trusted project artifact. Any deserialization must be explicitly documented. Prefer not to deserialize any binary artifact in this stage.
 
 ---
 
-# 11. C8.3 — Permutation Checks and Reproducibility Validation
+# 7. Result Families to Inventory
 
-## 11.1 Permutation Procedure
-
-Inspect `permutations_test.py` and document separately:
-
-### Treatment permutation
-
-Explain exactly which treatment column is shuffled, what remains unchanged, how trials are seeded, and how CATE estimation is rerun.
-
-### Outcome permutation
-
-Explain exactly how the mortality outcome is shuffled, what remains unchanged, how trials are seeded, and how CATE estimation is rerun.
-
-Verify whether the script:
-
-* creates temporary or trial-specific inputs;
-* invokes `cate_estimation.py` as a subprocess;
-* preserves model type and dataset configuration;
-* records subprocess errors;
-* aggregates treatment-level or run-level statistics;
-* cleans up temporary artifacts;
-* skips unsupported estimator families.
-
-## 11.2 Interpretation Boundary
-
-State that permutation checks can indicate whether an analysis produces similarly structured outputs after disrupting a key data relationship.
-
-They do not prove:
-
-* the original effect is causal;
-* the DAG is correct;
-* confounding is controlled;
-* the estimator is calibrated;
-* the proxy exposure is clinically valid;
-* the original numerical result is unbiased.
-
-Use:
+Inventory and classify at least:
 
 ```text
-sanity diagnostic
-negative-control-like disruption
-null-reference exercise
+cohort and analysis-population candidates
+rule-based proxy labels
+majority-vote proxy labels
+proxy prevalence
+proxy co-occurrence
+proxy-mortality association
+predictive training summaries
+predictive learning curves
+predictive export CSVs
+mortality-prediction results
+matching summaries
+matching failures
+CATE global summaries
+patient-level CATE files
+feature-importance files
+coefficient files
+adjustment and control-message files
+sensitivity benchmark summaries
+sensitivity reports
+sensitivity contours
+treatment permutation results
+outcome permutation results
+run summaries
+configuration references
+logs
+graph figures already used in methods
 ```
 
-only where source and literature justify the wording.
+Do not inventory example-thesis figures as CliniCause evidence.
 
-Do not call the procedure a formal randomization test unless its design and inferential interpretation support that claim.
-
-## 11.3 Trial Counts and Seeds
-
-Document the source contract for:
-
-* trial-count configuration;
-* seed derivation;
-* treatment iteration;
-* dataset;
-* estimator;
-* original/downsampled condition;
-* result aggregation.
-
-Do not insert archived trial counts into Chapter 8 unless needed to describe a verified fixed design and clearly separated from empirical outcomes.
-
-When final trial counts differ across archived runs, use a placeholder and defer selection to Stage 4.6A.
-
-## 11.4 Configuration Validation
-
-Describe:
-
-```text
-scripts/validate_global_variables_config.py
-scripts/validate_global_variables_config.sh
---validate-config-only
-router tests
-run_summary.json stage status
-control-message CSVs
-```
-
-Distinguish:
-
-* schema/config validation;
-* command-construction validation;
-* stage execution status;
-* artifact existence;
-* scientific validity.
-
-A successful config validation does not prove successful full execution.
-
-A successful stage status does not validate a causal claim.
-
-## 11.5 Planned Table
-
-Create:
-
-```latex
-\label{tab:permutation-reproducibility-design}
-```
-
-Suggested columns:
-
-```text
-Check
-Disrupted element
-Held-fixed elements
-Output
-Primary purpose
-Limitation
-```
-
-Rows should include:
-
-```text
-treatment permutation
-outcome permutation
-configuration validation
-run-summary stage status
-artifact-schema check
-```
-
-Do not include numerical permutation results.
+Mark legacy and draft sources explicitly.
 
 ---
 
-# 12. Stage 4.5B — Chapter 9
+# 8. Predictive Result Validation
 
-Target:
+## 8.1 Expected Experiment Families
 
-```text
-thesis-writing/thesis/chapters/09_experimental_design.tex
-```
-
-Inspect the existing skeleton and planning files before deciding exact section titles.
-
-Do not create a new chapter structure that conflicts with the established outline.
-
-The chapter should cover experimental design and reproducibility, not empirical findings.
-
----
-
-# 13. Chapter 9 Opening
-
-State that the chapter defines:
-
-* datasets;
-* prediction experiments;
-* causal run families;
-* original versus outcome-downsampled conditions;
-* configuration resolution;
-* stage orchestration;
-* software and hardware recording;
-* artifact and provenance requirements;
-* evaluation and result-selection policy.
-
-Cross-reference:
-
-* Chapter 4 for data and preprocessing;
-* Chapter 5 for proxy-state construction;
-* Chapter 6 for predictive models;
-* Chapter 7 for causal estimators;
-* Chapter 8 for diagnostics.
-
-Do not repeat detailed model derivations.
-
----
-
-# 14. Predictive Experimental Design
-
-## 14.1 Experiment Matrix
-
-Document the planned and archived predictive model families:
+Validate the following completed predictive families for both datasets:
 
 ```text
 STraTS
@@ -872,800 +519,1268 @@ GRU
 GRU-D
 TCN
 SAnD
-InterpNet
 ```
 
-For each family distinguish:
+Record InterpNet separately as:
 
 ```text
 implementation available
 wrapper available
-training artifact available
-prediction export available
-final result available
-provenance complete
-provenance incomplete
+final training summary missing
+final export missing
+not admissible for numerical comparison
 ```
 
-Do not imply that InterpNet has final results when the archive lacks approved final artifacts.
-
-## 14.2 Datasets and Labels
-
-Describe:
-
-* PhysioNet 2012;
-* MIMIC-III;
-* multi-label proxy-state prediction;
-* dataset-specific label sets;
-* rule-based or majority-vote target source;
-* split-aware STraTS artifact contract;
-* prediction-export contract.
-
-Do not insert cohort counts or label prevalences unless already verified and necessary for design.
-
-## 14.3 Training and Evaluation Protocol
-
-Summarize source-confirmed design elements such as:
-
-* pretraining applicability;
-* supervised fine-tuning;
-* model families;
-* loss;
-* class weighting;
-* validation and test metrics;
-* checkpoint selection;
-* prediction export;
-* random seeds;
-* train fractions or split configuration.
-
-Do not repeat Chapter 6 in full.
-
-Emphasize which final-run details remain provenance incomplete:
-
-* processed-pickle hashes;
-* split manifest;
-* checkpoint-to-export mapping;
-* exact producing wrapper;
-* archived command;
-* InterpNet result absence.
-
-## 14.4 Predictive Design Table
-
-Create:
-
-```latex
-\label{tab:predictive-experimental-matrix}
-```
-
-Suggested columns:
+The expected completed numerical matrix is:
 
 ```text
-Dataset
-Model family
-Pretraining support
-Input representation
-Primary output
-Final-artifact status
-Provenance limitation
+2 datasets × 5 completed model families = 10 training-summary families
 ```
 
-Do not include predictive metric values.
+Do not count InterpNet as a completed numerical result.
+
+## 8.2 Training Summaries
+
+Inspect every final `training_summary.txt`.
+
+Extract the exact existing fields required for later table `T-PRED-METRICS-01`, including when present:
+
+```text
+dataset
+model
+run identifier
+train fraction
+checkpoint-selection rule
+validation loss
+validation AUROC
+validation AUPRC
+validation minRP
+test loss
+test AUROC
+test AUPRC
+test minRP
+training epochs
+pretraining status
+```
+
+Preserve exact values from the source.
+
+Do not recompute metrics from predictions.
+
+## 8.3 Log Cross-Check
+
+For every training summary:
+
+* identify its paired log;
+* compare repeated metric fields;
+* record whether values agree;
+* use a strict textual comparison first;
+* use a small documented numeric tolerance only when formatting differs;
+* record missing fields;
+* record the exact canonical source chosen.
+
+`checked_predictive_metrics.csv` must include:
+
+```text
+dataset
+model
+run_name
+train_fraction
+metric_split
+loss
+auroc
+auprc
+minrp
+source_summary
+source_summary_sha256
+source_log
+source_log_sha256
+summary_log_agreement
+checkpoint_selection_rule
+admission_status
+provenance_class
+caveat_codes
+notes
+```
+
+Use separate validation and test rows when both are present.
+
+Do not round source values in the checked CSV.
+
+## 8.4 Prediction Exports
+
+Inspect all archived `predicted*_latent_tags*.csv` files.
+
+Validate:
+
+* row count;
+* `ts_id`;
+* probability columns;
+* binary columns;
+* paired probability/binary naming;
+* latent ordering;
+* duplicate `ts_id`;
+* missing identifiers;
+* value ranges;
+* whether binary fields contain only 0/1;
+* likely or verified export split;
+* producing model;
+* relationship to majority voting.
+
+Do not claim exports are out-of-sample unless verified.
+
+Create `checked_predictive_exports.csv` with one row per export, not one row per patient.
+
+Include:
+
+```text
+dataset
+model
+path
+sha256
+row_count
+unique_ts_id
+probability_column_count
+binary_column_count
+schema_valid
+binary_values_valid
+probability_range_valid
+export_split
+export_split_status
+checkpoint_provenance
+admission_status
+caveat_codes
+notes
+```
+
+## 8.5 Checkpoints and Learning Curves
+
+Hash and inventory checkpoints and learning curves.
+
+Do not deserialize checkpoints.
+
+Learning curves remain diagnostic figures and must not substitute for test metrics.
 
 ---
 
-# 15. Causal Experimental Design
+# 9. Proxy Result Validation
 
-## 15.1 Run-Family Matrix
+## 9.1 Rule-Based and Majority-Vote Artifacts
 
-Verify the archived design matrix directly from `experiment_inventory.csv` and all `run_summary.json` files.
-
-Expected factors include:
+Inventory:
 
 ```text
-Dataset:
-- PhysioNet 2012
-- MIMIC-III
-
-Estimator:
-- CausalForestDML
-- LinearDML
-- CausalPFN
-
-Sampling condition:
-- original cohort
-- outcome-downsampled cohort
+final-results/trees/physionet-tags/
+final-results/trees/mimic-tags/
+final-results/causal-outputs/outputs-*/majority_vote/
 ```
 
-When the full Cartesian product is present, describe it as twelve archived run families.
+Validate:
 
-Do not infer a run solely from a directory name. Verify each `run_summary.json`.
+* row count;
+* unique `ts_id`;
+* latent columns;
+* binary values;
+* duplicate outputs across causal run families;
+* hash-equivalent copies;
+* dataset-specific label ordering.
 
-## 15.2 Stage Sequence
+Group identical duplicate majority-vote files into duplicate groups.
 
-Document the orchestrated causal stages:
+Select one canonical artifact per dataset and distinct sampling/input condition when they differ.
+
+Do not infer voter composition from the merged output.
+
+## 9.2 Existing Proxy Tables
+
+Validate existing source artifacts such as:
+
+```text
+prevalence.csv
+cooccurrence_phi.csv
+mortality_by_tag.csv
+```
+
+Do not derive a missing PhysioNet prevalence, co-occurrence, or mortality table from patient-level tags during this task.
+
+Create:
+
+```text
+checked_proxy_prevalence.csv
+checked_proxy_cooccurrence.csv
+checked_proxy_mortality_association.csv
+```
+
+Rules:
+
+* copy only values already present in an existing result artifact;
+* add provenance columns;
+* retain the original variable names;
+* distinguish rule-based from majority-vote outputs;
+* distinguish dataset;
+* identify missing counterpart tables explicitly;
+* describe mortality tables as unadjusted association artifacts.
+
+Required provenance columns include:
+
+```text
+dataset
+proxy_source
+source_path
+source_sha256
+source_row
+admission_status
+provenance_class
+caveat_codes
+notes
+```
+
+Do not label mortality association as a causal effect.
+
+---
+
+# 10. Cohort and Analysis-Population Candidates
+
+Create `checked_cohort_candidates.csv`.
+
+This is not automatically the final cohort table.
+
+Collect only counts already present in verified text, JSON, or CSV artifacts, such as:
+
+```text
+training-summary sample counts
+prediction-export row counts
+rule-label row counts
+majority-vote row counts
+matching analysis n
+CATE analysis n
+original population n
+outcome-downsampled population n
+outcome rate
+treatment-specific model n
+```
+
+Every row must include:
+
+```text
+dataset
+population_name
+pipeline_stage
+sampling_condition
+count_type
+count_value
+outcome_rate
+source_path
+source_sha256
+scope
+admission_status
+caveat_codes
+notes
+```
+
+Do not combine counts from different pipeline contracts as though they describe the same cohort.
+
+Do not infer raw-dataset cohort counts from downstream artifacts.
+
+---
+
+# 11. Mortality-Prediction Result Validation
+
+Inspect all mortality-prediction outputs across causal runs.
+
+Determine:
+
+* whether copies are hash identical across estimator runs;
+* whether they depend only on dataset and proxy input;
+* whether original/downsampled variants differ;
+* model type;
+* outcome definition;
+* metrics present;
+* failure or warning status.
+
+Create `checked_mortality_prediction.csv`.
+
+Include only existing values.
+
+Label these results as:
+
+```text
+proxy-state mortality-prediction association
+```
+
+not causal effect evidence.
+
+Mark duplicate copies as excluded once a canonical equivalent is selected.
+
+---
+
+# 12. Causal Run Validation
+
+## 12.1 Expected Matrix
+
+Validate all twelve run families:
+
+```text
+2 datasets
+× 3 estimators
+× 2 sampling conditions
+= 12 causal run families
+```
+
+Estimators:
+
+```text
+CausalForestDML
+LinearDML
+CausalPFN
+```
+
+Sampling conditions:
+
+```text
+original
+outcome-downsampled
+```
+
+Verify each run using `run_summary.json`, not only the directory name.
+
+## 12.2 Stage Status
+
+For each run record:
 
 ```text
 graph
-majority vote
-mortality prediction
+majority_vote
+mortality_prediction
 matching
-CATE estimation
-saved-CATE analysis
-permutation tests
-```
-
-Verify the exact active stage names and ordering from `main.py`.
-
-Explain:
-
-* stage status;
-* enabled/skipped/failed behavior;
-* stage output directory;
-* log path;
-* run-summary recording;
-* estimator-specific stage skips.
-
-Do not imply every stage succeeded for every run without checking.
-
-## 15.3 Original Versus Outcome-Downsampled Conditions
-
-Carry forward the Stage 4.4S correction.
-
-State:
-
-* downsampling operates on mortality outcome classes;
-* it is not exposure balancing;
-* it changes the empirical analysis population;
-* it changes the sample outcome rate;
-* it can affect matching, nuisance fitting, CATE aggregation, and normalized CATE;
-* original and downsampled runs should not be treated as estimates of the same population quantity without an approved argument;
-* neither condition is selected as primary in this task.
-
-## 15.4 Exposure Loop
-
-Explain that each causal run evaluates multiple dataset-specific proxy-state exposures.
-
-Do not list treatment-specific outcomes or results.
-
-Record that final inclusion of exposures in the Results chapter requires:
-
-* treatment column availability;
-* graph-node availability;
-* valid binary values;
-* adjustment diagnostics;
-* support diagnostics;
-* artifact completeness;
-* approved estimand wording.
-
-## 15.5 Causal Matrix Table
-
-Create:
-
-```latex
-\label{tab:causal-experimental-matrix}
-```
-
-Suggested columns:
-
-```text
-Dataset
-Estimator
-Sampling condition
-Graph
-Exposure source
-Diagnostics expected
-Archived run status
-Configuration provenance
-```
-
-Do not include effect estimates.
-
----
-
-# 16. Computational Environment and Reproducibility
-
-## 16.1 Repository Versions
-
-Document separately:
-
-```text
-parent CliniCause commit
-causal nested-repository gitlink
-active nested worktree status
-STraTS nested repository state
-```
-
-Do not imply that a dirty local worktree is reproducible from a commit.
-
-## 16.2 Software Metadata
-
-Inspect available metadata for:
-
-```text
-Python
-EconML
-scikit-learn
-NumPy
-Pandas
-SciPy
-Matplotlib
-NetworkX
-Optuna
-PyTorch
-CUDA availability
-device name
-platform
-training timestamp
-estimator module and class
-artifact schema version
+cate_estimation
+analyze_cate_results
+permutations_test
 ```
 
 Distinguish:
 
-* metadata captured in active code;
-* metadata actually present in archived artifacts;
-* metadata missing from old runs;
-* metadata inferred from requirements only.
-
-Requirements files are intended environments, not proof of the producing environment.
-
-## 16.3 Hardware Metadata
-
-Record only hardware fields actually stored or documented.
-
-When CPU, RAM, GPU, operating system, or cluster-node details are incomplete, use a placeholder.
-
-Do not infer hardware from path names such as `/truenas/`.
-
-## 16.4 Configuration Provenance
-
-Explain the configuration hierarchy:
-
 ```text
-source defaults
-dataset config CSV
-CLI overrides
-resolved runtime values
-run summary
-saved artifact metadata
+success
+intentional skip
+partial
+failed
+missing
+unknown
 ```
 
-Verify precedence separately for each major script when it differs.
+CausalPFN downstream skips must be classified as intentional when the run summary supports that interpretation.
 
-Document that numbered final-run config CSVs referenced through absolute paths are not locally archived when that remains true.
+Do not call an intentional skip a negative diagnostic result.
 
-## 16.5 Path Portability
+## 12.3 Missing Configurations
 
-Explain that many archived run summaries contain absolute producing-machine paths.
+For every run:
 
-State:
+* record the numbered configuration path referenced by the run;
+* search the local repository for the exact file;
+* record whether it exists;
+* hash it when found;
+* compare it with the unnumbered compact config only when both exist;
+* do not silently substitute an unnumbered config for a missing numbered config.
 
-* absolute paths support historical context;
-* they are not portable execution instructions;
-* local path existence must not be assumed;
-* stable relative manifests and checksums are still required.
-
-## 16.6 Artifact Manifest Status
-
-Explain what a complete manifest should contain:
+When numbered configs remain missing, use:
 
 ```text
-artifact path
-artifact role
-dataset
-model or estimator
-sampling condition
-source commit
-config path and hash
-command
-input hashes
-output hashes
-row and column schema
-timestamp
-environment
-copy/archive history
-status
+BLOCKED_MISSING_CONFIGURATION
 ```
 
-Do not create the final results manifest during Stage 4.5.
+for exact configuration claims, but do not automatically exclude otherwise execution-supported result artifacts.
 
-Stage 4.6A will construct or validate that manifest.
+---
 
-## 16.7 Reproducibility Table
+# 13. Canonical Causal Summary Selection
+
+## 13.1 Candidate Summary Files
+
+For each causal run, inspect all files matching forms such as:
+
+```text
+global_summary.csv
+manager_global_summary.csv
+physionet_global_summary.csv
+mimic_global_summary.csv
+*_manager_global_summary.csv
+```
+
+Compare:
+
+* headers;
+* row counts;
+* treatment sets;
+* shared-column value equality;
+* extra columns;
+* missing columns;
+* file hashes;
+* dataset naming;
+* producing-log references.
+
+## 13.2 Selection Rules
+
+Prefer the richest full per-treatment global summary when:
+
+* dataset identity is correct;
+* treatment rows are complete;
+* values agree with detailed per-treatment files;
+* no conflict is found.
+
+Reduced manager summaries may be retained as aggregation/support artifacts but not selected over a richer verified source.
+
+For the known irregularities:
+
+```text
+outputs-physionet-forest/cate_estimation/physionet_global_summary.csv
+```
+
+may be selected only after direct validation against treatment-level sources.
+
+A file named:
+
+```text
+physionet_manager_global_summary.csv
+```
+
+inside a MIMIC run must be classified as mislabeled or obsolete unless direct evidence proves otherwise.
+
+Record all decisions in:
+
+```text
+results_manifest.csv
+results_manifest.md
+results_source_packet.md
+```
+
+Do not rename or delete source artifacts.
+
+---
+
+# 14. Matching Checked Tables
+
+Validate:
+
+```text
+final-results/causal-outputs/cate_cross_run_matching_table.csv
+final-results/causal-outputs/cate_cross_run_matching_failures.csv
+```
+
+Cross-check every included row against its per-run matching source.
 
 Create:
 
-```latex
-\label{tab:reproducibility-status}
+```text
+checked_matching_results.csv
+checked_matching_failures.csv
 ```
 
-Suggested columns:
+`checked_matching_results.csv` should preserve source fields such as:
 
 ```text
-Reproducibility element
-Available evidence
-Missing evidence
-Impact
-Required resolution stage
+dataset
+estimator
+sampling_condition
+treatment
+n
+n_treated
+n_control
+n_pairs
+match_rate
+mean_pair_effect
+std_pair_effect
+normalized_pair_effect
+final_allowed_distance
+sufficient_pairs
+observed_confounders
+source_path
+source_sha256
+row_validation_status
+admission_status
+caveat_codes
 ```
 
-Rows should cover:
+Do not rename `mean_pair_effect` as ATE or ATT.
+
+`checked_matching_failures.csv` must preserve:
 
 ```text
-source commits
-dataset configs
-raw data access
-processed artifacts
-predictive splits
-checkpoint/export mapping
-causal run configs
-software environment
-hardware environment
-result checksums
-prompt provenance
-clinical review
+dataset
+estimator
+sampling_condition
+treatment
+failure_reason
+support_fields
+source_path
+admission_status
+notes
 ```
 
-Do not hide missing evidence.
+A matching failure is not a zero effect.
 
 ---
 
-# 17. Evaluation and Result-Selection Policy
+# 15. CATE Checked Table
 
-Chapter 9 should state the policy that Stage 4.6A must apply before numerical drafting.
+Validate:
 
-A result may be admitted to the Results chapter only when:
-
-1. the producing run is identified;
-2. dataset, estimator/model, and sampling condition are known;
-3. the source artifact exists;
-4. the required schema is validated;
-5. the result status is not failed;
-6. source fields are interpreted correctly;
-7. the input and output relationship is documented;
-8. any fallback diagnostic is labeled as fallback;
-9. the relevant estimand and population are stated;
-10. unresolved limitations remain visible.
-
-State that directory names, copied summaries, or non-null cells alone are insufficient.
-
-Create a compact checklist table:
-
-```latex
-\label{tab:result-admission-policy}
+```text
+final-results/causal-outputs/cate_cross_run_unified_table.csv
+final-results/causal-outputs/cate_cross_run_summary.csv
+final-results/causal-outputs/cate_cross_run_cate_vs_matching.csv
 ```
 
-Do not select actual results during this stage.
+Cross-check each candidate numerical row against:
+
+* selected canonical per-run CATE summary;
+* treatment-level CATE CSV;
+* control-message CSV;
+* run summary;
+* estimator and sampling metadata.
+
+Create:
+
+```text
+checked_cate_candidates.csv
+```
+
+Include:
+
+```text
+dataset
+estimator
+sampling_condition
+run_name
+treatment
+model_n
+outcome_rate
+treatment_rate
+mean_cate
+normalized_cate
+cate_std
+cate_min
+cate_max
+interval_fields_available
+observed_confounders
+missing_graph_candidates
+identifiable_with_available_nodes
+source_run_summary
+source_cate_summary
+source_treatment_csv
+source_control_message
+row_validation_status
+diagnostic_availability
+selection_status
+admission_status
+provenance_class
+caveat_codes
+notes
+```
+
+Do not create a new average across estimators, datasets, sampling conditions, or treatments.
+
+Do not call `mean_cate` ATE.
+
+Do not call `normalized_cate` a risk ratio, relative risk, or percent reduction.
+
+Set:
+
+```text
+selection_status = PENDING_HUMAN_SELECTION
+```
+
+when primary estimator, sampling condition, or exposure status remains unresolved.
 
 ---
 
-# 18. Allowed Edit Scope
+# 16. Heterogeneity Candidate Table
+
+Create:
+
+```text
+checked_heterogeneity_candidates.csv
+```
+
+Inventory existing:
+
+```text
+patient-level CATE distributions
+feature-importance files
+coefficient files
+effect-modifier columns
+interval columns
+```
+
+Use one row per candidate artifact or treatment-level diagnostic, not one row per patient.
+
+Include:
+
+```text
+dataset
+estimator
+sampling_condition
+treatment
+diagnostic_type
+source_path
+source_sha256
+row_count
+feature_count
+interval_available
+figure_candidate
+admission_status
+selection_status
+caveat_codes
+notes
+```
+
+Do not interpret feature importance as mechanism.
+
+Do not calculate new subgroup effects.
+
+---
+
+# 17. Sensitivity Checked Table
+
+Inspect all non-PFN:
+
+```text
+benchmark_summary.csv
+control_messages_analyze_cate_results.csv
+treatment-level sensitivity reports
+sensitivity contour PNGs
+saved-training diagnostic fields
+```
+
+Create:
+
+```text
+checked_sensitivity_candidates.csv
+```
+
+Preserve fields when present for:
+
+```text
+dataset
+estimator
+sampling_condition
+treatment
+analysis_status
+diagnostic_name
+diagnostic_value
+diagnostic_lower
+diagnostic_upper
+diagnostic_source
+estimator_native
+saved_training_direct
+recomputed
+fallback
+benchmark_variable
+benchmark_status
+residual_status
+contour_path
+contour_sha256
+warnings
+source_path
+row_validation_status
+selection_status
+admission_status
+caveat_codes
+notes
+```
+
+Rules:
+
+* source classification must accompany every numerical sensitivity value;
+* fallback values must never be labeled estimator-native;
+* missing values must remain missing;
+* partial treatment reports must remain partial;
+* PFN rows may be represented as `NOT_APPLICABLE` or intentional skip, but no synthetic zeros may be added.
+
+Do not select the thesis-primary sensitivity contour.
+
+---
+
+# 18. Permutation Checked Table
+
+Inspect all archived:
+
+```text
+treatment_permutation_results.csv
+outcome_permutation_results.csv
+permutation logs
+run summaries
+```
+
+Create:
+
+```text
+checked_permutation_candidates.csv
+```
+
+Include:
+
+```text
+dataset
+estimator
+sampling_condition
+run_name
+treatment
+permutation_type
+num_trials
+seed
+original_statistic
+permuted_mean
+permuted_std
+z_score
+other_existing_fields
+source_path
+source_sha256
+subprocess_status
+warning_fields
+row_validation_status
+selection_status
+admission_status
+caveat_codes
+notes
+```
+
+Do not calculate new p-values.
+
+Do not call the procedure a formal randomization test unless the existing source explicitly supports that interpretation.
+
+PFN skips must remain visible.
+
+---
+
+# 19. Figure Candidate Table
+
+Create:
+
+```text
+checked_figure_candidates.csv
+```
+
+Inventory candidates for:
+
+```text
+F-LC-PHY-STRATS
+F-LC-MIMIC-STRATS
+F-LC-ALL
+F-MODEL-COMP-01
+F-PROXY-PREV-01
+F-PROXY-COOC-01
+F-CATE-DIST-01
+F-FEATURE-IMP-01
+F-OVERLAP-01
+F-SENS-SELECT
+F-PERM-01
+```
+
+For existing figures, include:
+
+```text
+figure_id
+dataset
+estimator
+sampling_condition
+treatment
+source_path
+source_sha256
+width
+height
+producing_script
+input_source
+source_status
+selection_status
+admission_status
+caveat_codes
+notes
+```
+
+For missing planned figures, include one status row with:
+
+```text
+BLOCKED_MISSING_RESULT
+```
+
+Do not generate, copy, or alter any figure in this stage.
+
+---
+
+# 20. Results Source Packet
+
+Create:
+
+```text
+thesis-writing/results/results_source_packet.md
+```
+
+Organize it by the planned Chapter 10 sections:
+
+```text
+C10.1 Data and cohort summary
+C10.2 Proxy prevalence and co-occurrence
+C10.3 Predictive performance
+C10.4 Learning-curve diagnostics
+C10.5 Mortality prediction from proxy states
+C10.6 Matching results
+C10.7 CATE estimates
+C10.8 Heterogeneity diagnostics
+C10.9 Overlap and support
+C10.10 Sensitivity
+C10.11 Permutation checks
+C10.12 Cross-dataset comparison
+```
+
+For every section record:
+
+```text
+planned table or figure
+checked Stage 4.6A file
+canonical source artifacts
+admission status
+available numerical fields
+blocked fields
+required wording boundary
+remaining human decision
+remaining provenance limitation
+recommended main-text or appendix role
+```
+
+Do not paste complete numerical tables into the Markdown source packet.
+
+Refer to the checked CSVs instead.
+
+---
+
+# 21. Results Decision Register
+
+Create:
+
+```text
+thesis-writing/results/results_decision_register.md
+```
+
+Include one decision record for each unresolved result-hierarchy question.
+
+At minimum:
+
+```text
+DEC-RESULT-001 — primary causal sampling condition
+DEC-RESULT-002 — primary causal estimator
+DEC-RESULT-003 — role of CausalPFN
+DEC-RESULT-004 — matching estimand wording
+DEC-RESULT-005 — mean_cate wording
+DEC-RESULT-006 — normalized_CATE inclusion and wording
+DEC-RESULT-007 — thesis-primary proxy-state exposures
+DEC-RESULT-008 — original versus downsampled presentation
+DEC-RESULT-009 — cross-dataset comparison scope
+DEC-RESULT-010 — sensitivity-contour selection
+DEC-RESULT-011 — permutation main-text versus appendix role
+DEC-RESULT-012 — overlap figure omission or generation requirement
+DEC-RESULT-013 — InterpNet exclusion
+DEC-RESULT-014 — learning-curve figure selection
+DEC-RESULT-015 — cohort-count source
+DEC-RESULT-016 — primary versus supplementary tables
+```
+
+For each decision provide:
+
+```text
+decision ID
+question
+available options
+verified evidence
+scientific consequences
+provenance consequences
+recommended option
+recommendation confidence
+human owner
+current status
+required before Stage 4.6B
+```
+
+Recommendations are nonbinding.
+
+Do not silently enact a recommendation in the checked tables.
+
+A reasonable recommendation may prioritize:
+
+* the original, non-downsampled cohort for population interpretation;
+* an estimator with complete sensitivity/permutation support for the main causal analysis;
+* alternative estimators as triangulation or sensitivity analyses;
+* CausalPFN as exploratory while citation and diagnostic gaps remain.
+
+However, every recommendation must be justified from verified methods and artifact status rather than assumed.
+
+---
+
+# 22. Human-Readable Manifest
+
+Create:
+
+```text
+thesis-writing/results/results_manifest.md
+```
+
+It must summarize:
+
+1. parent and nested Git states;
+2. ignored/untracked archive status;
+3. manifest scope;
+4. predictive experiment coverage;
+5. missing InterpNet results;
+6. proxy result coverage;
+7. twelve causal run families;
+8. stage statuses;
+9. canonical summary selections;
+10. duplicate and mislabeled exclusions;
+11. missing numbered configs;
+12. source-commit limitations;
+13. predictive split/checkpoint limitations;
+14. sensitivity source classifications;
+15. PFN diagnostic skips;
+16. permutation coverage;
+17. checked CSV inventory;
+18. figure-candidate inventory;
+19. decisions required before Chapter 10;
+20. exact readiness status.
+
+Do not include broad scientific conclusions.
+
+---
+
+# 23. Updating Existing Logs
 
 You may edit:
 
 ```text
-thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
-thesis-writing/thesis/chapters/09_experimental_design.tex
 thesis-writing/logs/unresolved_placeholders.md
 thesis-writing/logs/deferred_fixes.md
 ```
 
-You may create:
+Resolve placeholders only when the manifest supplies the missing evidence.
+
+Do not mark advisor decisions resolved merely because a recommendation was written.
+
+Add new deferred issues using IDs:
 
 ```text
-thesis-writing/logs/stage_4_5_evidence_report.md
+DF-4.6A-001
+DF-4.6A-002
+...
 ```
 
-A clean build may update:
+Assess at minimum:
+
+* missing exact producing commits;
+* missing numbered causal configs;
+* missing predictive split manifest;
+* missing checkpoint-to-export mapping;
+* archive-copy provenance;
+* duplicate or mislabeled causal summaries;
+* source conflicts found during row validation;
+* missing PhysioNet proxy tables;
+* incomplete cohort counts;
+* treatment-specific open-path diagnostics;
+* incomplete sensitivity rows;
+* permutation inconsistencies;
+* figure-selection blockers;
+* unresolved primary estimator and sampling choices.
+
+---
+
+# 24. Allowed Edit Scope
+
+You may create or edit only:
+
+```text
+thesis-writing/results/**
+thesis-writing/logs/stage_4_6A_evidence_report.md
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
+```
+
+A clean thesis build may update:
 
 ```text
 thesis-writing/thesis/main.pdf
 ```
 
-A narrow compilation-only correction may be made to:
-
-```text
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/latexmkrc
-```
-
-only when required to fix a fatal build problem and documented in the evidence report.
-
 Do not edit:
 
 ```text
-Chapters 1–7
-Chapters 10–12
-front matter
-appendices
-research code
-configs
-result artifacts
-prompt artifacts
+thesis-writing/thesis/chapters/**
+thesis-writing/thesis/frontmatter/**
+thesis-writing/thesis/appendices/**
+thesis-writing/planning/**
+thesis-writing/audit/**
+causal-irregular-time-series/**
+STraTS/**
+final-results/**
 bibliography files
-literature PDFs
-figure files
-other planning or audit files
+prompt artifacts
 ```
 
-Do not create numerical result tables or plots.
+Do not edit Chapter 10.
 
 ---
 
-# 19. Forbidden Actions
+# 25. Forbidden Actions
 
 Do not:
 
-* rerun CATE estimation;
+* rerun model training;
+* rerun prediction exports;
+* rerun proxy tagging;
+* rerun majority voting;
+* rerun mortality prediction;
 * rerun matching;
+* rerun CATE estimation;
 * rerun sensitivity analysis;
 * rerun permutation tests;
-* generate overlap diagnostics;
-* regenerate result summaries;
-* modify result CSVs;
-* modify run summaries;
-* modify graphs;
-* modify research code;
-* modify configurations;
-* select a primary estimator;
-* select a primary sampling condition;
-* select thesis-primary exposures;
-* present numerical predictive metrics;
-* present effect estimates;
-* present matching effects;
-* present robustness values;
-* present sensitivity intervals;
-* present permutation statistics;
-* present statistical significance;
-* rank estimators;
-* claim positivity;
-* claim robustness;
-* claim causal validation;
+* regenerate graphs;
+* generate figures;
+* modify result artifacts;
+* move result artifacts;
+* rename source artifacts;
+* delete duplicate files;
+* calculate missing proxy results from patient-level tags;
+* calculate new cohort statistics from raw or processed data;
+* recompute predictive metrics;
+* calculate new CATE summaries;
+* calculate new p-values;
+* average estimators;
+* merge original and outcome-downsampled populations;
+* select a primary estimator without recording the human-decision gate;
+* select a primary sampling condition without recording the human-decision gate;
+* write Chapter 10 prose;
 * commit or push.
 
----
-
-# 20. Placeholder Policy
-
-Replace generic placeholders in Chapters 8 and 9 with precise placeholders such as:
-
-```text
-[RESULT-SELECTION REQUIRED: select the thesis-primary overlap and support diagnostics after the Stage 4.6A manifest audit]
-```
-
-```text
-[FIGURE REQUIRED: generate or recover a dedicated overlap/common-support diagnostic before claiming empirical positivity]
-```
-
-```text
-[RESULT-SELECTION REQUIRED: identify the thesis-primary estimator, dataset, sampling condition, exposure, and source status for any sensitivity contour]
-```
-
-```text
-[VALIDATION REQUIRED: distinguish estimator-native, saved-training, recomputed, and fallback sensitivity outputs for every selected treatment]
-```
-
-```text
-[VALIDATION REQUIRED: verify archived permutation trial counts, seeds, estimator type, and subprocess status for every selected run]
-```
-
-```text
-[SUPERVISOR DECISION REQUIRED: determine whether permutation checks are main-text evidence or appendix diagnostics]
-```
-
-```text
-[SUPERVISOR DECISION REQUIRED: select the primary causal estimator and sampling condition]
-```
-
-```text
-[SUPERVISOR DECISION REQUIRED: determine the role of outcome-downsampled analyses]
-```
-
-```text
-[VALIDATION REQUIRED: recover the numbered final-run configuration CSVs or document that they are irrecoverable]
-```
-
-```text
-[VALIDATION REQUIRED: create the final predictive and causal artifact manifest with hashes and producing commands]
-```
-
-```text
-[VALIDATION REQUIRED: document the producing hardware and software environment for final runs]
-```
-
-Add every unresolved placeholder to:
-
-```text
-thesis-writing/logs/unresolved_placeholders.md
-```
-
-Record:
-
-* file;
-* section;
-* exact placeholder;
-* reason;
-* evidence or decision needed;
-* expected resolution stage;
-* status.
-
-Do not duplicate equivalent existing placeholders.
+Parsing, copying existing values into checked tables, hashing, schema validation, equality comparison, and label normalization are allowed.
 
 ---
 
-# 21. Deferred-Fix Updates
+# 26. Validation Requirements
 
-Review all existing deferred fixes.
+## 26.1 Manifest Validation
 
-Do not duplicate existing issues, including:
+Confirm:
+
+* every `artifact_id` is unique;
+* every non-missing relative path exists;
+* every listed hash matches the source file;
+* every generated checked CSV is hashed;
+* no canonical path is an absolute external path;
+* all missing paths have an explicit blocked status;
+* all duplicate groups have one canonical source or remain unresolved;
+* no excluded artifact is selected as canonical.
+
+## 26.2 Predictive Validation
+
+Confirm:
+
+* ten completed summary families are inspected;
+* both missing InterpNet result families are recorded;
+* summary/log comparisons are complete;
+* validation and test metrics are not conflated;
+* prediction exports are schema checked;
+* export split is not overstated;
+* checkpoints are not deserialized.
+
+## 26.3 Proxy Validation
+
+Confirm:
+
+* rule and majority-vote artifacts are distinguished;
+* duplicate majority-vote files are grouped by hash;
+* MIMIC tables are not attributed to PhysioNet;
+* missing PhysioNet tables are not regenerated;
+* mortality association remains noncausal.
+
+## 26.4 Causal Validation
+
+Confirm:
+
+* all twelve run summaries are parsed;
+* estimator and sampling labels agree with source evidence;
+* intentional PFN skips remain distinct from failures;
+* numbered configs are not silently substituted;
+* every selected global summary is directly validated;
+* misleading manager-summary files are excluded;
+* cross-run rows agree with selected per-run sources or are blocked.
+
+## 26.5 Numerical Integrity
+
+For each checked numerical table:
+
+* preserve original source values;
+* do not round;
+* do not transform effect scales;
+* do not calculate new aggregates;
+* include source path and hash;
+* include row-validation status;
+* include admission and caveat fields;
+* retain missing values as missing;
+* record conflicts instead of choosing silently.
+
+## 26.6 Scientific-Language Validation
+
+Search generated Markdown and CSV notes for:
 
 ```text
-DF-4.0-004 — result archive manifest
-DF-4.0-005 — missing numbered configs
-DF-4.0-007 — missing dedicated overlap diagnostics
-DF-4.1-002 — predictive split and artifact provenance
-DF-4.2-002 — checkpoint-to-export mapping
-DF-4.2-003 — wrapper inconsistency
-DF-4.2-004 — missing final InterpNet artifacts
-DF-4.3-006 — majority-vote voter manifests
-DF-4.4-005 — treatment-specific adjustment validation
-DF-4.4-010 — matching estimand wording
-DF-4.4-011 — mean-CATE wording
-DF-4.4-012 — normalized-CATE wording
-DF-4.4-013 — CausalPFN status
-DF-4.4S-001 — outcome-based downsampling and causal estimand
+proves causality
+true effect
+validated causal effect
+ATE
+ATT
+risk ratio
+relative risk
+percent reduction
+significant
+clinically actionable
+best estimator
+superior estimator
+positivity established
+confounding eliminated
 ```
 
-Append new issues with IDs beginning:
+Any occurrence must be:
 
-```text
-DF-4.5-
-```
+* a prohibited-language warning;
+* an explicitly qualified decision question;
+* or removed.
 
-Assess at minimum:
+## 26.7 Scope Validation
 
-1. Dedicated overlap diagnostics missing.
-2. Covariate-balance diagnostics missing or incomplete.
-3. Sensitivity source classification incomplete.
-4. Estimator-native versus fallback sensitivity ambiguity.
-5. Missing residuals or model artifacts for some treatments.
-6. Benchmark-confounder availability and selection.
-7. Sensitivity contour selection and provenance.
-8. Permutation trial-count or seed provenance.
-9. Permutation subprocess failures or partial runs.
-10. Unsupported permutation stages for CausalPFN.
-11. Missing final predictive run manifest.
-12. Missing causal config CSVs.
-13. Absolute-path portability.
-14. Producing environment and hardware gaps.
-15. Source-commit versus dirty-worktree ambiguity.
-16. Primary experiment and result-selection decisions.
-17. Original-versus-downsampled population comparability.
-18. Incomplete artifact hashes and archive-copy history.
+Confirm:
 
-For every issue include:
-
-```text
-ID
-area
-path
-issue
-evidence
-impact
-recommended later action
-urgency
-```
+* no thesis chapter was edited;
+* no result artifact was edited;
+* no experiment ran;
+* no research code changed;
+* no configuration changed;
+* no planning or audit file changed;
+* no source figure changed;
+* no commit or push occurred.
 
 ---
 
-# 22. Stage 4.5 Evidence Report
+# 27. Stage 4.6A Evidence Report
 
 Create:
 
 ```text
-thesis-writing/logs/stage_4_5_evidence_report.md
+thesis-writing/logs/stage_4_6A_evidence_report.md
 ```
 
-It must contain:
+It must include:
 
-## 22.1 Git State
+## 27.1 Git State
 
-* verified `a96d475`;
+* verified `7f5206a`;
 * parent branch and HEAD;
-* nested repository states;
+* causal and STraTS states;
 * initial and final worktrees;
+* ignored archive status;
 * files changed.
 
-## 22.2 Baseline Build
+## 27.2 Baseline Build
 
-* commands;
+* command;
 * result;
 * page count;
 * warnings.
 
-## 22.3 Files Inspected
+## 27.3 Artifact Inventory Summary
 
-Group by:
-
-* thesis;
-* planning;
-* audit;
-* literature;
-* active source;
-* configs;
-* orchestration;
-* predictive artifacts;
-* causal artifacts;
-* sensitivity artifacts;
-* permutation artifacts;
-* environment/provenance artifacts.
-
-## 22.4 Overlap and Support Audit
-
-Record:
+Counts by:
 
 ```text
-diagnostic
-source
-implemented status
-archived status
-schema
-interpretation
-missing evidence
-```
-
-## 22.5 Sensitivity Pipeline Matrix
-
-Record:
-
-```text
-diagnostic
-training-time source
-saved artifact
-analysis-time source
-applicable estimator
-source/status field
-fallback behavior
-output
-interpretation limit
-```
-
-## 22.6 Sensitivity Artifact Inventory
-
-For every run family, summarize without copying thesis result values:
-
-```text
+result family
 dataset
-estimator
+model or estimator
 sampling condition
-analysis stage status
-treatment folders
-benchmark summary availability
-control-message availability
-contour availability
-partial/failure status
-provenance status
+file type
+admission status
+provenance class
 ```
 
-## 22.7 Permutation Pipeline Matrix
+## 27.4 Predictive Validation
 
-Record:
+* completed families;
+* missing InterpNet families;
+* summary/log agreement;
+* export schema;
+* split/checkpoint limitations.
 
-```text
-permutation type
-disrupted variable
-held-fixed inputs
-trial configuration
-seed behavior
-subprocess command
-supported estimators
-outputs
-failure handling
-interpretation
-```
+## 27.5 Proxy Validation
 
-## 22.8 Permutation Artifact Inventory
+* rule outputs;
+* majority-vote outputs;
+* duplicate groups;
+* available tables;
+* missing tables.
 
-For every run family record:
+## 27.6 Causal Run Matrix
 
-```text
-dataset
-estimator
-sampling condition
-stage status
-treatment permutation file
-outcome permutation file
-trial-count field
-error/warning fields
-provenance status
-```
+* all twelve runs;
+* stage statuses;
+* config status;
+* canonical CATE source;
+* matching source;
+* sensitivity availability;
+* permutation availability.
 
-Do not copy substantive numerical outcomes into Chapter 8.
-
-## 22.9 Predictive Experiment Matrix
-
-Record:
-
-```text
-dataset
-model
-implementation
-wrapper
-training summary
-prediction export
-split provenance
-checkpoint provenance
-final-result status
-```
-
-## 22.10 Causal Experiment Matrix
-
-Record:
-
-```text
-dataset
-estimator
-sampling condition
-run folder
-run summary
-stage statuses
-config path
-config availability
-environment metadata
-result-manifest status
-```
-
-## 22.11 Reproducibility Matrix
-
-Record:
-
-```text
-element
-available
-source
-missing
-impact
-resolution stage
-```
-
-## 22.12 Citations
-
-List every inserted key and the precise claim it supports.
-
-## 22.13 Tables
-
-List all created labels:
-
-```text
-tab:overlap-support-design
-tab:sensitivity-diagnostic-design
-tab:permutation-reproducibility-design
-tab:predictive-experimental-matrix
-tab:causal-experimental-matrix
-tab:reproducibility-status
-tab:result-admission-policy
-```
-
-Adjust labels only when existing labels conflict.
-
-## 22.14 Placeholders
+## 27.7 Duplicate and Conflict Audit
 
 List:
 
-* removed generic placeholders;
-* retained precise placeholders;
+```text
+duplicate group
+candidate files
+shared fields
+equality status
+canonical selection
+exclusion status
+remaining uncertainty
+```
+
+## 27.8 Checked Table Inventory
+
+For every generated CSV record:
+
+```text
+path
+row count
+column count
+hash
+source family
+blocked rows
+conflicting rows
+admissible rows
+pending-selection rows
+```
+
+## 27.9 Source Packet
+
+Summarize readiness for every Chapter 10 section.
+
+## 27.10 Decision Register
+
+List all unresolved human decisions and the nonbinding recommendation.
+
+## 27.11 Placeholders and Deferred Fixes
+
+* resolved placeholders;
+* retained placeholders;
 * new placeholders;
-* planned resolution stage.
+* confirmed existing fixes;
+* new `DF-4.6A-*` issues.
 
-## 22.15 Deferred Fixes
-
-List:
-
-* existing relevant issues confirmed;
-* new `DF-4.5-*` issues;
-* resolved issues, when any.
-
-## 22.16 Final Build
+## 27.12 Final Build
 
 Run:
 
@@ -1686,231 +1801,104 @@ Record:
 * reference status;
 * duplicate labels;
 * fatal errors;
-* Biber errors;
 * layout warnings.
 
-## 22.17 Readiness
+## 27.13 Readiness
 
-Use one:
+Use exactly one:
 
 ```text
-READY FOR STAGE 4.6A
-READY WITH NON-BLOCKING WARNINGS
-BLOCKED BEFORE STAGE 4.6A
+READY FOR STAGE 4.6B
+READY FOR HUMAN RESULT-SELECTION DECISIONS
+BLOCKED: MANIFEST OR CHECKED TABLES INCOMPLETE
 ```
 
-Do not begin Stage 4.6A.
+Use:
+
+```text
+READY FOR STAGE 4.6B
+```
+
+only when all mandatory result-hierarchy decisions are already documented as approved.
+
+Use:
+
+```text
+READY FOR HUMAN RESULT-SELECTION DECISIONS
+```
+
+when the manifest and checked tables are complete but primary estimator, sampling, exposure, figure, or table hierarchy decisions remain open.
+
+Do not begin Stage 4.6B.
 
 ---
 
-# 23. Validation Requirements
+# 28. Completion Criteria
 
-## 23.1 Numerical-Result Search
+Stage 4.6A is complete only when:
 
-Search Chapters 8 and 9 for accidental result reporting, including:
-
-```text
-mean_cate
-normalized_CATE
-robustness value
-sensitivity interval
-match rate
-permutation mean
-permutation standard deviation
-z-score
-AUROC
-AUPRC
-minRP
-p-value
-significant
-best
-superior
-```
-
-Method or schema names may remain.
-
-Remove numerical values and substantive result conclusions.
-
-## 23.2 Causal-Language Search
-
-Search for:
-
-```text
-proves causality
-validates the effect
-eliminates confounding
-establishes positivity
-robust causal result
-confirmed effect
-true effect
-clinically actionable
-treatment recommendation
-```
-
-Remove or qualify every occurrence.
-
-## 23.3 Overlap Validation
-
-Confirm:
-
-* matching diagnostics are called indirect support evidence;
-* no propensity plots are claimed when absent;
-* matching success is not called proof of positivity;
-* matching failure is not interpreted as zero effect;
-* dedicated overlap diagnostics remain visibly missing.
-
-## 23.4 Sensitivity Validation
-
-Confirm:
-
-* estimator-native and fallback outputs are distinguished;
-* source/status fields are described;
-* partial and failed analyses remain visible;
-* CausalPFN exclusions are explicit;
-* no sensitivity value is reported;
-* no sensitivity result is called causal validation.
-
-## 23.5 Permutation Validation
-
-Confirm:
-
-* treatment and outcome permutations are described separately;
-* the actual shuffled object matches source;
-* seeds and trial settings are not invented;
-* subprocess and failure behavior match source;
-* unsupported estimator stages are identified;
-* permutation checks are called sanity diagnostics rather than identification proof.
-
-## 23.6 Experimental-Matrix Validation
-
-Confirm:
-
-* each run family is verified from inventory or run summaries;
-* directory names alone are not used as proof;
-* original and downsampled populations are separated;
-* no primary estimator is selected;
-* no primary sampling condition is selected;
-* no final exposure is selected;
-* InterpNet remains result-missing when still unsupported.
-
-## 23.7 Reproducibility Validation
-
-Confirm:
-
-* requirements files are not treated as producing-environment proof;
-* absolute paths are not treated as portable;
-* missing configs remain visible;
-* dirty worktree state is distinguished from committed state;
-* environment fields are reported only when archived;
-* the final result manifest is deferred to Stage 4.6A.
-
-## 23.8 Citation Validation
-
-Confirm:
-
-* every citation key exists;
-* no citation is used as local execution evidence;
-* no paper is used to validate the project DAG;
-* Biber reports no unresolved citations.
-
-## 23.9 LaTeX Validation
-
-Scan the clean-build log for:
-
-```text
-LaTeX Error
-Undefined control sequence
-Citation ... undefined
-Reference ... undefined
-There were undefined references
-multiply defined
-Biber error
-Emergency stop
-Fatal error
-```
-
-Record overfull and underfull boxes separately.
-
-## 23.10 Scope Validation
-
-Confirm:
-
-* only Chapters 8 and 9 received substantive prose;
-* no result value was inserted;
-* no figure was generated or copied;
-* no research code was edited;
-* no config was edited;
-* no result artifact was edited;
-* no prompt artifact was edited;
-* no bibliography record was edited;
-* no experiment was run;
-* no other thesis chapter was drafted;
-* no commit or push occurred.
-
----
-
-# 24. Completion Criteria
-
-Stage 4.5 is complete only when:
-
-* commit `a96d475` is verified;
-* Stage 4.4S corrections are preserved;
-* Chapter 8 documents overlap/support limitations;
-* matching support is not overstated;
-* sensitivity evidence layers are distinguished;
-* estimator-native and fallback outputs are separated;
-* benchmark-confounder logic is documented;
-* CausalPFN diagnostic limitations are explicit;
-* treatment and outcome permutations are accurately described;
-* permutation checks are not called identification proof;
-* config and run-status validation are documented;
-* Chapter 9 describes the predictive experiment matrix;
-* Chapter 9 describes the causal run-family matrix;
-* original and outcome-downsampled populations are separated;
-* the stage sequence is source verified;
-* reproducibility evidence and gaps are explicit;
-* the result-admission policy is defined;
-* no numerical result is reported;
-* placeholders are precise and logged;
-* deferred fixes are updated;
+* commit `7f5206a` is verified;
+* `results_manifest.csv` is complete;
+* `results_manifest.md` is complete;
+* checksums are complete;
+* predictive summaries and logs are checked;
+* prediction exports are schema validated;
+* InterpNet is marked result-missing;
+* proxy artifacts are checked without generating missing results;
+* duplicate majority-vote outputs are grouped;
+* all twelve causal runs are validated;
+* canonical summary files are selected or blocked;
+* misleading duplicate summaries are excluded;
+* checked matching tables are created;
+* checked CATE candidates are created;
+* checked sensitivity candidates are created;
+* checked permutation candidates are created;
+* checked figure candidates are created;
+* numerical values remain source-exact;
+* original and downsampled populations remain separate;
+* PFN skips remain visible;
+* source and configuration limitations remain visible;
+* a decision register is created;
+* a nonbinding results hierarchy is recommended;
+* Chapter 10 remains untouched;
 * the evidence report is complete;
-* the thesis compiles successfully;
-* only permitted files were edited.
+* the clean thesis build succeeds;
+* only allowed files were edited.
 
 ---
 
-# 25. Final Response
+# 29. Final Response
 
-At completion, report:
+At completion report:
 
-1. Verified Stage 4.4S commit.
-2. Parent and nested Git states.
-3. Baseline build result and page count.
-4. Files inspected.
-5. Files changed.
-6. Overlap/support design documented.
-7. Missing overlap diagnostics.
-8. Sensitivity layers documented.
-9. Estimator-native versus fallback conclusion.
-10. Benchmark-confounder design.
-11. CausalPFN diagnostic boundary.
-12. Treatment-permutation design.
-13. Outcome-permutation design.
-14. Configuration-validation design.
-15. Predictive experimental matrix.
-16. Causal experimental matrix.
-17. Original-versus-downsampled distinction.
-18. Reproducibility evidence.
-19. Missing configurations and manifests.
-20. Tables created.
-21. Citations inserted.
-22. Placeholders added.
-23. Deferred fixes added.
-24. Final build command and result.
-25. PDF path and page count.
-26. Remaining warnings.
-27. Stage 4.6A readiness.
+1. Verified Stage 4.5 commit.
+2. Parent, causal, and STraTS Git states.
+3. Baseline build result.
+4. Manifest path and artifact count.
+5. Checksum-file path.
+6. Predictive families validated.
+7. InterpNet status.
+8. Prediction-export validation.
+9. Proxy-table coverage.
+10. Majority-vote duplicate status.
+11. Twelve-run causal matrix status.
+12. Canonical CATE summary selections.
+13. Duplicate and mislabeled exclusions.
+14. Missing numbered configurations.
+15. Matching table status.
+16. CATE candidate-table status.
+17. Sensitivity candidate-table status.
+18. Permutation candidate-table status.
+19. Figure candidate status.
+20. Source-packet path.
+21. Decision-register path.
+22. Nonbinding primary-results recommendation.
+23. Decisions still requiring human approval.
+24. New placeholders.
+25. New deferred fixes.
+26. Final build result and page count.
+27. Readiness status.
 
 Do not commit or push.
 
-Do not begin Stage 4.6A.
+Do not begin Stage 4.6B.
