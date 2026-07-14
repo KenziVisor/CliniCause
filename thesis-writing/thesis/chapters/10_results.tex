@@ -64,7 +64,7 @@ PhysioNet 2012 & SAnD & 0.436 & 0.914 & 0.886 & 0.820 \\
 
 Tables~\ref{tab:results-forest-mimic} and~\ref{tab:results-forest-physionet} report every prespecified original-cohort proxy-state exposure.  The reported quantity is the \emph{mean model-estimated CATE over the analyzed sample}, on the model outcome scale.  It is neither a risk ratio nor an unqualified population-average causal effect.  Exposure prevalence is the proportion of analyzed records carrying the corresponding binary proxy-state tag.  The adjustment-set codes refer to the observed variables archived for each exposure; identifiability with the available nodes remained unresolved for every checked row.
 
-For MIMIC-III, all nine archived means were positive.  The largest mean was for \nolinkurl{LAT_CARDIAC_STRAIN} (0.220), followed by \nolinkurl{LAT_INFLAMMATION_SEPSIS} (0.161).  The smallest were for \nolinkurl{LAT_METABOLIC_DERANGEMENT} (0.020) and \nolinkurl{LAT_SHOCK} (0.021).  This ordering is descriptive and does not establish clinical importance or statistical significance.
+For MIMIC-III, all nine archived means were positive.  The largest mean was for \nolinkurl{LAT_CARDIAC_STRAIN} (0.220), followed by \nolinkurl{LAT_INFLAMMATION_SEPSIS} (0.161).  The smallest were for \nolinkurl{LAT_METABOLIC_DERANGEMENT} (0.020) and \nolinkurl{LAT_SHOCK} (0.021).  Figure~\ref{fig:results-mimic-forest-ranking} displays this source-exact ordering.  It is descriptive and does not establish clinical importance or statistical significance.
 
 \begingroup
 \footnotesize
@@ -93,9 +93,16 @@ Proxy-state exposure & Prevalence & Mean CATE & Adjustment & Status \\
 \end{longtable}
 \endgroup
 
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.98\textwidth]{results_mimic_forest_original_cate_ranking.png}
+\caption{Original-cohort MIMIC-III mean model-estimated CATE values from CausalForestDML.  All nine prespecified proxy-state exposures are shown.  The ordering is descriptive and does not establish statistical significance, clinical importance, or population-average causal effects.}
+\label{fig:results-mimic-forest-ranking}
+\end{figure}
+
 The MIMIC adjustment codes are: M0, no observed adjustment variables archived; M1, age, gender, and chronic burden; M2, inflammation/sepsis and shock; M3, chronic burden and shock; M4, age, gender, chronic burden, and inflammation/sepsis; M5, age, gender, chronic burden, global severity, and inflammation/sepsis; M6, age, gender, cardiac strain, chronic burden, and inflammation/sepsis; and M7, global severity, renal dysfunction, respiratory failure, and shock.  These are observed adjustment-variable records, not proof that all confounding was controlled.
 
-For PhysioNet, nine archived means were positive and the shock mean was negative.  Renal dysfunction had the largest mean (0.120), followed by cardiac injury/strain (0.112) and global severity (0.108).  Coagulation/hematologic dysfunction was small and positive (0.011), while shock was $-0.014$.  Again, ordering by an archived mean is descriptive only.
+For PhysioNet, nine archived means were positive and the shock mean was negative.  Renal dysfunction had the largest mean (0.120), followed by cardiac injury/strain (0.112) and global severity (0.108).  Coagulation/hematologic dysfunction was small and positive (0.011), while shock was $-0.014$.  Figure~\ref{fig:results-physionet-forest-ranking} retains that negative value and the source-exact ordering; the ranking is descriptive only.
 
 \begingroup
 \footnotesize
@@ -125,9 +132,14 @@ Proxy-state exposure & Prevalence & Mean CATE & Adjustment & Status \\
 \end{longtable}
 \endgroup
 
-The PhysioNet adjustment codes are: P0, no observed adjustment variables archived; P1, ICU-type indicators 1--4, cardiac injury/strain, inflammation/sepsis burden, and shock; P2, ICU-type indicators 1--4; P3, age, gender, weight, ICU-type indicators 1--4, chronic baseline risk, and inflammation/sepsis burden; P4, renal dysfunction, respiratory failure, and shock; P5, inflammation/sepsis burden and shock; and P6, ICU-type indicators 1--4, cardiac injury/strain, and inflammation/sepsis burden.  The same qualification about incomplete confounding control applies.
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.98\textwidth]{results_physionet_forest_original_cate_ranking.png}
+\caption{Original-cohort PhysioNet mean model-estimated CATE values from CausalForestDML.  All ten prespecified proxy-state exposures are shown.  The ordering is descriptive; the negative shock estimate is retained.  The figure does not establish statistical significance, clinical importance, or population-average causal effects.}
+\label{fig:results-physionet-forest-ranking}
+\end{figure}
 
-The three author-selected main-result PNGs were not inserted.  The frozen figure-selection register classifies both original-cohort ranking images as \texttt{BLOCKED\_VALUE\_CONFLICT} because their displayed labels implement a different estimator aggregation from the image description, and it classifies the direction-count image the same way because it combines original and outcome-downsampled analyses.  Presenting those images as support for the checked tables would conflict with the frozen packet.
+The PhysioNet adjustment codes are: P0, no observed adjustment variables archived; P1, ICU-type indicators 1--4, cardiac injury/strain, inflammation/sepsis burden, and shock; P2, ICU-type indicators 1--4; P3, age, gender, weight, ICU-type indicators 1--4, chronic baseline risk, and inflammation/sepsis burden; P4, renal dysfunction, respiratory failure, and shock; P5, inflammation/sepsis burden and shock; and P6, ICU-type indicators 1--4, cardiac injury/strain, and inflammation/sepsis burden.  The same qualification about incomplete confounding control applies.
 
 \section{Matching and Empirical Support}
 \label{sec:results:matching-empirical-support}
@@ -222,9 +234,16 @@ PhysioNet & \nolinkurl{LAT_SHOCK} & $-0.014$ & $-0.027$ & Yes \\
 \section{CausalPFN Exploratory Results}
 \label{sec:results:causal-pfn-exploratory}
 
-CausalPFN CATE execution completed for all 19 original-cohort comparisons.  The three estimators agreed in mean-effect direction for 18 of the 19 dataset--exposure comparisons: MIMIC was concordant for 9 of 9 and PhysioNet for 9 of 10 (Table~\ref{tab:results-pfn-comparison}).  The sole exception was PhysioNet \nolinkurl{LAT_SHOCK}: CausalForestDML was negative ($-0.014$), LinearDML was negative ($-0.027$), and CausalPFN was slightly positive (0.0041).
+CausalPFN CATE execution completed for all 19 original-cohort comparisons.  The three estimators agreed in mean-effect direction for 18 of the 19 dataset--exposure comparisons: MIMIC was concordant for 9 of 9 and PhysioNet for 9 of 10 (Table~\ref{tab:results-pfn-comparison} and Figure~\ref{fig:results-three-estimator-direction}).  The sole exception was PhysioNet \nolinkurl{LAT_SHOCK}: CausalForestDML was negative ($-0.014$), LinearDML was negative ($-0.027$), and CausalPFN was slightly positive (0.0041).
 
 CausalPFN reproduced the prevailing direction in nearly every comparison, supporting its promise as a complementary estimator within this pipeline.  This broad agreement is not complete agreement and does not establish estimator equivalence, superiority, causal validity, or interchangeable uncertainty quantification.  Its later sensitivity and permutation stages were intentionally skipped rather than failed, so it lacks the archived robustness-diagnostic family available for the DML estimators.  Its role remains exploratory, and the unresolved primary-citation limitation in Chapter~\ref{chap:causal-graph-effect-estimation-methodology} remains relevant.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.98\textwidth]{results_original_three_estimator_direction_agreement.png}
+\caption{Directional concordance of the original-cohort mean model-estimated CATE across CausalForestDML, LinearDML, and CausalPFN.  All three estimators shared the same direction for 18 of 19 dataset--exposure comparisons: 9 of 9 in MIMIC-III and 9 of 10 in PhysioNet.  PhysioNet shock was the sole exception.  Direction agreement does not imply equal magnitude, uncertainty, estimator equivalence, or causal validity.}
+\label{fig:results-three-estimator-direction}
+\end{figure}
 
 \begingroup
 \scriptsize

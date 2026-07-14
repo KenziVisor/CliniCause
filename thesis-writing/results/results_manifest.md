@@ -1,6 +1,6 @@
-# Stage 4.6A-R Results Manifest
+# Stage 4.6B-R Results Manifest
 
-The package inventories 1,369 archived result artifacts plus the 16 optional PNGs and one contextual seminar presentation. All have repository-relative paths and SHA-256 entries in `results_checksums.sha256`.
+The package inventories 1,369 archived result artifacts, 16 optional PNGs, three generated checked result figures, and one contextual seminar presentation. All have repository-relative paths and SHA-256 entries in `results_checksums.sha256`.
 
 ## Author decision freeze
 
@@ -16,8 +16,16 @@ Original-cohort checked CATE rows yield 18/19 concordant dataset--exposure compa
 
 ## Optional figures
 
-`figure_selection_register.md` classifies all 16 PNGs. Both original-cohort ranking figures are blocked because their labels conflict with their stated three-estimator median scale. `cross_model_direction_counts.png` is blocked because it mixes sampling modes; no replacement was generated. The seminar PowerPoint is contextual provenance only, never numerical authority.
+`figure_selection_register.md` retains the 16 optional PNGs and classifies the three generated replacements. The two archived ranking plots remain `BLOCKED_VALUE_CONFLICT` and `EXCLUDED_FROM_THESIS` because their displayed labels conflict with their stated three-estimator median scale. The archived `cross_model_direction_counts.png` remains blocked and excluded because it mixes sampling modes. Their source-exact replacements were generated from `checked_cate_candidates.csv`, selected as `MAIN_RESULTS`, and admitted with qualifications. The seminar PowerPoint is contextual provenance only, never numerical authority.
+
+## Generated main-result figures
+
+- `results_mimic_forest_original_cate_ranking.png`: exact MIMIC original-cohort CausalForestDML `PRIMARY_MAIN_TEXT` rows (9 rows), Chapter 10 primary-results placement.
+- `results_physionet_forest_original_cate_ranking.png`: exact PhysioNet original-cohort CausalForestDML `PRIMARY_MAIN_TEXT` rows (10 rows), including negative shock, Chapter 10 primary-results placement.
+- `results_original_three_estimator_direction_agreement.png`: 57 original-cohort estimator rows joined into 19 dataset--exposure comparisons; MIMIC 9/9, PhysioNet 9/10, overall 18/19, with PhysioNet shock the sole exception; Chapter 10 exploratory-PFN placement.
+
+All three have artifact role `generated checked result figure`, validation `SOURCE_EXACT_GENERATED`, selection `MAIN_RESULTS`, and admission `ADMISSIBLE_WITH_QUALIFICATIONS`. They were produced by `generate_stage_4_6B_main_figures.py`; dimensions, hashes, filters, caption boundaries, and provenance notes are recorded in the CSV manifest and figure register.
 
 ## Readiness
 
-BLOCKED: ALL THREE AUTHOR-SELECTED MAIN NUMERICAL FIGURES HAVE SOURCE-VALUE OR SAMPLING CONFLICTS. SUPERVISOR RATIFICATION OF THE RESULTS HIERARCHY REMAINS PENDING.
+**READY FOR STAGE 4.7.** The figure-source blocker is repaired: all three replacements passed source-exact numerical validation, Chapter 10 contains exactly those three generated figures, the eight validated table environments are unchanged, and the clean 90-page thesis build and rendered-page inspection passed. Supervisor ratification of the results hierarchy remains pending but is non-blocking for drafting Stage 4.7.

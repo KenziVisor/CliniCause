@@ -48,7 +48,7 @@ rg -o '\[[A-Z0-9 -]+ REQUIRED\]' thesis-writing/thesis/main.tex thesis-writing/t
 | --- | --- | --- |
 | Front matter | `frontmatter/title_pages.tex`, `abstract_primary.tex`, `abstract_secondary.tex`, `keywords.tex`, `acknowledgements.tex`, `nomenclature.tex` | Administrative details, language/order decisions, abstracts, keywords, acknowledgements, abbreviations, notation. |
 | Chapters 1-9 | `chapters/01_*.tex` through `chapters/09_*.tex` | Drafting placeholders plus targeted result, citation, figure, table, validation, and supervisor-decision placeholders. |
-| Chapter 10 | `chapters/10_results.tex` | Stage 4.6B resolved the generic result/validation skeleton; blocked figures and external provenance/review gates remain tracked below. |
+| Chapter 10 | `chapters/10_results.tex` | Stage 4.6B resolved the generic result/validation skeleton; Stage 4.6B-R repaired the three blocked main-result figures. External provenance/review gates remain tracked below. |
 | Chapters 11-12 | `chapters/11_discussion.tex`, `chapters/12_conclusions_future_work.tex` | Result-dependent synthesis and final conclusion placeholders. |
 | Appendices | `appendices/appendices.tex` | Appendix drafting, validation, figure/table slots, and supervisor-decision placeholders. |
 
@@ -233,7 +233,6 @@ Stage 4.6B replaced the generic Chapter 10 skeleton with checked numerical prose
 | gate | current status | required resolution |
 | --- | --- | --- |
 | Supervisor ratification of the result hierarchy | Author decision is frozen; supervisor ratification is still absent. | Record supervisor approval or requested hierarchy revisions before final submission. |
-| Main-result figures | Both ranking PNGs and the direction-count PNG are `BLOCKED_VALUE_CONFLICT`; none was copied or inserted. | Recover already-valid replacements or authorize a separate corrected-figure task. |
 | Supplementary figures and exact-value tables | Appendix candidates are selected but not inserted in this stage. | Complete the approved appendix-placement pass. |
 | Raw cohort totals | Original causal-analysis counts are reported, but reconstructed raw-source cohort totals remain unavailable. | Recover raw/processed data manifests and hashes; do not relabel causal-analysis counts. |
 | Exact causal configurations | Numbered producing configuration files remain unavailable locally. | Recover and archive the exact configurations or document irrecoverability. |
@@ -241,3 +240,9 @@ Stage 4.6B replaced the generic Chapter 10 skeleton with checked numerical prose
 | Overlap evidence | Matching remains indirect support evidence; no dedicated overlap/propensity figure exists. | Recover or generate an approved diagnostic before any positivity claim. |
 | Clinical validation | Proxy states and DAGs lack complete clinician/chart-review validation. | Complete and record clinical/supervisor review before strengthening causal or clinical language. |
 | CausalPFN citation and diagnostics | CausalPFN remains exploratory; its primary citation and DML-equivalent diagnostic family are absent. | Add a vetted primary citation and uncertainty/diagnostic plan, or retain the exploratory boundary. |
+
+## Stage 4.6B-R Figure Repair Update
+
+The three main-result figure placeholders are resolved. `generate_stage_4_6B_main_figures.py` generated two source-exact original-cohort CausalForestDML rankings and one original-cohort three-estimator direction-agreement figure directly from `checked_cate_candidates.csv`. All three passed numerical validation and were inserted in Chapter 10 with bounded captions and cross-references. The original conflicting PNGs remain unchanged, `BLOCKED_VALUE_CONFLICT`, and `EXCLUDED_FROM_THESIS` as provenance artifacts.
+
+This repair does not resolve supervisor ratification, the CausalPFN primary-citation limitation, missing numbered causal configurations, predictive split/checkpoint lineage, raw cohort-total limitations, appendix placement, or the final causal-language review.

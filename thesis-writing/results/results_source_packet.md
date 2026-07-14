@@ -1,6 +1,6 @@
-# Stage 4.6A-R Results Source Packet
+# Stage 4.6B-R Results Source Packet
 
-This packet is for Stage 4.6B. Use the checked CSVs and this frozen hierarchy; do not use historical InterpNet references in audit or literature files.
+This packet carries the frozen hierarchy forward after the Stage 4.6B-R figure repair. Use the checked CSVs; do not use historical InterpNet references in audit or literature files.
 
 ## Frozen hierarchy and population boundary
 
@@ -26,7 +26,9 @@ Original-cohort rows support 18 of 19 directionally concordant dataset--exposure
 
 ## Figure gate
 
-Use `figure_selection_register.md`. Both original-cohort ranking figures are blocked because their labels are two-DML averages rather than the image-labelled median across all three estimators. `cross_model_direction_counts.png` is also blocked because it aggregates both sampling modes and must not support the 18-of-19 statement. Appendix selections retain their stated diagnostic or illustrative boundaries.
+Use `figure_selection_register.md`. The two archived original-cohort ranking figures remain `BLOCKED_VALUE_CONFLICT` and `EXCLUDED_FROM_THESIS` because their labels are two-DML averages rather than the image-labelled median across all three estimators. The archived `cross_model_direction_counts.png` also remains blocked and excluded because it aggregates both sampling modes.
+
+The three `SOURCE_EXACT_GENERATED` replacements are approved for `MAIN_RESULTS` use with qualifications: MIMIC and PhysioNet original-cohort CausalForestDML rankings, plus the original-cohort three-estimator direction count. They were generated only from `checked_cate_candidates.csv`; the agreement figure uses no outcome-downsampled row and reports 18/19 with PhysioNet shock as the sole exception. Appendix selections retain their stated diagnostic or illustrative boundaries.
 
 ## Persisting limitations
 
