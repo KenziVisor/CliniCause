@@ -89,22 +89,27 @@ Identifiability flag & Records whether available mapped variables block all enco
 \bottomrule
 \end{longtable}
 
-\begin{longtable}{@{}p{0.24\textwidth}p{0.34\textwidth}p{0.32\textwidth}@{}}
+\begin{longtable}{@{}p{0.16\textwidth}p{0.25\textwidth}p{0.22\textwidth}p{0.27\textwidth}@{}}
 \caption{Causal assumptions required for interpreting the estimator outputs.}
 \label{tab:causal-assumptions}\\
 \toprule
-assumption & role in this project & evidence status \\
+assumption & methodological requirement & repository support & unresolved limitation \\
 \midrule
 \endfirsthead
 \toprule
-assumption & role in this project & evidence status \\
+assumption & methodological requirement & repository support & unresolved limitation \\
 \midrule
 \endhead
-Graph correctness for the target question & The DAG must correctly represent the relevant temporal and causal ordering among baseline variables, proxy states, care processes, measurement processes, and mortality. & Project-specified and source-encoded; human clinical review record remains incomplete. \\
-Sufficient measured adjustment & All relevant open backdoor paths for each proxy exposure must be blocked by available mapped background or latent variables. & Evaluated only inside the implemented DAG and available dataframe columns.  External unmeasured confounding remains possible. \\
-Positivity or overlap & For adjusted comparisons, patients with similar adjustment variables should include both exposed and unexposed cases. & Matching support is indirectly available through match rates; dedicated overlap diagnostics remain a later validation need. \\
-Consistency and well-defined exposure & The binary proxy-state exposure must correspond to a sufficiently interpretable intervention or contrast. & Limited, because proxy states often represent disease states or severity constructs rather than assignable treatments. \\
-No outcome leakage in adjustment & Adjustment variables should not be post-outcome or direct consequences of the exposure in a way that induces bias. & Enforced only through implemented node-type filtering, descendant removal, and source-level graph assumptions. \\
+Graph correctness for the target question & The DAG must correctly represent the relevant causal structure for the exposure contrast and mortality outcome. & Dataset-specific graphs are project-specified and encoded in active source. & The arrows were not learned from data, and the human clinical review record remains incomplete. \\
+Sufficient measured adjustment & Available adjustment variables must block the relevant open backdoor paths for each proxy exposure. & The helper tests path blocking within the implemented DAG using mapped background and latent columns. & Graph variables may be unavailable, and unmeasured or misspecified confounding outside the project DAG remains possible. \\
+Positivity or overlap & Comparable covariate strata must contain both exposed and unexposed records. & Matching outputs report match availability and match rates. & Dedicated treatment-specific overlap diagnostics and thresholds remain to be approved. \\
+Consistency and well-defined exposure & Each binary proxy-state contrast must have a sufficiently stable meaning across records. & The pipeline applies one binary exposure column at a time. & Disease-state and severity proxies are not necessarily assignable interventions, so the causal estimand remains unresolved. \\
+Proxy-state measurement & The binary exposure should measure the intended construct with sufficiently limited construct and classification error. & Exposure columns are rule-derived, predicted, or majority-vote proxy states. & No code path verifies construct validity or removes proxy-state measurement error; clinical and chart-review validation remains incomplete. \\
+Outcome measurement & The processed \nolinkurl{in_hospital_mortality} field must be consistently and correctly constructed from the outcome artifact. & Both estimator paths merge this processed outcome column by record identifier and require it to be present. & Source checks establish schema availability, not endpoint validity or cross-dataset construction equivalence. \\
+Temporal ordering and avoidance of post-exposure adjustment & Adjustment variables must be measured or conceptually occur before the relevant proxy-state contrast; post-exposure adjustment should be avoided. & Protection depends on the project DAG, source node classification, descendant filtering, and allowed-node filtering. & Repository graph ordering does not prove patient-record timing; actual variable timing and the correctness of the proxy-state construction window remain unverified. \\
+Nuisance- and effect-model adequacy & LinearDML and CausalForestDML require sufficiently adequate nuisance and effect models, regularity conditions, and appropriate cross-fitting behavior for their intended interpretation. & The source configures EconML estimators, random-forest nuisance models, and estimator-provided fitting behavior. & Source configuration alone does not verify model adequacy, regularity conditions, calibration, or valid cross-fitting performance in these data. \\
+No interference & One record's proxy-state exposure should not affect another record's outcome under the working unit-level interpretation. & Estimation treats records as separate units. & The repository does not empirically test interference or dependence across admissions, patients, units, or care processes. \\
+Sampling and target population & The analysis sample must support the stated target population, or reweighting or another transport argument must justify a sampled target. & The optional outcome-downsampling condition is deterministic given the configured seed and is applied consistently before treatment iteration. & Original and outcome-downsampled analyses correspond to different empirical populations; no weighting or target-population correction is documented. \\
 \bottomrule
 \end{longtable}
 
@@ -114,6 +119,10 @@ No outcome leakage in adjustment & Adjustment variables should not be post-outco
 \section{Matching and Heterogeneous-Effect Estimators}
 \label{sec:causal-graph-effect-estimation-methodology:matching-heterogeneous-effect-estimators}
 The causal pipeline applies two families of estimators to the binary proxy-state exposures: a transparent matched-pair baseline and model-based heterogeneous-effect estimators.  Both families use the same broad analysis frame.  Patient-level proxy-state labels are merged with the canonical in-hospital mortality outcome and baseline covariates.  For a selected exposure \(A_i \in \{0,1\}\), outcome \(Y_i\), adjustment variables \(W_i\), and effect modifiers \(X_i\), the target working quantity is a contrast in predicted or matched mortality outcome between \(A_i=1\) and \(A_i=0\), conditional on the source-defined covariate information.  Because the exposures are proxy states and the data are observational, these contrasts require cautious interpretation.
+
+An optional analysis condition, controlled by \texttt{DOWN\_SAMPLE}, down-samples mortality outcome classes rather than exposure groups.  All outcome-positive rows are retained.  When the outcome-negative class is larger and the positive class is nonempty, outcome-negative rows are sampled without replacement until their count equals the number of outcome-positive rows; the configured random seed controls both this sample and the subsequent row shuffle.  This occurs once before treatment-specific adjustment selection and estimation, including matching and DML/PFN fitting.  It is not propensity trimming, treatment balancing, matching, or a correction for confounding, and it does not improve causal identification by itself.  The procedure changes the analyzed population and observed outcome prevalence.  Original and outcome-downsampled runs therefore represent different analysis populations, and the primary or sensitivity role of the downsampled runs remains a supervisor and result-design decision.
+
+Outcome-based downsampling can change nuisance-model estimation, the distribution of covariates and proxy exposures, patient-level fitted effects, the population over which \texttt{mean\_cate} is averaged, and the availability and composition of matched pairs.  It also changes the sample outcome rate and therefore affects \texttt{normalized\_CATE}, whose denominator is that rate.  Effect summaries from original and outcome-downsampled analyses should not be compared as though they estimated the same population quantity without an approved sampling and estimand argument.  Outcome-based case-control sampling does not necessarily invalidate every estimator, but interpretation here requires estimator-specific methodological justification and an explicit target-population argument.
 
 The matching estimator is a deterministic baseline.  For each proxy exposure, the pipeline drops rows with missing exposure or outcome, coerces the exposure and outcome to binary variables, imputes numeric adjustment variables with medians, and converts non-binary numeric adjustment variables into binary columns using sample-median thresholds.  Already-binary variables, including ICU-type indicators, remain binary.  The matcher then greedily pairs exposed and unexposed patients by Hamming distance over these binary adjustment columns, increasing the allowed distance up to the configured maximum.  By default, controls are not reused.  The per-pair contrast is
 
@@ -142,11 +151,12 @@ method & implementation summary & main outputs & interpretation boundary \\
 \endhead
 Greedy Hamming matching & Binary adjustment matrix, median thresholding for non-binary covariates, median imputation, nearest available control within allowed Hamming distance, no default control reuse. & Matched pairs, pair effects, match rate, final distance, and per-treatment/global summaries. & Matched descriptive contrast; not automatically ATE or ATT. \\
 LinearDML & EconML \texttt{LinearDML} with random-forest nuisance outcome and treatment models, binary treatment handling, configured \(W\) and \(X\). & Patient-level CATE, optional intervals, coefficients when aligned, model artifact, global summaries. & Model-based heterogeneity estimate under project DAG, nuisance-model, overlap, and proxy-exposure assumptions. \\
-CausalForestDML & EconML \texttt{CausalForestDML} with random-forest nuisance models and a causal-forest final stage. & Patient-level CATE, optional intervals, feature importance, model artifact, global summaries. & Flexible heterogeneity estimate; feature importance is a model diagnostic, not mechanism proof. \\
+CausalForest DML & EconML \texttt{CausalForestDML} with random-forest nuisance models and a causal-forest final stage. & Patient-level CATE, optional intervals, feature importance, model artifact, global summaries. & Flexible heterogeneity estimate; feature importance is a model diagnostic, not mechanism proof. \\
 CausalPFN & Exploratory branch using deduplicated confounder and effect-modifier features.  It writes CATE CSVs and metadata but skips EconML-specific sensitivity and permutation stages. & Patient-level CATE and normalized CATE; interval columns are unavailable and stored as missing. & Secondary/exploratory unless a validated primary citation and additional uncertainty/sensitivity support are added. \\
 \bottomrule
 \end{longtable}
 
 \StagePlaceholder{[SUPERVISOR DECISION REQUIRED: review the use of overlapping variables in W and X]}
 \StagePlaceholder{[SUPERVISOR DECISION REQUIRED: approve or replace the interpretation of normalized\_CATE]}
+\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: determine the methodological role and target-population interpretation of the original and outcome-downsampled causal analyses]}
 \StagePlaceholder{[CITATION REQUIRED: validated primary source for the CausalPFN method before treating it as a main thesis estimator]}

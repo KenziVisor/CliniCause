@@ -377,3 +377,94 @@ No result values were copied into Chapter 7.
 READY WITH NON-BLOCKING WARNINGS
 
 Stage 4.4 is complete for drafting and validation.  Stage 4.5 should not begin until separately requested.  Remaining warnings are layout/provenance/citation/advisor-review issues, not build blockers.
+
+## Stage 4.4S Focused-Review Addendum
+
+### 4.4S.1 Commit Reviewed
+
+- Reviewed parent commit: `50b883f step 4.4` on `main`.
+- Parent relationship: `50b883f` directly follows `30f137e step 4.3 repair`.
+- The committed Chapter 7, Stage 4.4 evidence report, logs, and two DAG images were present.
+- The focused review did not reset, clean, stage, commit, or push.
+
+### 4.4S.2 Files Inspected
+
+- `causal-irregular-time-series/src/cate_estimation.py`
+- `causal-irregular-time-series/src/matching_causal_effect.py`
+- `causal-irregular-time-series/src/dataset_config.py`
+- `causal-irregular-time-series/configs/physionet-global-variables.csv`
+- `causal-irregular-time-series/configs/mimic-global-variables.csv`
+- The 12 archived causal run summaries were read only to map run-family names to their referenced numbered configuration paths; no complete result or estimator audit was repeated.
+
+### 4.4S.3 Exact Outcome-Downsampling Behavior
+
+- `DOWN_SAMPLE` controls one optional analysis-frame transformation based on `in_hospital_mortality`; it does not balance exposure groups.
+- Both implementations split the merged analysis dataframe into outcome-positive (`1`) and outcome-negative (`0`) rows.
+- All outcome-positive rows are retained.  If no positive rows exist, sampling is skipped and the dataframe is copied unchanged.
+- If the negative count is no larger than the positive count, sampling is skipped and the dataframe is copied unchanged.
+- Otherwise, exactly `n_positive` outcome-negative rows are sampled without replacement with `pandas.DataFrame.sample(n=n_positive, random_state=SEED, replace=False)`.
+- Positive rows and sampled negative rows are concatenated, shuffled with `sample(frac=1.0, random_state=SEED)`, and reindexed.
+- The active PhysioNet and MIMIC default configuration CSVs both set `SEED=42` and `DOWN_SAMPLE=False`.
+
+### 4.4S.4 Matching-versus-CATE Agreement and Difference
+
+- Agreement: matching and CATE contain equivalent copies of `downsample_majority_label`, including the two skip conditions, negative-row sample size, no-replacement rule, seed use, shuffle, and reset of the row index.
+- Interface difference: CATE resolves `DOWN_SAMPLE` with command-line-over-config precedence and exposes `--down-sample true|false`.  Matching has no corresponding command-line flag and reads `DOWN_SAMPLE` from the selected dataset configuration CSV.
+- This interface difference does not change the implemented sampling algorithm once the flag and seed have been resolved.
+
+### 4.4S.5 Location in the Pipeline
+
+- The dataframe is first assembled by merging proxy-state labels, the processed mortality outcome, and background variables.
+- The graph is loaded, and then optional outcome downsampling is applied once to the common dataframe.
+- Downsampling therefore precedes the treatment loop, treatment-specific graph-adjustment selection, matching preprocessing and pair construction, and LinearDML, CausalForestDML, or CausalPFN fitting.
+- The archived run-family names classify `outputs-{physionet,mimic}-{forest,linear,pfn}` as original families and their corresponding `-downsample` directories as outcome-downsampled families.  The run summaries reference numbered `*-global-variables-{1..6}.csv` files on an external path; those numbered files and a resolved `DOWN_SAMPLE` field are not locally archived, so this classification is based on the explicit archive family naming rather than a recovered producing config.
+
+### 4.4S.6 Consequences for Target Population
+
+Outcome-based selection changes the empirical analysis population, mortality prevalence, and potentially the joint distribution of baseline covariates and proxy exposures.  It is not propensity trimming, treatment balancing, matching, or confounding correction.  Original and outcome-downsampled runs should therefore be treated as different analysis populations unless an approved weighting, sampling, or transport argument connects them.  No run family was selected as primary in this review.
+
+### 4.4S.7 Consequences for `mean_cate`
+
+Downsampling can alter nuisance-model fitting, effect-model fitting, patient-level fitted effects, and the rows over which `mean_cate` is averaged.  The original and outcome-downsampled `mean_cate` values do not automatically represent the same population average.  This does not establish that case-control sampling invalidates every estimator; estimator-specific justification is required.
+
+### 4.4S.8 Consequences for `normalized_CATE`
+
+`normalized_CATE` divides a fitted CATE by the outcome rate in the analysis sample.  Outcome downsampling directly changes that denominator and can also change the fitted numerator.  It remains an implementation-defined rescaling, not a risk ratio, relative risk, or percent reduction, and it should not be compared across original and downsampled populations without an approved argument.
+
+### 4.4S.9 Chapter 7 Changes
+
+- Added the optional outcome-class downsampling condition to C7.3, including class retained/sampled, sample size, replacement rule, seed, and pipeline location.
+- Distinguished outcome sampling from exposure balancing, propensity trimming, matching, confounding correction, and causal-identification improvement.
+- Added conservative consequences for nuisance models, covariates and proxies, patient-level effects, `mean_cate`, matching availability and pairs, outcome prevalence, and `normalized_CATE`.
+- Added the required statement that original and outcome-downsampled summaries should not be compared as the same population quantity without an approved sampling and estimand argument.
+- Reviewed the DAG captions and adjacent C7.1 text.  Together they already state project specification, LLM-assisted design provenance, active-source authority, assumed rather than learned arrows, and incomplete clinical validation; no figure or caption change was needed.
+
+### 4.4S.10 Assumptions-Table Additions
+
+Table `tab:causal-assumptions` now separates methodological requirement, repository support, and unresolved limitation for every row.  It retains graph correctness, sufficient measured adjustment, positivity/overlap, consistency/well-defined exposure, and avoidance of post-exposure adjustment, and adds explicit treatment of proxy-state measurement, outcome measurement, temporal ordering, nuisance/effect-model adequacy, no interference, and sampling/target population.  The former outcome-leakage row is now `Temporal ordering and avoidance of post-exposure adjustment` and does not claim that source checks enforce correct timing.
+
+### 4.4S.11 New Placeholder
+
+- Added: `[SUPERVISOR DECISION REQUIRED: determine the methodological role and target-population interpretation of the original and outcome-downsampled causal analyses]`.
+- Logged in `unresolved_placeholders.md` with its evidence requirement, expected resolution stage, and open status.
+
+### 4.4S.12 New Deferred Fix
+
+- Added `DF-4.4S-001`, area `Outcome-based downsampling and causal estimand`, urgency `high`.
+- The implementation was not modified.
+
+### 4.4S.13 Final Build
+
+- Baseline clean build before 4.4S edits: success, 64 pages.
+- Final commands: `cd thesis-writing/thesis && latexmk -C && latexmk -xelatex main.tex && test -f main.pdf && pdfinfo main.pdf`.
+- Final result: success (`0`), 66 pages, 1,981,883 bytes.
+- Final PDF SHA-256: `5911a71dc3720d7e2ad8c6db07183925456f183644f7cf0a6ca4c27208389e4d`.
+- Final error scan: no LaTeX errors, undefined control sequences, unresolved citations, unresolved references, multiply defined labels, Biber errors, emergency stops, or fatal errors.
+- Layout warnings: 27 overfull hbox warnings and 529 underfull hbox warnings.  The expanded assumptions table adds expected narrow-column underfull warnings; they are nonfatal.
+- Rendered Chapter 7 pages were inspected.  The assumptions table, outcome-downsampling paragraphs, estimator table, and new placeholder are present and readable; two initially touching table labels were repaired before this final build.
+
+### 4.4S.14 Readiness
+
+READY WITH NON-BLOCKING WARNINGS
+
+The focused scientific omission is repaired for methods drafting.  Before causal result selection or cross-run interpretation, the supervisor must decide the role and target population of the downsampled analyses and resolve `DF-4.4S-001`.  Stage 4.5 was not started.
