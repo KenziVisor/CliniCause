@@ -71,7 +71,7 @@ The active CATE code is designed to capture Python and package versions for Econ
 
 Configuration resolution follows a hierarchy of source defaults, dataset configuration CSV, command-line overrides, resolved runtime values, run summary, and saved-artifact metadata.  The precedence is script-specific: for example, CATE exposes command-line overrides for selected options, whereas matching reads its downsampling setting from the dataset configuration.  The numbered final-run configurations referenced by archived summaries are unavailable locally, so recovered defaults cannot be represented as proof of exact producing settings.
 
-The result manifest records artifact paths and roles, datasets, models or estimators, sampling conditions, available source and configuration fields, hashes, schemas, and status.  Exact producing configurations, commands, source versions, environments, and archive-copy histories remain incomplete for some final artifacts, so the manifest supports traceability without establishing complete rerun provenance.
+The result manifest records artifact paths and roles, datasets, models or estimators, sampling conditions, available source and configuration fields, hashes, schemas, and status.  The accompanying compact reproducibility package indexes the exact archived causal command arrays and the log-recorded predictive arguments, seeds, and export-split setting, while retaining the missing numbered configurations, split identifiers, checkpoint-to-export proof, producing source versions, environments, and archive-copy histories.  Thus the records support traceability without establishing complete rerun provenance.
 
 \begingroup
 \small

@@ -1,0 +1,56 @@
+source_id,workflow_family,repository,repository_role,current_gitlink,current_head,worktree_status,recorded_producing_version,producing_version_status,current_reproduction_version,artifact_family,lineage_status,gap,notes
+SRC-PARENT,project records,CliniCause,parent repository,f71c9bab70c8fb6347c7692236cd2cfd03e84fa1,f71c9bab70c8fb6347c7692236cd2cfd03e84fa1,"M README.md
+ M SCRIPTS.md
+ m causal-irregular-time-series
+ M fix_preprocessor.py
+ M prompt.txt
+ M requirements-full.txt
+ M requirements-router.txt
+ M requirements.txt
+ M router.py
+ M runs/validate_demo/config/physionet_resolved_config.csv
+ M tests/test_router.py
+ M thesis-writing/important-md-copies/clinicause_root_project_overview.md
+ M thesis-writing/important-md-copies/clinicause_root_router_usage.md
+ M thesis-writing/important-md-copies/strats_project_overview.md
+ M thesis-writing/literature/metadata/catalog.csv
+ M thesis-writing/logs/stage_5_2_appendix_audit.csv
+ M thesis-writing/logs/stage_5_2_figure_validation.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-DAG-MIMIC-edges.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-DAG-MIMIC-nodes.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-DAG-PHYSIONET-edges.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-DAG-PHYSIONET-nodes.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-RESULT-DIRECTION-AGREEMENT-summary.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-RESULT-DIRECTION-AGREEMENT.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-RESULT-MIMIC-CATE.csv
+ M thesis-writing/logs/stage_5_2_figure_values/F-RESULT-PHYSIONET-CATE.csv
+ M thesis-writing/logs/stage_5_2_reproducibility_artifact_audit.csv
+ M thesis-writing/logs/stage_5_2_table_audit.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-analysis-populations.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-forest-mimic.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-forest-physionet.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-linear-comparison.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-matching-support.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-pfn-comparison.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-predictive-performance.csv
+ M thesis-writing/logs/stage_5_2_table_values/T-results-robustness-summary.csv
+ M thesis-writing/results/checked_cate_candidates.csv
+ M thesis-writing/results/checked_cohort_candidates.csv
+ M thesis-writing/results/checked_figure_candidates.csv
+ M thesis-writing/results/checked_heterogeneity_candidates.csv
+ M thesis-writing/results/checked_matching_failures.csv
+ M thesis-writing/results/checked_matching_results.csv
+ M thesis-writing/results/checked_mortality_prediction.csv
+ M thesis-writing/results/checked_permutation_candidates.csv
+ M thesis-writing/results/checked_predictive_exports.csv
+ M thesis-writing/results/checked_predictive_metrics.csv
+ M thesis-writing/results/checked_proxy_cooccurrence.csv
+ M thesis-writing/results/checked_proxy_mortality_association.csv
+ M thesis-writing/results/checked_proxy_prevalence.csv
+ M thesis-writing/results/checked_sensitivity_candidates.csv
+ M thesis-writing/results/results_manifest.csv
+ M tmp_verify_router.py",NOT_RECORDED,EXTERNAL_RECORD_REQUIRED,f71c9bab70c8fb6347c7692236cd2cfd03e84fa1,thesis package and logs,PARTIAL_LINEAGE,No per-artifact producing parent revision recorded.,Current head is not substituted for historical producer state.
+SRC-CAUSAL,causal workflow,causal-irregular-time-series,nested repository,417bb322fd43ddc4caea1e83529b3462b25eaaf5,417bb322fd43ddc4caea1e83529b3462b25eaaf5,M src/preprocess_mimic_iii_large.py,NOT_RECORDED,EXTERNAL_RECORD_REQUIRED,417bb322fd43ddc4caea1e83529b3462b25eaaf5,"graphs, aggregation, matching, CATE, diagnostics",PARTIAL_LINEAGE,No archived producing commit/version; exact numbered config also absent.,Gitlink/current head and active source are current-reproduction context only.
+SRC-STRATS,predictive workflow,STraTS,nested repository,4d2a7520b565425eed00462cee570e139b5392db,4d2a7520b565425eed00462cee570e139b5392db,CLEAN,NOT_RECORDED,EXTERNAL_RECORD_REQUIRED,4d2a7520b565425eed00462cee570e139b5392db,"training summaries, checkpoints, exports",PARTIAL_LINEAGE,No archived producing commit/version.,Gitlink/current head does not prove exported artifacts used it.
+SRC-GRAPH-REPRO,DAG reproduction,causal-irregular-time-series,current graph source,417bb322fd43ddc4caea1e83529b3462b25eaaf5,417bb322fd43ddc4caea1e83529b3462b25eaaf5,M src/preprocess_mimic_iii_large.py,NOT_RECORDED,EXTERNAL_RECORD_REQUIRED,Current source hashes: PhysioNet 825705e5...060ce; MIMIC 4d5e61a5...e2490,canonical DAG PNGs,CURRENT_SOURCE_REPRODUCTION,Historical producing source version remains absent.,Stage 5.2 byte-identical current-source rendering validates reproduction only.
+SRC-CAUSALPFN,CausalPFN,external package/source,estimator implementation dependency,NOT_APPLICABLE,NOT_APPLICABLE,NOT_APPLICABLE,NOT_RECORDED,EXTERNAL_RECORD_REQUIRED,NOT_APPLICABLE,CausalPFN CATE outputs,PARTIAL_LINEAGE,Package source/version and implementation alignment absent.,No primary source/version record was recovered locally.
