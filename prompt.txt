@@ -1,4 +1,4 @@
-# Stage 5.3 — Reproducibility and Provenance Closure
+# Stage 5.4 — Institutional, Ethics, Governance, and Administrative Compliance
 
 ## Model
 
@@ -13,158 +13,103 @@ Extra High
 Implement this task as:
 
 ```text
-Stage 5.3 — Evidence-Constrained Reproducibility and Provenance Closure
+Stage 5.4 — Institutional, Ethics, Governance, and Administrative Compliance Audit
 ```
 
 The current repository head is expected to be:
 
 ```text
-f71c9bab70c8fb6347c7692236cd2cfd03e84fa1 step 5.2
+ad52c76a31e3e06bd44b36e6ce68f47ce84558f8 step 5.3
 ```
 
 Its immediate parent is expected to be:
 
 ```text
-11a2cb46a87a979677602556611a704cfbd1074a step 5.1
+f71c9bab70c8fb6347c7692236cd2cfd03e84fa1 step 5.2
 ```
-
-Stage 5.2 concluded:
-
-```text
-READY FOR EXTERNAL FIGURE VALIDATION
-```
-
-The independent external assistant review has now been completed.
 
 The next planned task after this stage is:
 
 ```text
-Stage 5.4 — Institutional, Ethics, Governance, and Administrative Compliance
+Stage 5.5 — Final LaTeX, Layout, and Copy-Edit Hardening
 ```
 
-Do not begin Stage 5.4.
+Do not begin Stage 5.5.
 
 ---
 
-# 1. Authoritative external figure-validation decision
+# 1. Objective
 
-The following decision was made externally by the assistant after independent source reconstruction and visual review.
-
-Codex must record this decision but must not represent it as Codex’s own approval.
-
-| Figure ID                      | External decision                                      | Mandatory retained limitation                                                                                                  |
-| ------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `F-RESULT-MIMIC-CATE`          | `APPROVED_BY_ASSISTANT`                                | Descriptive original-cohort CausalForestDML ranking; no significance, clinical-importance, or population-average-effect claim. |
-| `F-RESULT-PHYSIONET-CATE`      | `APPROVED_BY_ASSISTANT`                                | Negative PhysioNet shock must remain visible; no significance, clinical-importance, or population-average-effect claim.        |
-| `F-RESULT-DIRECTION-AGREEMENT` | `APPROVED_BY_ASSISTANT_WITH_DIRECTION_ONLY_LIMITATION` | Direction agreement only; no magnitude, uncertainty, equivalence, correctness, superiority, or causal-validity conclusion.     |
-| `F-DAG-PHYSIONET`              | `APPROVED_BY_ASSISTANT_WITH_READABILITY_LIMITATION`    | Dense orientation figure only; source and node/edge inventories remain the exact authority.                                    |
-| `F-DAG-MIMIC`                  | `APPROVED_BY_ASSISTANT_WITH_READABILITY_LIMITATION`    | Dense orientation figure only; source and node/edge inventories remain the exact authority.                                    |
-
-The independent review also concludes:
-
-```text
-No figure hallucination, fabricated value, hidden sign, unauthorized aggregation,
-invented graph element, or estimator substitution was found.
-```
-
-Do not modify any figure, generator, displayed value, figure caption, label, title, axis, legend, color, or placement in Stage 5.3.
-
----
-
-# 2. Objective
-
-Close as much reproducibility and provenance uncertainty as the repository can genuinely support.
+Audit the complete thesis against the locally available institutional requirements and the project’s actual ethics, governance, privacy, authorization, and administrative evidence.
 
 This stage must:
 
-1. formally record the completed external figure decision;
-2. reconstruct available data, code, configuration, command, environment, split, checkpoint, export, run, result, and archive lineages;
-3. search the repository and its Git history for currently missing provenance evidence;
-4. distinguish exact evidence from defaults, inference, and absent records;
-5. build a compact, machine-readable reproducibility package;
-6. update thesis reproducibility language only where newly recovered evidence materially changes its accuracy;
-7. leave every unresolved gap explicit;
-8. determine which gaps are recoverable, externally dependent, or likely irrecoverable.
+1. verify every locally checkable BGU formatting and structural requirement;
+2. identify every requirement that depends on current official forms or human authorization;
+3. audit ethics and data-governance language throughout the thesis;
+4. audit privacy, data-access, consent, approval, and institutional-review claims;
+5. ensure no administrative fact was invented;
+6. ensure no absence of documentation is misrepresented as absence of oversight;
+7. create a precise submission-input checklist;
+8. distinguish:
 
-This stage must not claim complete reproducibility merely because:
+   * compliant;
+   * compliant with qualification;
+   * externally gated;
+   * noncompliant and locally repairable;
+   * blocked pending authoritative input.
 
-* files exist;
-* hashes match;
-* current code runs;
-* a current default resembles an archived result;
-* a run summary contains a historical path;
-* two files have the same filename;
-* current source recreates an artifact;
-* a requirements file lists packages;
-* a commit predates an output;
-* a copied artifact contains a timestamp.
+Do not invent official institutional text.
+
+Do not browse the web.
+
+Do not download current forms.
+
+Do not infer approval from repository silence.
 
 ---
 
-# 3. Mandatory repository verification
+# 2. Repository verification
 
-From the parent repository root, run:
+Run:
 
 ```bash
 git status --short
 git branch --show-current
 git log -10 --oneline
 
-git show --stat --oneline f71c9ba
-git diff --stat 11a2cb4..f71c9ba
-
-git submodule status
-git ls-tree HEAD causal-irregular-time-series
-git ls-tree HEAD STraTS
+git show --stat --oneline ad52c76
+git diff --stat f71c9ba..ad52c76
 ```
 
 Confirm:
 
-1. `f71c9ba` exists.
-2. Its message is `step 5.2`.
-3. Its immediate parent is `11a2cb4`.
-4. Stage 5.2 added its audit ledgers and evidence reports.
-5. Stage 5.2 changed no thesis PNG.
-6. Stage 5.2 changed no checked CSV.
-7. Stage 5.2 changed no figure generator.
-8. Stage 5.2 changed no graph generator.
-9. The only protected evidence-record modification was the authorized duplicate-name clarification in `figure_selection_register.md`.
-10. The Stage 5.2 report records:
+1. `ad52c76` exists.
+2. Its message is `step 5.3`.
+3. Its immediate parent is `f71c9ba`.
+4. Stage 5.3 added the reproducibility package and provenance ledgers.
+5. Stage 5.3 changed no thesis figure.
+6. Stage 5.3 changed no checked result source.
+7. Stage 5.3 changed no research code.
+8. Stage 5.3 changed no literature source.
+9. Stage 5.3 made only narrowly documented reader-facing provenance repairs.
+10. The five external assistant figure decisions are recorded without presenting them as Codex approval.
 
-    * five included figures;
-    * zero figure-value discrepancies;
-    * 239 checked numerical table cells with zero discrepancies;
-    * 1,389 manifest files present with matching hashes;
-    * readiness for external figure validation.
+Record the complete initial worktree.
 
-Record the complete initial parent and nested-repository worktree states.
+Do not reset, clean, switch branches, discard changes, stage, amend, commit, push, update submodules, or normalize unrelated files.
 
-Do not:
-
-* reset;
-* clean;
-* checkout another branch;
-* discard unrelated changes;
-* normalize CRLF-only changes;
-* stage;
-* amend;
-* commit;
-* push;
-* update submodules;
-* fetch remotes;
-* browse the web.
-
-If the baseline differs materially, stop and report:
+If the baseline differs materially, report:
 
 ```text
-BLOCKED BEFORE STAGE 5.3 — REPOSITORY BASELINE MISMATCH
+BLOCKED BEFORE STAGE 5.4 — REPOSITORY BASELINE MISMATCH
 ```
 
 ---
 
-# 4. Protected baseline
+# 3. Protected-file baseline
 
-Before investigation, hash:
+Hash and protect:
 
 ```text
 thesis-writing/results/checked_*.csv
@@ -178,710 +123,618 @@ thesis-writing/results/generate_stage_4_6B_main_figures.py
 thesis-writing/thesis/figures/*.png
 thesis-writing/literature/metadata/references.bib
 thesis-writing/literature/metadata/catalog.csv
-causal-irregular-time-series/src/physionet2012_causal_graph.py
-causal-irregular-time-series/src/mimiciii_causal_graph.py
-```
-
-Also record hashes for every thesis source file before editing.
-
-At completion:
-
-* all checked evidence must remain byte-identical;
-* all five figures must remain byte-identical;
-* all generators must remain byte-identical;
-* literature metadata must remain byte-identical;
-* research code must remain byte-identical.
-
----
-
-# 5. Record the external figure decision
-
-Create:
-
-```text
-thesis-writing/logs/stage_5_3_external_figure_decision.csv
-```
-
-Required columns:
-
-```text
-figure_id
-stage_5_2_hash
-assistant_decision
-retained_limitation
-decision_source
-recorded_by_codex
-figure_changed
-caption_changed
-notes
-```
-
-Use:
-
-```text
-decision_source=Independent assistant review supplied in the Stage 5.3 authorization prompt
-recorded_by_codex=TRANSCRIBED_EXTERNAL_DECISION_NOT_CODEX_APPROVAL
-figure_changed=NO
-caption_changed=NO
-```
-
-Create:
-
-```text
-thesis-writing/logs/stage_5_3_external_figure_decision.md
-```
-
-The Markdown record must state:
-
-* all five decisions;
-* that the review was external to Codex;
-* that no figure hallucination was found;
-* that DAG readability remains a non-blocking limitation;
-* that the direction-agreement figure is direction-only evidence;
-* that no clinical, causal-identification, or statistical-significance approval follows.
-
-Do not rewrite the historical Stage 5.2 report or its original pending-status ledger.
-
----
-
-# 6. Evidence-status vocabulary
-
-Use exactly these evidence classes throughout Stage 5.3:
-
-```text
-EXACT_ARCHIVED_ARTIFACT
-EXACT_ARCHIVED_METADATA
-EXACT_GIT_HISTORY_RECOVERY
-EXACT_HASH_IDENTICAL_COPY
-RUN_SUMMARY_RECORDED
-LOG_RECORDED
-CURRENT_SOURCE_REPRODUCTION
-CURRENT_SOURCE_ONLY
-CURRENT_DEFAULT_ONLY
-INTENDED_REQUIREMENTS_ONLY
-PARTIAL_LINEAGE
-INFERRED_CANDIDATE_NOT_PROOF
-MISSING_LOCAL_ARTIFACT
-EXTERNAL_RECORD_REQUIRED
-LIKELY_IRRECOVERABLE
-NOT_APPLICABLE
-```
-
-Do not collapse them into a generic “available” status.
-
-An inferred candidate must never be promoted to an exact producing record.
-
----
-
-# 7. Create the reproducibility package
-
-Create:
-
-```text
+causal-irregular-time-series/src/
+STraTS/
 thesis-writing/reproducibility/
 ```
 
-Required files:
+The Stage 5.3 reproducibility package is immutable in Stage 5.4.
 
-```text
-thesis-writing/reproducibility/README.md
-thesis-writing/reproducibility/artifact_index.csv
-thesis-writing/reproducibility/causal_run_lineage.csv
-thesis-writing/reproducibility/predictive_run_lineage.csv
-thesis-writing/reproducibility/data_lineage.csv
-thesis-writing/reproducibility/environment_lineage.csv
-thesis-writing/reproducibility/source_version_lineage.csv
-thesis-writing/reproducibility/archive_copy_lineage.csv
-thesis-writing/reproducibility/provenance_gaps.csv
-thesis-writing/reproducibility/checksums.sha256
-```
+Also record hashes for all thesis `.tex` files before editing.
 
-The package must be reader-facing, concise, and independently auditable.
-
-It must not duplicate all 1,389 manifest rows unnecessarily.
-
-Instead, it should:
-
-* index existing authoritative records;
-* summarize lineage by run family or result family;
-* point to detailed manifests;
-* distinguish exact evidence from gaps;
-* provide checksums for the new package itself.
+At completion, prove all protected evidence and all five figures are byte-identical.
 
 ---
 
-# 8. Read-only repository forensics
+# 4. Authoritative local institutional evidence
 
-Search all locally available evidence.
-
-Permitted read-only commands include:
-
-```bash
-find
-rg
-grep
-git log --all
-git show
-git diff
-git ls-tree
-git cat-file
-git rev-list --all --objects
-git fsck --full --no-reflogs --unreachable --no-progress
-sha256sum
-file
-stat
-```
-
-Do not use `git fsck --lost-found`, because it writes recovered objects.
-
-Search:
-
-* tracked files;
-* untracked but non-sensitive project files;
-* all local branches and tags;
-* reachable and dangling Git objects;
-* parent-repository history;
-* nested causal-repository history;
-* STraTS history;
-* archived logs;
-* run summaries;
-* command records;
-* configuration basenames;
-* copied result directories;
-* training summaries;
-* prediction exports;
-* checkpoint names;
-* environment metadata;
-* timestamps stored inside artifacts.
-
-Do not inspect:
-
-* shell-history files;
-* credentials;
-* tokens;
-* `.env` secrets;
-* SSH files;
-* raw protected clinical data;
-* unrelated user directories.
-
-When a historical or dangling object is inspected, record:
+Inspect completely:
 
 ```text
-repository
-object_or_commit
-path
-relevance
-recovery_status
+general-instructions.pdf
+thesis-writing/general-instructions.pdf
+thesis-writing/planning/bgu_requirements_map.md
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/frontmatter/
+thesis-writing/thesis/appendices/
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
 ```
 
-Do not restore it into the working tree unless it is a non-sensitive provenance artifact and restoration is explicitly justified in the report.
+Use whichever local copy of the institutional PDF actually exists.
 
-Prefer recording recovered content in the reproducibility package rather than altering research directories.
+The supplied BGU instructions establish, at minimum:
+
+* A4 paper;
+* line spacing between 1.5 and 2;
+* margins of at least 1 cm;
+* page numbers centered at the top;
+* Roman or Hebrew-letter numbering for front matter;
+* Arabic numbering for the thesis body;
+* separately numbered figures and tables;
+* Hebrew and English abstracts in matching format;
+* no abstract longer than 500 words;
+* contents including chapters, sections, and subsections;
+* terminology or symbol list when needed;
+* 10–15 keywords or key phrases after the abstract;
+* consistent bibliography;
+* current faculty forms for cover and internal title pages;
+* Hebrew as the default thesis language;
+* departmental authorization for an English-language thesis;
+* a Hebrew abstract when the thesis is written in English.
+
+Do not claim that the locally supplied general instructions establish the exact current English-thesis title-page sequence if they do not.
+
+Do not reconstruct current faculty forms from memory or an example thesis.
 
 ---
 
-# 9. Causal-run lineage
-
-Create one row for each of the twelve archived causal run families:
-
-```text
-MIMIC / CausalForestDML / original
-MIMIC / CausalForestDML / outcome-downsampled
-MIMIC / LinearDML / original
-MIMIC / LinearDML / outcome-downsampled
-MIMIC / CausalPFN / original
-MIMIC / CausalPFN / outcome-downsampled
-PhysioNet / CausalForestDML / original
-PhysioNet / CausalForestDML / outcome-downsampled
-PhysioNet / LinearDML / original
-PhysioNet / LinearDML / outcome-downsampled
-PhysioNet / CausalPFN / original
-PhysioNet / CausalPFN / outcome-downsampled
-```
-
-Required columns:
-
-```text
-run_id
-dataset
-estimator
-sampling_condition
-run_directory
-run_summary
-run_summary_sha256
-recorded_command
-command_status
-recorded_config_path
-config_basename
-config_local_status
-resolved_config_candidate
-candidate_status
-source_repository
-source_version
-source_version_status
-graph_artifact
-matching_artifact
-cate_artifact
-diagnostic_artifact
-environment_artifact
-archive_copy_status
-lineage_completeness
-blocking_gap
-notes
-```
-
-For each run, verify:
-
-* stage statuses;
-* graph output;
-* matching status;
-* CATE status;
-* sensitivity status;
-* permutation status;
-* intentionally skipped CausalPFN diagnostics;
-* sampling condition;
-* exact exposure coverage;
-* configuration path;
-* command record;
-* source-version record;
-* environment record;
-* copy lineage.
-
-A numbered configuration referenced through an unavailable absolute path remains missing unless the exact file is recovered by content or history.
-
-A similar current config is not the producing config.
-
----
-
-# 10. Predictive-run lineage
-
-Create one row for each dataset–model family combination:
-
-```text
-MIMIC-III: STraTS, GRU, GRU-D, TCN, SAnD
-PhysioNet 2012: STraTS, GRU, GRU-D, TCN, SAnD
-```
-
-Required columns:
-
-```text
-predictive_run_id
-dataset
-model_family
-training_summary
-training_summary_sha256
-prediction_export
-prediction_export_sha256
-test_metrics_source
-split_manifest
-split_status
-seed
-seed_status
-checkpoint
-checkpoint_sha256
-checkpoint_status
-checkpoint_to_export_status
-producing_command
-command_status
-producing_config
-config_status
-source_repository
-source_version
-source_version_status
-environment_record
-archive_copy_status
-lineage_completeness
-blocking_gap
-notes
-```
-
-Explicitly distinguish:
-
-* archived summary;
-* archived prediction export;
-* available implementation wrapper;
-* current default;
-* missing producing split;
-* missing checkpoint;
-* missing checkpoint-to-export mapping;
-* missing producing command;
-* missing exact source version.
-
-Do not treat matching numerical log values as proof of checkpoint lineage.
-
----
-
-# 11. Data lineage
-
-Audit separately:
-
-```text
-raw source data
-authorized access
-raw-data version
-raw-data hashes
-extraction queries
-cohort construction
-processed pickles
-processed hashes
-patient or record identifiers
-prediction inputs
-proxy-label inputs
-majority-vote inputs
-causal-analysis inputs
-mortality outcome construction
-```
-
-Required `data_lineage.csv` columns:
-
-```text
-lineage_id
-dataset
-stage
-input_artifact
-input_status
-input_sha256
-producer
-producer_status
-configuration
-configuration_status
-output_artifact
-output_status
-output_sha256
-row_identifier
-row_count
-access_requirement
-sensitive_data
-lineage_completeness
-gap
-notes
-```
-
-Do not open protected raw data.
-
-Use schemas, manifests, code contracts, and available hashes only.
-
-Do not claim cross-dataset equivalence merely because both outputs use a similarly named mortality field.
-
----
-
-# 12. Environment lineage
-
-For every major family record:
-
-```text
-predictive training
-prediction export
-proxy construction
-aggregation
-matching
-CausalForestDML
-LinearDML
-CausalPFN
-figure generation
-thesis build
-```
-
-Distinguish:
-
-* package versions stored in the archived artifact;
-* package versions printed in a log;
-* current environment;
-* intended requirements;
-* unknown producing environment.
-
-Required columns:
-
-```text
-environment_id
-workflow_family
-dataset
-run_family
-environment_source
-python_version
-package_versions
-operating_system
-cpu
-ram
-gpu
-cuda
-timestamp
-evidence_class
-producing_environment_supported
-missing_fields
-notes
-```
-
-A current successful rebuild is `CURRENT_SOURCE_REPRODUCTION`, not proof of the historical producing environment.
-
-A requirements file is `INTENDED_REQUIREMENTS_ONLY`.
-
----
-
-# 13. Source-version lineage
-
-Audit:
-
-* parent CliniCause source;
-* causal nested repository;
-* STraTS nested repository;
-* gitlinks;
-* active worktree differences;
-* archived source paths;
-* source versions recorded in result metadata;
-* producing versions recorded in run summaries;
-* versions used for current reproduction.
-
-Required columns:
-
-```text
-source_id
-workflow_family
-repository
-repository_role
-current_gitlink
-current_head
-worktree_status
-recorded_producing_version
-producing_version_status
-current_reproduction_version
-artifact_family
-lineage_status
-gap
-notes
-```
-
-Never substitute:
-
-```text
-current HEAD
-```
-
-for:
-
-```text
-historical producing version
-```
-
-unless exact archived evidence proves they are identical.
-
----
-
-# 14. Archive-copy lineage
-
-Group hash-identical files across:
-
-* `final-results`;
-* archived model directories;
-* thesis-local figure copies;
-* optional-figure directories;
-* copied summaries;
-* result packets.
-
-Required columns:
-
-```text
-copy_group_id
-sha256
-canonical_path
-copy_path
-artifact_role
-byte_identical
-copy_direction_known
-copy_timestamp_available
-timestamp_evidence_class
-source_version_known
-selection_status
-notes
-```
-
-Hash equality proves byte identity, not copy direction.
-
-Filesystem timestamps alone must not establish historical origin.
-
-Preserve the Stage 5.2 finding that:
-
-```text
-causal_dag_overview.png
-```
-
-is a duplicate or rename of the canonical archived MIMIC DAG and remains excluded only to prevent duplicate inclusion.
-
----
-
-# 15. Provenance-gap disposition
-
-For every unresolved item, record:
-
-```text
-gap_id
-category
-artifact_or_run
-description
-current_evidence
-searches_performed
-recovered
-recovery_result
-impact
-resolution_owner
-external_input_required
-likely_irrecoverable
-thesis_wording
-next_action
-```
-
-At minimum disposition:
-
-* numbered final causal configurations;
-* producing causal commands;
-* producing causal source versions;
-* predictive split manifests;
-* predictive seeds;
-* predictive checkpoints;
-* checkpoint-to-export mapping;
-* predictive producing commands;
-* predictive source versions;
-* raw-data versions and hashes;
-* processed-pickle hashes;
-* cohort extraction lineage;
-* archive-copy direction;
-* producing environments;
-* producing hardware;
-* CausalPFN source/version;
-* LLM prompt-run settings;
-* human clinical-review record.
-
-Use:
-
-```text
-RECOVERED
-PARTIALLY_RECOVERED
-NOT_FOUND_AFTER_EXHAUSTIVE_LOCAL_SEARCH
-EXTERNAL_RECORD_REQUIRED
-LIKELY_IRRECOVERABLE
-NOT_APPLICABLE
-```
-
-Do not describe a gap as “closed” unless its exact required evidence is recovered.
-
----
-
-# 16. Reproducibility claims matrix
+# 5. Create the institutional compliance matrix
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_3_reproducibility_claim_matrix.csv
+thesis-writing/logs/stage_5_4_institutional_compliance.csv
 ```
 
 Required columns:
 
 ```text
-claim_id
-reader_facing_claim
-current_location
-required_evidence
-available_evidence
-evidence_class
-claim_supported
-qualification_required
+requirement_id
+requirement_category
+requirement_text
+authoritative_source
+source_page_or_location
+locally_checkable
+current_implementation
+evidence
+status
 repair_required
+external_input_required
+responsible_owner
 notes
 ```
 
-Audit every reader-facing claim involving:
+Use these statuses:
 
 ```text
-reproducible
-reproduction
-replication
-traceable
-manifest
-checksum
-source version
-configuration
-command
-environment
-archive
-checkpoint
-split
-seed
-provenance
-clean checkout
+COMPLIANT
+COMPLIANT_WITH_QUALIFICATION
+LOCALLY_REPAIRABLE_NONCOMPLIANCE
+EXTERNALLY_GATED
+NOT_APPLICABLE
+SOURCE_AMBIGUOUS
+BLOCKING_NONCOMPLIANCE
 ```
 
-The thesis may claim:
+Audit at minimum:
 
-* numerical traceability where hashes and sources support it;
-* current artifact reproduction where reproduced;
-* documented evidence boundaries.
-
-It may not claim:
-
-* complete clean-checkout reproduction;
-* exact historical rerun;
-* complete data lineage;
-* complete checkpoint lineage;
-* complete producing-environment capture.
+* page size;
+* margins;
+* line spacing;
+* page-number position;
+* front-matter numbering;
+* body numbering;
+* abstract order;
+* abstract format;
+* abstract word counts;
+* Hebrew abstract;
+* English abstract;
+* keyword counts;
+* bilingual keyword alignment;
+* TOC depth;
+* list of figures;
+* list of tables;
+* nomenclature;
+* bibliography placement;
+* appendix placement;
+* title-page structure;
+* internal approval page;
+* English-language authorization;
+* current faculty forms;
+* degree wording;
+* department wording;
+* submission date;
+* supervisor information;
+* author information;
+* Hebrew title;
+* acknowledgements.
 
 ---
 
-# 17. Permitted thesis repairs
+# 6. Ethics and governance evidence hierarchy
 
-Only make a reader-facing repair when Stage 5.3 recovers evidence or discovers a material provenance misstatement.
+Use this hierarchy:
 
-Potentially relevant files:
+## 6.1 Reader-facing authority
 
 ```text
 thesis-writing/thesis/chapters/04_data_preprocessing.tex
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
 thesis-writing/thesis/chapters/09_experimental_design.tex
 thesis-writing/thesis/chapters/11_discussion.tex
 thesis-writing/thesis/chapters/12_conclusions_future_work.tex
 thesis-writing/thesis/appendices/appendices.tex
 ```
 
-Allowed repairs:
+## 6.2 Repository evidence
 
-* replace a now-resolved provenance gate;
-* refine a gap from unknown to partially recovered;
-* distinguish current reproduction from historical production;
-* add a precise reference to the reproducibility package;
-* correct a false claim of missing or available evidence;
-* remove obsolete internal stage wording.
+```text
+thesis-writing/audit/
+thesis-writing/planning/
+thesis-writing/logs/
+thesis-writing/reproducibility/
+README.md
+SCRIPTS.md
+```
 
-Do not:
+## 6.3 Dataset documentation already approved in the literature corpus
 
-* broaden prose;
-* introduce new results;
-* change values;
-* change result interpretation;
-* change citations;
-* modify figures;
-* modify table values;
-* add administrative facts;
-* claim complete reproduction.
+Use only existing approved citations and bibliography entries.
+
+Do not add literature.
+
+Do not browse.
+
+## 6.4 External institutional facts
+
+The following require authoritative human or institutional input unless already documented exactly:
+
+* ethics-board or IRB approval number;
+* exemption determination;
+* consent procedure;
+* waiver of consent;
+* data-use agreement;
+* credentialed-access approval;
+* institutional data-governance approval;
+* departmental approval for an English thesis;
+* author identity;
+* supervisor identity;
+* department;
+* degree;
+* submission date;
+* committee;
+* approval signatures.
 
 ---
 
-# 18. Allowed edit scope
+# 7. Create the ethics and governance claim ledger
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_4_ethics_governance_audit.csv
+```
+
+Use one row per materially distinct claim involving:
+
+```text
+ethics
+ethical
+IRB
+institutional review
+approval
+exemption
+consent
+waiver
+privacy
+de-identification
+anonymization
+credentialed access
+data-use agreement
+governance
+protected health information
+patient confidentiality
+secondary research
+public dataset
+restricted dataset
+data security
+clinical validation
+human subjects
+retrospective
+observational
+deployment
+risk
+fairness
+bias
+subgroup
+```
+
+Required columns:
+
+```text
+claim_id
+file
+section
+claim_excerpt
+claim_category
+dataset_scope
+required_evidence
+available_evidence
+support_status
+wording_strength
+repair_required
+external_input_required
+notes
+```
+
+Support statuses:
+
+```text
+SUPPORTED
+SUPPORTED_WITH_QUALIFICATION
+NEGATIVE_BOUNDARY_SUPPORTED
+EXTERNAL_DOCUMENT_REQUIRED
+UNSUPPORTED
+AMBIGUOUS
+```
+
+---
+
+# 8. Mandatory ethics-language boundaries
+
+The thesis must not claim or imply:
+
+* a project-specific IRB approval number that is not documented;
+* a project-specific exemption;
+* informed consent or waiver without evidence;
+* an institutional data-use agreement without evidence;
+* that de-identified public or credentialed data automatically removes all ethical obligations;
+* that access permission equals institutional research approval;
+* that absence of direct identifiers proves zero re-identification risk;
+* that repository access establishes lawful clinical deployment;
+* that clinical validation occurred;
+* that chart review occurred;
+* that fairness was established;
+* that subgroup safety was established;
+* that privacy risk was empirically measured;
+* that data governance was complete;
+* that the DAG or proxy rules received qualified clinical approval;
+* that external figure approval constitutes ethics, clinical, or institutional approval.
+
+Required reader-facing boundary:
+
+```text
+The repository does not establish the project-specific institutional approval,
+consent or waiver procedure, data-use agreement, or governance determination.
+These facts must be supplied from authoritative institutional records and must
+not be inferred from dataset access, de-identification, or repository contents.
+```
+
+Use equivalent scholarly wording, not necessarily this exact sentence.
+
+---
+
+# 9. Dataset-specific ethics audit
+
+Audit MIMIC-III and PhysioNet 2012 separately.
+
+For each, record:
+
+* dataset description used in thesis;
+* access model described;
+* de-identification claim;
+* credentialing claim;
+* use-agreement claim;
+* citation support;
+* local project approval;
+* institutional approval;
+* consent or waiver;
+* governance record;
+* remaining gap.
+
+Do not merge dataset-level access conditions with project-level institutional approval.
+
+A dataset paper or website-derived statement already represented in an approved citation may support dataset context, but not a project-specific approval claim.
+
+---
+
+# 10. Privacy and sensitive-data audit
+
+Inspect the thesis and new reproducibility package for exposure of:
+
+* absolute user paths;
+* usernames;
+* machine names;
+* credentials;
+* access tokens;
+* emails;
+* protected patient identifiers;
+* raw patient-level values;
+* unredacted record identifiers;
+* private storage paths;
+* institutional server names;
+* access-account details.
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_4_privacy_scan.csv
+```
+
+Required columns:
+
+```text
+finding_id
+path
+finding_type
+matched_text_or_description
+sensitive
+reader_facing
+authorized_provenance_value
+repair_required
+disposition
+notes
+```
+
+Do not copy sensitive content into the audit ledger.
+
+Use a redacted description when necessary.
+
+Historical absolute paths may remain in internal evidence only when required for provenance and when they contain no credentials or protected data.
+
+Reader-facing thesis prose should avoid unnecessary machine-specific paths.
+
+---
+
+# 11. Administrative metadata audit
+
+Audit:
+
+```text
+thesis-writing/thesis/frontmatter/administrative_metadata.tex
+thesis-writing/thesis/frontmatter/title_pages.tex
+thesis-writing/thesis/frontmatter/acknowledgements.tex
+thesis-writing/thesis/frontmatter/abstract_primary.tex
+thesis-writing/thesis/frontmatter/abstract_secondary.tex
+thesis-writing/thesis/frontmatter/keywords.tex
+```
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_4_administrative_inputs.csv
+```
+
+Required columns:
+
+```text
+input_id
+field
+current_value
+status
+authoritative_provider
+required_format
+where_used
+blocking_for_final_submission
+safe_placeholder_policy
+notes
+```
+
+Required fields include:
+
+```text
+official English title
+official Hebrew title
+author full legal name
+author identification number if required
+department
+faculty
+degree
+supervisor name
+supervisor title
+co-supervisor if applicable
+submission month
+submission year
+committee or approval text
+English-thesis authorization
+institutional ethics wording
+approval or exemption number
+consent or waiver wording
+data-use agreement wording
+acknowledgements
+current official title-page form
+current official approval-page form
+```
+
+Do not infer these fields from:
+
+* GitHub username;
+* repository owner;
+* chat identity;
+* commit author;
+* file metadata;
+* old thesis examples;
+* email addresses;
+* directory names.
+
+---
+
+# 12. Reader-facing placeholder policy
+
+No raw drafting placeholder such as:
+
+```text
+TODO
+TBD
+INSERT NAME
+[NAME]
+[DATE]
+[APPROVAL]
+[VALIDATION REQUIRED]
+```
+
+may render in the final PDF.
+
+For unavailable administrative details, use one of these approaches:
+
+1. omit the page or field until supplied;
+2. centralize an explicit non-rendered LaTeX placeholder;
+3. render a neutral draft-only marker only when the document is explicitly labelled as a draft.
+
+Do not make the thesis appear submission-ready while official identity or approval pages are absent.
+
+Audit both source and rendered PDF.
+
+---
+
+# 13. Abstract and keyword institutional recheck
+
+Revalidate:
+
+* English abstract word count;
+* Hebrew abstract word count;
+* each under 500 words;
+* equivalent factual content;
+* matching structure;
+* no citations;
+* no footnotes;
+* 10–15 English keywords;
+* 10–15 Hebrew keywords;
+* aligned concepts;
+* Hebrew rendering;
+* embedded Latin terms;
+* abstract-page numbering.
+
+Do not rewrite either abstract unless a compliance or ethics statement is materially inaccurate.
+
+---
+
+# 14. TOC, numbering, and document sequence
+
+Verify actual rendered behavior, not only source settings.
+
+Audit:
+
+* title page;
+* internal title or approval page;
+* Hebrew abstract;
+* Hebrew keywords;
+* English abstract;
+* English keywords;
+* acknowledgements, if present;
+* TOC;
+* abbreviations;
+* notation;
+* list of figures;
+* list of tables;
+* chapters;
+* appendices;
+* bibliography.
+
+Record the current sequence.
+
+Classify the sequence as:
+
+```text
+LOCALLY_SUPPORTED
+LOCALLY_SUPPORTED_WITH_ENGLISH_THESIS_QUALIFICATION
+REQUIRES_CURRENT_FACULTY_FORM_CONFIRMATION
+```
+
+Do not alter sequence solely based on assumptions about current forms.
+
+Verify `tocdepth` using the actual rendered TOC. For the standard `report` hierarchy, depth `2` normally includes chapter, section, and subsection.
+
+---
+
+# 15. Formatting verification
+
+Programmatically and visually verify:
+
+* A4 dimensions;
+* margin values;
+* effective text block;
+* line spacing;
+* top-centered page numbers;
+* Roman front-matter numbering;
+* Arabic body numbering;
+* figure numbering;
+* table numbering;
+* appendix numbering;
+* bibliography consistency;
+* heading hierarchy;
+* Hebrew direction;
+* no clipped title-page content;
+* no blank administrative page presented as complete.
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_4_format_validation.csv
+```
+
+Required columns:
+
+```text
+check_id
+requirement
+source_setting
+rendered_observation
+status
+repair
+notes
+```
+
+---
+
+# 16. Permitted repairs
+
+Permitted repairs include:
+
+* correcting an inaccurate ethics or governance statement;
+* replacing an overclaim with an explicit documentation boundary;
+* removing a raw reader-facing placeholder;
+* correcting keyword count;
+* correcting abstract word-count noncompliance;
+* fixing page-number position;
+* fixing TOC depth if the rendered TOC omits required levels;
+* fixing malformed bilingual direction;
+* removing sensitive paths from reader-facing prose;
+* clarifying that English-thesis authorization remains pending;
+* clarifying that current official forms remain pending;
+* ensuring administrative fields remain centralized and non-invented.
+
+Every repair must be:
+
+* minimal;
+* evidence-supported;
+* logged;
+* non-numerical;
+* non-experimental;
+* unrelated to figure content.
+
+---
+
+# 17. Allowed edit scope
 
 You may create:
 
 ```text
-thesis-writing/reproducibility/
-thesis-writing/logs/stage_5_3_external_figure_decision.csv
-thesis-writing/logs/stage_5_3_external_figure_decision.md
-thesis-writing/logs/stage_5_3_reproducibility_claim_matrix.csv
-thesis-writing/logs/stage_5_3_recovery_search_log.csv
-thesis-writing/logs/stage_5_3_evidence_report.md
+thesis-writing/logs/stage_5_4_institutional_compliance.csv
+thesis-writing/logs/stage_5_4_ethics_governance_audit.csv
+thesis-writing/logs/stage_5_4_privacy_scan.csv
+thesis-writing/logs/stage_5_4_administrative_inputs.csv
+thesis-writing/logs/stage_5_4_format_validation.csv
+thesis-writing/logs/stage_5_4_submission_inputs_required.md
+thesis-writing/logs/stage_5_4_evidence_report.md
 ```
 
-You may edit only where supported by documented evidence:
+You may edit, only for documented repairs:
 
 ```text
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/frontmatter/*.tex
 thesis-writing/thesis/chapters/04_data_preprocessing.tex
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
 thesis-writing/thesis/chapters/09_experimental_design.tex
 thesis-writing/thesis/chapters/11_discussion.tex
 thesis-writing/thesis/chapters/12_conclusions_future_work.tex
@@ -898,26 +751,22 @@ thesis-writing/thesis/main.pdf
 
 ---
 
-# 19. Forbidden edit scope
+# 18. Forbidden edit scope
 
 Do not edit:
 
 ```text
 prompt.txt
 thesis-writing/thesis/figures/
-thesis-writing/results/checked_*.csv
-thesis-writing/results/results_manifest.csv
-thesis-writing/results/results_manifest.md
-thesis-writing/results/results_source_packet.md
-thesis-writing/results/results_decision_register.md
-thesis-writing/results/results_checksums.sha256
-thesis-writing/results/figure_selection_register.md
-thesis-writing/results/generate_stage_4_6B_main_figures.py
+thesis-writing/results/
+thesis-writing/reproducibility/
+thesis-writing/logs/stage_5_1_*
 thesis-writing/logs/stage_5_2_*
+thesis-writing/logs/stage_5_3_*
 thesis-writing/literature/
 thesis-writing/audit/
 thesis-writing/planning/
-causal-irregular-time-series/src/
+causal-irregular-time-series/
 STraTS/
 router.py
 requirements*.txt
@@ -926,55 +775,83 @@ tests/
 
 Do not modify research code.
 
-Do not rerun training, preprocessing, matching, CATE estimation, sensitivity analysis, or permutation experiments.
+Do not run source-code pipelines.
 
-Do not create a figure.
-
-Do not overwrite an archived result.
+Do not rerun preprocessing, training, prediction, matching, CATE estimation, sensitivity analysis, permutation analysis, or figure generation.
 
 Do not browse the web.
 
----
+Do not download official forms.
 
-# 20. Validation
+Do not create a figure.
 
-Validate the reproducibility package programmatically.
-
-Check:
-
-* required columns;
-* unique IDs;
-* no missing status field;
-* all referenced local files exist or are explicitly marked missing/external;
-* all recorded hashes match;
-* all exact evidence classes have an exact source;
-* no `CURRENT_DEFAULT_ONLY` row is labelled producing configuration;
-* no `INFERRED_CANDIDATE_NOT_PROOF` row is labelled recovered;
-* no current environment is labelled historical producing environment;
-* no hash-identical copy is assigned a copy direction without evidence;
-* every gap has an owner and next action.
-
-Generate:
-
-```text
-thesis-writing/reproducibility/checksums.sha256
-```
-
-for the completed reproducibility package.
+Do not change a result value or table value.
 
 ---
 
-# 21. Final build
+# 19. Submission-input checklist
 
-From:
+Create:
 
 ```text
-thesis-writing/thesis/
+thesis-writing/logs/stage_5_4_submission_inputs_required.md
 ```
 
-run:
+Organize it into:
+
+## Required from author
+
+* official identity details;
+* acknowledgements;
+* desired final title confirmation;
+* Hebrew title approval.
+
+## Required from supervisor or department
+
+* title ratification;
+* English-thesis authorization;
+* supervisor titles;
+* degree and department wording;
+* thesis sequence confirmation;
+* current official forms;
+* committee or signature requirements.
+
+## Required from institution or data-governance authority
+
+* ethics approval, exemption, or determination wording;
+* approval number;
+* consent or waiver wording;
+* data-use agreement wording;
+* governance wording;
+* any required privacy statement.
+
+## Required from qualified clinical reviewer
+
+* proxy-rule review;
+* DAG review;
+* clinical-language review;
+* accepted/rejected decision record.
+
+For each item include:
+
+```text
+required
+why required
+where inserted
+authoritative provider
+acceptable evidence
+current status
+submission blocking
+```
+
+---
+
+# 20. Build and visual inspection
+
+Run:
 
 ```bash
+cd thesis-writing/thesis
 latexmk -C
 latexmk -xelatex main.tex
 test -f main.pdf
@@ -983,7 +860,6 @@ pdfinfo main.pdf
 
 Record:
 
-* return codes;
 * page count;
 * PDF SHA-256;
 * unresolved citations;
@@ -992,12 +868,25 @@ Record:
 * fatal errors;
 * Biber errors and warnings;
 * missing glyphs;
-* bidi warnings;
+* bidi errors;
 * overfull boxes;
 * underfull boxes;
 * `xdvipdfmx` warnings.
 
-Render and inspect every changed thesis page.
+Render and inspect:
+
+* every title and approval page;
+* both abstracts;
+* both keyword blocks;
+* TOC;
+* nomenclature;
+* lists;
+* Chapter 4 data description;
+* Chapter 9 reproducibility section;
+* Chapter 11 limitations and ethics language;
+* Chapter 12 conclusions/future work;
+* appendix;
+* bibliography transition.
 
 After inspection:
 
@@ -1007,24 +896,23 @@ latexmk -c
 
 Retain `main.pdf`.
 
-Do not retain LaTeX auxiliary files.
+No auxiliary file may remain tracked or retained.
 
 ---
 
-# 22. Protected-file validation
+# 21. Protected-file validation
 
-Recalculate protected hashes.
+Recalculate hashes and prove:
 
-Prove:
+* all checked CSVs unchanged;
+* all result records unchanged;
+* reproducibility package unchanged;
+* all five figures unchanged;
+* generators unchanged;
+* research code unchanged;
+* literature unchanged.
 
-* all five externally approved PNGs are byte-identical;
-* checked CSVs are unchanged;
-* figure and graph generators are unchanged;
-* research source is unchanged;
-* result manifests and checksums are unchanged;
-* literature metadata is unchanged.
-
-If any figure changes, report:
+If any externally approved figure changes, report:
 
 ```text
 BLOCKED — EXTERNALLY APPROVED FIGURE MODIFIED
@@ -1032,227 +920,196 @@ BLOCKED — EXTERNALLY APPROVED FIGURE MODIFIED
 
 ---
 
-# 23. Stage 5.3 evidence report
+# 22. Stage 5.4 evidence report
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_3_evidence_report.md
+thesis-writing/logs/stage_5_4_evidence_report.md
 ```
 
 Use this structure.
 
-## 23.1 Repository baseline
+## 22.1 Repository baseline
 
 * head;
 * parent;
 * branch;
-* parent worktree;
-* nested worktrees;
-* Stage 5.2 readiness.
+* worktree;
+* Stage 5.3 scope.
 
-## 23.2 External figure-decision record
+## 22.2 Institutional sources
 
-* five decisions;
-* source of decision;
-* confirmation that Codex merely transcribed it;
-* confirmation of unchanged figure hashes.
+* exact local files;
+* PDF pages inspected;
+* limits of local authority.
 
-## 23.3 Search methodology
+## 22.3 Institutional compliance
 
-* repositories;
-* histories;
-* files;
-* Git objects;
-* exclusions;
-* commands.
+Report counts by status.
 
-## 23.4 Recovered evidence
+## 22.4 Formatting
 
-For each recovered item:
+* page size;
+* margins;
+* spacing;
+* numbering;
+* TOC;
+* figures/tables;
+* nomenclature;
+* bibliography;
+* sequence.
 
-```text
-item
-exact source
-evidence class
-previous status
-new status
-impact
-```
+## 22.5 Abstracts and keywords
 
-## 23.5 Causal-run lineage
+* word counts;
+* alignment;
+* keyword counts;
+* rendering.
 
-* 12 run families;
-* completeness counts;
-* recovered configurations;
-* recovered commands;
-* unresolved items.
+## 22.6 Ethics and governance
 
-## 23.6 Predictive-run lineage
+Report counts by support status and every repair.
 
-* 10 dataset–model families;
-* summaries;
-* exports;
-* splits;
-* checkpoints;
-* commands;
-* source versions.
+## 22.7 Dataset-specific ethics
 
-## 23.7 Data lineage
+Separate MIMIC-III and PhysioNet 2012.
 
-* raw;
-* processed;
-* prediction;
-* proxy;
-* causal;
-* outcome;
-* access boundaries.
+## 22.8 Privacy scan
 
-## 23.8 Environment lineage
+* paths scanned;
+* sensitive findings;
+* repairs;
+* confirmation that no protected patient data were copied.
 
-* historical captured;
-* intended;
-* current reproduction;
-* missing producing environments.
+## 22.9 Administrative metadata
 
-## 23.9 Source-version lineage
+* resolved fields;
+* unresolved fields;
+* fields intentionally not inferred.
 
-* parent;
-* causal nested repository;
-* STraTS;
-* producing-version findings.
+## 22.10 Official-form and authorization gates
 
-## 23.10 Archive-copy lineage
+* current faculty forms;
+* English-thesis authorization;
+* title-page order;
+* approval page;
+* institutional wording.
 
-* duplicate groups;
-* canonical paths;
-* unknown directions;
-* MIMIC DAG duplicate-name status.
+## 22.11 Thesis repairs
 
-## 23.11 Provenance gaps
-
-Count:
+For each:
 
 ```text
-RECOVERED
-PARTIALLY_RECOVERED
-NOT_FOUND_AFTER_EXHAUSTIVE_LOCAL_SEARCH
-EXTERNAL_RECORD_REQUIRED
-LIKELY_IRRECOVERABLE
+path
+old wording
+new wording
+evidence
+reason
 ```
 
-## 23.12 Thesis repairs
+## 22.12 Submission inputs
 
-* exact path;
-* exact old claim;
-* exact new claim;
-* source;
-* reason.
+Summarize the required-input checklist.
 
-## 23.13 Reproducibility package
-
-* files;
-* row counts;
-* validation;
-* package checksum.
-
-## 23.14 Files changed
+## 22.13 Files changed
 
 List exact paths.
 
-## 23.15 Protected-file validation
+## 22.14 Protected-file validation
 
 * protected count;
 * changed count;
-* figure hashes;
-* frozen-evidence result.
+* figure hashes.
 
-## 23.16 Final build
+## 22.15 Final build and render
 
 * page count;
 * PDF hash;
 * compilation;
 * warnings;
-* render inspection.
+* visual inspection.
 
-## 23.17 Remaining gates
+## 22.16 Remaining gates
 
-Carry forward only genuinely unresolved items.
+Carry forward only unresolved external inputs.
 
-## 23.18 Readiness decision
+## 22.17 Readiness decision
 
 Use exactly one:
 
 ```text
-READY FOR STAGE 5.4 WITH NON-BLOCKING PROVENANCE GAPS
-BLOCKED BEFORE STAGE 5.4
+READY FOR STAGE 5.5 WITH NON-BLOCKING ADMINISTRATIVE GATES
+BLOCKED BEFORE STAGE 5.5
 ```
 
 ---
 
-# 24. Readiness rules
+# 23. Readiness rules
 
 Use:
 
 ```text
-READY FOR STAGE 5.4 WITH NON-BLOCKING PROVENANCE GAPS
+READY FOR STAGE 5.5 WITH NON-BLOCKING ADMINISTRATIVE GATES
 ```
 
 only if:
 
-* external figure approval is recorded accurately;
-* no figure changed;
-* all locally recoverable provenance has been investigated;
-* every remaining gap is explicitly classified;
-* no inference is presented as exact evidence;
-* the reproducibility package validates;
-* thesis reproducibility language is accurate;
-* protected evidence is unchanged;
+* all locally checkable requirements pass;
+* all ethics and governance prose is accurate;
+* no approval is invented;
+* no sensitive reader-facing path remains;
+* abstract and keyword requirements pass;
+* missing official details are precisely tracked;
+* current forms and English authorization remain explicit external gates;
+* no protected file changed;
 * the thesis builds.
 
 Use:
 
 ```text
-BLOCKED BEFORE STAGE 5.4
+BLOCKED BEFORE STAGE 5.5
 ```
 
 if:
 
-* a figure changed;
-* a checked source changed;
-* an exact producing claim rests only on defaults or inference;
-* a recovered artifact cannot be verified;
-* run-lineage rows are materially inconsistent;
-* a reader-facing reproducibility overclaim remains;
-* sensitive data were copied into the package;
+* a locally repairable institutional violation remains;
+* an unsupported ethics claim remains;
+* a fabricated approval or consent claim remains;
+* sensitive information is exposed;
+* a reader-facing raw placeholder remains;
+* abstracts exceed the limit;
+* Hebrew rendering fails;
+* protected evidence changes;
+* a figure changes;
 * the thesis fails to build.
+
+Administrative details that only the author, supervisor, department, or institution can supply are not by themselves a reason to block Stage 5.5, provided they are clearly and accurately tracked and not fabricated.
 
 ---
 
-# 25. Final Codex response
+# 24. Final Codex response
 
 Report:
 
 1. verified head and parent;
 2. readiness status;
-3. external figure decisions recorded;
-4. confirmation that no figure changed;
-5. recovered causal provenance;
-6. recovered predictive provenance;
-7. recovered data provenance;
-8. recovered environment provenance;
-9. recovered source versions;
-10. archive-copy findings;
-11. unresolved and likely irrecoverable gaps;
-12. thesis repairs;
-13. reproducibility-package files and row counts;
-14. protected-file result;
-15. final page count and PDF hash;
-16. build/render result;
-17. exact next authorized stage.
+3. locally compliant institutional requirements;
+4. locally repaired requirements;
+5. ethics/governance findings and repairs;
+6. privacy findings;
+7. abstract and keyword result;
+8. administrative fields still missing;
+9. official-form and English-authorization gates;
+10. files changed;
+11. protected-file result;
+12. confirmation that all five figures are unchanged;
+13. final page count and PDF hash;
+14. build/render result;
+15. exact next authorized stage.
 
 Do not commit or push.
 
 Do not edit `prompt.txt`.
 
-Do not begin Stage 5.4.
+Do not begin Stage 5.5.
