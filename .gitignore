@@ -52,3 +52,17 @@ final-results/
 
 # Local verification scratch files
 tmp_verify_*.py
+
+# Thesis-local LaTeX auxiliary files (main.pdf remains tracked)
+thesis-writing/thesis/*.aux
+thesis-writing/thesis/*.bbl
+thesis-writing/thesis/*.bcf
+thesis-writing/thesis/*.blg
+thesis-writing/thesis/*.fdb_latexmk
+thesis-writing/thesis/*.fls
+thesis-writing/thesis/*.lof
+thesis-writing/thesis/*.lot
+thesis-writing/thesis/*.out
+thesis-writing/thesis/*.run.xml
+thesis-writing/thesis/*.toc
+thesis-writing/thesis/*.xdv

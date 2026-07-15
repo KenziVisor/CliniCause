@@ -3,7 +3,7 @@
 
 This chapter describes how the repository transforms heterogeneous, irregular ICU measurements into a smaller set of interpretable binary constructs.  The constructs provide supervised targets for the proxy-state prediction task introduced in Chapter~\ref{chap:problem-definition-study-design} and structured proxy-state exposures for later observational analyses.  Their interpretability comes from explicit source-code rules and from stable \texttt{LAT\_*} column names, not from chart-adjudicated clinical reference labels.  They should therefore be read as proxy states: useful analytical representations whose value depends on construct validity, source-variable availability, measurement quality, missingness, and later clinical review.
 
-The chapter is limited to methods and construct definition.  It documents the active rule implementations for PhysioNet 2012 and MIMIC-III, describes available validation artifacts without reporting their numerical contents, and explains how rule-derived labels differ from model-predicted and majority-vote proxy states.  Predictive-model architecture and training mechanics are deferred to Chapter~\ref{chap:predictive-modeling-proxy-states}; final numerical results are deferred to later results chapters.
+The chapter is limited to methods and construct definition.  It documents the active rule implementations for PhysioNet 2012 and MIMIC-III, describes available validation artifacts without reporting their numerical contents, and explains how rule-derived labels differ from model-predicted and majority-vote proxy states.  Predictive-model architecture and training mechanics are presented in Chapter~\ref{chap:predictive-modeling-proxy-states}; final numerical results are reported in Chapter~\ref{chap:results}.
 
 \section{Rationale and Terminology}
 \label{sec:clinical-proxy-state-construction:rationale-terminology}
@@ -43,11 +43,6 @@ Manager-summary documents & Project & Management summaries of proxy/DAG and clin
 \end{tabular}
 \end{table}
 
-\StagePlaceholder{[VALIDATION REQUIRED: record the final prompt execution settings, research or browsing mode, follow-up prompts, and output-export procedure for the ChatGPT 5.4 extended-reasoning runs]}
-\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: document the human and clinical review applied to the LLM-generated proxy-state and DAG design proposals]}
-
-\StagePlaceholder{[SUPERVISOR DECISION REQUIRED: approve proxy state as the primary thesis term and review construct-level clinical wording]}
-
 \begin{table}[htbp]
 \centering
 \caption{Proxy-state source types used in the thesis pipeline.}
@@ -85,13 +80,11 @@ The active PhysioNet implementation is \texttt{tagging\_latent\_variables\_physi
 \texttt{LAT\_METABOLIC\_DERANGEMENT}.
 \end{gathered}
 \]
-The archived \texttt{final-results/trees/physionet-tags/physionet-latent-tags.csv} header matches this active column set and contains binary values with no duplicate \texttt{ts\_id} values in the audit.  That artifact-level agreement supports the schema, but it does not by itself prove the producing command, input-artifact hash, source commit, or default-versus-optimized threshold mode.
+The archived \texttt{final-results/trees/physionet-tags/physionet-latent-tags.csv} header matches this active column set and contains binary values with no duplicate \texttt{ts\_id} values in the validated artifact.  That artifact-level agreement supports the schema, but it does not by itself prove the producing command, input-artifact hash, source commit, or default-versus-optimized threshold mode.
 
 Missingness is handled conservatively in the active decision helpers.  A comparison such as \(x < c\) or \(x \ge c\) contributes positive evidence only when a non-missing value exists.  Missing values therefore do not count as abnormal.  The active summarizer does not implement explicit time windows beyond whatever time span is already present in the processed PhysioNet record.  It also does not compute a fresh urine sum; urine-related clauses fire only if a compatible precomputed summary column such as \texttt{Urine\_24h\_min}, \texttt{Urine\_24h\_sum}, or \texttt{Urine\_sum} is present.  For oxygenation, the implementation uses \texttt{PF\_min} when available and otherwise approximates the PaO2/FiO2 ratio from PaO2 and FiO2 summary columns.
 
 By default the script uses the clinically inspired thresholds embedded in the active source.  The command-line option \texttt{--optimized} switches to externally supplied thresholds loaded from \texttt{--thresholds-path}, with unspecified optimized keys falling back to defaults.  The existence of this option is not evidence that optimized thresholds generated the archived CSV.
-
-\StagePlaceholder{[VALIDATION REQUIRED: identify whether the archived PhysioNet proxy-state CSV used default or externally optimized thresholds and record the threshold-file provenance]}
 
 \begingroup
 \scriptsize
@@ -124,11 +117,9 @@ Proxy-state column & Construct represented & Input measurements and aggregation 
 \end{longtable}
 \endgroup
 
-The remaining PhysioNet citation gaps are explicit evidence gates rather than hidden assumptions.  The chronic baseline-risk, hepatic, cardiac, and metabolic families are project-specific rules pending exact clinical-source support and clinical review; they are tracked in the thesis evidence logs rather than presented as formal diagnoses or validated definitions.
+The chronic baseline-risk, hepatic, cardiac, and metabolic families remain project-specific rules without complete exact clinical-source support or qualified clinical review.  They are therefore presented as analytical proxy definitions rather than formal diagnoses or validated clinical definitions.
 
 Decision-tree pickle files and rendered tree images exist under the inspected archive and repository tree directories.  However, the figure-generation path depends on saved callable objects and plotting code, and the active PhysioNet script's CLI tree-save path requires provenance review before the images can be treated as thesis figures.  The rules in Table~\ref{tab:physionet-proxy-definitions} therefore come from the active source and CSV schema rather than from unpickled tree artifacts.
-
-\StagePlaceholder{[VALIDATION REQUIRED: verify the provenance and active-rule correspondence of the planned proxy-state decision-tree figures]}
 
 \section{MIMIC Proxy-State Rules and Validation Artifacts}
 \label{sec:clinical-proxy-state-construction:mimic-proxy-state-rules-validation-artifacts}
@@ -155,8 +146,6 @@ The MIMIC archive header matches this set.  Compared with PhysioNet, MIMIC uses 
 The script supports three mutually exclusive input modes.  In summary-CSV mode, a precomputed one-row-per-stay table is loaded; accepted identifier columns include \texttt{icustay\_id}, \texttt{patient\_id}, or \texttt{stay\_id}.  In canonical-pickle mode, the script reads a PhysioNet-compatible MIMIC payload \([\texttt{ts},\texttt{oc},\texttt{ts\_ids}]\), canonicalizes \texttt{ts\_id}, reconstructs summary features from long events, derives GCS minima from \texttt{GCS\_eye}, \texttt{GCS\_motor}, and \texttt{GCS\_verbal}, aggregates first-24-hour urine output and rolling 6-hour ml/kg/hour urine rates when weight is available, and merges optional outcome/context fields from \texttt{oc}.  Aliases include \texttt{MBP} to MAP, \texttt{PCO2} to PaCO2, \texttt{PO2} to PaO2, \texttt{O2 Saturation} to SpO2, \texttt{Creatinine Blood} to creatinine, and \texttt{Bilirubin (Total)} to bilirubin.  In raw-concept mode, the admissions table is required, and optional diagnoses, vitals, labs, urine, vasopressor, ventilation, infection, and troponin-map CSVs are aggregated into the summary table.
 
 Binary helper flags are treated as evidence only when they are positive or truthy.  Numeric comparisons require non-missing values.  Raw-concept mode fills absent binary helper columns with zero, while pickle mode inserts missing helper columns as missing; in both cases missing numeric evidence does not make a rule positive.  Consequently, input mode and concept extraction completeness affect which clauses can fire.
-
-\StagePlaceholder{[VALIDATION REQUIRED: identify the MIMIC tagger input mode, source artifact hash, producing command, and source commit for the archived tag CSV]}
 
 \begingroup
 \scriptsize
@@ -188,10 +177,7 @@ Proxy-state column & Construct represented & Input measurements and aggregation 
 \end{longtable}
 \endgroup
 
-The remaining MIMIC citation gaps are explicit evidence gates rather than hidden assumptions.
-\StagePlaceholder{[CITATION REQUIRED: clinical grounding for MIMIC chronic burden rule clauses]}
-\StagePlaceholder{[CITATION REQUIRED: clinical grounding for MIMIC metabolic, electrolyte, and acid-base proxy thresholds]}
-\StagePlaceholder{[CITATION REQUIRED: clinical grounding for MIMIC cardiac strain proxy thresholds]}
+Exact clinical-source support remains incomplete for the MIMIC chronic-burden, metabolic/electrolyte/acid-base, and cardiac-strain rule clauses.  These rows are therefore retained only as project-specific proxy definitions pending qualified clinical review.
 
 The MIMIC output directory contains a binary tag CSV, a merged feature table, prevalence and co-occurrence summaries, mortality-association summaries, a JSON validation summary, and a decision-tree pickle.  The tag CSV, \texttt{latent\_tags.csv}, is keyed by \texttt{ts\_id}.  The merged feature table retains the summary features used by the rules together with the resulting tags, making it a diagnostic trace of the construction process.  The prevalence table describes how often each proxy label fires; those values are descriptive properties of the labels, not clinical validation.  The mortality-by-tag table reports unadjusted mortality association by proxy value, and its risk ratios are not causal estimates.  The co-occurrence table reports pairwise association among proxy states.  The JSON validation summary stores available-latent metadata, prevalence records, mortality-association records, sanity checks, and interpretation notes.  None of these files is a substitute for expert chart-review validation.
 
@@ -220,5 +206,3 @@ For record \(i\), proxy state \(k\), and \(M\) aligned voter files, the implemen
 This is equivalent to the source expression \texttt{2 * ones\_count >= n\_voters}; therefore an even-voter tie is mapped to 1.  The output schema is \texttt{ts\_id} followed by the reference latent columns.  The causal orchestrator writes this table under the run's \texttt{majority\_vote/} directory and then passes it to mortality prediction, matching, CATE estimation, sensitivity analysis, and permutation stages.
 
 Majority voting aggregates binary model or rule outputs; it does not establish clinical truth, remove shared model bias, guarantee independence among voters, or prove ensemble superiority.  It can amplify correlated errors when voters are trained on related data or share the same rule-derived targets.  Its interpretation depends on identical construct definitions, aligned identifiers, binary-only inputs, and the exact voter set supplied to each run.  The available run summaries confirm the majority-vote stage and record absolute voter input directories, but they do not archive a per-run voter manifest listing every source file and hash.
-
-\StagePlaceholder{[VALIDATION REQUIRED: create a per-run majority-vote voter manifest listing every binary voter CSV, source predictive model, export split, checkpoint hash, input-artifact hash, row count, latent ordering, and majority-vote output hash]}
