@@ -1,0 +1,59 @@
+\xpginauxfiletrue 
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {1.1}{\ignorespaces Contribution hierarchy, evidence supplied by the thesis, and principal boundaries.}}{6}{table.1.1}%
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {2.1}{\ignorespaces Conceptual roles of the ICU datasets used in this thesis.}}{10}{table.2.1}%
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {2.2}{\ignorespaces Predictive model families included in the thesis comparison.}}{13}{table.2.2}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {4.1}{\ignorespaces Processed artifact contracts used by the causal and STraTS repositories.}}{25}{table.4.1}%
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {5.1}{\ignorespaces Prompt and document artifacts used as design provenance for proxy-state and DAG construction.}}{28}{table.5.1}%
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {5.2}{\ignorespaces Proxy-state source types used in the thesis pipeline.}}{29}{table.5.2}%
+\contentsline {table}{\numberline {5.3}{PhysioNet rule-derived proxy-state definitions from the active tagger.}}{29}{table.5.3}%
+\contentsline {table}{\numberline {5.4}{MIMIC rule-derived proxy-state definitions from the active tagger.}}{33}{table.5.4}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{Implemented predictive model families and non-numeric evidence status.}}{39}{table.6.1}%
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {6.2}{\ignorespaces Prediction export schema before downstream voter normalization.}}{40}{table.6.2}%
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {7.1}{Implemented DAG node families used by the causal pipeline.}}{45}{table.7.1}%
+\contentsline {table}{\numberline {7.2}{Implemented adjustment-set logic and thesis interpretation.}}{48}{table.7.2}%
+\contentsline {table}{\numberline {7.3}{Causal assumptions required for interpreting the estimator outputs.}}{49}{table.7.3}%
+\contentsline {table}{\numberline {7.4}{Implemented causal estimators and interpretation limits.}}{53}{table.7.4}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {8.1}{Planned overlap and support diagnostic design; this table contains no selected numerical results.}}{56}{table.8.1}%
+\contentsline {table}{\numberline {8.2}{Sensitivity-diagnostic design and interpretation boundary.}}{58}{table.8.2}%
+\contentsline {table}{\numberline {8.3}{Permutation and reproducibility-validation design.}}{60}{table.8.3}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {9.1}{Predictive experimental matrix and artifact-status design; no predictive metric is reported.}}{63}{table.9.1}%
+\contentsline {table}{\numberline {9.2}{Causal experimental matrix. The table records run-family design, not effect estimates.}}{64}{table.9.2}%
+\contentsline {table}{\numberline {9.3}{Reproducibility-status design.}}{66}{table.9.3}%
+\contentsline {table}{\numberline {9.4}{Result-admission policy for the later manifest audit.}}{68}{table.9.4}%
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {10.1}{\ignorespaces Original causal-analysis populations admitted to the primary analyses. Counts describe model rows in the checked original-cohort runs, not raw-source cohort totals.}}{69}{table.10.1}%
+\contentsline {table}{\numberline {10.2}{Archived predictive test performance for the five included model families. AUROC, AUPRC, and minRP are macro-averaged across non-degenerate proxy-label targets on the archived test split.}}{70}{table.10.2}%
+\contentsline {table}{\numberline {10.3}{Primary original-cohort MIMIC-III CausalForestDML results ($n=26{,}845$). Prevalence and mean model-estimated CATE are proportions on their archived scales.}}{71}{table.10.3}%
+\contentsline {table}{\numberline {10.4}{Primary original-cohort PhysioNet CausalForestDML results ($n=7{,}993$). Prevalence and mean model-estimated CATE are proportions on their archived scales.}}{71}{table.10.4}%
+\setforeignlanguage {english}
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {10.5}{Original-cohort descriptive matching and empirical-support summaries. ``Difference'' is the descriptive matched-pair outcome difference; it is not a model-estimated CATE.}}{75}{table.10.5}%
+\contentsline {table}{\numberline {10.6}{Original-cohort comparison of mean model-estimated CATE from CausalForestDML and LinearDML.}}{76}{table.10.6}%
+\contentsline {table}{\numberline {10.7}{Original-cohort exploratory CausalPFN mean model-estimated CATE and direction agreement with both DML estimators.}}{76}{table.10.7}%
+\contentsline {table}{\numberline {10.8}{Robustness and diagnostic availability. Counts are exposure-level statuses, not effect estimates.}}{78}{table.10.8}%
+\setforeignlanguage {english}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {11.1}{Evidence-based answers to the research questions.}}{86}{table.11.1}%
+\contentsline {table}{\numberline {11.2}{Repository-specific limitations and threats to validity.}}{91}{table.11.2}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\xpginauxfilefalse 

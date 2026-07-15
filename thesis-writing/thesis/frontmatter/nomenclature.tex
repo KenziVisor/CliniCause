@@ -1,12 +1,64 @@
 \chapter*{Abbreviations}
 \addcontentsline{toc}{chapter}{Abbreviations}
 
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-% Source plan: thesis-writing/planning/terminology_and_notation.md.
+\begin{longtable}{@{}p{0.20\textwidth}p{0.72\textwidth}@{}}
+\toprule
+Abbreviation & Meaning in this thesis \\
+\midrule
+\endfirsthead
+\toprule
+Abbreviation & Meaning in this thesis \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+ICU & Intensive Care Unit. \\
+EHR & Electronic Health Record. \\
+DAG & Directed Acyclic Graph. \\
+STraTS & Self-Supervised Transformer for Sparse and Irregularly Sampled Multivariate Clinical Time Series. \\
+GRU & Gated Recurrent Unit. \\
+GRU-D & Gated Recurrent Unit with Decay. \\
+TCN & Temporal Convolutional Network. \\
+SAnD & Simply Attend and Diagnose. \\
+DML & Double Machine Learning. \\
+CATE & Conditional Average Treatment Effect; reported here only as a model-estimated quantity under the stated assumptions. \\
+HTE & Heterogeneous Treatment Effect. \\
+AUROC & Area Under the Receiver Operating Characteristic Curve. \\
+AUPRC & Area Under the Precision--Recall Curve. \\
+minRP & Minimum of precision and recall. \\
+SOFA & Sequential Organ Failure Assessment. \\
+ARDS & Acute Respiratory Distress Syndrome. \\
+CausalPFN & Exploratory model name used in the project; its primary methodological source and expansion are unresolved. \\
+\end{longtable}
 
 \clearpage
 \chapter*{Notation and Symbols}
 \addcontentsline{toc}{chapter}{Notation and Symbols}
 
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-% Source plan: thesis-writing/planning/terminology_and_notation.md.
+\begin{longtable}{@{}p{0.25\textwidth}p{0.67\textwidth}@{}}
+\toprule
+Symbol & Meaning in this thesis \\
+\midrule
+\endfirsthead
+\toprule
+Symbol & Meaning in this thesis \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\(i\) & Index of a normalized analysis record. \\
+\(n_i\) & Number of observed measurement events for record \(i\). \\
+\(t_{ij}\) & Elapsed time in minutes for event \(j\) of record \(i\). \\
+\(v_{ij}\) & Observed variable name for event \(j\) of record \(i\). \\
+\(x_{ij}\) & Numeric value recorded for event \(j\) of record \(i\). \\
+\(\mathcal{V}\) & Set of observed measurement-variable names. \\
+\(\mathcal{O}_i\) & Long-format measurement-event object for record \(i\). \\
+\(L^{rule}_{ik}\) & Rule-derived binary proxy label for record \(i\) and proxy state \(k\). \\
+\(\hat p^{(m)}_{ik}\) & Probability for proxy state \(k\) exported by model \(m\) for record \(i\). \\
+\(\hat L^{(m)}_{ik}\) & Binary predicted proxy label corresponding to \(\hat p^{(m)}_{ik}\). \\
+\(A_i\) & Selected binary proxy-state exposure for record \(i\). \\
+\(Y_i\) & In-hospital mortality outcome for record \(i\). \\
+\(W_i\) & Observed adjustment variables selected from the project-specified DAG and available columns. \\
+\(X_i\) & Effect-modifier features used to describe heterogeneity. \\
+\(Y_i(a)\) & Conceptual potential outcome under exposure value \(a\); its interpretation requires the assumptions stated in the methods. \\
+\end{longtable}

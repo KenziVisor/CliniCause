@@ -1,7 +1,10 @@
-\chapter*{Primary-Language Abstract}
-\addcontentsline{toc}{chapter}{Primary-Language Abstract}
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
 
-\StagePlaceholder{[STAGE 4 DRAFT REQUIRED]}
-\StagePlaceholder{[SUPERVISOR DECISION REQUIRED]}
-% Constraint: draft later from final validated body; maximum 500 words.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
+Irregular intensive-care-unit (ICU) records contain measurements observed at nonuniform times, with variable availability and missingness that can carry information about care processes as well as patient state. This thesis constructs and evaluates an evidence-tracked framework that connects irregular ICU measurements to clinically inspired proxy-state representations and, under explicit observational assumptions, to DAG-guided adjusted analyses of in-hospital mortality. The aim is methodological integration with traceable analytical handoffs, not clinical validation, treatment recommendation, or deployment.
+
+The workflow is evaluated separately in the PhysioNet 2012 and MIMIC-III cohorts. It combines dataset-specific preprocessing, deterministic rule-derived proxy states, multi-label proxy-state prediction, normalization and algorithmic aggregation of prediction outputs, project-specified directed acyclic graphs (DAGs), exposure-specific adjustment, descriptive matching, heterogeneous-effect estimation, and available robustness and provenance checks. The predictive evaluation compares five model families against rule-derived labels. The causal-analysis component treats proxy states as analytical exposures: they are not chart-adjudicated diagnoses, and the project DAGs are neither learned from data nor clinically validated.
+
+For the primary original-cohort CausalForestDML summaries, all nine MIMIC-III proxy-state summaries were positive; nine of ten PhysioNet summaries were positive, with shock negative. CausalForestDML and LinearDML agreed in direction in all 19 original-cohort dataset--exposure comparisons. All three estimators agreed in direction in 18 of 19 comparisons; CausalPFN is retained only as an exploratory estimator because its primary methodological source and comparable diagnostic support remain unresolved. Matching provides descriptive matched-pair outcome differences rather than confirmation of an intervention effect. Results are reported separately by dataset and are not pooled.
+
+The contribution is therefore a transparent framework for inspecting how rule-derived constructs move from irregular measurements through prediction and into observational analysis, together with checked numerical artifacts and explicit provenance boundaries. The estimates remain conditional on proxy measurement, graph, temporal-ordering, adjustment, overlap, model, and unmeasured-confounding assumptions. The thesis does not establish that a proxy state caused mortality, that changing one would change an outcome, or that the workflow is clinically valid or ready for use. Available evidence records improve numerical traceability but do not establish clean-checkout computational reproducibility; clinical review, stronger observational designs, external validation, and complete provenance remain necessary.

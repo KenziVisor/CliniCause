@@ -1,0 +1,2024 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{sun_2026_review_irregular_medical_timeseries}{article}{}
+      \name{author}{6}{}{%
+        {{hash=eeaf22a80f03e9cf56ed8df78f6899c8}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Chenxi},
+           giveni={C\bibinitperiod}}}%
+        {{hash=ca7f48b95dc253151843884b53c38429}{%
+           family={Song},
+           familyi={S\bibinitperiod},
+           given={Moxian},
+           giveni={M\bibinitperiod}}}%
+        {{hash=0b075c55e7e8489602c2f9439ca96d6e}{%
+           family={Cai},
+           familyi={C\bibinitperiod},
+           given={Derun},
+           giveni={D\bibinitperiod}}}%
+        {{hash=203cb69d81a21751d387ac1e613c7fde}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Baofeng},
+           giveni={B\bibinitperiod}}}%
+        {{hash=316908b9498be117475605145d4046c9}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Hongyan},
+           giveni={H\bibinitperiod}}}%
+        {{hash=b2370c4b25acb40ddbebb099f02ae411}{%
+           family={Hong},
+           familyi={H\bibinitperiod},
+           given={Shenda},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{5a2c84c95c2fdbc43f26821655334348}
+      \strng{fullhash}{55bfe9e19ac8637fe13cfbd78bff6e24}
+      \strng{bibnamehash}{5a2c84c95c2fdbc43f26821655334348}
+      \strng{authorbibnamehash}{5a2c84c95c2fdbc43f26821655334348}
+      \strng{authornamehash}{5a2c84c95c2fdbc43f26821655334348}
+      \strng{authorfullhash}{55bfe9e19ac8637fe13cfbd78bff6e24}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Health Data Science}
+      \field{title}{A Review of Deep Learning Methods for Irregularly Sampled Medical Time Series Data}
+      \field{year}{2026}
+      \field{pages}{hds.0456}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.34133/hds.0456
+      \endverb
+      \verb{file}
+      \verb ../papers/review_irregular_medical_timeseries_sun_et_al_2026.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.34133/hds.0456
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.34133/hds.0456
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{lipton_kale_wetzel_2016_missingness_rnns}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=599ae457cf41d4ce64e09433edbc964b}{%
+           family={Lipton},
+           familyi={L\bibinitperiod},
+           given={Zachary\bibnamedelima C.},
+           giveni={Z\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=a9722bcad8ecc155599a0ac611358674}{%
+           family={Kale},
+           familyi={K\bibinitperiod},
+           given={David\bibnamedelima C.},
+           giveni={D\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=dc12d56d09f7850ab8c9ab7996bf0aa1}{%
+           family={Wetzel},
+           familyi={W\bibinitperiod},
+           given={Randall},
+           giveni={R\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {PMLR}%
+      }
+      \strng{namehash}{778669b4e33d6c16749ec41f7b134b09}
+      \strng{fullhash}{778669b4e33d6c16749ec41f7b134b09}
+      \strng{bibnamehash}{778669b4e33d6c16749ec41f7b134b09}
+      \strng{authorbibnamehash}{778669b4e33d6c16749ec41f7b134b09}
+      \strng{authornamehash}{778669b4e33d6c16749ec41f7b134b09}
+      \strng{authorfullhash}{778669b4e33d6c16749ec41f7b134b09}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 1st Machine Learning for Healthcare Conference}
+      \field{series}{Proceedings of Machine Learning Research}
+      \field{title}{Directly Modeling Missing Data in Sequences with {RNNs}: Improved Classification of Clinical Time Series}
+      \field{volume}{56}
+      \field{year}{2016}
+      \field{pages}{253\bibrangedash 270}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.48550/arXiv.1606.04130
+      \endverb
+      \verb{file}
+      \verb ../papers/model_missingness_rnn_lipton_et_al_2016.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1606.04130
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1606.04130
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{tipirneni2022strats}{article}{}
+      \name{author}{2}{}{%
+        {{hash=09b6f38c394245d902fa3894e034ae3b}{%
+           family={Tipirneni},
+           familyi={T\bibinitperiod},
+           given={Sindhu},
+           giveni={S\bibinitperiod}}}%
+        {{hash=032468e36a0ab9511f98a11f03bbcea1}{%
+           family={Reddy},
+           familyi={R\bibinitperiod},
+           given={Chandan\bibnamedelima K.},
+           giveni={C\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+      }
+      \strng{namehash}{11515f5eeb2cc36f5f05b629dedadbea}
+      \strng{fullhash}{11515f5eeb2cc36f5f05b629dedadbea}
+      \strng{bibnamehash}{11515f5eeb2cc36f5f05b629dedadbea}
+      \strng{authorbibnamehash}{11515f5eeb2cc36f5f05b629dedadbea}
+      \strng{authornamehash}{11515f5eeb2cc36f5f05b629dedadbea}
+      \strng{authorfullhash}{11515f5eeb2cc36f5f05b629dedadbea}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{ACM Transactions on Knowledge Discovery from Data}
+      \field{title}{Self-Supervised Transformer for Sparse and Irregularly Sampled Multivariate Clinical Time-Series}
+      \field{year}{2022}
+      \verb{doi}
+      \verb 10.1145/3516367
+      \endverb
+      \verb{file}
+      \verb ../papers/model_strats_tipirneni_reddy_2022.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1145/3516367
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1145/3516367
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{che2018grud}{article}{}
+      \name{author}{5}{}{%
+        {{hash=9a3883e9890f26b708e2beeb76655180}{%
+           family={Che},
+           familyi={C\bibinitperiod},
+           given={Zhengping},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=76b799069a676d5592d0daf8ff7d5e38}{%
+           family={Purushotham},
+           familyi={P\bibinitperiod},
+           given={Sanjay},
+           giveni={S\bibinitperiod}}}%
+        {{hash=3da7501a79d9346572c7fd6e41b615df}{%
+           family={Cho},
+           familyi={C\bibinitperiod},
+           given={Kyunghyun},
+           giveni={K\bibinitperiod}}}%
+        {{hash=e7482c3a6bf929dc430ae34c20757273}{%
+           family={Sontag},
+           familyi={S\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=92f7474e36f4f2b59a14e85c0e738e40}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Yan},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{e7ba3bf7742ab28bb3b8e94be9bd6f72}
+      \strng{fullhash}{9bb54a7f2ef09e0c9dd46cf8157c5c39}
+      \strng{bibnamehash}{e7ba3bf7742ab28bb3b8e94be9bd6f72}
+      \strng{authorbibnamehash}{e7ba3bf7742ab28bb3b8e94be9bd6f72}
+      \strng{authornamehash}{e7ba3bf7742ab28bb3b8e94be9bd6f72}
+      \strng{authorfullhash}{9bb54a7f2ef09e0c9dd46cf8157c5c39}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Reports}
+      \field{number}{6085}
+      \field{title}{Recurrent Neural Networks for Multivariate Time Series with Missing Values}
+      \field{volume}{8}
+      \field{year}{2018}
+      \verb{doi}
+      \verb 10.1038/s41598-018-24271-9
+      \endverb
+      \verb{file}
+      \verb ../papers/model_grud_che_et_al_2018.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1038/s41598-018-24271-9
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1038/s41598-018-24271-9
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{banda_2018_electronic_phenotyping}{article}{}
+      \name{author}{4}{}{%
+        {{hash=ba73cf69c0012daab00949fc7c1a3002}{%
+           family={Banda},
+           familyi={B\bibinitperiod},
+           given={Juan\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=e6e54ed8af8b0d85eef43525d40f7c9b}{%
+           family={Seneviratne},
+           familyi={S\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=c976976b9f5618a71e125e9adb518c46}{%
+           family={Hernandez-Boussard},
+           familyi={H\bibinithyphendelim B\bibinitperiod},
+           given={Tina},
+           giveni={T\bibinitperiod}}}%
+        {{hash=081581b9a4dc52a848c247c6b5944e70}{%
+           family={Shah},
+           familyi={S\bibinitperiod},
+           given={Nigam\bibnamedelima H.},
+           giveni={N\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+      }
+      \strng{namehash}{cc68dd61d80095896afd0a92d70a80cc}
+      \strng{fullhash}{ddc1eaf3fdc312e20e07de925d9dfffa}
+      \strng{bibnamehash}{cc68dd61d80095896afd0a92d70a80cc}
+      \strng{authorbibnamehash}{cc68dd61d80095896afd0a92d70a80cc}
+      \strng{authornamehash}{cc68dd61d80095896afd0a92d70a80cc}
+      \strng{authorfullhash}{ddc1eaf3fdc312e20e07de925d9dfffa}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Annual Review of Biomedical Data Science}
+      \field{title}{Advances in Electronic Phenotyping: From Rule-Based Definitions to Machine Learning Models}
+      \field{volume}{1}
+      \field{year}{2018}
+      \field{pages}{53\bibrangedash 68}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1146/annurev-biodatasci-080917-013315
+      \endverb
+      \verb{file}
+      \verb ../papers/phenotyping_ehr_banda_et_al_2018.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1146/annurev-biodatasci-080917-013315
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1146/annurev-biodatasci-080917-013315
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{ratner_et_al_2020_snorkel}{article}{}
+      \name{author}{6}{}{%
+        {{hash=4b7fea39f8ec2c45c82e6fc7cb769600}{%
+           family={Ratner},
+           familyi={R\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=e281f5b6494b88bd13e75f4b21e9aa39}{%
+           family={Bach},
+           familyi={B\bibinitperiod},
+           given={Stephen\bibnamedelima H.},
+           giveni={S\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=28bc5cfd78ca0c74348c0fbf55828f1d}{%
+           family={Ehrenberg},
+           familyi={E\bibinitperiod},
+           given={Henry},
+           giveni={H\bibinitperiod}}}%
+        {{hash=476d4f38e48b75ef4bb5d4a4e714ace3}{%
+           family={Fries},
+           familyi={F\bibinitperiod},
+           given={Jason},
+           giveni={J\bibinitperiod}}}%
+        {{hash=d391f69afd4ca19c6ef23ac44f186e61}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={Sen},
+           giveni={S\bibinitperiod}}}%
+        {{hash=34d18a316c191e8c4da2a4998c4a36dd}{%
+           family={Re},
+           familyi={R\bibinitperiod},
+           given={Christopher},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{cd64fde1cf98106b9e427382330e9c01}
+      \strng{fullhash}{b59c58626561b8b8e69c6884d9f61e66}
+      \strng{bibnamehash}{cd64fde1cf98106b9e427382330e9c01}
+      \strng{authorbibnamehash}{cd64fde1cf98106b9e427382330e9c01}
+      \strng{authornamehash}{cd64fde1cf98106b9e427382330e9c01}
+      \strng{authorfullhash}{b59c58626561b8b8e69c6884d9f61e66}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The VLDB Journal}
+      \field{title}{Snorkel: Rapid Training Data Creation with Weak Supervision}
+      \field{volume}{29}
+      \field{year}{2020}
+      \field{pages}{709\bibrangedash 730}
+      \range{pages}{22}
+      \verb{doi}
+      \verb 10.1007/s00778-019-00552-1
+      \endverb
+      \verb{file}
+      \verb ../papers/phenotyping_weak_supervision_snorkel_ratner_et_al_2020.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/s00778-019-00552-1
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/s00778-019-00552-1
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{pearl_1995_causal_diagrams}{article}{}
+      \name{author}{1}{}{%
+        {{hash=809f695b398afbb54b544c49e8d1bbbb}{%
+           family={Pearl},
+           familyi={P\bibinitperiod},
+           given={Judea},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{809f695b398afbb54b544c49e8d1bbbb}
+      \strng{fullhash}{809f695b398afbb54b544c49e8d1bbbb}
+      \strng{bibnamehash}{809f695b398afbb54b544c49e8d1bbbb}
+      \strng{authorbibnamehash}{809f695b398afbb54b544c49e8d1bbbb}
+      \strng{authornamehash}{809f695b398afbb54b544c49e8d1bbbb}
+      \strng{authorfullhash}{809f695b398afbb54b544c49e8d1bbbb}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Biometrika}
+      \field{number}{4}
+      \field{title}{Causal Diagrams for Empirical Research}
+      \field{volume}{82}
+      \field{year}{1995}
+      \field{pages}{669\bibrangedash 688}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.1093/biomet/82.4.669
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_causal_diagrams_pearl_1995.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1093/biomet/82.4.669
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1093/biomet/82.4.669
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{hernan_robins_2016_target_trial}{article}{}
+      \name{author}{2}{}{%
+        {{hash=e23110cd852e85dc77897465185fdaf1}{%
+           family={Hernan},
+           familyi={H\bibinitperiod},
+           given={Miguel\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=7a2ba958c4a9112b1e74732b9c35f016}{%
+           family={Robins},
+           familyi={R\bibinitperiod},
+           given={James\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \strng{namehash}{74105997977e65f466d26ac2b8626ae0}
+      \strng{fullhash}{74105997977e65f466d26ac2b8626ae0}
+      \strng{bibnamehash}{74105997977e65f466d26ac2b8626ae0}
+      \strng{authorbibnamehash}{74105997977e65f466d26ac2b8626ae0}
+      \strng{authornamehash}{74105997977e65f466d26ac2b8626ae0}
+      \strng{authorfullhash}{74105997977e65f466d26ac2b8626ae0}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{American Journal of Epidemiology}
+      \field{number}{8}
+      \field{title}{Using Big Data to Emulate a Target Trial When a Randomized Trial Is Not Available}
+      \field{volume}{183}
+      \field{year}{2016}
+      \field{pages}{758\bibrangedash 764}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1093/aje/kwv254
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_target_trial_emulation_hernan_robins_2016.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1093/aje/kwv254
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1093/aje/kwv254
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{hernan_taubman_2008_well_defined_interventions}{article}{}
+      \name{author}{2}{}{%
+        {{hash=e23110cd852e85dc77897465185fdaf1}{%
+           family={Hernan},
+           familyi={H\bibinitperiod},
+           given={Miguel\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=80c4a125d273379613b2af6191a77847}{%
+           family={Taubman},
+           familyi={T\bibinitperiod},
+           given={Sarah\bibnamedelima L.},
+           giveni={S\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{18a9828f7b030dc506250a2cad52aa46}
+      \strng{fullhash}{18a9828f7b030dc506250a2cad52aa46}
+      \strng{bibnamehash}{18a9828f7b030dc506250a2cad52aa46}
+      \strng{authorbibnamehash}{18a9828f7b030dc506250a2cad52aa46}
+      \strng{authornamehash}{18a9828f7b030dc506250a2cad52aa46}
+      \strng{authorfullhash}{18a9828f7b030dc506250a2cad52aa46}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Obesity}
+      \field{note}{Author/academic repost used because publisher PDF was not directly downloadable in this environment.}
+      \field{number}{Suppl 3}
+      \field{title}{Does Obesity Shorten Life? The Importance of Well-Defined Interventions to Answer Causal Questions}
+      \field{volume}{32}
+      \field{year}{2008}
+      \field{pages}{S8\bibrangedash S14}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1038/ijo.2008.82
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_well_defined_interventions_hernan_taubman_2008.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1038/ijo.2008.82
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1038/ijo.2008.82
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{silva2012physionet}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=a014bc35a0c855a4bc42e641ba9e37a2}{%
+           family={Silva},
+           familyi={S\bibinitperiod},
+           given={Ikaro},
+           giveni={I\bibinitperiod}}}%
+        {{hash=7bcbb9c689431a5afc17e619dafbad1a}{%
+           family={Moody},
+           familyi={M\bibinitperiod},
+           given={George},
+           giveni={G\bibinitperiod}}}%
+        {{hash=d5c44c90fb093d330188d5c0cc6d3228}{%
+           family={Scott},
+           familyi={S\bibinitperiod},
+           given={Daniel\bibnamedelima J.},
+           giveni={D\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=3f99086f25722fadcd3c7540baaa9e93}{%
+           family={Celi},
+           familyi={C\bibinitperiod},
+           given={Leo\bibnamedelima A.},
+           giveni={L\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=2193bac90baddb616fc4dcd2f366de81}{%
+           family={Mark},
+           familyi={M\bibinitperiod},
+           given={Roger\bibnamedelima G.},
+           giveni={R\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \strng{namehash}{279ae2f7ae16f90f81082edff8603ef6}
+      \strng{fullhash}{a3d844ffcee06df361ba83c1ac28384a}
+      \strng{bibnamehash}{279ae2f7ae16f90f81082edff8603ef6}
+      \strng{authorbibnamehash}{279ae2f7ae16f90f81082edff8603ef6}
+      \strng{authornamehash}{279ae2f7ae16f90f81082edff8603ef6}
+      \strng{authorfullhash}{a3d844ffcee06df361ba83c1ac28384a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Computing in Cardiology}
+      \field{title}{Predicting In-Hospital Mortality of ICU Patients: The {PhysioNet}/Computing in Cardiology Challenge 2012}
+      \field{volume}{39}
+      \field{year}{2012}
+      \field{pages}{245\bibrangedash 248}
+      \range{pages}{4}
+      \verb{file}
+      \verb ../papers/dataset_physionet_challenge_silva_et_al_2012.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://physionet.org/content/challenge-2012/1.0.0/
+      \endverb
+      \verb{url}
+      \verb https://physionet.org/content/challenge-2012/1.0.0/
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{johnson2016mimiciii}{article}{}
+      \name{author}{10}{}{%
+        {{hash=97ddf9ef7b3f83671aa14334972e8186}{%
+           family={Johnson},
+           familyi={J\bibinitperiod},
+           given={Alistair\bibnamedelimb E.\bibnamedelimi W.},
+           giveni={A\bibinitperiod\bibinitdelim E\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=b1a10559d1345954860fcb71d58d644b}{%
+           family={Pollard},
+           familyi={P\bibinitperiod},
+           given={Tom\bibnamedelima J.},
+           giveni={T\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=905fd330076c29b21add0f3e7108629d}{%
+           family={Shen},
+           familyi={S\bibinitperiod},
+           given={Lu},
+           giveni={L\bibinitperiod}}}%
+        {{hash=2ea8fc75e44631dccd4c8217117062f2}{%
+           family={Lehman},
+           familyi={L\bibinitperiod},
+           given={Li-wei\bibnamedelima H.},
+           giveni={L\bibinithyphendelim w\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=6aa84d1af8a9f95dddedc1677244afbe}{%
+           family={Feng},
+           familyi={F\bibinitperiod},
+           given={Mengling},
+           giveni={M\bibinitperiod}}}%
+        {{hash=b576d328e9b0f4401d1363e5a30441ac}{%
+           family={Ghassemi},
+           familyi={G\bibinitperiod},
+           given={Mohammad},
+           giveni={M\bibinitperiod}}}%
+        {{hash=64d84f6b7d6b1cd1b82470cd4f4661b0}{%
+           family={Moody},
+           familyi={M\bibinitperiod},
+           given={Benjamin},
+           giveni={B\bibinitperiod}}}%
+        {{hash=e4ec701f3e9b3400f41c7dcb84d2e88a}{%
+           family={Szolovits},
+           familyi={S\bibinitperiod},
+           given={Peter},
+           giveni={P\bibinitperiod}}}%
+        {{hash=f0e3dac1adc983d78b53e594ecb6d1dc}{%
+           family={Celi},
+           familyi={C\bibinitperiod},
+           given={Leo\bibnamedelima Anthony},
+           giveni={L\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=2193bac90baddb616fc4dcd2f366de81}{%
+           family={Mark},
+           familyi={M\bibinitperiod},
+           given={Roger\bibnamedelima G.},
+           giveni={R\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \strng{namehash}{2dc9d6f36765f978f5cd24a236e1c1e5}
+      \strng{fullhash}{924ec116ee95765e276c886e99423344}
+      \strng{bibnamehash}{2dc9d6f36765f978f5cd24a236e1c1e5}
+      \strng{authorbibnamehash}{2dc9d6f36765f978f5cd24a236e1c1e5}
+      \strng{authornamehash}{2dc9d6f36765f978f5cd24a236e1c1e5}
+      \strng{authorfullhash}{924ec116ee95765e276c886e99423344}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Data}
+      \field{number}{160035}
+      \field{title}{{MIMIC-III}, a freely accessible critical care database}
+      \field{volume}{3}
+      \field{year}{2016}
+      \verb{doi}
+      \verb 10.1038/sdata.2016.35
+      \endverb
+      \verb{file}
+      \verb ../papers/dataset_mimiciii_johnson_et_al_2016.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1038/sdata.2016.35
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1038/sdata.2016.35
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{chernozhukov2018dml}{article}{}
+      \name{author}{7}{}{%
+        {{hash=c75cbe2cefd1e532f636a50892605d06}{%
+           family={Chernozhukov},
+           familyi={C\bibinitperiod},
+           given={Victor},
+           giveni={V\bibinitperiod}}}%
+        {{hash=ef4b66d2ca2dde47ec1b0afa98306775}{%
+           family={Chetverikov},
+           familyi={C\bibinitperiod},
+           given={Denis},
+           giveni={D\bibinitperiod}}}%
+        {{hash=d3c2cc443c71254678269de10d61d61c}{%
+           family={Demirer},
+           familyi={D\bibinitperiod},
+           given={Mert},
+           giveni={M\bibinitperiod}}}%
+        {{hash=7e6b0ea4eee38822cdb0a4361e98752c}{%
+           family={Duflo},
+           familyi={D\bibinitperiod},
+           given={Esther},
+           giveni={E\bibinitperiod}}}%
+        {{hash=b38b53cdfa3ce5b62046f22663d5cc6f}{%
+           family={Hansen},
+           familyi={H\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=9c98526d9f1775b95096664c9cf0c633}{%
+           family={Newey},
+           familyi={N\bibinitperiod},
+           given={Whitney},
+           giveni={W\bibinitperiod}}}%
+        {{hash=bf615cc72310078c444f0c653a1fc5e7}{%
+           family={Robins},
+           familyi={R\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{fullhash}{7892f5fdea2b46a0fb4e6c031c27c781}
+      \strng{bibnamehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{authorbibnamehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{authornamehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{authorfullhash}{7892f5fdea2b46a0fb4e6c031c27c781}
+      \field{extraname}{1}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Econometrics Journal}
+      \field{number}{1}
+      \field{title}{Double/Debiased Machine Learning for Treatment and Structural Parameters}
+      \field{volume}{21}
+      \field{year}{2018}
+      \field{pages}{C1\bibrangedash C68}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1111/ectj.12097
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_double_machine_learning_chernozhukov_et_al_2018.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1111/ectj.12097
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1111/ectj.12097
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{wager2018causalforest}{article}{}
+      \name{author}{2}{}{%
+        {{hash=e22c2c3bb1bd12e43f46c07ea788b581}{%
+           family={Wager},
+           familyi={W\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=cab7b4f39472e6c01dc0fc30a32c6d89}{%
+           family={Athey},
+           familyi={A\bibinitperiod},
+           given={Susan},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{d4c64d08a4af7035a4061fd6e82a6d2d}
+      \strng{fullhash}{d4c64d08a4af7035a4061fd6e82a6d2d}
+      \strng{bibnamehash}{d4c64d08a4af7035a4061fd6e82a6d2d}
+      \strng{authorbibnamehash}{d4c64d08a4af7035a4061fd6e82a6d2d}
+      \strng{authornamehash}{d4c64d08a4af7035a4061fd6e82a6d2d}
+      \strng{authorfullhash}{d4c64d08a4af7035a4061fd6e82a6d2d}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the American Statistical Association}
+      \field{number}{523}
+      \field{title}{Estimation and Inference of Heterogeneous Treatment Effects using Random Forests}
+      \field{volume}{113}
+      \field{year}{2018}
+      \field{pages}{1228\bibrangedash 1242}
+      \range{pages}{15}
+      \verb{doi}
+      \verb 10.1080/01621459.2017.1319839
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_causal_forest_wager_athey_2018.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1080/01621459.2017.1319839
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1080/01621459.2017.1319839
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{athey2019grf}{article}{}
+      \name{author}{3}{}{%
+        {{hash=cab7b4f39472e6c01dc0fc30a32c6d89}{%
+           family={Athey},
+           familyi={A\bibinitperiod},
+           given={Susan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=7d255257e355c7b9af6030b797bd6edb}{%
+           family={Tibshirani},
+           familyi={T\bibinitperiod},
+           given={Julie},
+           giveni={J\bibinitperiod}}}%
+        {{hash=e22c2c3bb1bd12e43f46c07ea788b581}{%
+           family={Wager},
+           familyi={W\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{aed26c19027a498842fb4405b81c74f5}
+      \strng{fullhash}{aed26c19027a498842fb4405b81c74f5}
+      \strng{bibnamehash}{aed26c19027a498842fb4405b81c74f5}
+      \strng{authorbibnamehash}{aed26c19027a498842fb4405b81c74f5}
+      \strng{authornamehash}{aed26c19027a498842fb4405b81c74f5}
+      \strng{authorfullhash}{aed26c19027a498842fb4405b81c74f5}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Annals of Statistics}
+      \field{number}{2}
+      \field{title}{Generalized Random Forests}
+      \field{volume}{47}
+      \field{year}{2019}
+      \field{pages}{1148\bibrangedash 1178}
+      \range{pages}{31}
+      \verb{doi}
+      \verb 10.1214/18-AOS1709
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_generalized_random_forests_athey_et_al_2019.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1214/18-AOS1709
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1214/18-AOS1709
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{smit_2023_causal_inference_icu_scoping_review}{article}{}
+      \name{author}{9}{}{%
+        {{hash=f8718623ebca7fda8722f31795cb925a}{%
+           family={Smit},
+           familyi={S\bibinitperiod},
+           given={J.\bibnamedelimi M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=ce84afd4065110dc1c8dca17e37f3d77}{%
+           family={Krijthe},
+           familyi={K\bibinitperiod},
+           given={J.\bibnamedelimi H.},
+           giveni={J\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=af06c8a6478054b8fddb5f0dc36949d5}{%
+           family={Kant},
+           familyi={K\bibinitperiod},
+           given={W.\bibnamedelimi M.\bibnamedelimi R.},
+           giveni={W\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=a5bf7d0fa2a4e8a071a733e557876f0f}{%
+           family={Labrecque},
+           familyi={L\bibinitperiod},
+           given={J.\bibnamedelimi A.},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=a1a7a1459bf089249647aaab85552dc3}{%
+           family={Komorowski},
+           familyi={K\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+        {{hash=8e06d14417bf8858ee71b1d5e0028d53}{%
+           family={Gommers},
+           familyi={G\bibinitperiod},
+           given={D.\bibnamedelimi A.\bibnamedelimi M.\bibnamedelimi P.\bibnamedelimi J.},
+           giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim M\bibinitperiod\bibinitdelim P\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=ac9cf7f749f739b4048687f3fce10f83}{%
+           family={Bommel},
+           familyi={B\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=03fdc4d838fc718e3c4c88e024bb7896}{%
+           family={Reinders},
+           familyi={R\bibinitperiod},
+           given={M.\bibnamedelimi J.\bibnamedelimi T.},
+           giveni={M\bibinitperiod\bibinitdelim J\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=43d02e464f6faf9459fc4d2bb9e8c1a1}{%
+           family={Genderen},
+           familyi={G\bibinitperiod},
+           given={M.\bibnamedelimi E.},
+           giveni={M\bibinitperiod\bibinitdelim E\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+      }
+      \strng{namehash}{72ce7a7278ff3de9e387b01d28949523}
+      \strng{fullhash}{ded9776e18521f557eb75f5da309b447}
+      \strng{bibnamehash}{72ce7a7278ff3de9e387b01d28949523}
+      \strng{authorbibnamehash}{72ce7a7278ff3de9e387b01d28949523}
+      \strng{authornamehash}{72ce7a7278ff3de9e387b01d28949523}
+      \strng{authorfullhash}{ded9776e18521f557eb75f5da309b447}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{npj Digital Medicine}
+      \field{number}{1}
+      \field{title}{Causal Inference Using Observational Intensive Care Unit Data: A Scoping Review and Recommendations for Future Practice}
+      \field{volume}{6}
+      \field{year}{2023}
+      \field{pages}{221}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1038/s41746-023-00961-1
+      \endverb
+      \verb{file}
+      \verb ../papers/review_causal_inference_icu_smit_et_al_2023.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1038/s41746-023-00961-1
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1038/s41746-023-00961-1
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{bica_2021_individualized_treatment_effects_ehr_ml}{article}{}
+      \name{author}{4}{}{%
+        {{hash=dc7ee06cb0ad6c8c1fc2c4c8fa7cfb95}{%
+           family={Bica},
+           familyi={B\bibinitperiod},
+           given={Ioana},
+           giveni={I\bibinitperiod}}}%
+        {{hash=ef418106521a20335973cc6eedb3c29c}{%
+           family={Alaa},
+           familyi={A\bibinitperiod},
+           given={Ahmed\bibnamedelima M.},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=21a1e5bc018df82034d8a855f96200b2}{%
+           family={Lambert},
+           familyi={L\bibinitperiod},
+           given={Craig},
+           giveni={C\bibinitperiod}}}%
+        {{hash=44c5ebc1d90d166c1418c35650bdd2ef}{%
+           family={Schaar},
+           familyi={S\bibinitperiod},
+           given={Mihaela},
+           giveni={M\bibinitperiod},
+           prefix={van\bibnamedelima der},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
+      }
+      \strng{namehash}{f2a9ba68aa45b1a6bbebd0f62ba8a59d}
+      \strng{fullhash}{517aeb087f7731543cb290fac8176002}
+      \strng{bibnamehash}{f2a9ba68aa45b1a6bbebd0f62ba8a59d}
+      \strng{authorbibnamehash}{f2a9ba68aa45b1a6bbebd0f62ba8a59d}
+      \strng{authornamehash}{f2a9ba68aa45b1a6bbebd0f62ba8a59d}
+      \strng{authorfullhash}{517aeb087f7731543cb290fac8176002}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Clinical Pharmacology \& Therapeutics}
+      \field{number}{1}
+      \field{title}{From Real-World Patient Data to Individualized Treatment Effects Using Machine Learning: Current and Future Methods to Address Underlying Challenges}
+      \field{volume}{109}
+      \field{year}{2021}
+      \field{pages}{87\bibrangedash 100}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1002/cpt.1907
+      \endverb
+      \verb{file}
+      \verb ../papers/review_ite_ehr_ml_bica_et_al_2021.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1002/cpt.1907
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1002/cpt.1907
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{harutyunyan_2019_mimiciii_benchmark}{article}{}
+      \name{author}{5}{}{%
+        {{hash=6df38b1362f4f4eeac46d8f4be2c7de5}{%
+           family={Harutyunyan},
+           familyi={H\bibinitperiod},
+           given={Hrayr},
+           giveni={H\bibinitperiod}}}%
+        {{hash=01ce1f444723692a8b9d637306df1c4c}{%
+           family={Khachatrian},
+           familyi={K\bibinitperiod},
+           given={Hrant},
+           giveni={H\bibinitperiod}}}%
+        {{hash=a9722bcad8ecc155599a0ac611358674}{%
+           family={Kale},
+           familyi={K\bibinitperiod},
+           given={David\bibnamedelima C.},
+           giveni={D\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=3bb5b2eb9024eedb4f0a8df9ae0a1154}{%
+           family={Steeg},
+           familyi={S\bibinitperiod},
+           given={Greg\bibnamedelima Ver},
+           giveni={G\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=73b781905368dfe2cc66cef5e33e0d32}{%
+           family={Galstyan},
+           familyi={G\bibinitperiod},
+           given={Aram},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{7823beea23b6ccf4f9d76fbfd4a35a51}
+      \strng{fullhash}{c900950dba955997932f9d3ba9703642}
+      \strng{bibnamehash}{7823beea23b6ccf4f9d76fbfd4a35a51}
+      \strng{authorbibnamehash}{7823beea23b6ccf4f9d76fbfd4a35a51}
+      \strng{authornamehash}{7823beea23b6ccf4f9d76fbfd4a35a51}
+      \strng{authorfullhash}{c900950dba955997932f9d3ba9703642}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Data}
+      \field{number}{1}
+      \field{title}{Multitask Learning and Benchmarking with Clinical Time Series Data}
+      \field{volume}{6}
+      \field{year}{2019}
+      \field{pages}{96}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1038/s41597-019-0103-9
+      \endverb
+      \verb{file}
+      \verb ../papers/dataset_mimiciii_benchmark_harutyunyan_et_al_2019.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1038/s41597-019-0103-9
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1038/s41597-019-0103-9
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{cho2014gru}{inproceedings}{}
+      \name{author}{7}{}{%
+        {{hash=3da7501a79d9346572c7fd6e41b615df}{%
+           family={Cho},
+           familyi={C\bibinitperiod},
+           given={Kyunghyun},
+           giveni={K\bibinitperiod}}}%
+        {{hash=d27fe3f9898ba01eeca28e3bd205f9ea}{%
+           family={Merrienboer},
+           familyi={M\bibinitperiod},
+           given={Bart},
+           giveni={B\bibinitperiod},
+           prefix={van},
+           prefixi={v\bibinitperiod}}}%
+        {{hash=2adc0c92c308f233c731321d55efe58f}{%
+           family={Gulcehre},
+           familyi={G\bibinitperiod},
+           given={Caglar},
+           giveni={C\bibinitperiod}}}%
+        {{hash=6d80adec79a13a33e73215c5f46f1605}{%
+           family={Bahdanau},
+           familyi={B\bibinitperiod},
+           given={Dzmitry},
+           giveni={D\bibinitperiod}}}%
+        {{hash=6deedc795e51da1bc7fd6289ab321a48}{%
+           family={Bougares},
+           familyi={B\bibinitperiod},
+           given={Fethi},
+           giveni={F\bibinitperiod}}}%
+        {{hash=449689e8c1ced50f608244e3a96fe6d3}{%
+           family={Schwenk},
+           familyi={S\bibinitperiod},
+           given={Holger},
+           giveni={H\bibinitperiod}}}%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{9b1920db887fe0d658725c1e606b61f4}
+      \strng{fullhash}{93de344d8644049cc7e61f1b9095d310}
+      \strng{bibnamehash}{9b1920db887fe0d658725c1e606b61f4}
+      \strng{authorbibnamehash}{9b1920db887fe0d658725c1e606b61f4}
+      \strng{authornamehash}{9b1920db887fe0d658725c1e606b61f4}
+      \strng{authorfullhash}{93de344d8644049cc7e61f1b9095d310}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing}
+      \field{eprinttype}{arXiv}
+      \field{title}{Learning Phrase Representations using RNN Encoder--Decoder for Statistical Machine Translation}
+      \field{year}{2014}
+      \field{pages}{1724\bibrangedash 1734}
+      \range{pages}{11}
+      \verb{doi}
+      \verb 10.48550/arXiv.1406.1078
+      \endverb
+      \verb{eprint}
+      \verb 1406.1078
+      \endverb
+      \verb{file}
+      \verb ../papers/model_gru_cho_et_al_2014.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1406.1078
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1406.1078
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{bai2018tcn}{article}{}
+      \name{author}{3}{}{%
+        {{hash=46866596e404b7745d45fdb1cbff0a01}{%
+           family={Bai},
+           familyi={B\bibinitperiod},
+           given={Shaojie},
+           giveni={S\bibinitperiod}}}%
+        {{hash=0288715a83a3349e44f9292c5c2149f7}{%
+           family={Kolter},
+           familyi={K\bibinitperiod},
+           given={J.\bibnamedelimi Zico},
+           giveni={J\bibinitperiod\bibinitdelim Z\bibinitperiod}}}%
+        {{hash=9025300f43a193cfed8e10e924f2a117}{%
+           family={Koltun},
+           familyi={K\bibinitperiod},
+           given={Vladlen},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{3a3778cabb3cde60fd94e137dc83c5a8}
+      \strng{fullhash}{3a3778cabb3cde60fd94e137dc83c5a8}
+      \strng{bibnamehash}{3a3778cabb3cde60fd94e137dc83c5a8}
+      \strng{authorbibnamehash}{3a3778cabb3cde60fd94e137dc83c5a8}
+      \strng{authornamehash}{3a3778cabb3cde60fd94e137dc83c5a8}
+      \strng{authorfullhash}{3a3778cabb3cde60fd94e137dc83c5a8}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.LG}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{arXiv}
+      \field{title}{An Empirical Evaluation of Generic Convolutional and Recurrent Networks for Sequence Modeling}
+      \field{year}{2018}
+      \verb{doi}
+      \verb 10.48550/arXiv.1803.01271
+      \endverb
+      \verb{eprint}
+      \verb 1803.01271
+      \endverb
+      \verb{file}
+      \verb ../papers/model_tcn_bai_et_al_2018.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/1803.01271
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/1803.01271
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{song2018sand}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=bc3faec03752aea310b6cb925c9d0d5e}{%
+           family={Song},
+           familyi={S\bibinitperiod},
+           given={Huan},
+           giveni={H\bibinitperiod}}}%
+        {{hash=8f36e38a623b18d46e55a1ee45d0c5db}{%
+           family={Rajan},
+           familyi={R\bibinitperiod},
+           given={Deepta},
+           giveni={D\bibinitperiod}}}%
+        {{hash=91392c8a5ceb7911befd6fa9f787b0df}{%
+           family={Thiagarajan},
+           familyi={T\bibinitperiod},
+           given={Jayaraman\bibnamedelima J.},
+           giveni={J\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=30fd7c131271bf9fd9e23bcf9b039139}{%
+           family={Spanias},
+           familyi={S\bibinitperiod},
+           given={Andreas},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{a4f97e55ae06300128ad8ad37937c8b8}
+      \strng{fullhash}{4f70eea2f7d72aa94a6daab589c0d047}
+      \strng{bibnamehash}{a4f97e55ae06300128ad8ad37937c8b8}
+      \strng{authorbibnamehash}{a4f97e55ae06300128ad8ad37937c8b8}
+      \strng{authornamehash}{a4f97e55ae06300128ad8ad37937c8b8}
+      \strng{authorfullhash}{4f70eea2f7d72aa94a6daab589c0d047}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the AAAI Conference on Artificial Intelligence}
+      \field{title}{Attend and Diagnose: Clinical Time Series Analysis using Attention Models}
+      \field{year}{2018}
+      \verb{file}
+      \verb ../papers/model_sand_song_et_al_2018.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://ojs.aaai.org/index.php/AAAI/article/view/11843
+      \endverb
+      \verb{url}
+      \verb https://ojs.aaai.org/index.php/AAAI/article/view/11843
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping}{article}{}
+      \name{author}{3}{}{%
+        {{hash=eaf2ba99a743408c52d472ef519b80e2}{%
+           family={Essay},
+           familyi={E\bibinitperiod},
+           given={Patrick},
+           giveni={P\bibinitperiod}}}%
+        {{hash=b91ec286a9bdf74f466f46d4a8da36ab}{%
+           family={Mosier},
+           familyi={M\bibinitperiod},
+           given={Jarrod},
+           giveni={J\bibinitperiod}}}%
+        {{hash=bcaa5fa1c2caf94804405c07a2f5a3e2}{%
+           family={Subbian},
+           familyi={S\bibinitperiod},
+           given={Vignesh},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{474fceb4b05018d75e8f32c0bbaae830}
+      \strng{fullhash}{474fceb4b05018d75e8f32c0bbaae830}
+      \strng{bibnamehash}{474fceb4b05018d75e8f32c0bbaae830}
+      \strng{authorbibnamehash}{474fceb4b05018d75e8f32c0bbaae830}
+      \strng{authornamehash}{474fceb4b05018d75e8f32c0bbaae830}
+      \strng{authorfullhash}{474fceb4b05018d75e8f32c0bbaae830}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{JMIR Medical Informatics}
+      \field{number}{4}
+      \field{title}{Rule-Based Cohort Definitions for Acute Respiratory Failure: Electronic Phenotyping Algorithm}
+      \field{volume}{8}
+      \field{year}{2020}
+      \field{pages}{e18402}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.2196/18402
+      \endverb
+      \verb{file}
+      \verb ../papers/phenotyping_respiratory_failure_essay_et_al_2020.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.2196/18402
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.2196/18402
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{singer_2016_sepsis3}{article}{}
+      \name{author}{19}{}{%
+        {{hash=c8b2f6f387c95da90b0f20a38f98b22d}{%
+           family={Singer},
+           familyi={S\bibinitperiod},
+           given={Mervyn},
+           giveni={M\bibinitperiod}}}%
+        {{hash=a2eaf24b0ae4b3f54112785a3f0b2645}{%
+           family={Deutschman},
+           familyi={D\bibinitperiod},
+           given={Clifford\bibnamedelima S.},
+           giveni={C\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=fb318d22c61babe88736ba34d2b20cde}{%
+           family={Seymour},
+           familyi={S\bibinitperiod},
+           given={Christopher\bibnamedelima W.},
+           giveni={C\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=f48544d180b890ae2582be390c5d9719}{%
+           family={Shankar-Hari},
+           familyi={S\bibinithyphendelim H\bibinitperiod},
+           given={Manu},
+           giveni={M\bibinitperiod}}}%
+        {{hash=e2dd0941deb45db608b84b849338045c}{%
+           family={Annane},
+           familyi={A\bibinitperiod},
+           given={Djillali},
+           giveni={D\bibinitperiod}}}%
+        {{hash=e3aaf99037fdbf7a9ce99497cd543989}{%
+           family={Bauer},
+           familyi={B\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=34a8b97f9a96eb15dfaa8b4125f6699a}{%
+           family={Bellomo},
+           familyi={B\bibinitperiod},
+           given={Rinaldo},
+           giveni={R\bibinitperiod}}}%
+        {{hash=cf9b69a3d607e1c18608f95bd270f0b2}{%
+           family={Bernard},
+           familyi={B\bibinitperiod},
+           given={Gordon\bibnamedelima R.},
+           giveni={G\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=2bdbcb3ab0a9bb55b33afe10ec38914f}{%
+           family={Chiche},
+           familyi={C\bibinitperiod},
+           given={Jean-Daniel},
+           giveni={J\bibinithyphendelim D\bibinitperiod}}}%
+        {{hash=8658015d41f351710b6a63f07d9c087b}{%
+           family={Coopersmith},
+           familyi={C\bibinitperiod},
+           given={Craig\bibnamedelima M.},
+           giveni={C\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=7777d9a7da399eb5c913261e721d3b7f}{%
+           family={Hotchkiss},
+           familyi={H\bibinitperiod},
+           given={Richard\bibnamedelima S.},
+           giveni={R\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=051314791a4a94cda595c29a9ebd48e7}{%
+           family={Levy},
+           familyi={L\bibinitperiod},
+           given={Mitchell\bibnamedelima M.},
+           giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=fcbb61544e24ccd60dff5a8499e52f07}{%
+           family={Marshall},
+           familyi={M\bibinitperiod},
+           given={John\bibnamedelima C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=cc70a6e737b407a2f1807e2e4ff400f8}{%
+           family={Martin},
+           familyi={M\bibinitperiod},
+           given={Greg\bibnamedelima S.},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=b37f9e905aaeafbf061a05d6ac12d7c2}{%
+           family={Opal},
+           familyi={O\bibinitperiod},
+           given={Steven\bibnamedelima M.},
+           giveni={S\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=a0eeb044bfbafa691d4799c62c3f84a6}{%
+           family={Rubenfeld},
+           familyi={R\bibinitperiod},
+           given={Gordon\bibnamedelima D.},
+           giveni={G\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=62b8c4bf95e627d736286e47c5c436fc}{%
+           family={Poll},
+           familyi={P\bibinitperiod},
+           given={Tom},
+           giveni={T\bibinitperiod},
+           prefix={van\bibnamedelima der},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
+        {{hash=cb4ea8288e52bbc4b7a82b501134fa1b}{%
+           family={Vincent},
+           familyi={V\bibinitperiod},
+           given={Jean-Louis},
+           giveni={J\bibinithyphendelim L\bibinitperiod}}}%
+        {{hash=9258ff7a18fe7fd60ad42ee48bac565e}{%
+           family={Angus},
+           familyi={A\bibinitperiod},
+           given={Derek\bibnamedelima C.},
+           giveni={D\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ccc0fe2a80155634549f7ed71bc1693}
+      \strng{fullhash}{49ad15aa2c48767e0c9ed45c5df1199d}
+      \strng{bibnamehash}{8ccc0fe2a80155634549f7ed71bc1693}
+      \strng{authorbibnamehash}{8ccc0fe2a80155634549f7ed71bc1693}
+      \strng{authornamehash}{8ccc0fe2a80155634549f7ed71bc1693}
+      \strng{authorfullhash}{49ad15aa2c48767e0c9ed45c5df1199d}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{JAMA}
+      \field{number}{8}
+      \field{title}{The Third International Consensus Definitions for Sepsis and Septic Shock ({Sepsis-3})}
+      \field{volume}{315}
+      \field{year}{2016}
+      \field{pages}{801\bibrangedash 810}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1001/jama.2016.0287
+      \endverb
+      \verb{file}
+      \verb ../papers/clinical_sepsis3_singer_et_al_2016.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1001/jama.2016.0287
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1001/jama.2016.0287
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{kdigo_2012_acute_kidney_injury}{report}{}
+      \name{author}{1}{}{%
+        {{hash=6c18f125e894fb93c2fbf23f583ec60d}{%
+           family={{Kidney Disease: Improving Global Outcomes Acute Kidney Injury Work Group}},
+           familyi={K\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Kidney Disease: Improving Global Outcomes}%
+      }
+      \strng{namehash}{6c18f125e894fb93c2fbf23f583ec60d}
+      \strng{fullhash}{6c18f125e894fb93c2fbf23f583ec60d}
+      \strng{bibnamehash}{6c18f125e894fb93c2fbf23f583ec60d}
+      \strng{authorbibnamehash}{6c18f125e894fb93c2fbf23f583ec60d}
+      \strng{authornamehash}{6c18f125e894fb93c2fbf23f583ec60d}
+      \strng{authorfullhash}{6c18f125e894fb93c2fbf23f583ec60d}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{number}{1}
+      \field{series}{Kidney International Supplements}
+      \field{title}{{KDIGO} Clinical Practice Guideline for Acute Kidney Injury}
+      \field{type}{techreport}
+      \field{volume}{2}
+      \field{year}{2012}
+      \field{pages}{1\bibrangedash 138}
+      \range{pages}{138}
+      \verb{file}
+      \verb ../papers/clinical_kdigo_acute_kidney_injury_2012.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://kdigo.org/guidelines/acute-kidney-injury/
+      \endverb
+      \verb{url}
+      \verb https://kdigo.org/guidelines/acute-kidney-injury/
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{taylor_et_al_2001_isth_dic}{article}{}
+      \name{author}{5}{}{%
+        {{hash=c3dec367b1de3bfd3dfccde84c589089}{%
+           family={Jr.},
+           familyi={J\bibinitperiod},
+           given={F.\bibnamedelimi B.\bibnamedelimi Taylor},
+           giveni={F\bibinitperiod\bibinitdelim B\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=7f9f2f431333eb84bab62b3745cacdd4}{%
+           family={Toh},
+           familyi={T\bibinitperiod},
+           given={C.\bibnamedelimi H.},
+           giveni={C\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=7de9619ca825c28cda8fdff681f6bd9a}{%
+           family={Hoots},
+           familyi={H\bibinitperiod},
+           given={W.\bibnamedelimi K.},
+           giveni={W\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=d18416568c151b330eabf9b5e15ed670}{%
+           family={Wada},
+           familyi={W\bibinitperiod},
+           given={H.},
+           giveni={H\bibinitperiod}}}%
+        {{hash=3d8da4f6b9f6c0039b4edfa28c2de467}{%
+           family={Levi},
+           familyi={L\bibinitperiod},
+           given={M.},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{1142012caf776b70774b57508e86c110}
+      \strng{fullhash}{f60ede9b8bd7aef8b28df83aa41517c6}
+      \strng{bibnamehash}{1142012caf776b70774b57508e86c110}
+      \strng{authorbibnamehash}{1142012caf776b70774b57508e86c110}
+      \strng{authornamehash}{1142012caf776b70774b57508e86c110}
+      \strng{authorfullhash}{f60ede9b8bd7aef8b28df83aa41517c6}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Thrombosis and Haemostasis}
+      \field{note}{Thieme publisher page exposed a PDF URL but returned HTML; The Blood Project public educational PDF matched title/authors/year and was used.}
+      \field{number}{5}
+      \field{title}{Towards Definition, Clinical and Laboratory Criteria, and a Scoring System for Disseminated Intravascular Coagulation}
+      \field{volume}{86}
+      \field{year}{2001}
+      \field{pages}{1327\bibrangedash 1330}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1055/s-0037-1616068
+      \endverb
+      \verb{file}
+      \verb ../papers/clinical_dic_isth_taylor_et_al_2001.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1055/s-0037-1616068
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1055/s-0037-1616068
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{vincent_et_al_1996_sofa}{article}{}
+      \name{author}{9}{}{%
+        {{hash=cb4ea8288e52bbc4b7a82b501134fa1b}{%
+           family={Vincent},
+           familyi={V\bibinitperiod},
+           given={Jean-Louis},
+           giveni={J\bibinithyphendelim L\bibinitperiod}}}%
+        {{hash=2b98cdbc69cff07c5153a3445540ba2a}{%
+           family={Moreno},
+           familyi={M\bibinitperiod},
+           given={Rui},
+           giveni={R\bibinitperiod}}}%
+        {{hash=18e3cb7eb2bb691dacba9c8341301996}{%
+           family={Takala},
+           familyi={T\bibinitperiod},
+           given={Jukka},
+           giveni={J\bibinitperiod}}}%
+        {{hash=584863ac9bdffb8a90b758db0ff1ae97}{%
+           family={Willatts},
+           familyi={W\bibinitperiod},
+           given={Sheila},
+           giveni={S\bibinitperiod}}}%
+        {{hash=a801c3d7e272a59e7e7bc1e26530ae17}{%
+           family={Mendonca},
+           familyi={M\bibinitperiod},
+           given={Arnaldo\bibnamedelima De},
+           giveni={A\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=339f312f1405e3d7bca7e95e10c1e202}{%
+           family={Bruining},
+           familyi={B\bibinitperiod},
+           given={Hajo},
+           giveni={H\bibinitperiod}}}%
+        {{hash=715ec50ef592e7371727860dfa0a4719}{%
+           family={Reinhart},
+           familyi={R\bibinitperiod},
+           given={C.\bibnamedelimi K.},
+           giveni={C\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=340dd41a972b69f2bad437036804693f}{%
+           family={Suter},
+           familyi={S\bibinitperiod},
+           given={Peter\bibnamedelima M.},
+           giveni={P\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=f7f3b7ddf6433056587595fe7875f126}{%
+           family={Thijs},
+           familyi={T\bibinitperiod},
+           given={L.\bibnamedelimi G.},
+           giveni={L\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+      }
+      \strng{namehash}{f433e9f044664c22b893e0a50ddeda72}
+      \strng{fullhash}{07757e70300183921ff3825466413495}
+      \strng{bibnamehash}{f433e9f044664c22b893e0a50ddeda72}
+      \strng{authorbibnamehash}{f433e9f044664c22b893e0a50ddeda72}
+      \strng{authornamehash}{f433e9f044664c22b893e0a50ddeda72}
+      \strng{authorfullhash}{07757e70300183921ff3825466413495}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Intensive Care Medicine}
+      \field{note}{No lawful public PDF was downloaded: Springer/Ovid routes returned HTML rather than a PDF; metadata retained with missing PDF status.}
+      \field{number}{7}
+      \field{title}{The {SOFA} (Sepsis-related Organ Failure Assessment) Score to Describe Organ Dysfunction/Failure}
+      \field{volume}{22}
+      \field{year}{1996}
+      \field{pages}{707\bibrangedash 710}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1007/BF01709751
+      \endverb
+      \verb{file}
+      \verb ../papers/clinical_sofa_vincent_et_al_1996.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1007/BF01709751
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1007/BF01709751
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{ranieri_et_al_2012_berlin_ards}{article}{}
+      \name{author}{9}{}{%
+        {{hash=bfabab6e45d0c2156e1cceadbd6c144f}{%
+           family={Force},
+           familyi={F\bibinitperiod},
+           given={ARDS\bibnamedelimb Definition\bibnamedelima Task},
+           giveni={A\bibinitperiod\bibinitdelim D\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=146637089b9e97078f5db183cbdcb489}{%
+           family={Ranieri},
+           familyi={R\bibinitperiod},
+           given={V.\bibnamedelimi Marco},
+           giveni={V\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=a0eeb044bfbafa691d4799c62c3f84a6}{%
+           family={Rubenfeld},
+           familyi={R\bibinitperiod},
+           given={Gordon\bibnamedelima D.},
+           giveni={G\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=7bcbf078afbe3196e4a26d25d6ea3901}{%
+           family={Thompson},
+           familyi={T\bibinitperiod},
+           given={B.\bibnamedelimi Taylor},
+           giveni={B\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=4ee820533357d703b6274d49ee43331c}{%
+           family={Ferguson},
+           familyi={F\bibinitperiod},
+           given={Niall\bibnamedelima D.},
+           giveni={N\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=c5622e438ba2a6d3eb5e55a19701bbfa}{%
+           family={Caldwell},
+           familyi={C\bibinitperiod},
+           given={Ellen},
+           giveni={E\bibinitperiod}}}%
+        {{hash=96aa01ae265d75c7b2fde08370289c4f}{%
+           family={Fan},
+           familyi={F\bibinitperiod},
+           given={Eddy},
+           giveni={E\bibinitperiod}}}%
+        {{hash=207907e652a86b2ed0da2fba8aaacf6c}{%
+           family={Camporota},
+           familyi={C\bibinitperiod},
+           given={Luigi},
+           giveni={L\bibinitperiod}}}%
+        {{hash=2c5044869586ccafc501850a8ca4f0a2}{%
+           family={Slutsky},
+           familyi={S\bibinitperiod},
+           given={Arthur\bibnamedelima S.},
+           giveni={A\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+      }
+      \strng{namehash}{f4ba6ca55a00164f5bdbe46b43e723ed}
+      \strng{fullhash}{6cf74f1e98b0819ea7a4a65137ce26e0}
+      \strng{bibnamehash}{f4ba6ca55a00164f5bdbe46b43e723ed}
+      \strng{authorbibnamehash}{f4ba6ca55a00164f5bdbe46b43e723ed}
+      \strng{authornamehash}{f4ba6ca55a00164f5bdbe46b43e723ed}
+      \strng{authorfullhash}{6cf74f1e98b0819ea7a4a65137ce26e0}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{JAMA}
+      \field{note}{No lawful public PDF was downloaded: JAMA/CDN routes returned 403 and Ovid returned HTML rather than a PDF; metadata retained with missing PDF status.}
+      \field{number}{23}
+      \field{title}{Acute Respiratory Distress Syndrome: The Berlin Definition}
+      \field{volume}{307}
+      \field{year}{2012}
+      \field{pages}{2526\bibrangedash 2533}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1001/jama.2012.5669
+      \endverb
+      \verb{file}
+      \verb ../papers/clinical_ards_berlin_definition_ranieri_et_al_2012.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1001/jama.2012.5669
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1001/jama.2012.5669
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{oprescu_et_al_2019_econml}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{hash=b10cdb9d98802bebd36e9273775cd63d}{%
+           family={Oprescu},
+           familyi={O\bibinitperiod},
+           given={Miruna},
+           giveni={M\bibinitperiod}}}%
+        {{hash=342033b26b8f8c243380f2343a53e1fa}{%
+           family={Syrgkanis},
+           familyi={S\bibinitperiod},
+           given={Vasilis},
+           giveni={V\bibinitperiod}}}%
+        {{hash=de4e37e54496962c3f8901e46413b464}{%
+           family={Battocchi},
+           familyi={B\bibinitperiod},
+           given={Keith},
+           giveni={K\bibinitperiod}}}%
+        {{hash=e3a08a7c22f6dc8bddfecff953b0d17e}{%
+           family={Hei},
+           familyi={H\bibinitperiod},
+           given={Maggie},
+           giveni={M\bibinitperiod}}}%
+        {{hash=aaab2d46d427908668fc97c86171164b}{%
+           family={Lewis},
+           familyi={L\bibinitperiod},
+           given={Greg},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{c9750cd6f0ee73c6d64737064ec50ca9}
+      \strng{fullhash}{a0de97a53b35ab8a7b8232ecd44a12c4}
+      \strng{bibnamehash}{c9750cd6f0ee73c6d64737064ec50ca9}
+      \strng{authorbibnamehash}{c9750cd6f0ee73c6d64737064ec50ca9}
+      \strng{authornamehash}{c9750cd6f0ee73c6d64737064ec50ca9}
+      \strng{authorfullhash}{a0de97a53b35ab8a7b8232ecd44a12c4}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{NeurIPS 2019 Workshop on Causal Machine Learning}
+      \field{title}{{EconML}: A Machine Learning Library for Estimating Heterogeneous Treatment Effects}
+      \field{year}{2019}
+      \field{pages}{1\bibrangedash 6}
+      \range{pages}{6}
+      \verb{file}
+      \verb ../papers/software_econml_oprescu_et_al_2019.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://tripods.cis.cornell.edu/neurips19_causalml/
+      \endverb
+      \verb{url}
+      \verb https://tripods.cis.cornell.edu/neurips19_causalml/
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{lipkovich_2024_modern_hte_methods}{article}{}
+      \name{author}{4}{}{%
+        {{hash=c9c44c65607352c48e39741db2fed9d3}{%
+           family={Lipkovich},
+           familyi={L\bibinitperiod},
+           given={Ilya},
+           giveni={I\bibinitperiod}}}%
+        {{hash=8e370b0041ee8b7eff044de4c73df24f}{%
+           family={Svensson},
+           familyi={S\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=80ce5060840690e0916e92f907a52aa4}{%
+           family={Ratitch},
+           familyi={R\bibinitperiod},
+           given={Bohdana},
+           giveni={B\bibinitperiod}}}%
+        {{hash=818c5849aea923f2a910d5c1bbebc0c8}{%
+           family={Dmitrienko},
+           familyi={D\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{96695ed47a7280162476797ac13ca9e8}
+      \strng{fullhash}{43ed60c7a99ee6d4f89100ed56926bd4}
+      \strng{bibnamehash}{96695ed47a7280162476797ac13ca9e8}
+      \strng{authorbibnamehash}{96695ed47a7280162476797ac13ca9e8}
+      \strng{authornamehash}{96695ed47a7280162476797ac13ca9e8}
+      \strng{authorfullhash}{43ed60c7a99ee6d4f89100ed56926bd4}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Statistics in Medicine}
+      \field{number}{22}
+      \field{title}{Modern Approaches for Evaluating Treatment Effect Heterogeneity from Clinical Trials and Observational Data}
+      \field{volume}{43}
+      \field{year}{2024}
+      \field{pages}{4388\bibrangedash 4436}
+      \range{pages}{49}
+      \verb{doi}
+      \verb 10.1002/sim.10167
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_hte_methods_lipkovich_et_al_2024.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1002/sim.10167
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1002/sim.10167
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{curth_2024_ml_individualized_treatment_effects}{article}{}
+      \name{author}{5}{}{%
+        {{hash=be4caf6e3994dcbe4e11bc11c8a6a437}{%
+           family={Curth},
+           familyi={C\bibinitperiod},
+           given={Alicia},
+           giveni={A\bibinitperiod}}}%
+        {{hash=f2d8154a0d1174d12102daa7bc9b9187}{%
+           family={Peck},
+           familyi={P\bibinitperiod},
+           given={Richard\bibnamedelima W.},
+           giveni={R\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=afcaf2000aa65414d6f0db654fba12a4}{%
+           family={McKinney},
+           familyi={M\bibinitperiod},
+           given={Eoin},
+           giveni={E\bibinitperiod}}}%
+        {{hash=55a44cd7975fa4188e5b3432e5becc91}{%
+           family={Weatherall},
+           familyi={W\bibinitperiod},
+           given={James},
+           giveni={J\bibinitperiod}}}%
+        {{hash=44c5ebc1d90d166c1418c35650bdd2ef}{%
+           family={Schaar},
+           familyi={S\bibinitperiod},
+           given={Mihaela},
+           giveni={M\bibinitperiod},
+           prefix={van\bibnamedelima der},
+           prefixi={v\bibinitperiod\bibinitdelim d\bibinitperiod}}}%
+      }
+      \strng{namehash}{4522e0939bc50353b48c896b7f8f5657}
+      \strng{fullhash}{df8678a61aecd2e568f355cfd5a62d0d}
+      \strng{bibnamehash}{4522e0939bc50353b48c896b7f8f5657}
+      \strng{authorbibnamehash}{4522e0939bc50353b48c896b7f8f5657}
+      \strng{authornamehash}{4522e0939bc50353b48c896b7f8f5657}
+      \strng{authorfullhash}{df8678a61aecd2e568f355cfd5a62d0d}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Clinical Pharmacology \& Therapeutics}
+      \field{number}{4}
+      \field{title}{Using Machine Learning to Individualize Treatment Effect Estimation: Challenges and Opportunities}
+      \field{volume}{115}
+      \field{year}{2024}
+      \field{pages}{710\bibrangedash 719}
+      \range{pages}{10}
+      \verb{doi}
+      \verb 10.1002/cpt.3159
+      \endverb
+      \verb{file}
+      \verb ../papers/review_ml_individualized_treatment_curth_et_al_2024.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1002/cpt.3159
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1002/cpt.3159
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{iwashyna_2015_hte_critical_care}{article}{}
+      \name{author}{6}{}{%
+        {{hash=ea2629c3215792961a103b33900a56aa}{%
+           family={Iwashyna},
+           familyi={I\bibinitperiod},
+           given={Theodore\bibnamedelima J.},
+           giveni={T\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=2bb8181268c43928a58b5d6b32abce51}{%
+           family={Burke},
+           familyi={B\bibinitperiod},
+           given={James\bibnamedelima F.},
+           giveni={J\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+        {{hash=873cf864d6b77aa0d789bacd3ab1b2ba}{%
+           family={Sussman},
+           familyi={S\bibinitperiod},
+           given={Jeremy\bibnamedelima B.},
+           giveni={J\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=8d9bffbecede264bc6c046e88fb70da7}{%
+           family={Prescott},
+           familyi={P\bibinitperiod},
+           given={Hallie\bibnamedelima C.},
+           giveni={H\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=322e1c000b85280965492caf1cbf09eb}{%
+           family={Hayward},
+           familyi={H\bibinitperiod},
+           given={Rodney\bibnamedelima A.},
+           giveni={R\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=9258ff7a18fe7fd60ad42ee48bac565e}{%
+           family={Angus},
+           familyi={A\bibinitperiod},
+           given={Derek\bibnamedelima C.},
+           giveni={D\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{9ccfcd41fcaed276e0d42ba1d1114819}
+      \strng{fullhash}{254cbd6401c9c16f0e667fed7ceb3246}
+      \strng{bibnamehash}{9ccfcd41fcaed276e0d42ba1d1114819}
+      \strng{authorbibnamehash}{9ccfcd41fcaed276e0d42ba1d1114819}
+      \strng{authornamehash}{9ccfcd41fcaed276e0d42ba1d1114819}
+      \strng{authorfullhash}{254cbd6401c9c16f0e667fed7ceb3246}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{American Journal of Respiratory and Critical Care Medicine}
+      \field{number}{9}
+      \field{title}{Implications of Heterogeneity of Treatment Effect for Reporting and Analysis of Randomized Trials in Critical Care}
+      \field{volume}{192}
+      \field{year}{2015}
+      \field{pages}{1045\bibrangedash 1051}
+      \range{pages}{7}
+      \verb{doi}
+      \verb 10.1164/rccm.201411-2125CP
+      \endverb
+      \verb{file}
+      \verb ../papers/review_hte_critical_care_iwashyna_et_al_2015.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1164/rccm.201411-2125CP
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1164/rccm.201411-2125CP
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{crump_et_al_2009_limited_overlap}{article}{}
+      \name{author}{4}{}{%
+        {{hash=372f4e6665543d66d0cb4904c40b7bc8}{%
+           family={Crump},
+           familyi={C\bibinitperiod},
+           given={Richard\bibnamedelima K.},
+           giveni={R\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=ae561f30a81236c5d35d4527fe96684e}{%
+           family={Hotz},
+           familyi={H\bibinitperiod},
+           given={V.\bibnamedelimi Joseph},
+           giveni={V\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=9f4fa8d00c0311b9cdad0f20ad429e57}{%
+           family={Imbens},
+           familyi={I\bibinitperiod},
+           given={Guido\bibnamedelima W.},
+           giveni={G\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=15f2eb8c286175250b386ebba5e7de5a}{%
+           family={Mitnik},
+           familyi={M\bibinitperiod},
+           given={Oscar\bibnamedelima A.},
+           giveni={O\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{02535b23467aa091f2ee0b68f4388eb1}
+      \strng{fullhash}{1e09cd46e5739e7e311321231573ebed}
+      \strng{bibnamehash}{02535b23467aa091f2ee0b68f4388eb1}
+      \strng{authorbibnamehash}{02535b23467aa091f2ee0b68f4388eb1}
+      \strng{authornamehash}{02535b23467aa091f2ee0b68f4388eb1}
+      \strng{authorfullhash}{1e09cd46e5739e7e311321231573ebed}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Biometrika}
+      \field{note}{Duke university author PDF used.}
+      \field{number}{1}
+      \field{title}{Dealing with Limited Overlap in Estimation of Average Treatment Effects}
+      \field{volume}{96}
+      \field{year}{2009}
+      \field{pages}{187\bibrangedash 199}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1093/biomet/asn055
+      \endverb
+      \verb{file}
+      \verb ../papers/causal_limited_overlap_crump_et_al_2009.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1093/biomet/asn055
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1093/biomet/asn055
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{cinelli_hazlett_2020_sensitivity}{article}{}
+      \name{author}{2}{}{%
+        {{hash=aa688514e4319489094f1006ca357c7e}{%
+           family={Cinelli},
+           familyi={C\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=c3de901751a69bd69e344f3901d6d0cf}{%
+           family={Hazlett},
+           familyi={H\bibinitperiod},
+           given={Chad},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{374afa6179d868cc41a3a005fcc29737}
+      \strng{fullhash}{374afa6179d868cc41a3a005fcc29737}
+      \strng{bibnamehash}{374afa6179d868cc41a3a005fcc29737}
+      \strng{authorbibnamehash}{374afa6179d868cc41a3a005fcc29737}
+      \strng{authornamehash}{374afa6179d868cc41a3a005fcc29737}
+      \strng{authorfullhash}{374afa6179d868cc41a3a005fcc29737}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of the Royal Statistical Society: Series B (Statistical Methodology)}
+      \field{note}{Author PDF used; first page states forthcoming JRSSB version and DOI.}
+      \field{number}{1}
+      \field{title}{Making Sense of Sensitivity: Extending Omitted Variable Bias}
+      \field{volume}{82}
+      \field{year}{2020}
+      \field{pages}{39\bibrangedash 67}
+      \range{pages}{29}
+      \verb{doi}
+      \verb 10.1111/rssb.12348
+      \endverb
+      \verb{file}
+      \verb ../papers/sensitivity_omitted_variable_bias_cinelli_hazlett_2020.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1111/rssb.12348
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1111/rssb.12348
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{chernozhukov_et_al_2026_ovb_causal_ml}{article}{}
+      \name{author}{5}{}{%
+        {{hash=c75cbe2cefd1e532f636a50892605d06}{%
+           family={Chernozhukov},
+           familyi={C\bibinitperiod},
+           given={Victor},
+           giveni={V\bibinitperiod}}}%
+        {{hash=aa688514e4319489094f1006ca357c7e}{%
+           family={Cinelli},
+           familyi={C\bibinitperiod},
+           given={Carlos},
+           giveni={C\bibinitperiod}}}%
+        {{hash=058d74ae5e89fbd5a49ebdbe97b4c922}{%
+           family={Newey},
+           familyi={N\bibinitperiod},
+           given={Whitney\bibnamedelima K.},
+           giveni={W\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+        {{hash=af1491a2bbe671539e635699d0e0b9c5}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={Amit},
+           giveni={A\bibinitperiod}}}%
+        {{hash=342033b26b8f8c243380f2343a53e1fa}{%
+           family={Syrgkanis},
+           familyi={S\bibinitperiod},
+           given={Vasilis},
+           giveni={V\bibinitperiod}}}%
+      }
+      \strng{namehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{fullhash}{5143403e25c14606ba211a845faa83fc}
+      \strng{bibnamehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{authorbibnamehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{authornamehash}{e8ad45c8076487daa445bfbeb4e02a04}
+      \strng{authorfullhash}{5143403e25c14606ba211a845faa83fc}
+      \field{extraname}{2}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arXiv}
+      \field{journaltitle}{Review of Economics and Statistics}
+      \field{note}{Final publisher landing page exists, but publisher PDF returned 403/HTML; official arXiv author version was used.}
+      \field{title}{Long Story Short: Omitted Variable Bias in Causal Machine Learning}
+      \field{year}{2026}
+      \verb{doi}
+      \verb 10.1162/REST.a.1705
+      \endverb
+      \verb{eprint}
+      \verb 2112.13398
+      \endverb
+      \verb{file}
+      \verb ../papers/sensitivity_ovb_causal_ml_chernozhukov_et_al_2026.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1162/REST.a.1705
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1162/REST.a.1705
+      \endverb
+      \keyw{core}
+    \endentry
+    \entry{sharma_kiciman_2020_dowhy}{misc}{}
+      \name{author}{2}{}{%
+        {{hash=af1491a2bbe671539e635699d0e0b9c5}{%
+           family={Sharma},
+           familyi={S\bibinitperiod},
+           given={Amit},
+           giveni={A\bibinitperiod}}}%
+        {{hash=62ef108f731f13738a37da8b832c9927}{%
+           family={Kiciman},
+           familyi={K\bibinitperiod},
+           given={Emre},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{43217ca0b66ddf1911c7626373a59f32}
+      \strng{fullhash}{43217ca0b66ddf1911c7626373a59f32}
+      \strng{bibnamehash}{43217ca0b66ddf1911c7626373a59f32}
+      \strng{authorbibnamehash}{43217ca0b66ddf1911c7626373a59f32}
+      \strng{authornamehash}{43217ca0b66ddf1911c7626373a59f32}
+      \strng{authorfullhash}{43217ca0b66ddf1911c7626373a59f32}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{cs.AI}
+      \field{eprinttype}{arXiv}
+      \field{title}{{DoWhy}: An End-to-End Library for Causal Inference}
+      \field{year}{2020}
+      \verb{doi}
+      \verb 10.48550/arXiv.2011.04216
+      \endverb
+      \verb{eprint}
+      \verb 2011.04216
+      \endverb
+      \verb{file}
+      \verb ../papers/software_dowhy_sharma_kiciman_2020.pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2011.04216
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2011.04216
+      \endverb
+      \keyw{core}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
