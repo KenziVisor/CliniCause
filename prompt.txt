@@ -1,4 +1,4 @@
-# Stage 5.4 — Institutional, Ethics, Governance, and Administrative Compliance
+# Stage 5.5 — Final LaTeX, Layout, and Copy-Edit Hardening
 
 ## Model
 
@@ -13,731 +13,1049 @@ Extra High
 Implement this task as:
 
 ```text
-Stage 5.4 — Institutional, Ethics, Governance, and Administrative Compliance Audit
+Stage 5.5 — Final LaTeX, Layout, Language, and Internal-Consistency Hardening
 ```
 
 The current repository head is expected to be:
 
 ```text
-ad52c76a31e3e06bd44b36e6ce68f47ce84558f8 step 5.3
+3e29da1d8c6b91ddc00d44b9637218ed0047e6a6 step 5.4
 ```
 
 Its immediate parent is expected to be:
 
 ```text
-f71c9bab70c8fb6347c7692236cd2cfd03e84fa1 step 5.2
+ad52c76a31e3e06bd44b36e6ce68f47ce84558f8 step 5.3
 ```
 
-The next planned task after this stage is:
+Stage 5.4 concluded:
 
 ```text
-Stage 5.5 — Final LaTeX, Layout, and Copy-Edit Hardening
+READY FOR STAGE 5.5 WITH NON-BLOCKING ADMINISTRATIVE GATES
 ```
 
-Do not begin Stage 5.5.
+The next and final workflow part after this stage is:
+
+```text
+Final Release Audit — authoritative administrative-input insertion,
+clean release build, complete PDF sign-off, and submission packaging
+```
+
+Do not begin the Final Release Audit.
+
+Stage 5.5 is the last substantive thesis-editing stage.
 
 ---
 
-# 1. Objective
+# 1. Absolute no-research-execution boundary
 
-Audit the complete thesis against the locally available institutional requirements and the project’s actual ethics, governance, privacy, authorization, and administrative evidence.
+This is a document-hardening task only.
 
-This stage must:
+Do not execute any project source code, research module, experiment, notebook, data loader, preprocessing pipeline, training pipeline, prediction pipeline, router workflow, proxy-state generator, voting workflow, causal-analysis workflow, matching workflow, CATE estimator, sensitivity analysis, permutation analysis, or figure generator.
 
-1. verify every locally checkable BGU formatting and structural requirement;
-2. identify every requirement that depends on current official forms or human authorization;
-3. audit ethics and data-governance language throughout the thesis;
-4. audit privacy, data-access, consent, approval, and institutional-review claims;
-5. ensure no administrative fact was invented;
-6. ensure no absence of documentation is misrepresented as absence of oversight;
-7. create a precise submission-input checklist;
-8. distinguish:
+Do not run:
 
-   * compliant;
-   * compliant with qualification;
-   * externally gated;
-   * noncompliant and locally repairable;
-   * blocked pending authoritative input.
+```text
+router.py
+main.py
+fix_preprocessor.py
+tmp_verify_router.py
+causal-irregular-time-series/*.py
+causal-irregular-time-series/src/*.py
+STraTS/*.py
+tests/
+notebooks
+research shell scripts
+```
 
-Do not invent official institutional text.
+Do not import project modules into a validation script.
 
-Do not browse the web.
+Permitted execution is limited to document and static-text inspection tools such as:
 
-Do not download current forms.
+```text
+git
+rg
+grep
+sed
+awk
+sha256sum
+file
+latexmk
+biber through latexmk
+pdfinfo
+pdftotext
+pdftoppm
+mutool
+qpdf --check
+chktex, if already installed
+```
 
-Do not infer approval from repository silence.
+A temporary one-off script may parse `.tex`, `.aux`, `.log`, `.toc`, `.lof`, `.lot`, or extracted PDF text only. It must not import project packages, access clinical datasets, inspect patient-level records, or execute research logic.
 
 ---
 
-# 2. Repository verification
+# 2. Objective
 
-Run:
+Perform the final substantive hardening of the thesis while preserving all frozen evidence and approved interpretations.
+
+The stage must improve:
+
+* grammar;
+* punctuation;
+* syntax;
+* readability;
+* paragraph flow;
+* terminology consistency;
+* capitalization;
+* abbreviation use;
+* notation;
+* heading consistency;
+* LaTeX robustness;
+* cross-reference presentation;
+* table readability;
+* page composition;
+* line breaking;
+* bilingual typography;
+* PDF visual consistency.
+
+It must not change:
+
+* scientific content;
+* numerical results;
+* result hierarchy;
+* estimands;
+* evidence roles;
+* conclusions;
+* causal strength;
+* clinical strength;
+* citation set;
+* figure content;
+* approved figure captions;
+* institutional or administrative facts;
+* unresolved external gates.
+
+The correct outcome is a polished advisor-ready draft, not a falsely submission-ready thesis.
+
+---
+
+# 3. Mandatory repository verification
+
+From the repository root, run:
 
 ```bash
 git status --short
 git branch --show-current
 git log -10 --oneline
 
-git show --stat --oneline ad52c76
-git diff --stat f71c9ba..ad52c76
+git show --stat --oneline 3e29da1
+git diff --stat ad52c76..3e29da1
 ```
 
 Confirm:
 
-1. `ad52c76` exists.
-2. Its message is `step 5.3`.
-3. Its immediate parent is `f71c9ba`.
-4. Stage 5.3 added the reproducibility package and provenance ledgers.
-5. Stage 5.3 changed no thesis figure.
-6. Stage 5.3 changed no checked result source.
-7. Stage 5.3 changed no research code.
-8. Stage 5.3 changed no literature source.
-9. Stage 5.3 made only narrowly documented reader-facing provenance repairs.
-10. The five external assistant figure decisions are recorded without presenting them as Codex approval.
+1. `3e29da1` exists.
+2. Its message is `step 5.4`.
+3. Its immediate parent is `ad52c76`.
+4. Stage 5.4 added seven compliance and submission-input records.
+5. Stage 5.4 changed only five thesis `.tex` files and `main.pdf`.
+6. Stage 5.4 changed no figure.
+7. Stage 5.4 changed no checked result source.
+8. Stage 5.4 changed no result generator.
+9. Stage 5.4 changed no research code.
+10. Stage 5.4 changed no literature source.
+11. Stage 5.4 preserved the complete Stage 5.3 reproducibility package.
+12. Stage 5.4 concluded:
 
-Record the complete initial worktree.
+```text
+READY FOR STAGE 5.5 WITH NON-BLOCKING ADMINISTRATIVE GATES
+```
 
-Do not reset, clean, switch branches, discard changes, stage, amend, commit, push, update submodules, or normalize unrelated files.
+The commit also contains a `prompt.txt` change. Treat the version present at the start of this task as user-controlled baseline input. Do not modify it during Stage 5.5 and do not count it as a Codex-authored thesis repair.
+
+Record the complete initial worktree, including nested-repository status.
+
+Do not:
+
+* reset;
+* clean;
+* switch branches;
+* discard changes;
+* normalize unrelated files;
+* stage;
+* amend;
+* commit;
+* push;
+* update submodules;
+* fetch remotes;
+* browse the web.
 
 If the baseline differs materially, report:
 
 ```text
-BLOCKED BEFORE STAGE 5.4 — REPOSITORY BASELINE MISMATCH
+BLOCKED BEFORE STAGE 5.5 — REPOSITORY BASELINE MISMATCH
 ```
 
 ---
 
-# 3. Protected-file baseline
+# 4. Protected baseline
 
-Hash and protect:
+Before editing, record SHA-256 hashes for:
 
 ```text
-thesis-writing/results/checked_*.csv
-thesis-writing/results/results_manifest.csv
-thesis-writing/results/results_manifest.md
-thesis-writing/results/results_source_packet.md
-thesis-writing/results/results_decision_register.md
-thesis-writing/results/results_checksums.sha256
-thesis-writing/results/figure_selection_register.md
-thesis-writing/results/generate_stage_4_6B_main_figures.py
-thesis-writing/thesis/figures/*.png
-thesis-writing/literature/metadata/references.bib
-thesis-writing/literature/metadata/catalog.csv
-causal-irregular-time-series/src/
-STraTS/
+thesis-writing/results/
 thesis-writing/reproducibility/
-```
-
-The Stage 5.3 reproducibility package is immutable in Stage 5.4.
-
-Also record hashes for all thesis `.tex` files before editing.
-
-At completion, prove all protected evidence and all five figures are byte-identical.
-
----
-
-# 4. Authoritative local institutional evidence
-
-Inspect completely:
-
-```text
-general-instructions.pdf
-thesis-writing/general-instructions.pdf
-thesis-writing/planning/bgu_requirements_map.md
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/
-thesis-writing/thesis/appendices/
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-```
-
-Use whichever local copy of the institutional PDF actually exists.
-
-The supplied BGU instructions establish, at minimum:
-
-* A4 paper;
-* line spacing between 1.5 and 2;
-* margins of at least 1 cm;
-* page numbers centered at the top;
-* Roman or Hebrew-letter numbering for front matter;
-* Arabic numbering for the thesis body;
-* separately numbered figures and tables;
-* Hebrew and English abstracts in matching format;
-* no abstract longer than 500 words;
-* contents including chapters, sections, and subsections;
-* terminology or symbol list when needed;
-* 10–15 keywords or key phrases after the abstract;
-* consistent bibliography;
-* current faculty forms for cover and internal title pages;
-* Hebrew as the default thesis language;
-* departmental authorization for an English-language thesis;
-* a Hebrew abstract when the thesis is written in English.
-
-Do not claim that the locally supplied general instructions establish the exact current English-thesis title-page sequence if they do not.
-
-Do not reconstruct current faculty forms from memory or an example thesis.
-
----
-
-# 5. Create the institutional compliance matrix
-
-Create:
-
-```text
-thesis-writing/logs/stage_5_4_institutional_compliance.csv
-```
-
-Required columns:
-
-```text
-requirement_id
-requirement_category
-requirement_text
-authoritative_source
-source_page_or_location
-locally_checkable
-current_implementation
-evidence
-status
-repair_required
-external_input_required
-responsible_owner
-notes
-```
-
-Use these statuses:
-
-```text
-COMPLIANT
-COMPLIANT_WITH_QUALIFICATION
-LOCALLY_REPAIRABLE_NONCOMPLIANCE
-EXTERNALLY_GATED
-NOT_APPLICABLE
-SOURCE_AMBIGUOUS
-BLOCKING_NONCOMPLIANCE
-```
-
-Audit at minimum:
-
-* page size;
-* margins;
-* line spacing;
-* page-number position;
-* front-matter numbering;
-* body numbering;
-* abstract order;
-* abstract format;
-* abstract word counts;
-* Hebrew abstract;
-* English abstract;
-* keyword counts;
-* bilingual keyword alignment;
-* TOC depth;
-* list of figures;
-* list of tables;
-* nomenclature;
-* bibliography placement;
-* appendix placement;
-* title-page structure;
-* internal approval page;
-* English-language authorization;
-* current faculty forms;
-* degree wording;
-* department wording;
-* submission date;
-* supervisor information;
-* author information;
-* Hebrew title;
-* acknowledgements.
-
----
-
-# 6. Ethics and governance evidence hierarchy
-
-Use this hierarchy:
-
-## 6.1 Reader-facing authority
-
-```text
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
-thesis-writing/thesis/chapters/09_experimental_design.tex
-thesis-writing/thesis/chapters/11_discussion.tex
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
-thesis-writing/thesis/appendices/appendices.tex
-```
-
-## 6.2 Repository evidence
-
-```text
+thesis-writing/literature/
+thesis-writing/thesis/figures/
 thesis-writing/audit/
 thesis-writing/planning/
-thesis-writing/logs/
-thesis-writing/reproducibility/
+thesis-writing/logs/stage_5_1_*
+thesis-writing/logs/stage_5_2_*
+thesis-writing/logs/stage_5_3_*
+thesis-writing/logs/stage_5_4_*
+causal-irregular-time-series/
+STraTS/
 README.md
 SCRIPTS.md
+router.py
+fix_preprocessor.py
+requirements*.txt
+tests/
 ```
 
-## 6.3 Dataset documentation already approved in the literature corpus
+Also hash every thesis `.tex` file before editing.
 
-Use only existing approved citations and bibliography entries.
+The following are frozen evidence:
 
-Do not add literature.
+* every checked CSV;
+* every result manifest and checksum;
+* every reproducibility record;
+* every bibliography and literature record;
+* every figure;
+* every figure generator;
+* every graph generator;
+* every research-code file;
+* every prior-stage audit ledger;
+* every prior-stage evidence report.
 
-Do not browse.
-
-## 6.4 External institutional facts
-
-The following require authoritative human or institutional input unless already documented exactly:
-
-* ethics-board or IRB approval number;
-* exemption determination;
-* consent procedure;
-* waiver of consent;
-* data-use agreement;
-* credentialed-access approval;
-* institutional data-governance approval;
-* departmental approval for an English thesis;
-* author identity;
-* supervisor identity;
-* department;
-* degree;
-* submission date;
-* committee;
-* approval signatures.
+At completion, prove all protected files are byte-identical.
 
 ---
 
-# 7. Create the ethics and governance claim ledger
+# 5. Frozen figure decision
+
+The five externally reviewed figures remain approved under their existing limitations.
+
+Do not modify:
+
+```text
+thesis-writing/thesis/figures/*.png
+```
+
+Do not modify any of the five:
+
+* `\includegraphics` commands;
+* figure labels;
+* figure captions;
+* visible titles;
+* axes;
+* legends;
+* ordering;
+* placement directives;
+* referenced figure filenames.
+
+The included figure set must remain exactly:
+
+```text
+physionet_causal_dag.png
+mimic_causal_dag.png
+results_mimic_forest_original_cate_ranking.png
+results_physionet_forest_original_cate_ranking.png
+results_original_three_estimator_direction_agreement.png
+```
+
+Retain these limitations:
+
+* DAGs are dense orientation figures; node/edge inventories and source remain the exact authority.
+* The estimator-agreement figure is direction-only evidence.
+* Ranking figures do not establish significance, clinical importance, or population-average effects.
+* PhysioNet shock remains negative in the primary forest ranking.
+* CausalPFN remains exploratory.
+
+Any figure or caption change is blocking.
+
+---
+
+# 6. Frozen numerical and citation baseline
+
+Before editing, create static snapshots of all reader-facing thesis sources.
+
+Record:
+
+* every decimal;
+* every integer used as a reported result or count;
+* every fraction such as `9/9`, `9/10`, and `18/19`;
+* every percentage;
+* every sample size;
+* every table value;
+* every equation;
+* every citation key;
+* every label;
+* every `\ref`, `\pageref`, and `\autoref`;
+* every figure filename;
+* every table and figure caption;
+* chapter and section order.
+
+Use the validated Stage 5.1 and Stage 5.2 ledgers as the authority for results.
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_4_ethics_governance_audit.csv
-```
-
-Use one row per materially distinct claim involving:
-
-```text
-ethics
-ethical
-IRB
-institutional review
-approval
-exemption
-consent
-waiver
-privacy
-de-identification
-anonymization
-credentialed access
-data-use agreement
-governance
-protected health information
-patient confidentiality
-secondary research
-public dataset
-restricted dataset
-data security
-clinical validation
-human subjects
-retrospective
-observational
-deployment
-risk
-fairness
-bias
-subgroup
+thesis-writing/logs/stage_5_5_frozen_content_snapshot.csv
 ```
 
 Required columns:
 
 ```text
-claim_id
+snapshot_id
+artifact_type
 file
-section
-claim_excerpt
-claim_category
-dataset_scope
-required_evidence
-available_evidence
-support_status
-wording_strength
-repair_required
-external_input_required
+line_or_context
+exact_value
+pre_edit_hash
+post_edit_value
+unchanged
+authorized_formatting_exception
 notes
 ```
 
-Support statuses:
+Reader-facing numerical tokens must remain unchanged.
+
+A change in spacing, LaTeX wrapping, or line breaking around an unchanged number is acceptable.
+
+A changed number, sign, denominator, unit, cohort, estimator, sampling condition, or status is blocking.
+
+The exact citation-key set must remain unchanged.
+
+Do not:
+
+* add citations;
+* remove citations;
+* replace citations;
+* edit `references.bib`;
+* edit `catalog.csv`;
+* change bibliography style or sorting.
+
+---
+
+# 7. Baseline build
+
+From:
 
 ```text
-SUPPORTED
-SUPPORTED_WITH_QUALIFICATION
-NEGATIVE_BOUNDARY_SUPPORTED
-EXTERNAL_DOCUMENT_REQUIRED
-UNSUPPORTED
-AMBIGUOUS
+thesis-writing/thesis/
 ```
 
----
+run:
 
-# 8. Mandatory ethics-language boundaries
+```bash
+latexmk -C
+latexmk -xelatex main.tex
+test -f main.pdf
+pdfinfo main.pdf
+```
 
-The thesis must not claim or imply:
+Also run, when available:
 
-* a project-specific IRB approval number that is not documented;
-* a project-specific exemption;
-* informed consent or waiver without evidence;
-* an institutional data-use agreement without evidence;
-* that de-identified public or credentialed data automatically removes all ethical obligations;
-* that access permission equals institutional research approval;
-* that absence of direct identifiers proves zero re-identification risk;
-* that repository access establishes lawful clinical deployment;
-* that clinical validation occurred;
-* that chart review occurred;
-* that fairness was established;
-* that subgroup safety was established;
-* that privacy risk was empirically measured;
-* that data governance was complete;
-* that the DAG or proxy rules received qualified clinical approval;
-* that external figure approval constitutes ethics, clinical, or institutional approval.
+```bash
+qpdf --check main.pdf
+```
 
-Required reader-facing boundary:
+Record:
+
+* return codes;
+* page count;
+* PDF size;
+* PDF SHA-256;
+* unresolved citations;
+* unresolved references;
+* duplicate labels;
+* Biber errors and warnings;
+* fatal errors;
+* missing glyphs;
+* bidi errors;
+* overfull boxes;
+* underfull boxes;
+* `xdvipdfmx` warnings;
+* PDF structural warnings.
+
+Expected Stage 5.4 baseline:
 
 ```text
-The repository does not establish the project-specific institutional approval,
-consent or waiver procedure, data-use agreement, or governance determination.
-These facts must be supplied from authoritative institutional records and must
-not be inferred from dataset access, de-identification, or repository contents.
+109 pages
+48 overfull boxes
+1,157 underfull boxes
+0 unresolved citations
+0 unresolved references
+0 duplicate labels
+0 Biber errors
+0 missing glyphs
+0 bidi errors
+0 fatal errors
+0 xdvipdfmx warnings
 ```
 
-Use equivalent scholarly wording, not necessarily this exact sentence.
+Record deviations without assuming that every warning is a defect.
 
 ---
 
-# 9. Dataset-specific ethics audit
-
-Audit MIMIC-III and PhysioNet 2012 separately.
-
-For each, record:
-
-* dataset description used in thesis;
-* access model described;
-* de-identification claim;
-* credentialing claim;
-* use-agreement claim;
-* citation support;
-* local project approval;
-* institutional approval;
-* consent or waiver;
-* governance record;
-* remaining gap.
-
-Do not merge dataset-level access conditions with project-level institutional approval.
-
-A dataset paper or website-derived statement already represented in an approved citation may support dataset context, but not a project-specific approval claim.
-
----
-
-# 10. Privacy and sensitive-data audit
-
-Inspect the thesis and new reproducibility package for exposure of:
-
-* absolute user paths;
-* usernames;
-* machine names;
-* credentials;
-* access tokens;
-* emails;
-* protected patient identifiers;
-* raw patient-level values;
-* unredacted record identifiers;
-* private storage paths;
-* institutional server names;
-* access-account details.
+# 8. Copy-edit ledger
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_4_privacy_scan.csv
+thesis-writing/logs/stage_5_5_copy_edit_ledger.csv
+```
+
+Use one row per materially distinct edit.
+
+Required columns:
+
+```text
+edit_id
+file
+chapter_or_section
+edit_category
+old_text
+new_text
+scientific_meaning_changed
+number_changed
+citation_changed
+causal_strength_changed
+clinical_strength_changed
+reason
+validation
+```
+
+Every edit must use:
+
+```text
+scientific_meaning_changed=NO
+number_changed=NO
+citation_changed=NO
+causal_strength_changed=NO
+clinical_strength_changed=NO
+```
+
+If an edit cannot honestly satisfy these fields, do not make it.
+
+---
+
+# 9. Language and prose hardening
+
+Inspect every reader-facing source file in full.
+
+Correct only genuine issues involving:
+
+* grammar;
+* punctuation;
+* agreement;
+* articles;
+* prepositions;
+* tense consistency;
+* singular/plural consistency;
+* awkward syntax;
+* redundant phrasing;
+* unclear pronouns;
+* sentence fragments;
+* run-on sentences;
+* parallel structure;
+* repeated words;
+* inconsistent hyphenation;
+* inconsistent capitalization;
+* malformed quotations;
+* inconsistent dash use;
+* inconsistent mathematical punctuation.
+
+Do not rewrite strong, accurate prose merely to create stylistic activity.
+
+Prefer minimal sentence-level edits.
+
+Do not reorganize chapters or move substantive paragraphs.
+
+Do not merge or split paragraphs when doing so changes argumentative structure.
+
+Preserve the established distinction between:
+
+* implementation;
+* execution;
+* archived output;
+* numerical observation;
+* model estimate;
+* descriptive comparison;
+* interpretation;
+* assumption;
+* limitation;
+* future work.
+
+---
+
+# 10. Terminology validation
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_5_terminology_audit.csv
 ```
 
 Required columns:
 
 ```text
-finding_id
-path
-finding_type
-matched_text_or_description
-sensitive
-reader_facing
-authorized_provenance_value
+term_id
+canonical_term
+variants_found
+files
+approved_variant
 repair_required
-disposition
+repair_count
+meaning_preserved
 notes
 ```
 
-Do not copy sensitive content into the audit ledger.
+Standardize, where context permits:
 
-Use a redacted description when necessary.
+```text
+proxy state
+proxy-state exposure
+proxy-state label
+clinically inspired proxy state
+rule-derived label
+algorithmic majority vote
+original cohort
+outcome-downsampled cohort
+in-hospital mortality
+MIMIC-III
+PhysioNet 2012
+STraTS
+GRU
+GRU-D
+TCN
+SAnD
+CausalForestDML
+LinearDML
+CausalPFN
+directed acyclic graph
+DAG
+mean model-estimated CATE
+descriptive matched-pair outcome difference
+directional concordance
+observational adjusted estimate
+```
 
-Historical absolute paths may remain in internal evidence only when required for provenance and when they contain no credentials or protected data.
+Preserve distinctions between:
 
-Reader-facing thesis prose should avoid unnecessary machine-specific paths.
+```text
+exposure ≠ randomized treatment
+proxy state ≠ diagnosis
+rule-derived label ≠ clinical ground truth
+matching difference ≠ CATE
+prediction ≠ causal estimation
+association ≠ causal effect
+agreement ≠ correctness
+robustness ≠ validation
+de-identification ≠ project approval
+dataset access ≠ ethics authorization
+current reproduction ≠ historical producing provenance
+```
+
+Do not globally replace `treatment` when it is part of:
+
+* an estimator’s standard mathematical terminology;
+* a literal code field;
+* a quoted source concept;
+* an accurately bounded methodological description.
+
+Context must control terminology.
 
 ---
 
-# 11. Administrative metadata audit
+# 11. Causal and clinical language preservation
 
-Audit:
+Audit every occurrence of:
 
 ```text
-thesis-writing/thesis/frontmatter/administrative_metadata.tex
-thesis-writing/thesis/frontmatter/title_pages.tex
-thesis-writing/thesis/frontmatter/acknowledgements.tex
-thesis-writing/thesis/frontmatter/abstract_primary.tex
-thesis-writing/thesis/frontmatter/abstract_secondary.tex
-thesis-writing/thesis/frontmatter/keywords.tex
+cause
+causal
+effect
+impact
+treatment
+intervention
+protective
+risk
+significant
+validated
+validation
+diagnosis
+phenotype
+clinical
+recommendation
+deployment
+generalizable
+reproducible
 ```
 
-Create:
+Create one consistency row for each substantive occurrence in:
 
 ```text
-thesis-writing/logs/stage_5_4_administrative_inputs.csv
-```
-
-Required columns:
-
-```text
-input_id
-field
-current_value
-status
-authoritative_provider
-required_format
-where_used
-blocking_for_final_submission
-safe_placeholder_policy
-notes
-```
-
-Required fields include:
-
-```text
-official English title
-official Hebrew title
-author full legal name
-author identification number if required
-department
-faculty
-degree
-supervisor name
-supervisor title
-co-supervisor if applicable
-submission month
-submission year
-committee or approval text
-English-thesis authorization
-institutional ethics wording
-approval or exemption number
-consent or waiver wording
-data-use agreement wording
-acknowledgements
-current official title-page form
-current official approval-page form
-```
-
-Do not infer these fields from:
-
-* GitHub username;
-* repository owner;
-* chat identity;
-* commit author;
-* file metadata;
-* old thesis examples;
-* email addresses;
-* directory names.
-
----
-
-# 12. Reader-facing placeholder policy
-
-No raw drafting placeholder such as:
-
-```text
-TODO
-TBD
-INSERT NAME
-[NAME]
-[DATE]
-[APPROVAL]
-[VALIDATION REQUIRED]
-```
-
-may render in the final PDF.
-
-For unavailable administrative details, use one of these approaches:
-
-1. omit the page or field until supplied;
-2. centralize an explicit non-rendered LaTeX placeholder;
-3. render a neutral draft-only marker only when the document is explicitly labelled as a draft.
-
-Do not make the thesis appear submission-ready while official identity or approval pages are absent.
-
-Audit both source and rendered PDF.
-
----
-
-# 13. Abstract and keyword institutional recheck
-
-Revalidate:
-
-* English abstract word count;
-* Hebrew abstract word count;
-* each under 500 words;
-* equivalent factual content;
-* matching structure;
-* no citations;
-* no footnotes;
-* 10–15 English keywords;
-* 10–15 Hebrew keywords;
-* aligned concepts;
-* Hebrew rendering;
-* embedded Latin terms;
-* abstract-page numbering.
-
-Do not rewrite either abstract unless a compliance or ethics statement is materially inaccurate.
-
----
-
-# 14. TOC, numbering, and document sequence
-
-Verify actual rendered behavior, not only source settings.
-
-Audit:
-
-* title page;
-* internal title or approval page;
-* Hebrew abstract;
-* Hebrew keywords;
-* English abstract;
-* English keywords;
-* acknowledgements, if present;
-* TOC;
-* abbreviations;
-* notation;
-* list of figures;
-* list of tables;
-* chapters;
-* appendices;
-* bibliography.
-
-Record the current sequence.
-
-Classify the sequence as:
-
-```text
-LOCALLY_SUPPORTED
-LOCALLY_SUPPORTED_WITH_ENGLISH_THESIS_QUALIFICATION
-REQUIRES_CURRENT_FACULTY_FORM_CONFIRMATION
-```
-
-Do not alter sequence solely based on assumptions about current forms.
-
-Verify `tocdepth` using the actual rendered TOC. For the standard `report` hierarchy, depth `2` normally includes chapter, section, and subsection.
-
----
-
-# 15. Formatting verification
-
-Programmatically and visually verify:
-
-* A4 dimensions;
-* margin values;
-* effective text block;
-* line spacing;
-* top-centered page numbers;
-* Roman front-matter numbering;
-* Arabic body numbering;
-* figure numbering;
-* table numbering;
-* appendix numbering;
-* bibliography consistency;
-* heading hierarchy;
-* Hebrew direction;
-* no clipped title-page content;
-* no blank administrative page presented as complete.
-
-Create:
-
-```text
-thesis-writing/logs/stage_5_4_format_validation.csv
+thesis-writing/logs/stage_5_5_consistency_audit.csv
 ```
 
 Required columns:
 
 ```text
 check_id
-requirement
-source_setting
-rendered_observation
+file
+term_or_claim
+context
+current_boundary
 status
-repair
+edit_required
+post_edit_boundary
 notes
 ```
 
----
+The thesis must retain that:
 
-# 16. Permitted repairs
+* causal interpretation is conditional on explicit assumptions;
+* proxy states are not diagnoses;
+* proxy exposures may not be manipulable interventions;
+* DAGs are project-specified assumptions;
+* matching is descriptive;
+* estimator agreement is not causal confirmation;
+* no statistical significance is claimed without evidence;
+* no clinical recommendation follows;
+* no prospective or external clinical validation occurred;
+* no fairness validation occurred;
+* project-specific ethics and governance facts require authoritative records.
 
-Permitted repairs include:
-
-* correcting an inaccurate ethics or governance statement;
-* replacing an overclaim with an explicit documentation boundary;
-* removing a raw reader-facing placeholder;
-* correcting keyword count;
-* correcting abstract word-count noncompliance;
-* fixing page-number position;
-* fixing TOC depth if the rendered TOC omits required levels;
-* fixing malformed bilingual direction;
-* removing sensitive paths from reader-facing prose;
-* clarifying that English-thesis authorization remains pending;
-* clarifying that current official forms remain pending;
-* ensuring administrative fields remain centralized and non-invented.
-
-Every repair must be:
-
-* minimal;
-* evidence-supported;
-* logged;
-* non-numerical;
-* non-experimental;
-* unrelated to figure content.
+Do not strengthen or weaken these boundaries except to correct an actual inconsistency.
 
 ---
 
-# 17. Allowed edit scope
+# 12. Abbreviations, notation, and symbols
 
-You may create:
+Audit:
+
+* first use of abbreviations;
+* repeated expansion;
+* acronym capitalization;
+* mathematical symbol definitions;
+* subscript consistency;
+* italic versus upright symbols;
+* hyphenation of multiword modifiers;
+* nomenclature entries;
+* consistency between prose, equations, captions, and tables.
+
+Verify at minimum:
 
 ```text
-thesis-writing/logs/stage_5_4_institutional_compliance.csv
-thesis-writing/logs/stage_5_4_ethics_governance_audit.csv
-thesis-writing/logs/stage_5_4_privacy_scan.csv
-thesis-writing/logs/stage_5_4_administrative_inputs.csv
-thesis-writing/logs/stage_5_4_format_validation.csv
-thesis-writing/logs/stage_5_4_submission_inputs_required.md
-thesis-writing/logs/stage_5_4_evidence_report.md
+DAG
+CATE
+HTE
+DML
+AUROC
+AUPRC
+ICU
+EHR
+MIMIC-III
+STraTS
+GRU-D
+TCN
+SAnD
 ```
 
-You may edit, only for documented repairs:
+Do not add a nomenclature entry unless the term is genuinely used and currently undefined.
+
+Do not remove an existing nomenclature entry merely because it appears infrequently.
+
+---
+
+# 13. Headings and structural consistency
+
+Audit every:
+
+* chapter title;
+* section title;
+* subsection title;
+* paragraph heading;
+* table caption;
+* list entry;
+* appendix heading;
+* bibliography heading.
+
+Check:
+
+* title capitalization;
+* parallel phrasing;
+* numbering;
+* hierarchy;
+* duplicated or near-duplicated headings;
+* overly long headings;
+* consistency with TOC entries;
+* consistency with chapter references in prose.
+
+Do not rename a chapter or section when the change would require conceptual remapping.
+
+Any heading repair must preserve the existing label and reference target.
+
+---
+
+# 14. Cross-reference audit
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_5_cross_reference_audit.csv
+```
+
+Required columns:
+
+```text
+reference_id
+source_file
+reference_command
+target_label
+target_type
+target_exists
+display_context_correct
+capitalization_correct
+spacing_correct
+repair_required
+notes
+```
+
+Verify:
+
+* all labels are unique;
+* every reference resolves;
+* chapter references point to chapters;
+* section references point to the intended sections;
+* table references point to the correct tables;
+* figure references point to the five approved figures;
+* appendix references resolve;
+* references are not duplicated awkwardly;
+* nonbreaking spaces precede references where appropriate;
+* punctuation around citations and references is correct.
+
+The label set and target relationships must remain unchanged.
+
+---
+
+# 15. Table hardening
+
+Do not change table values, row membership, order, evidence status, or scientific wording.
+
+Permitted table repairs are limited to:
+
+* column widths;
+* scoped font sizing;
+* scoped `\tabcolsep`;
+* scoped `\arraystretch`;
+* controlled line breaks;
+* `\allowbreak`;
+* nonbreaking text;
+* repeat-header behavior;
+* caption attachment;
+* continuation formatting;
+* page-break behavior;
+* typographic consistency.
+
+Do not:
+
+* remove rows to improve layout;
+* abbreviate a scientifically necessary value without explanation;
+* change significant digits;
+* replace missing or failed values with zero;
+* shrink a table until it is unreadable;
+* change margins;
+* use landscape orientation unless an existing table is otherwise materially unreadable and the repair is fully documented.
+
+Previously repaired numerical tables must retain exact values.
+
+---
+
+# 16. Layout-warning triage
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_5_layout_warning_ledger.csv
+```
+
+Required columns:
+
+```text
+warning_id
+warning_type
+source_file
+source_line
+box_amount
+pdf_page
+rendered_defect
+severity
+root_cause
+repair
+post_repair_status
+notes
+```
+
+Classify each warning family as:
+
+```text
+MATERIAL_RENDERED_DEFECT
+MINOR_READABILITY_DEFECT
+BENIGN_TEX_DIAGNOSTIC
+LONGTABLE_OR_JUSTIFICATION_ARTIFACT
+UNRESOLVED
+```
+
+Do not chase warning count blindly.
+
+A warning requires repair when it creates:
+
+* clipped text;
+* margin intrusion;
+* overlapping text;
+* detached caption;
+* unreadable table cell;
+* malformed URL;
+* broken identifier;
+* visually excessive spacing;
+* isolated heading;
+* orphaned caption;
+* blank or nearly blank unintended page;
+* incorrect float association;
+* visibly poor Hebrew or mixed-direction layout.
+
+A warning may remain when rendered output is correct and the ledger explains why.
+
+Do not use global:
+
+```text
+\sloppy
+\emergencystretch
+font-size reduction
+margin reduction
+line-spacing reduction
+```
+
+as a blanket warning suppression technique.
+
+Scoped use already present in a difficult table may remain when rendered output is readable.
+
+---
+
+# 17. Full-PDF visual review
+
+Render all PDF pages.
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_5_full_pdf_review.csv
+```
+
+Use one row per physical PDF page.
+
+Required columns:
+
+```text
+physical_page
+printed_page
+document_region
+primary_content
+clipping
+overlap
+margin_intrusion
+header_footer
+heading_quality
+paragraph_spacing
+table_quality
+figure_quality
+rtl_ltr_quality
+blank_page_status
+required_action
+notes
+```
+
+Inspect all pages, not only changed pages.
+
+Review at sufficient resolution to detect:
+
+* clipping;
+* overflow;
+* collisions;
+* malformed tables;
+* detached captions;
+* incorrect page numbers;
+* accidental blank pages;
+* excessive whitespace;
+* widows and orphans where materially distracting;
+* headings stranded at page bottoms;
+* single-line paragraph fragments;
+* broken identifiers;
+* broken equations;
+* malformed minus signs;
+* malformed bibliography entries;
+* Hebrew direction problems;
+* incorrect Latin text inside Hebrew;
+* figure readability;
+* list and TOC alignment.
+
+Use higher-resolution rendering for any page marked uncertain.
+
+Do not use visual inspection to reapprove scientific figure content; that approval is already frozen.
+
+---
+
+# 18. Bilingual front-matter hardening
+
+Reinspect:
+
+```text
+frontmatter/abstract_primary.tex
+frontmatter/abstract_secondary.tex
+frontmatter/keywords.tex
+frontmatter/nomenclature.tex
+```
+
+Verify:
+
+* both abstracts remain below 500 words;
+* both remain factually equivalent;
+* paragraph correspondence is retained;
+* no citation or footnote enters either abstract;
+* all numerical facts remain unchanged;
+* 15 English keywords remain;
+* 15 Hebrew keywords remain;
+* the keyword concepts remain aligned;
+* Hebrew punctuation renders correctly;
+* embedded English names use stable direction handling;
+* no Latin phrase reverses or attaches to the wrong punctuation.
+
+Do not substantively rewrite either abstract.
+
+Do not translate or invent an official Hebrew thesis title.
+
+---
+
+# 19. Administrative-gate preservation
+
+The current PDF intentionally omits official title and approval pages.
+
+Preserve this behavior.
+
+Do not:
+
+* enable `frontmatter/title_pages.tex`;
+* insert an unofficial title page;
+* insert a blank approval page;
+* invent author metadata;
+* infer identity from Git;
+* infer supervisor information;
+* infer department or degree;
+* invent a submission date;
+* invent English-thesis authorization;
+* invent an ethics or governance statement;
+* insert acknowledgements without author-supplied wording.
+
+Treat as externally pending:
+
+* official English title;
+* approved Hebrew title;
+* author details;
+* supervisor details;
+* degree, department, and faculty wording;
+* submission date;
+* current title and approval forms;
+* exact English-thesis sequence;
+* English-thesis authorization;
+* ethics or exemption wording;
+* consent or waiver wording;
+* data-use and governance wording;
+* clinical-review record;
+* acknowledgements.
+
+Do not present the Stage 5.5 PDF as submission ready.
+
+---
+
+# 20. Permitted repairs
+
+Permitted:
+
+* grammar and punctuation corrections;
+* minimal clarity repairs;
+* terminology normalization;
+* capitalization and hyphenation consistency;
+* abbreviation consistency;
+* nonbreaking spaces;
+* LaTeX escaping;
+* controlled line breaks;
+* table width and spacing repairs;
+* heading-spacing repairs;
+* bibliography-page layout repairs that do not edit bibliography data;
+* page composition repairs;
+* RTL/LTR formatting repairs;
+* cross-reference grammar;
+* removal of obsolete internal process language when it appears reader-facing;
+* removal of redundant wording that does not change meaning.
+
+Every substantive-looking edit must have a copy-edit ledger row.
+
+---
+
+# 21. Forbidden content changes
+
+Do not:
+
+* add a result;
+* remove a result;
+* change a value;
+* change a sign;
+* change rounding;
+* change a cohort;
+* change an estimator;
+* change evidence hierarchy;
+* change a failure status;
+* change a missing status;
+* add a confidence interval;
+* add a statistical test;
+* add significance language;
+* change an estimand;
+* pool datasets;
+* change result interpretation;
+* add or remove literature;
+* add or remove citations;
+* modify a figure or caption;
+* change the DAG;
+* modify research code;
+* run research code;
+* insert external administrative facts;
+* begin the final release stage.
+
+---
+
+# 22. Allowed edit scope
+
+You may edit:
 
 ```text
 thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/*.tex
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
-thesis-writing/thesis/chapters/09_experimental_design.tex
-thesis-writing/thesis/chapters/11_discussion.tex
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
+thesis-writing/thesis/frontmatter/abstract_primary.tex
+thesis-writing/thesis/frontmatter/abstract_secondary.tex
+thesis-writing/thesis/frontmatter/keywords.tex
+thesis-writing/thesis/frontmatter/nomenclature.tex
+thesis-writing/thesis/chapters/*.tex
 thesis-writing/thesis/appendices/appendices.tex
 thesis-writing/logs/unresolved_placeholders.md
 thesis-writing/logs/deferred_fixes.md
@@ -749,9 +1067,31 @@ You may regenerate:
 thesis-writing/thesis/main.pdf
 ```
 
+You may create:
+
+```text
+thesis-writing/logs/stage_5_5_frozen_content_snapshot.csv
+thesis-writing/logs/stage_5_5_copy_edit_ledger.csv
+thesis-writing/logs/stage_5_5_terminology_audit.csv
+thesis-writing/logs/stage_5_5_consistency_audit.csv
+thesis-writing/logs/stage_5_5_cross_reference_audit.csv
+thesis-writing/logs/stage_5_5_layout_warning_ledger.csv
+thesis-writing/logs/stage_5_5_full_pdf_review.csv
+thesis-writing/logs/stage_5_5_release_handoff.md
+thesis-writing/logs/stage_5_5_evidence_report.md
+```
+
+Read but do not edit:
+
+```text
+thesis-writing/thesis/frontmatter/administrative_metadata.tex
+thesis-writing/thesis/frontmatter/title_pages.tex
+thesis-writing/thesis/frontmatter/acknowledgements.tex
+```
+
 ---
 
-# 18. Forbidden edit scope
+# 23. Forbidden edit scope
 
 Do not edit:
 
@@ -760,93 +1100,85 @@ prompt.txt
 thesis-writing/thesis/figures/
 thesis-writing/results/
 thesis-writing/reproducibility/
-thesis-writing/logs/stage_5_1_*
-thesis-writing/logs/stage_5_2_*
-thesis-writing/logs/stage_5_3_*
 thesis-writing/literature/
 thesis-writing/audit/
 thesis-writing/planning/
+thesis-writing/logs/stage_5_1_*
+thesis-writing/logs/stage_5_2_*
+thesis-writing/logs/stage_5_3_*
+thesis-writing/logs/stage_5_4_*
 causal-irregular-time-series/
 STraTS/
+README.md
+SCRIPTS.md
 router.py
+fix_preprocessor.py
 requirements*.txt
 tests/
 ```
 
-Do not modify research code.
-
-Do not run source-code pipelines.
-
-Do not rerun preprocessing, training, prediction, matching, CATE estimation, sensitivity analysis, permutation analysis, or figure generation.
-
-Do not browse the web.
-
-Do not download official forms.
-
-Do not create a figure.
-
-Do not change a result value or table value.
+Do not create new figures, tables, results, bibliography records, or research artifacts.
 
 ---
 
-# 19. Submission-input checklist
+# 24. Post-edit static validation
 
-Create:
+After editing, compare the pre-edit and post-edit snapshots.
 
-```text
-thesis-writing/logs/stage_5_4_submission_inputs_required.md
-```
-
-Organize it into:
-
-## Required from author
-
-* official identity details;
-* acknowledgements;
-* desired final title confirmation;
-* Hebrew title approval.
-
-## Required from supervisor or department
-
-* title ratification;
-* English-thesis authorization;
-* supervisor titles;
-* degree and department wording;
-* thesis sequence confirmation;
-* current official forms;
-* committee or signature requirements.
-
-## Required from institution or data-governance authority
-
-* ethics approval, exemption, or determination wording;
-* approval number;
-* consent or waiver wording;
-* data-use agreement wording;
-* governance wording;
-* any required privacy statement.
-
-## Required from qualified clinical reviewer
-
-* proxy-rule review;
-* DAG review;
-* clinical-language review;
-* accepted/rejected decision record.
-
-For each item include:
+Require:
 
 ```text
-required
-why required
-where inserted
-authoritative provider
-acceptable evidence
-current status
-submission blocking
+reader-facing numerical changes = 0
+citation-key additions = 0
+citation-key removals = 0
+label additions = 0 unless purely structural and explicitly authorized
+label removals = 0
+unresolved references = 0
+figure-file changes = 0
+figure-caption changes = 0
+table-value changes = 0
+protected-file changes = 0
 ```
+
+Verify that every copy-edit ledger row preserves meaning.
+
+Search for raw drafting markers:
+
+```text
+TODO
+TBD
+FIXME
+XXX
+INSERT
+PLACEHOLDER
+NEEDS RESULT
+NEEDS EVIDENCE
+NEEDS CITATION
+ADVISOR CHECK
+VALIDATION REQUIRED
+```
+
+A source-only centralized administrative macro may remain when it is not rendered and is already tracked by Stage 5.4.
+
+No raw marker may appear in extracted PDF text.
+
+Search for reader-facing process jargon such as:
+
+```text
+Stage 4
+Stage 5
+Codex
+prompt task
+audit row
+repair pass
+current stage
+```
+
+Retain only wording that is genuinely part of documented methodology or provenance. Remove obsolete workflow narration from thesis prose.
 
 ---
 
-# 20. Build and visual inspection
+# 25. Final build
 
 Run:
 
@@ -856,37 +1188,30 @@ latexmk -C
 latexmk -xelatex main.tex
 test -f main.pdf
 pdfinfo main.pdf
+qpdf --check main.pdf
 ```
+
+If `qpdf` is unavailable, record that fact rather than installing it.
 
 Record:
 
 * page count;
+* file size;
 * PDF SHA-256;
-* unresolved citations;
-* unresolved references;
+* compilation return code;
+* undefined citations;
+* undefined references;
 * duplicate labels;
-* fatal errors;
 * Biber errors and warnings;
 * missing glyphs;
 * bidi errors;
-* overfull boxes;
-* underfull boxes;
-* `xdvipdfmx` warnings.
+* fatal errors;
+* overfull warnings;
+* underfull warnings;
+* `xdvipdfmx` warnings;
+* PDF structural status.
 
-Render and inspect:
-
-* every title and approval page;
-* both abstracts;
-* both keyword blocks;
-* TOC;
-* nomenclature;
-* lists;
-* Chapter 4 data description;
-* Chapter 9 reproducibility section;
-* Chapter 11 limitations and ethics language;
-* Chapter 12 conclusions/future work;
-* appendix;
-* bibliography transition.
+Render all pages again after the final build and complete the full-PDF ledger.
 
 After inspection:
 
@@ -894,222 +1219,334 @@ After inspection:
 latexmk -c
 ```
 
-Retain `main.pdf`.
+Retain:
 
-No auxiliary file may remain tracked or retained.
+```text
+main.pdf
+```
+
+Do not retain LaTeX auxiliary files.
 
 ---
 
-# 21. Protected-file validation
+# 26. Protected-file validation
 
-Recalculate hashes and prove:
+Recalculate all protected hashes.
 
-* all checked CSVs unchanged;
-* all result records unchanged;
-* reproducibility package unchanged;
-* all five figures unchanged;
-* generators unchanged;
-* research code unchanged;
-* literature unchanged.
+Prove:
 
-If any externally approved figure changes, report:
+* all five figures are byte-identical;
+* all checked CSVs are unchanged;
+* all result records are unchanged;
+* the reproducibility package is unchanged;
+* literature is unchanged;
+* research code is unchanged;
+* prior-stage logs are unchanged;
+* figure generators and DAG generators are unchanged.
+
+If a protected file changes, report:
 
 ```text
-BLOCKED — EXTERNALLY APPROVED FIGURE MODIFIED
+BLOCKED — PROTECTED EVIDENCE OR SOURCE MODIFIED
+```
+
+If a figure or figure caption changes, report:
+
+```text
+BLOCKED — EXTERNALLY APPROVED FIGURE RECORD MODIFIED
 ```
 
 ---
 
-# 22. Stage 5.4 evidence report
+# 27. Release handoff
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_4_evidence_report.md
+thesis-writing/logs/stage_5_5_release_handoff.md
+```
+
+Include:
+
+## Document state
+
+* final Stage 5.5 commit baseline;
+* PDF page count;
+* PDF hash;
+* build command;
+* warning summary;
+* full-page review status.
+
+## Frozen evidence state
+
+* results unchanged;
+* figures unchanged;
+* citations unchanged;
+* numerical claims unchanged;
+* causal and clinical boundaries unchanged.
+
+## Authoritative inputs still required
+
+Carry forward the Stage 5.4 submission-input checklist without inventing values.
+
+## Exact insertion locations
+
+Identify where each future authoritative input must be inserted:
+
+* administrative metadata;
+* current title page;
+* approval page;
+* acknowledgements;
+* ethics/governance statement;
+* final PDF metadata.
+
+## Final Release Audit requirements
+
+State that the final audit must:
+
+1. insert only supplied authoritative information;
+2. verify current forms and sequence;
+3. run a clean build;
+4. inspect the complete final PDF;
+5. verify all protected hashes;
+6. verify no placeholders or sensitive paths;
+7. produce final submission and archival PDFs;
+8. produce final SHA-256 checksums;
+9. obtain human author and supervisor sign-off.
+
+Do not perform these steps now.
+
+---
+
+# 28. Stage 5.5 evidence report
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_5_evidence_report.md
 ```
 
 Use this structure.
 
-## 22.1 Repository baseline
+## 28.1 Repository baseline
 
 * head;
 * parent;
 * branch;
 * worktree;
-* Stage 5.3 scope.
+* nested worktrees;
+* Stage 5.4 readiness.
 
-## 22.2 Institutional sources
+## 28.2 No-research-execution confirmation
 
-* exact local files;
-* PDF pages inspected;
-* limits of local authority.
+List document commands executed.
 
-## 22.3 Institutional compliance
+Explicitly confirm that no project source code, research module, pipeline, notebook, test suite, or figure generator was executed.
 
-Report counts by status.
+## 28.3 Protected baseline
 
-## 22.4 Formatting
+* protected paths;
+* initial hashes;
+* figure hashes;
+* thesis source hashes.
 
-* page size;
-* margins;
-* spacing;
-* numbering;
-* TOC;
-* figures/tables;
-* nomenclature;
-* bibliography;
-* sequence.
-
-## 22.5 Abstracts and keywords
-
-* word counts;
-* alignment;
-* keyword counts;
-* rendering.
-
-## 22.6 Ethics and governance
-
-Report counts by support status and every repair.
-
-## 22.7 Dataset-specific ethics
-
-Separate MIMIC-III and PhysioNet 2012.
-
-## 22.8 Privacy scan
-
-* paths scanned;
-* sensitive findings;
-* repairs;
-* confirmation that no protected patient data were copied.
-
-## 22.9 Administrative metadata
-
-* resolved fields;
-* unresolved fields;
-* fields intentionally not inferred.
-
-## 22.10 Official-form and authorization gates
-
-* current faculty forms;
-* English-thesis authorization;
-* title-page order;
-* approval page;
-* institutional wording.
-
-## 22.11 Thesis repairs
-
-For each:
-
-```text
-path
-old wording
-new wording
-evidence
-reason
-```
-
-## 22.12 Submission inputs
-
-Summarize the required-input checklist.
-
-## 22.13 Files changed
-
-List exact paths.
-
-## 22.14 Protected-file validation
-
-* protected count;
-* changed count;
-* figure hashes.
-
-## 22.15 Final build and render
+## 28.4 Baseline build
 
 * page count;
 * PDF hash;
-* compilation;
-* warnings;
-* visual inspection.
+* warning profile;
+* structural validation.
 
-## 22.16 Remaining gates
+## 28.5 Frozen-content snapshot
 
-Carry forward only unresolved external inputs.
+* numerical tokens;
+* citations;
+* labels;
+* references;
+* captions;
+* figure set.
 
-## 22.17 Readiness decision
+## 28.6 Copy editing
+
+* files reviewed;
+* edit count by category;
+* representative repairs;
+* confirmation of unchanged scientific meaning.
+
+## 28.7 Terminology and notation
+
+* terms checked;
+* inconsistencies repaired;
+* intentionally retained variants.
+
+## 28.8 Causal and clinical boundaries
+
+* occurrences audited;
+* repairs;
+* confirmation that no claim was strengthened.
+
+## 28.9 Cross-references
+
+* labels;
+* references;
+* unresolved count;
+* repairs.
+
+## 28.10 Layout warnings
+
+Report counts by:
+
+```text
+MATERIAL_RENDERED_DEFECT
+MINOR_READABILITY_DEFECT
+BENIGN_TEX_DIAGNOSTIC
+LONGTABLE_OR_JUSTIFICATION_ARTIFACT
+UNRESOLVED
+```
+
+## 28.11 Full-PDF visual review
+
+* pages reviewed;
+* pages repaired;
+* remaining visual defects;
+* title-page omission status;
+* RTL/LTR result.
+
+## 28.12 Bilingual front matter
+
+* abstract counts;
+* keyword counts;
+* factual equivalence;
+* rendering.
+
+## 28.13 Administrative gates
+
+* official forms;
+* English authorization;
+* official metadata;
+* ethics/governance wording;
+* clinical-review record.
+
+## 28.14 Files changed
+
+List exact paths.
+
+## 28.15 Frozen-content comparison
+
+Report:
+
+* changed numerical tokens;
+* changed citation keys;
+* changed labels;
+* changed figure captions;
+* changed table values.
+
+Every count must be zero.
+
+## 28.16 Protected-file validation
+
+* total protected files;
+* changed count;
+* five figure hashes.
+
+## 28.17 Final build
+
+* page count;
+* PDF hash;
+* compilation result;
+* warning counts;
+* PDF structural check;
+* full-page inspection result.
+
+## 28.18 Release handoff
+
+* remaining authoritative inputs;
+* exact next action.
+
+## 28.19 Readiness decision
 
 Use exactly one:
 
 ```text
-READY FOR STAGE 5.5 WITH NON-BLOCKING ADMINISTRATIVE GATES
-BLOCKED BEFORE STAGE 5.5
+READY FOR FINAL RELEASE PREPARATION WITH EXTERNAL SUBMISSION INPUTS PENDING
+BLOCKED BEFORE FINAL RELEASE PREPARATION
 ```
 
 ---
 
-# 23. Readiness rules
+# 29. Readiness rules
 
 Use:
 
 ```text
-READY FOR STAGE 5.5 WITH NON-BLOCKING ADMINISTRATIVE GATES
+READY FOR FINAL RELEASE PREPARATION WITH EXTERNAL SUBMISSION INPUTS PENDING
 ```
 
 only if:
 
-* all locally checkable requirements pass;
-* all ethics and governance prose is accurate;
-* no approval is invented;
-* no sensitive reader-facing path remains;
-* abstract and keyword requirements pass;
-* missing official details are precisely tracked;
-* current forms and English authorization remain explicit external gates;
-* no protected file changed;
-* the thesis builds.
+* no research code was run;
+* no protected source changed;
+* no figure or figure caption changed;
+* no result number changed;
+* no citation key changed;
+* no scientific claim changed;
+* no causal or clinical claim was strengthened;
+* all material rendered defects were repaired;
+* remaining warnings are classified and visually benign;
+* all pages were reviewed;
+* no raw placeholder appears in the PDF;
+* bilingual content renders correctly;
+* the thesis builds successfully;
+* external administrative gates remain explicit.
 
 Use:
 
 ```text
-BLOCKED BEFORE STAGE 5.5
+BLOCKED BEFORE FINAL RELEASE PREPARATION
 ```
 
 if:
 
-* a locally repairable institutional violation remains;
-* an unsupported ethics claim remains;
-* a fabricated approval or consent claim remains;
-* sensitive information is exposed;
-* a reader-facing raw placeholder remains;
-* abstracts exceed the limit;
+* a protected file changed;
+* a figure or caption changed;
+* a numerical token changed;
+* a citation was added or removed;
+* a scientific interpretation changed;
+* an unsupported causal or clinical claim remains;
+* a material visual defect remains;
+* a raw placeholder renders;
 * Hebrew rendering fails;
-* protected evidence changes;
-* a figure changes;
-* the thesis fails to build.
-
-Administrative details that only the author, supervisor, department, or institution can supply are not by themselves a reason to block Stage 5.5, provided they are clearly and accurately tracked and not fabricated.
+* the thesis fails to build;
+* research code was executed.
 
 ---
 
-# 24. Final Codex response
+# 30. Final Codex response
 
 Report:
 
 1. verified head and parent;
 2. readiness status;
-3. locally compliant institutional requirements;
-4. locally repaired requirements;
-5. ethics/governance findings and repairs;
-6. privacy findings;
-7. abstract and keyword result;
-8. administrative fields still missing;
-9. official-form and English-authorization gates;
-10. files changed;
-11. protected-file result;
-12. confirmation that all five figures are unchanged;
-13. final page count and PDF hash;
-14. build/render result;
-15. exact next authorized stage.
+3. confirmation that no research code was executed;
+4. files reviewed;
+5. copy edits by category;
+6. terminology repairs;
+7. causal and clinical boundary result;
+8. cross-reference result;
+9. baseline and final warning counts;
+10. material layout defects repaired;
+11. benign warnings retained;
+12. complete PDF-review result;
+13. frozen-number result;
+14. frozen-citation result;
+15. five figure hashes and unchanged status;
+16. files changed;
+17. final page count and PDF hash;
+18. remaining authoritative inputs;
+19. exact next authorized action.
 
 Do not commit or push.
 
 Do not edit `prompt.txt`.
 
-Do not begin Stage 5.5.
+Do not begin the Final Release Audit.
