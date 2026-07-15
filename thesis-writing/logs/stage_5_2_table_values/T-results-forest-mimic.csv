@@ -1,0 +1,37 @@
+table_id,row_key,field,source_exact,expected_display,actual_display,match,notes
+tab:results-forest-mimic,LAT_CARDIAC_STRAIN,prevalence,checked_cate_candidates.csv:treatment_rate,0.178,0.178,YES,
+tab:results-forest-mimic,LAT_CARDIAC_STRAIN,mean_cate,checked_cate_candidates.csv:mean_cate,0.220,0.220,YES,
+tab:results-forest-mimic,LAT_CARDIAC_STRAIN,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M1,M1,YES,"Age, Gender, LAT_CHRONIC_BURDEN"
+tab:results-forest-mimic,LAT_CARDIAC_STRAIN,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_INFLAMMATION_SEPSIS,prevalence,checked_cate_candidates.csv:treatment_rate,0.472,0.472,YES,
+tab:results-forest-mimic,LAT_INFLAMMATION_SEPSIS,mean_cate,checked_cate_candidates.csv:mean_cate,0.161,0.161,YES,
+tab:results-forest-mimic,LAT_INFLAMMATION_SEPSIS,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M0,M0,YES,
+tab:results-forest-mimic,LAT_INFLAMMATION_SEPSIS,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_HEPATIC_COAG_DYSFUNCTION,prevalence,checked_cate_candidates.csv:treatment_rate,0.241,0.241,YES,
+tab:results-forest-mimic,LAT_HEPATIC_COAG_DYSFUNCTION,mean_cate,checked_cate_candidates.csv:mean_cate,0.098,0.098,YES,
+tab:results-forest-mimic,LAT_HEPATIC_COAG_DYSFUNCTION,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M2,M2,YES,"LAT_INFLAMMATION_SEPSIS, LAT_SHOCK"
+tab:results-forest-mimic,LAT_HEPATIC_COAG_DYSFUNCTION,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_RENAL_DYSFUNCTION,prevalence,checked_cate_candidates.csv:treatment_rate,0.363,0.363,YES,
+tab:results-forest-mimic,LAT_RENAL_DYSFUNCTION,mean_cate,checked_cate_candidates.csv:mean_cate,0.091,0.091,YES,
+tab:results-forest-mimic,LAT_RENAL_DYSFUNCTION,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M3,M3,YES,"LAT_CHRONIC_BURDEN, LAT_SHOCK"
+tab:results-forest-mimic,LAT_RENAL_DYSFUNCTION,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_GLOBAL_SEVERITY,prevalence,checked_cate_candidates.csv:treatment_rate,0.719,0.719,YES,
+tab:results-forest-mimic,LAT_GLOBAL_SEVERITY,mean_cate,checked_cate_candidates.csv:mean_cate,0.062,0.062,YES,
+tab:results-forest-mimic,LAT_GLOBAL_SEVERITY,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M4,M4,YES,"Age, Gender, LAT_CHRONIC_BURDEN, LAT_INFLAMMATION_SEPSIS"
+tab:results-forest-mimic,LAT_GLOBAL_SEVERITY,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_RESPIRATORY_FAILURE,prevalence,checked_cate_candidates.csv:treatment_rate,0.590,0.590,YES,
+tab:results-forest-mimic,LAT_RESPIRATORY_FAILURE,mean_cate,checked_cate_candidates.csv:mean_cate,0.036,0.036,YES,
+tab:results-forest-mimic,LAT_RESPIRATORY_FAILURE,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M5,M5,YES,"Age, Gender, LAT_CHRONIC_BURDEN, LAT_GLOBAL_SEVERITY, LAT_INFLAMMATION_SEPSIS"
+tab:results-forest-mimic,LAT_RESPIRATORY_FAILURE,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_NEUROLOGIC_DYSFUNCTION,prevalence,checked_cate_candidates.csv:treatment_rate,0.434,0.434,YES,
+tab:results-forest-mimic,LAT_NEUROLOGIC_DYSFUNCTION,mean_cate,checked_cate_candidates.csv:mean_cate,0.034,0.034,YES,
+tab:results-forest-mimic,LAT_NEUROLOGIC_DYSFUNCTION,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M5,M5,YES,"Age, Gender, LAT_CHRONIC_BURDEN, LAT_GLOBAL_SEVERITY, LAT_INFLAMMATION_SEPSIS"
+tab:results-forest-mimic,LAT_NEUROLOGIC_DYSFUNCTION,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_SHOCK,prevalence,checked_cate_candidates.csv:treatment_rate,0.540,0.540,YES,
+tab:results-forest-mimic,LAT_SHOCK,mean_cate,checked_cate_candidates.csv:mean_cate,0.021,0.021,YES,
+tab:results-forest-mimic,LAT_SHOCK,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M6,M6,YES,"Age, Gender, LAT_CARDIAC_STRAIN, LAT_CHRONIC_BURDEN, LAT_INFLAMMATION_SEPSIS"
+tab:results-forest-mimic,LAT_SHOCK,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-mimic,LAT_METABOLIC_DERANGEMENT,prevalence,checked_cate_candidates.csv:treatment_rate,0.373,0.373,YES,
+tab:results-forest-mimic,LAT_METABOLIC_DERANGEMENT,mean_cate,checked_cate_candidates.csv:mean_cate,0.020,0.020,YES,
+tab:results-forest-mimic,LAT_METABOLIC_DERANGEMENT,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,M7,M7,YES,"LAT_GLOBAL_SEVERITY, LAT_RENAL_DYSFUNCTION, LAT_RESPIRATORY_FAILURE, LAT_SHOCK"
+tab:results-forest-mimic,LAT_METABOLIC_DERANGEMENT,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,

@@ -1,0 +1,41 @@
+table_id,row_key,field,source_exact,expected_display,actual_display,match,notes
+tab:results-forest-physionet,LAT_RENAL_DYSFUNCTION,prevalence,checked_cate_candidates.csv:treatment_rate,0.230,0.230,YES,
+tab:results-forest-physionet,LAT_RENAL_DYSFUNCTION,mean_cate,checked_cate_candidates.csv:mean_cate,0.120,0.120,YES,
+tab:results-forest-physionet,LAT_RENAL_DYSFUNCTION,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P1,P1,YES,"ICUType_1, ICUType_2, ICUType_3, ICUType_4, LAT_CARDIAC_INJURY_STRAIN, LAT_INFLAMMATION_SEPSIS_BURDEN, LAT_SHOCK"
+tab:results-forest-physionet,LAT_RENAL_DYSFUNCTION,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_CARDIAC_INJURY_STRAIN,prevalence,checked_cate_candidates.csv:treatment_rate,0.355,0.355,YES,
+tab:results-forest-physionet,LAT_CARDIAC_INJURY_STRAIN,mean_cate,checked_cate_candidates.csv:mean_cate,0.112,0.112,YES,
+tab:results-forest-physionet,LAT_CARDIAC_INJURY_STRAIN,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P2,P2,YES,"ICUType_1, ICUType_2, ICUType_3, ICUType_4"
+tab:results-forest-physionet,LAT_CARDIAC_INJURY_STRAIN,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_GLOBAL_SEVERITY,prevalence,checked_cate_candidates.csv:treatment_rate,0.777,0.777,YES,
+tab:results-forest-physionet,LAT_GLOBAL_SEVERITY,mean_cate,checked_cate_candidates.csv:mean_cate,0.108,0.108,YES,
+tab:results-forest-physionet,LAT_GLOBAL_SEVERITY,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P3,P3,YES,"Age, Gender, ICUType_1, ICUType_2, ICUType_3, ICUType_4, LAT_CHRONIC_BASELINE_RISK, LAT_INFLAMMATION_SEPSIS_BURDEN, Weight"
+tab:results-forest-physionet,LAT_GLOBAL_SEVERITY,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_HEPATIC_DYSFUNCTION,prevalence,checked_cate_candidates.csv:treatment_rate,0.142,0.142,YES,
+tab:results-forest-physionet,LAT_HEPATIC_DYSFUNCTION,mean_cate,checked_cate_candidates.csv:mean_cate,0.091,0.091,YES,
+tab:results-forest-physionet,LAT_HEPATIC_DYSFUNCTION,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P1,P1,YES,"ICUType_1, ICUType_2, ICUType_3, ICUType_4, LAT_CARDIAC_INJURY_STRAIN, LAT_INFLAMMATION_SEPSIS_BURDEN, LAT_SHOCK"
+tab:results-forest-physionet,LAT_HEPATIC_DYSFUNCTION,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_NEUROLOGIC_DYSFUNCTION,prevalence,checked_cate_candidates.csv:treatment_rate,0.659,0.659,YES,
+tab:results-forest-physionet,LAT_NEUROLOGIC_DYSFUNCTION,mean_cate,checked_cate_candidates.csv:mean_cate,0.082,0.082,YES,
+tab:results-forest-physionet,LAT_NEUROLOGIC_DYSFUNCTION,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P0,P0,YES,
+tab:results-forest-physionet,LAT_NEUROLOGIC_DYSFUNCTION,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_METABOLIC_DERANGEMENT,prevalence,checked_cate_candidates.csv:treatment_rate,0.558,0.558,YES,
+tab:results-forest-physionet,LAT_METABOLIC_DERANGEMENT,mean_cate,checked_cate_candidates.csv:mean_cate,0.078,0.078,YES,
+tab:results-forest-physionet,LAT_METABOLIC_DERANGEMENT,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P4,P4,YES,"LAT_RENAL_DYSFUNCTION, LAT_RESPIRATORY_FAILURE, LAT_SHOCK"
+tab:results-forest-physionet,LAT_METABOLIC_DERANGEMENT,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_INFLAMMATION_SEPSIS_BURDEN,prevalence,checked_cate_candidates.csv:treatment_rate,0.563,0.563,YES,
+tab:results-forest-physionet,LAT_INFLAMMATION_SEPSIS_BURDEN,mean_cate,checked_cate_candidates.csv:mean_cate,0.072,0.072,YES,
+tab:results-forest-physionet,LAT_INFLAMMATION_SEPSIS_BURDEN,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P0,P0,YES,
+tab:results-forest-physionet,LAT_INFLAMMATION_SEPSIS_BURDEN,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_RESPIRATORY_FAILURE,prevalence,checked_cate_candidates.csv:treatment_rate,0.614,0.614,YES,
+tab:results-forest-physionet,LAT_RESPIRATORY_FAILURE,mean_cate,checked_cate_candidates.csv:mean_cate,0.065,0.065,YES,
+tab:results-forest-physionet,LAT_RESPIRATORY_FAILURE,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P0,P0,YES,
+tab:results-forest-physionet,LAT_RESPIRATORY_FAILURE,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_COAG_HEME_DYSFUNCTION,prevalence,checked_cate_candidates.csv:treatment_rate,0.395,0.395,YES,
+tab:results-forest-physionet,LAT_COAG_HEME_DYSFUNCTION,mean_cate,checked_cate_candidates.csv:mean_cate,0.011,0.011,YES,
+tab:results-forest-physionet,LAT_COAG_HEME_DYSFUNCTION,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P5,P5,YES,"LAT_INFLAMMATION_SEPSIS_BURDEN, LAT_SHOCK"
+tab:results-forest-physionet,LAT_COAG_HEME_DYSFUNCTION,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,
+tab:results-forest-physionet,LAT_SHOCK,prevalence,checked_cate_candidates.csv:treatment_rate,0.696,0.696,YES,
+tab:results-forest-physionet,LAT_SHOCK,mean_cate,checked_cate_candidates.csv:mean_cate,-0.014,-0.014,YES,
+tab:results-forest-physionet,LAT_SHOCK,adjustment_code,checked_cate_candidates.csv:observed_confounders + chapter code mapping,P6,P6,YES,"ICUType_1, ICUType_2, ICUType_3, ICUType_4, LAT_CARDIAC_INJURY_STRAIN, LAT_INFLAMMATION_SEPSIS_BURDEN"
+tab:results-forest-physionet,LAT_SHOCK,status,checked_cate_candidates.csv:identifiable_with_available_nodes,Identifiability unresolved,Identifiability unresolved,YES,

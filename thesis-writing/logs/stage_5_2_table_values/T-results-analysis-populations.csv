@@ -1,0 +1,7 @@
+table_id,row_key,field,source_exact,expected_display,actual_display,match,notes
+tab:results-analysis-populations,MIMIC-III,records,checked_cate_candidates.csv:model_n original all estimators,"26,845","26,845",YES,
+tab:results-analysis-populations,MIMIC-III,sampling,checked_cate_candidates.csv:sampling_condition,Original,Original,YES,
+tab:results-analysis-populations,MIMIC-III,scope,selection hierarchy,Primary,Primary,YES,
+tab:results-analysis-populations,PhysioNet 2012,records,checked_cate_candidates.csv:model_n original all estimators,"7,993","7,993",YES,
+tab:results-analysis-populations,PhysioNet 2012,sampling,checked_cate_candidates.csv:sampling_condition,Original,Original,YES,
+tab:results-analysis-populations,PhysioNet 2012,scope,selection hierarchy,Primary,Primary,YES,

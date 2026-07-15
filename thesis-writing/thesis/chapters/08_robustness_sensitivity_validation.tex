@@ -12,6 +12,10 @@ Matching is greedy, one-to-one, and based on a binary representation of the sele
 
 Dedicated propensity-score distributions, common-support plots, covariate balance before and after matching, standardized mean differences, weighting effective sample sizes, treatment-probability histograms, and formal positivity diagnostics were not found in the approved archive.  Not every analysis necessarily requires every one of these diagnostics, but their absence limits the strength of overlap claims.  Limited overlap is a general concern for observational effect estimation, not evidence that this repository satisfies positivity \cite{crump_et_al_2009_limited_overlap}.
 
+\begingroup
+\small
+\sloppy
+\setlength{\tabcolsep}{2.5pt}
 \begin{longtable}{@{}p{0.15\textwidth}p{0.15\textwidth}p{0.18\textwidth}p{0.20\textwidth}p{0.10\textwidth}@{}}
 \caption{Overlap and support diagnostic design; this table contains no numerical results.}
 \label{tab:overlap-support-design}\\
@@ -23,13 +27,14 @@ Diagnostic & Repository source & What it assesses & What it does not establish &
 Diagnostic & Repository source & What it assesses & What it does not establish & Result status \\
 \midrule
 \endhead
-Treated/control counts, pairs, and match rate & \texttt{matching/global\_summary.csv}; per-treatment summaries & Whether the implemented matcher found comparison pairs & Propensity overlap, covariate balance, or positivity & archived; indirect only \\
-Final Hamming distance and sufficient-pair flags & \texttt{matching\_causal\_effect.py}; matching summaries & Similarity under the binary matching representation and support warnings & Similarity in the original covariate space or a target-population guarantee & implemented; archived \\
+Treated versus control counts, pairs, and match rate & \nolinkurl{matching/global_summary.csv}; per-treatment summaries & Whether the implemented matcher found comparison pairs & Propensity overlap, covariate balance, or positivity & archived; indirect only \\
+Final Hamming distance and sufficient-pair flags & \nolinkurl{matching_causal_effect.py}; matching summaries & Similarity under the binary matching representation and support warnings & Similarity in the original covariate space or a target-population guarantee & implemented; archived \\
 Matching failure reason & Per-treatment summaries; cross-run matching-failure table & Why a matching contrast was not produced & A zero effect or absence of an exposure effect & archived \\
-Propensity/common-support and balance diagnostics & Approved archive search & Dedicated treatment-probability and pre/post-match balance evidence & Any conclusion about their value in a particular run & not found \\
+Propensity, common-support, and balance diagnostics & Approved archive search & Dedicated treatment-probability and pre/post-match balance evidence & Any conclusion about their value in a particular run & not found \\
 Thesis support display & Validated original-cohort matching table in Chapter~\ref{chap:results} & Pair availability, match rates, accepted distance, and warning or failure status & Empirical positivity or covariate balance & Selected descriptive support summary \\
 \bottomrule
 \end{longtable}
+\endgroup
 
 \section{Sensitivity and Robustness Values}
 \label{sec:robustness-sensitivity-validation-design:sensitivity-robustness-values}
@@ -46,6 +51,10 @@ Benchmark-confounder analysis seeks an interpretable scale: it compares a hypoth
 
 The CausalPFN branch does not implement the same EconML residual, interval, sensitivity, or permutation workflow.  Its missing diagnostics are therefore not zero sensitivity or robustness.  The citation and validation limitation for CausalPFN stated in Chapter~\ref{chap:causal-graph-effect-estimation-methodology} remains in force.
 
+\begingroup
+\small
+\sloppy
+\setlength{\tabcolsep}{2.5pt}
 \begin{longtable}{@{}p{0.12\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.15\textwidth}p{0.14\textwidth}p{0.12\textwidth}@{}}
 \caption{Sensitivity-diagnostic design and interpretation boundary.}
 \label{tab:sensitivity-diagnostic-design}\\
@@ -59,13 +68,14 @@ Diagnostic type & Source stage & Applicable estimators & Required saved object &
 \endhead
 Method availability & CATE fitting & EconML branches & Fitted estimator metadata & Boolean availability and errors & API availability is not a diagnostic value \\
 Saved-training direct & CATE fitting & EconML branches where callable & Schema-versioned model artifact & Value plus source/error fields & Interpret only as labelled direct training-time evidence \\
-Saved-artifact recomputed & Saved-CATE analysis & Non-PFN when artifact/environment permits & Model artifact and reconstructed inputs & CSV/report source fields & Later recomputation can differ from training-time access \\
+Saved-artifact recomputed & Saved-CATE analysis & Non-PFN when artifact or environment permits & Model artifact and reconstructed inputs & CSV/report source fields & Later recomputation can differ from training-time access \\
 Fallback diagnostic & Saved-CATE analysis & Non-PFN when direct paths fail & Serialized parameters or residual information & Explicit fallback source and warnings & Not identical to estimator-native output \\
 Benchmark-confounder comparison & Saved-CATE analysis & Non-PFN where candidates are available & Candidate covariate and analysis inputs & Benchmark CSV/report & Gives a scale, not a bound on all unmeasured confounding \\
-Sensitivity contour & Saved-CATE analysis & Non-PFN where parameters permit & Parameters/residual reconstruction and plot path & Rendered diagnostic figure & Requires source and status validation before selection \\
+Sensitivity contour & Saved-CATE analysis & Non-PFN where parameters permit & Parameters or residual reconstruction and plot path & Rendered diagnostic figure & Requires source and status validation before selection \\
 CausalPFN diagnostic status & Orchestration & CausalPFN & N/A for EconML workflow & Skipped/not applicable status & Absence is not a zero diagnostic \\
 \bottomrule
 \end{longtable}
+\endgroup
 
 No sensitivity contour is selected as main-text evidence.  Chapter~\ref{chap:results} reports validated availability and status counts rather than combining diagnostically non-equivalent magnitudes.
 
@@ -80,7 +90,11 @@ The script captures nonzero subprocess return codes and summary-schema failures 
 
 Configuration validation is a separate reproducibility control.  The Python and shell validators check the compact dataset-config schema and invoke active scripts with \texttt{--validate-config-only}; router tests additionally exercise command parsing and construction.  The causal orchestrator writes \texttt{run\_summary.json} with resolved stage commands, paths, statuses, timestamps, and expected outputs, while CATE and saved-analysis control-message CSVs record field-level provenance.  These are different evidence layers: schema/config validation, command-construction validation, stage execution status, artifact existence, and scientific validity.  A successful config check does not prove full execution, and a successful stage status does not validate a causal claim.
 
-\begin{longtable}{@{}p{0.12\textwidth}p{0.14\textwidth}p{0.16\textwidth}p{0.12\textwidth}p{0.14\textwidth}p{0.12\textwidth}@{}}
+\begingroup
+\small
+\sloppy
+\setlength{\tabcolsep}{2.5pt}
+\begin{longtable}{@{}p{0.14\textwidth}p{0.14\textwidth}p{0.16\textwidth}p{0.11\textwidth}p{0.13\textwidth}p{0.12\textwidth}@{}}
 \caption{Permutation and reproducibility-validation design.}
 \label{tab:permutation-reproducibility-design}\\
 \toprule
@@ -91,10 +105,11 @@ Check & Disrupted element & Held-fixed elements & Output & Primary purpose & Lim
 Check & Disrupted element & Held-fixed elements & Output & Primary purpose & Limitation \\
 \midrule
 \endhead
-Treatment permutation & One iterated treatment column in copied latent tags & Other latent columns, outcome data, graph, config, estimator & Aggregate treatment-permutation CSV & Sanity check after exposure-label disruption & Does not establish identification or calibration \\
-Outcome permutation & Mortality column in copied processed outcome dataframe & Time series, IDs, latent tags, graph, config, estimator & Aggregate outcome-permutation CSV & Null-reference exercise after outcome disruption & Does not validate proxy exposure or DAG \\
-Configuration validation & None; configuration only & Compact schema and declared script contracts & PASS/FAIL and resolved-field output & Detect invalid/missing config fields & Does not load data or execute analysis \\
-Run-summary stage status & None; archived orchestration record & Stage command, log, expected outputs & \texttt{run\_summary.json} & Execution/provenance audit & Status is not scientific validity \\
-Artifact-schema check & None; header/status inspection & Selected artifact path and producing-stage context & Manifest validation record & Prevent wrong-file or wrong-granularity use & Does not establish result correctness \\
+Treatment permutation & One iterated treatment column in copied latent tags & Other latent columns, outcome data, graph, config, estimator & Aggregate treatment permutation CSV & Sanity check after exposure label disruption & Does not establish identification or calibration \\
+Outcome permutation & Mortality column in copied processed outcome dataframe & Time series, IDs, latent tags, graph, config, estimator & Aggregate outcome permutation CSV & Null-reference exercise after outcome disruption & Does not validate proxy exposure or DAG \\
+Configuration validation & None; configuration only & Compact schema and declared script contracts & PASS or FAIL; resolved field output & Detect invalid or missing config fields & Does not load data or execute analysis \\
+Run-summary stage status & None; archived orchestration record & Stage command, log, expected outputs & \nolinkurl{run_summary.json} & Execution and provenance audit & Status is not scientific validity \\
+Artifact-schema check & None; header/status inspection & Selected artifact path and producing stage context & Manifest validation record & Prevent wrong file or wrong granularity use & Does not establish result correctness \\
 \bottomrule
 \end{longtable}
+\endgroup

@@ -1,0 +1,20 @@
+dataset,treatment,CausalForestDML_exact,CausalForestDML_sign,LinearDML_exact,LinearDML_sign,CausalPFN_exact,CausalPFN_sign,concordance_expected,display_group,included_in_count,notes
+mimic,LAT_CARDIAC_STRAIN,0.22035603834514436,positive,0.1876338252286513,positive,0.259327498577642,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_GLOBAL_SEVERITY,0.06210061818008489,positive,0.08015308816889209,positive,0.07304968889618824,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_HEPATIC_COAG_DYSFUNCTION,0.09759849060449512,positive,0.08301684982922239,positive,0.0968462757091129,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_INFLAMMATION_SEPSIS,0.16117863078031663,positive,0.1613343714629977,positive,0.14854354851917861,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_METABOLIC_DERANGEMENT,0.01974295345435545,positive,0.017989452868950796,positive,0.03132348239996354,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_NEUROLOGIC_DYSFUNCTION,0.034252711518043336,positive,0.03154960397072449,positive,0.034993031034570465,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_RENAL_DYSFUNCTION,0.09129044441831921,positive,0.08859517453837928,positive,0.08697155012811061,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_RESPIRATORY_FAILURE,0.036133320420856,positive,0.03909791554254309,positive,0.04976550012196902,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+mimic,LAT_SHOCK,0.020994326819048455,positive,0.021245787889811386,positive,0.031644985158239956,positive,concordant,MIMIC-III,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_CARDIAC_INJURY_STRAIN,0.1118307526053288,positive,0.12203313682540579,positive,0.11941345027314323,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_COAG_HEME_DYSFUNCTION,0.01079355815492156,positive,0.004135693132290908,positive,0.025428398451365294,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_GLOBAL_SEVERITY,0.10798789990231876,positive,0.10674017610435634,positive,0.10503878126970247,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_HEPATIC_DYSFUNCTION,0.09052704652421123,positive,0.06018403931880851,positive,0.10684272691739839,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_INFLAMMATION_SEPSIS_BURDEN,0.07180004977331886,positive,0.07087168486512074,positive,0.0674804416051104,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_METABOLIC_DERANGEMENT,0.07770406267721523,positive,0.07973829165462494,positive,0.0907344995137599,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_NEUROLOGIC_DYSFUNCTION,0.08163578213590206,positive,0.07572758184655413,positive,0.07704883483275221,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_RENAL_DYSFUNCTION,0.1200268544489593,positive,0.0906219401807068,positive,0.11066853776658027,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_RESPIRATORY_FAILURE,0.06475009736198116,positive,0.06266009635207058,positive,0.06298443986654997,positive,concordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.
+physionet,LAT_SHOCK,-0.013849200594340203,negative,-0.02694439466909599,negative,0.00412193359964432,positive,discordant,PhysioNet 2012,YES,Source-exact original-cohort three-estimator join.

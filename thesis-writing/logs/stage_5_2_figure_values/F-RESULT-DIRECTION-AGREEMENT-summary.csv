@@ -1,0 +1,11 @@
+metric,expected_value
+MIMIC concordant,9
+MIMIC discordant,0
+PhysioNet concordant,9
+PhysioNet discordant,1
+Overall concordant,18
+Overall total,19
+Sole exception,PhysioNet LAT_SHOCK
+Forest sign,negative
+Linear sign,negative
+CausalPFN sign,positive

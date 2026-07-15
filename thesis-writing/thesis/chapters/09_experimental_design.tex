@@ -39,7 +39,11 @@ Outcome downsampling operates on mortality outcome classes, not exposure groups.
 
 Within each causal run, the exposure loop evaluates multiple dataset-specific binary proxy-state columns.  Inclusion of any exposure in a later Results chapter requires treatment-column availability, graph-node availability, valid binary values, adjustment and support diagnostics, artifact completeness, and approved estimand wording.  The exposure list is a design dimension, not a list of approved causal claims.
 
-\begin{longtable}{@{}p{0.08\textwidth}p{0.10\textwidth}p{0.10\textwidth}p{0.08\textwidth}p{0.12\textwidth}p{0.12\textwidth}p{0.10\textwidth}p{0.10\textwidth}@{}}
+\begingroup
+\footnotesize
+\sloppy
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{0.10\textwidth}p{0.12\textwidth}p{0.09\textwidth}p{0.07\textwidth}p{0.11\textwidth}p{0.12\textwidth}p{0.10\textwidth}p{0.10\textwidth}@{}}
 \caption{Causal experimental matrix.  The table records run-family design, not effect estimates.}
 \label{tab:causal-experimental-matrix}\\
 \toprule
@@ -50,12 +54,13 @@ Dataset & Estimator & Sampling condition & Graph & Exposure source & Diagnostics
 Dataset & Estimator & Sampling condition & Graph & Exposure source & Diagnostics expected & Archived run status & Configuration provenance \\
 \midrule
 \endhead
-PhysioNet 2012 and MIMIC-III & CausalForestDML & Original cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Matching, saved-CATE analysis, and permutations & Archived run family with stage records & Numbered producing config path recorded; local file missing \\
+PhysioNet 2012 and MIMIC-III & CausalForest\allowbreak DML & Original cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Matching, saved-CATE analysis, and permutations & Archived run family with stage records & Numbered producing config path recorded; local file missing \\
 PhysioNet 2012 and MIMIC-III & LinearDML & Original cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Matching, saved-CATE analysis, and permutations & Archived run family with stage records & Numbered producing config path recorded; local file missing \\
 PhysioNet 2012 and MIMIC-III & CausalPFN & Original cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Matching; CATE; EconML diagnostics not applicable & Archived run family; later diagnostic stages skipped & Numbered producing config path recorded; local file missing \\
-PhysioNet 2012 and MIMIC-III & CausalForestDML, LinearDML, CausalPFN & Outcome-downsampled cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Same family-specific checks, interpreted for a different empirical population & Archived run families with stage records & Numbered producing config path recorded; downsampling setting needs manifest confirmation \\
+PhysioNet 2012 and MIMIC-III & CausalForest\allowbreak DML, LinearDML, CausalPFN & Outcome-downsampled cohort & Dataset-specific project graph & Majority-vote binary proxy-state columns & Same family-specific checks, interpreted for a different empirical population & Archived run families with stage records & Numbered producing config path recorded; downsampling setting needs manifest confirmation \\
 \bottomrule
 \end{longtable}
+\endgroup
 
 \section{Computational Environment and Reproducibility}
 \label{sec:experimental-design:computational-environment-reproducibility}
@@ -68,6 +73,10 @@ Configuration resolution follows a hierarchy of source defaults, dataset configu
 
 The result manifest records artifact paths and roles, datasets, models or estimators, sampling conditions, available source and configuration fields, hashes, schemas, and status.  Exact producing configurations, commands, source versions, environments, and archive-copy histories remain incomplete for some final artifacts, so the manifest supports traceability without establishing complete rerun provenance.
 
+\begingroup
+\small
+\sloppy
+\setlength{\tabcolsep}{2.5pt}
 \begin{longtable}{@{}p{0.14\textwidth}p{0.14\textwidth}p{0.18\textwidth}p{0.15\textwidth}p{0.12\textwidth}@{}}
 \caption{Reproducibility-status design.}
 \label{tab:reproducibility-status}\\
@@ -82,13 +91,14 @@ Reproducibility element & Available evidence & Missing evidence & Impact & Requi
 Source versions & Repository history and nested source state can be recorded & Exact producing version for every archived artifact and reconciliation of local changes & Version records alone may not reproduce an uncommitted producer state & Producer provenance \\
 Dataset configs & Local compact defaults and archived config paths & Numbered final-run config CSVs and hashes & Exact archived settings remain configuration-incomplete & Configuration recovery \\
 Raw data and processed artifacts & Code contracts and path references & Access record, hashes, and processing manifest & Cohort lineage cannot be reproduced from the archive alone & Data manifest and authorized access \\
-Predictive splits and checkpoint/export mapping & Training summaries, exports, wrappers & Split IDs/seeds, checkpoint hashes, producing commands, copy record & Final prediction provenance incomplete & Per-export lineage \\
+Predictive splits and checkpoint/export mapping & Training summaries, exports, wrappers & Split IDs and seeds, checkpoint hashes, producing commands, and copy record & Final prediction provenance incomplete & Per-export lineage \\
 Causal run configuration and artifacts & Run summaries, logs, workflow folders, schemas & Resolved configs, input/output hashes, copy history & Execution-supported but provenance incomplete & Per-run lineage \\
 Software environment & Active metadata collection and intended requirements & Producing environment for older final runs where absent & Version compatibility cannot be assumed & Producing-environment record \\
-Hardware environment & Limited device fields where archived & CPU/RAM/GPU/node and OS details where absent & Hardware claims must remain incomplete & Producing-environment record \\
+Hardware environment & Limited device fields where archived & CPU, RAM, GPU, node, and OS details where absent & Hardware claims must remain incomplete & Producing-environment record \\
 Result checksums and prompt/clinical review & Result hashes plus partial source and prompt records & Prompt-run settings and clinical-review record & Review and artifact lineage remain incomplete & Human and clinical review \\
 \bottomrule
 \end{longtable}
+\endgroup
 
 \section{Evaluation and Result-Selection Policy}
 \label{sec:experimental-design:evaluation-result-selection-policy}

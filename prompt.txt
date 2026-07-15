@@ -1,4 +1,4 @@
-# Stage 5.1 — Final Claim, Number, Citation, Terminology, and Front-Matter Audit
+# Stage 5.2 — Figure, Table, Appendix, and Reproducibility-Artifact Audit
 
 ## Model
 
@@ -13,79 +13,127 @@ Extra High
 Implement this task as:
 
 ```text
-Stage 5.1 — Whole-Thesis Claim, Number, Citation, Terminology, and Front-Matter Audit
+Stage 5.2 — Prepare Every Thesis Figure, Table, Appendix, and Reproducibility Artifact for Independent External Validation
 ```
 
 The current repository head is expected to be:
 
 ```text
-4f69df9 step 4.10C
+11a2cb4 step 5.1
 ```
 
 Its immediate parent is expected to be:
 
 ```text
-405f907 step 4.10B
+4f69df9 step 4.10C
 ```
 
-Stage 4.10C completed the evidence-supported front matter and retained one concise reproducibility appendix. It reported:
+Stage 5.1 completed the whole-thesis claim, number, citation, terminology, and front-matter audit. Its report concludes:
 
 ```text
-READY FOR STAGE 5.1 WITH NON-BLOCKING ADMINISTRATIVE WARNINGS
+READY FOR STAGE 5.2 WITH NON-BLOCKING WARNINGS
 ```
 
-No figure was inserted, copied, generated, modified, or newly referenced during Stage 4.10C.
+Stage 5.1 reports:
 
-The next planned task after this one is:
+* 644 materially distinct reader-facing claims audited;
+* 325 result values or counts matched to their authoritative sources;
+* zero unsupported or inconsistent final claims;
+* zero unresolved citations or references;
+* exactly five included figures;
+* all five figure hashes unchanged;
+* no excluded figure newly entered the thesis;
+* all frozen evidence and figure sources unchanged;
+* successful 113-page build;
+* generated LaTeX auxiliary files removed and narrowly ignored.
+
+The next planned task after this audit is:
 
 ```text
-Stage 5.2 — Figure, Table, Appendix, and Reproducibility-Artifact Audit
+Stage 5.3 — Reproducibility and Provenance Closure
 ```
 
-Do not begin Stage 5.2.
+Do not begin Stage 5.3.
 
 ---
 
-# 1. Objective
+# 1. Critical approval boundary
 
-Perform a final, independent, claim-level audit of the complete reader-facing thesis.
+This stage prepares evidence for an independent external figure review.
 
-Audit:
+Codex must not declare a thesis figure academically or scientifically approved.
 
-* every empirical claim;
-* every repeated number;
-* every contribution claim;
-* every causal or clinical statement;
-* every citation;
-* every bibliography key used in the thesis;
-* terminology consistency;
-* research-question consistency;
-* estimator and cohort hierarchy;
-* English and Hebrew abstract equivalence;
-* title consistency;
-* keywords;
-* abbreviations;
-* notation;
-* front-matter administrative boundaries;
-* reader-facing placeholders;
-* cross-references;
-* conclusion consistency;
-* appendix claims;
-* accidental repository-process language.
+Codex may report:
 
-Repair only issues supported by authoritative evidence.
+```text
+SELF_CHECK_PASS
+SELF_CHECK_FAIL
+```
 
-Do not perform a broad stylistic rewrite.
+but every included thesis figure must retain:
 
-Do not conduct new research.
+```text
+external_review_status=PENDING_ASSISTANT_REVIEW
+```
 
-Do not add new experiments.
+The final readiness decision for a successful run must be:
 
-Do not create or modify figures in this stage.
+```text
+READY FOR EXTERNAL FIGURE VALIDATION
+```
+
+not “ready for Stage 5.3.”
+
+Do not silently replace, regenerate, edit, crop, recolor, relabel, rename, or overwrite any thesis figure.
+
+If an existing figure is incorrect, ambiguous, misleading, or not reproducible from an approved source:
+
+1. preserve the current file for forensic comparison;
+2. mark it blocked;
+3. create no replacement in the thesis directory;
+4. describe the smallest candidate repair;
+5. stop before Stage 5.3.
 
 ---
 
-# 2. Mandatory repository verification
+# 2. Objective
+
+Independently audit every currently compiled:
+
+* figure;
+* figure caption;
+* figure reference;
+* table;
+* longtable;
+* table caption;
+* table reference;
+* appendix claim;
+* result manifest;
+* result checksum;
+* figure register;
+* source packet;
+* decision register;
+* checked source dependency;
+* reproducibility statement.
+
+The audit must answer:
+
+1. What exactly is displayed?
+2. What exact source produced or supports it?
+3. Are the correct dataset, cohort, estimator, exposure, filters, and units used?
+4. Does every displayed value match the authoritative source?
+5. Does every sign, count, order, label, title, axis, legend, and caption match?
+6. Are missing and failed results represented correctly?
+7. Are primary, robustness, secondary, exploratory, and descriptive evidence visually and textually distinguished?
+8. Is the figure or table reproducible deterministically?
+9. Does any visual imply more causal, clinical, statistical, or reproducibility certainty than the evidence permits?
+10. Can an external reviewer verify the artifact without relying on Codex’s narrative judgment?
+
+No new research is authorized.
+
+---
+
+# 3. Mandatory repository verification
 
 From the repository root, run:
 
@@ -94,111 +142,53 @@ git status --short
 git branch --show-current
 git log -10 --oneline
 
-git show --stat --oneline 4f69df9
-git diff --stat 405f907..4f69df9
+git show --stat --oneline 11a2cb4
+git diff --stat 4f69df9..11a2cb4
 ```
 
 Confirm:
 
-1. `4f69df9` exists.
-2. Its message is `step 4.10C`.
-3. Its immediate parent is `405f907`.
-4. Stage 4.10C changed only its authorized front-matter, appendix, log, PDF, prompt, and generated-build paths.
-5. No body chapter changed.
-6. No checked result source changed.
-7. No figure, figure generator, or figure register changed.
-8. The Stage 4.10C report records:
-
-   * 115 pages;
-   * zero unresolved citations;
-   * zero unresolved references;
-   * zero duplicate labels;
-   * zero fatal errors;
-   * clean Hebrew and bidirectional rendering;
-   * no newly included figure;
-   * readiness for Stage 5.1 with non-blocking administrative warnings.
-
-Record the complete initial worktree state.
-
-Do not reset, clean, switch branches, discard unrelated changes, stage, amend, commit, or push.
-
-If the baseline differs materially, stop and report:
+1. `11a2cb4` exists.
+2. Its message is `step 5.1`.
+3. Its immediate parent is `4f69df9`.
+4. Stage 5.1 removed the twelve generated LaTeX auxiliary files.
+5. Stage 5.1 added narrow thesis-local ignore rules.
+6. Stage 5.1 changed no figure file.
+7. Stage 5.1 changed no figure generator or graph generator.
+8. Stage 5.1 changed no checked result CSV.
+9. Stage 5.1 changed no result manifest, source packet, decision register, checksum file, or figure register.
+10. The Stage 5.1 report concludes:
 
 ```text
-BLOCKED BEFORE STAGE 5.1 — REPOSITORY BASELINE MISMATCH
+READY FOR STAGE 5.2 WITH NON-BLOCKING WARNINGS
 ```
 
----
+Record the complete initial worktree.
 
-# 3. Mandatory generated-file cleanup
+Do not:
 
-The Stage 4.10C commit includes LaTeX auxiliary files that its own report describes as generated and untracked.
+* reset;
+* clean;
+* switch branches;
+* discard unrelated changes;
+* stage;
+* amend;
+* commit;
+* push;
+* normalize pre-existing line-ending changes;
+* absorb unrelated dirty files.
 
-These files are not authorized source deliverables:
+If the repository baseline differs materially, stop and report:
 
 ```text
-thesis-writing/thesis/main.aux
-thesis-writing/thesis/main.bbl
-thesis-writing/thesis/main.bcf
-thesis-writing/thesis/main.blg
-thesis-writing/thesis/main.fdb_latexmk
-thesis-writing/thesis/main.fls
-thesis-writing/thesis/main.lof
-thesis-writing/thesis/main.lot
-thesis-writing/thesis/main.out
-thesis-writing/thesis/main.run.xml
-thesis-writing/thesis/main.toc
-thesis-writing/thesis/main.xdv
-```
-
-Before substantive auditing:
-
-1. verify that each file is a generated LaTeX artifact;
-2. verify that none is intentionally required as a tracked source file;
-3. remove these files from the working tree;
-4. do not remove `main.pdf`;
-5. do not remove any `.tex`, `.bib`, source CSV, source image, manifest, or log;
-6. record the cleanup in the Stage 5.1 evidence report.
-
-Inspect `.gitignore`.
-
-If the thesis auxiliary files are not already ignored, add narrowly scoped ignore rules for only the corresponding generated LaTeX artifacts.
-
-Do not add a broad rule that could hide source files, result artifacts, figures, bibliography files, or evidence logs.
-
-A suitable narrowly scoped policy may include thesis-local patterns such as:
-
-```gitignore
-thesis-writing/thesis/*.aux
-thesis-writing/thesis/*.bbl
-thesis-writing/thesis/*.bcf
-thesis-writing/thesis/*.blg
-thesis-writing/thesis/*.fdb_latexmk
-thesis-writing/thesis/*.fls
-thesis-writing/thesis/*.lof
-thesis-writing/thesis/*.lot
-thesis-writing/thesis/*.out
-thesis-writing/thesis/*.run.xml
-thesis-writing/thesis/*.toc
-thesis-writing/thesis/*.xdv
-```
-
-Do not ignore:
-
-```text
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/main.pdf
-thesis-writing/thesis/**/*.tex
-thesis-writing/thesis/figures/
-thesis-writing/literature/
-thesis-writing/results/
+BLOCKED BEFORE STAGE 5.2 — REPOSITORY BASELINE MISMATCH
 ```
 
 ---
 
 # 4. Protected-file baseline
 
-Before making content edits, calculate SHA-256 hashes for:
+Before any audit or repair, record SHA-256 hashes for:
 
 ```text
 thesis-writing/results/checked_*.csv
@@ -212,17 +202,24 @@ thesis-writing/literature/metadata/references.bib
 thesis-writing/literature/metadata/catalog.csv
 ```
 
-These are immutable evidence sources in Stage 5.1.
+Also hash:
 
-Also hash every figure and figure-generation script currently used by the thesis.
+```text
+thesis-writing/thesis/figures/*.png
+thesis-writing/results/generate_stage_4_6B_main_figures.py
+causal-irregular-time-series/src/physionet2012_causal_graph.py
+causal-irregular-time-series/src/mimiciii_causal_graph.py
+```
 
-At completion, prove these files are byte-for-byte unchanged.
+These are protected during Stage 5.2 unless this prompt explicitly authorizes a narrowly evidenced register correction.
 
-Body and front-matter `.tex` files may be edited only through the repair policy below.
+Do not alter checked CSVs, literature, active research code, graph generators, or the existing figure files.
+
+At completion, prove byte-for-byte preservation.
 
 ---
 
-# 5. Baseline build
+# 5. Baseline build and figure inventory
 
 From:
 
@@ -243,783 +240,928 @@ Record:
 
 * return codes;
 * page count;
-* PDF hash;
+* PDF SHA-256;
 * unresolved citations;
 * unresolved references;
 * duplicate labels;
-* Biber warnings and errors;
 * fatal errors;
+* Biber errors and warnings;
 * missing glyphs;
-* bidi warnings;
-* `xdvipdfmx` warnings;
-* overfull boxes;
-* underfull boxes.
+* bidi errors;
+* overfull warnings;
+* underfull warnings;
+* `xdvipdfmx` destination warnings.
 
-The Stage 4.10C report recorded 115 pages. Verify the actual current source after auxiliary-file cleanup.
+Extract every actual `\includegraphics` invocation from the compiled source.
+
+The expected included figure set is exactly:
+
+```text
+physionet_causal_dag.png
+mimic_causal_dag.png
+results_mimic_forest_original_cate_ranking.png
+results_physionet_forest_original_cate_ranking.png
+results_original_three_estimator_direction_agreement.png
+```
+
+Confirm that:
+
+* there are exactly five included files;
+* no optional figure is included;
+* no excluded figure is included under its original or renamed path;
+* no missing figure is silently replaced;
+* every included file exists;
+* every included file is readable;
+* each hash matches the Stage 5.1 record.
+
+Expected current hashes:
+
+```text
+physionet_causal_dag.png
+67d545d696b480136ee9ed58604d2cd56b406832e7b48d5a67b946f4837be7c2
+
+mimic_causal_dag.png
+79fa7209166d24a9056753ef785865eb87995b2a363c1b3b5a2bff657fe204d8
+
+results_mimic_forest_original_cate_ranking.png
+e87b0d768ee3e1f11835d8fc7beb324c0b7a72e6ddc374c0872610cd1242b969
+
+results_physionet_forest_original_cate_ranking.png
+1a64ad1dac16fae862ae886b1f3d19d878c3043cccc3d32b22ae2472bb854c87
+
+results_original_three_estimator_direction_agreement.png
+0f2b89b3fce68b965c79387287f7651e635d91cf4e8232e079acc4cb640b59ea
+```
+
+Any unexpected hash difference is blocking.
 
 ---
 
-# 6. Authoritative evidence hierarchy
-
-Use this hierarchy.
-
-## 6.1 Numerical authority
-
-```text
-thesis-writing/results/checked_*.csv
-thesis-writing/results/results_manifest.md
-thesis-writing/results/results_source_packet.md
-thesis-writing/results/results_decision_register.md
-thesis-writing/results/results_checksums.sha256
-thesis-writing/thesis/chapters/10_results.tex
-```
-
-Checked structured sources take precedence over prose summaries.
-
-Chapter 10 is the reader-facing numerical authority.
-
-## 6.2 Interpretation authority
-
-```text
-thesis-writing/thesis/chapters/11_discussion.tex
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
-```
-
-Use these for:
-
-* interpretation;
-* limitation;
-* clinical meaning;
-* causal boundaries;
-* future work;
-* conclusion strength.
-
-## 6.3 Objective and contribution authority
-
-```text
-thesis-writing/thesis/chapters/01_introduction.tex
-```
-
-Use Chapter 1 for:
-
-* thesis gap;
-* objective;
-* main research question;
-* SRQ-1 through SRQ-7;
-* contribution hierarchy.
-
-Actual evidence in Chapters 10–12 overrides an earlier unsupported framing.
-
-## 6.4 Methods authority
-
-Use Chapters 3–9 and active source only where needed to validate:
-
-* a workflow statement;
-* implemented terminology;
-* data contracts;
-* proxy construction;
-* prediction behavior;
-* graph terminology;
-* estimator description;
-* diagnostic coverage;
-* experimental design.
-
-## 6.5 Literature authority
-
-Use:
-
-```text
-thesis-writing/literature/metadata/references.bib
-thesis-writing/literature/metadata/catalog.csv
-thesis-writing/literature/README.md
-```
-
-Do not browse the web.
-
-Do not add literature.
-
-Do not repair a citation gap by inventing a source.
-
----
-
-# 7. Create the master Stage 5.1 claim ledger
+# 6. Create the external figure-validation ledger
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_1_master_claim_audit.csv
+thesis-writing/logs/stage_5_2_figure_validation.csv
 ```
 
-Use one row per materially distinct reader-facing claim.
+Use one row per included thesis figure.
 
 Required columns:
 
 ```text
-claim_id
+figure_id
+thesis_path
+chapter
+latex_label
+caption
+current_sha256
+width
+height
+color_mode
+figure_type
+canonical_source_path
+canonical_source_sha256
+source_copy_match
+generator_path
+generator_sha256
+authoritative_input
+authoritative_input_sha256
+exact_filters
+source_row_count
+displayed_value_count
+displayed_values_file
+visible_title
+visible_axis_labels
+visible_legend_entries
+visible_category_labels
+sorting_rule
+axis_limits_rule
+negative_values_present
+missing_or_failed_value_policy
+dataset_scope
+cohort_scope
+estimator_scope
+evidence_role
+caption_boundary
+deterministic_regeneration_status
+pixel_equivalence_status
+source_structure_status
+self_check_status
+external_review_status
+blocking_issue
+notes
+```
+
+Every row must use:
+
+```text
+external_review_status=PENDING_ASSISTANT_REVIEW
+```
+
+Do not substitute `APPROVED`.
+
+---
+
+# 7. Create per-figure displayed-value inventories
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_2_figure_values/
+```
+
+Create one UTF-8 CSV for each numerical figure.
+
+Required files:
+
+```text
+F-RESULT-MIMIC-CATE.csv
+F-RESULT-PHYSIONET-CATE.csv
+F-RESULT-DIRECTION-AGREEMENT.csv
+```
+
+For ranking figures, required columns:
+
+```text
+rank
+dataset
+estimator
+sampling_condition
+selection_status
+treatment
+source_mean_cate_exact
+display_value_expected
+sign
+human_label_expected
+present_in_figure
+order_correct
+value_correct
+label_correct
+notes
+```
+
+For the direction-agreement figure, required columns:
+
+```text
+dataset
+treatment
+CausalForestDML_exact
+CausalForestDML_sign
+LinearDML_exact
+LinearDML_sign
+CausalPFN_exact
+CausalPFN_sign
+concordance_expected
+display_group
+included_in_count
+notes
+```
+
+Add a final summary section or companion CSV containing:
+
+```text
+MIMIC concordant = 9
+MIMIC discordant = 0
+PhysioNet concordant = 9
+PhysioNet discordant = 1
+Overall concordant = 18
+Overall total = 19
+Sole exception = PhysioNet LAT_SHOCK
+Forest sign = negative
+Linear sign = negative
+CausalPFN sign = positive
+```
+
+The inventories must be generated directly from:
+
+```text
+thesis-writing/results/checked_cate_candidates.csv
+```
+
+Do not transcribe values manually from the PNG.
+
+---
+
+# 8. Numerical figure audit
+
+The three result figures are generated by:
+
+```text
+thesis-writing/results/generate_stage_4_6B_main_figures.py
+```
+
+Inspect the complete script independently.
+
+Verify at minimum:
+
+* required columns;
+* duplicate-key protection;
+* finite-number validation;
+* exact input path;
+* output path;
+* dataset filters;
+* estimator filters;
+* sampling-condition filters;
+* selection-status filters;
+* expected row counts;
+* sorting logic;
+* friendly-label logic;
+* displayed rounding;
+* title;
+* axis label;
+* zero reference line;
+* negative-value handling;
+* axis-limit calculation;
+* count construction;
+* expected concordance assertion;
+* expected shock exception assertion;
+* legend;
+* PNG metadata;
+* output names.
+
+## 8.1 Isolated regeneration
+
+Do not write regenerated files into:
+
+```text
+thesis-writing/thesis/figures/
+```
+
+Create a temporary isolated copy of the generator or parameterize execution without editing the protected script.
+
+Regenerate all three outputs into a temporary directory.
+
+Record:
+
+* Python version;
+* Matplotlib version;
+* NumPy version, if imported transitively;
+* font selected;
+* image dimensions;
+* PNG color mode;
+* full-file SHA-256;
+* decoded pixel-array SHA-256;
+* metadata-stripped pixel-array SHA-256.
+
+Compare temporary output to the thesis file.
+
+Use three levels:
+
+```text
+BYTE_IDENTICAL
+PIXEL_IDENTICAL_METADATA_DIFFERS
+PIXEL_DIFFERENT
+```
+
+A Matplotlib or PNG metadata difference is not automatically a scientific failure if decoded pixels are identical.
+
+A pixel difference is blocking until every difference is explained.
+
+Do not overwrite the thesis file.
+
+## 8.2 Pixel comparison
+
+Use Pillow or another deterministic image library.
+
+Compare:
+
+* dimensions;
+* mode;
+* full decoded pixel arrays;
+* alpha channel;
+* non-white bounding box;
+* count and location of differing pixels;
+* maximum channel difference.
+
+Do not use OCR as the primary validation method.
+
+Visible text must instead be validated from:
+
+* generator source;
+* controlled label mapping;
+* source rows;
+* deterministic regeneration;
+* exact or pixel-equivalent output.
+
+## 8.3 Result-figure correctness rules
+
+Block if any figure:
+
+* uses a downsampled row in a primary figure;
+* uses LinearDML or CausalPFN values in a CausalForestDML ranking;
+* averages estimators;
+* normalizes CATE;
+* drops an exposure;
+* duplicates an exposure;
+* changes a negative value to positive;
+* hides PhysioNet shock;
+* sorts by absolute value rather than signed mean CATE;
+* displays a value inconsistent with the approved rounding rule;
+* shows a title inconsistent with dataset, estimator, or cohort;
+* uses a misleading axis;
+* omits the zero line where negative values exist;
+* presents 18/19 without the shock exception;
+* represents agreement as correctness or voting;
+* claims statistical significance;
+* claims clinical importance;
+* claims population-average causal effects.
+
+---
+
+# 9. DAG figure audit
+
+The two DAG figures require a separate validation path.
+
+Canonical archived artifacts:
+
+```text
+final-results/causal-outputs/outputs-physionet-forest/graph/physionet_causal_dag.png
+final-results/causal-outputs/outputs-mimic-forest/graph/mimic_causal_dag.png
+```
+
+Thesis-local copies:
+
+```text
+thesis-writing/thesis/figures/physionet_causal_dag.png
+thesis-writing/thesis/figures/mimic_causal_dag.png
+```
+
+Active graph sources:
+
+```text
+causal-irregular-time-series/src/physionet2012_causal_graph.py
+causal-irregular-time-series/src/mimiciii_causal_graph.py
+```
+
+Archived serialized graphs:
+
+```text
+final-results/causal-outputs/outputs-*/graph/*.pkl
+```
+
+## 9.1 Copy provenance
+
+For each dataset:
+
+1. hash every archived DAG PNG across all six estimator/sampling run families;
+2. verify all six dataset-specific PNGs are byte-identical, or enumerate differences;
+3. hash all six graph pickles;
+4. verify all six dataset-specific pickles are byte-identical, or enumerate differences;
+5. verify the thesis-local PNG is byte-identical to the selected canonical archived PNG;
+6. record exact source and destination hashes.
+
+## 9.2 Active-source graph comparison
+
+Load the canonical archived graph pickle safely.
+
+Run the active graph-construction function without changing research code.
+
+Compare:
+
+* exact node set;
+* exact directed edge set;
+* node count;
+* edge count;
+* DAG acyclicity;
+* node type attributes;
+* labels;
+* dataset-specific outcome node;
+* background node count;
+* proxy-state node count;
+* observed node count;
+* treatment/care node count;
+* missingness/process node count.
+
+Expected structural summaries:
+
+```text
+PhysioNet 2012:
+30 nodes
+45 directed edges
+acyclic
+
+MIMIC-III:
+36 nodes
+57 directed edges
+acyclic
+```
+
+Write exact node and edge inventories to:
+
+```text
+thesis-writing/logs/stage_5_2_figure_values/F-DAG-PHYSIONET-nodes.csv
+thesis-writing/logs/stage_5_2_figure_values/F-DAG-PHYSIONET-edges.csv
+thesis-writing/logs/stage_5_2_figure_values/F-DAG-MIMIC-nodes.csv
+thesis-writing/logs/stage_5_2_figure_values/F-DAG-MIMIC-edges.csv
+```
+
+Node inventory columns:
+
+```text
+dataset
+node
+node_type
+active_source_present
+archived_pickle_present
+attribute_match
+figure_label_expected
+notes
+```
+
+Edge inventory columns:
+
+```text
+dataset
+source
+target
+active_source_present
+archived_pickle_present
+match
+edge_role
+notes
+```
+
+## 9.3 Render provenance language
+
+The current captions say that the graph artifact was generated by the active graph-construction source.
+
+Do not retain that exact wording unless the audit proves the current active source and rendering path reproduce the archived image sufficiently to support it.
+
+The evidence already supports a weaker statement:
+
+```text
+The archived serialized graph has the same node, edge, acyclicity, and relevant attribute structure as the graph produced by the active source.
+```
+
+That does not by itself prove:
+
+* the exact active source version produced the PNG;
+* the exact current rendering function produced identical pixels;
+* the producing command is recovered.
+
+If exact producing source/version/command remains unavailable, repair the caption minimally to reflect archived-artifact provenance and structural agreement rather than exact current-source generation.
+
+Any caption repair must remain pending external review.
+
+## 9.4 MIMIC hash-name collision
+
+Investigate this exact issue:
+
+```text
+mimic_causal_dag.png
+SHA-256 79fa7209166d24a9056753ef785865eb87995b2a363c1b3b5a2bff657fe204d8
+
+causal_dag_overview.png
+SHA-256 79fa7209166d24a9056753ef785865eb87995b2a363c1b3b5a2bff657fe204d8
+```
+
+The second filename is classified as excluded in the optional-figure register.
+
+Determine which explanation is supported:
+
+```text
+A. The optional file is merely a duplicate copy or rename of the valid archived MIMIC DAG.
+B. The thesis MIMIC DAG was copied from an ambiguous seminar/optional artifact but happens to match an archived graph.
+C. The register mislabeled the optional file.
+D. The thesis figure is incorrectly sourced or labeled.
+E. Evidence is insufficient.
+```
+
+Required checks:
+
+* exact paths of every file with this hash;
+* file dimensions and mode;
+* PNG metadata;
+* canonical archived MIMIC source;
+* graph pickle correspondence;
+* active-source structural correspondence;
+* title expected from the MIMIC renderer;
+* figure-register wording;
+* thesis-figure README wording;
+* Stage 4.4 evidence wording.
+
+Do not infer from filenames alone.
+
+If A, B, or C is proven and the thesis-local figure remains the valid archived MIMIC DAG, document the duplicate-name issue and propose the smallest register clarification.
+
+If D or E applies, report:
+
+```text
+BLOCKED — MIMIC DAG FIGURE PROVENANCE OR IDENTITY UNRESOLVED
+```
+
+Do not alter the thesis figure.
+
+---
+
+# 10. Figure-caption and reference audit
+
+For every included figure, map:
+
+```text
+figure path
+LaTeX label
+chapter
+first reference
+all references
+caption
+source
+evidence role
+limitation
+```
+
+Verify:
+
+* every label is unique;
+* every reference resolves;
+* captions match displayed dataset and artifact;
+* no caption names the wrong estimator;
+* no caption names the wrong cohort;
+* no caption strengthens the evidence;
+* DAG captions state assumption rather than discovery or validation;
+* result captions state descriptive/model-estimated status;
+* the direction-agreement caption identifies CausalPFN as exploratory;
+* no caption claims statistical significance without evidence;
+* no caption calls matching or estimator agreement causal confirmation.
+
+Any caption edit must be the smallest evidence-required repair.
+
+Do not rewrite captions for style.
+
+---
+
+# 11. Visual readability checks
+
+Render the five figure pages from the final PDF at a resolution sufficient for inspection.
+
+Record for each:
+
+* PDF page;
+* figure bounding box;
+* clipping;
+* readable title;
+* readable axis;
+* readable labels;
+* readable legend;
+* caption attached to correct figure;
+* page number placement;
+* unexpected blank area;
+* overflow;
+* label collision;
+* line or arrow visibility;
+* negative-bar visibility;
+* zero-line visibility;
+* grayscale distinguishability;
+* whether the figure remains interpretable at normal PDF zoom.
+
+For DAGs, explicitly report:
+
+* whether node labels are readable;
+* whether arrow direction is visible;
+* whether the legend is readable;
+* whether density makes the figure unusable as more than an orientation figure.
+
+Do not claim that visual readability proves scientific correctness.
+
+---
+
+# 12. Create the complete table ledger
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_2_table_audit.csv
+```
+
+Use one row per table or longtable.
+
+Required columns:
+
+```text
+table_id
 file
-chapter_or_section
-line_or_excerpt
-claim_type
-claim_summary
-numeric_expression
-citation_keys
+chapter
+latex_label
+caption
+table_type
+evidence_role
 authoritative_source
 exact_source_location
-support_status
-qualification_status
-terminology_status
-hierarchy_status
-cross_language_status
+dataset_scope
+cohort_scope
+estimator_scope
+row_count
+numeric_cell_count
+numeric_cells_checked
+textual_claims_checked
+rounding_rule
+missing_value_policy
+failure_policy
+sorting_rule
+caption_status
+source_status
+layout_status
 required_action
 notes
 ```
 
-Claim types should include:
+Inventory every compiled:
 
-```text
-MOTIVATION
-OBJECTIVE
-RESEARCH_QUESTION
-WORKFLOW
-IMPLEMENTATION
-CONTRIBUTION
-LITERATURE_SYNTHESIS
-PREDICTIVE_RESULT
-CAUSAL_MODEL_RESULT
-MATCHING_RESULT
-DIAGNOSTIC_RESULT
-ROBUSTNESS_RESULT
-CROSS_DATASET_RESULT
-EXPLORATORY_RESULT
-LIMITATION
-ETHICS_GOVERNANCE
-FUTURE_WORK
-NEGATIVE_BOUNDARY
-ABSTRACT_SYNTHESIS
-APPENDIX_PROVENANCE
+```latex
+\begin{table}
+\begin{longtable}
 ```
 
-Support statuses:
-
-```text
-SUPPORTED
-SUPPORTED_WITH_QUALIFICATION
-EXPLORATORY_CORRECTLY_BOUNDED
-LIMITATION_SUPPORTED
-ADMINISTRATIVE_GATE
-UNSUPPORTED
-INCONSISTENT
-SOURCE_AMBIGUOUS
-```
-
-Required actions:
-
-```text
-RETAIN
-REPAIR
-REMOVE
-MOVE_TO_TRACKING
-BLOCKED_EXTERNAL_INPUT
-```
+Do not omit method, assumption, design, limitation, or front-matter tables merely because they are non-numerical.
 
 ---
 
-# 8. Numerical audit
+# 13. Numerical table validation
 
-Programmatically extract numerical expressions from all reader-facing `.tex` files:
+For every numerical result table:
+
+1. reconstruct the expected table rows directly from checked sources;
+2. compare dataset;
+3. compare estimator;
+4. compare sampling condition;
+5. compare exposure;
+6. compare values;
+7. compare signs;
+8. compare rounding;
+9. compare ordering;
+10. compare status labels;
+11. compare missing/failure representation;
+12. compare row counts;
+13. compare caption population and estimand language.
+
+At minimum validate:
+
+* analysis-population table;
+* predictive-performance table;
+* MIMIC primary CausalForestDML table;
+* PhysioNet primary CausalForestDML table;
+* matching-support table;
+* LinearDML comparison table;
+* CausalPFN comparison table;
+* robustness/downsampling table;
+* sensitivity table;
+* permutation table;
+* any proxy prevalence, association, or mortality-prediction table still compiled.
+
+Rules:
+
+* failed matching is not zero;
+* missing intervals are not zero-width intervals;
+* intentionally skipped CausalPFN diagnostics are not failures;
+* robustness rows are not primary rows;
+* datasets are not pooled;
+* normalized CATE is not substituted;
+* prevalence is not effect;
+* matching difference is not CATE;
+* mean CATE is not automatically ATE;
+* no unapproved aggregate may be introduced.
+
+Create machine-readable comparison output under:
 
 ```text
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/
-thesis-writing/thesis/chapters/
-thesis-writing/thesis/appendices/
+thesis-writing/logs/stage_5_2_table_values/
 ```
 
-Classify each expression as:
+Use one CSV per numerical table.
 
-```text
-RESULT_VALUE
-RESULT_COUNT
-DATASET_YEAR
-METHOD_PARAMETER
-EQUATION_OR_SYMBOL
-SECTION_IDENTIFIER
-CITATION_YEAR
-ADMINISTRATIVE_TEXT
-EDITORIAL_ORDERING
-```
+---
 
-Every result value and result count must have an exact authoritative source.
+# 14. Non-numerical table validation
 
-At minimum independently revalidate:
+For method, assumption, configuration, design, evidence, or limitation tables, verify each cell against:
 
-* predictive model table values;
-* MIMIC and PhysioNet causal-analysis population counts;
-* all primary CausalForestDML table values;
-* matching pair counts, rates, distances, and differences;
-* all LinearDML comparison values;
-* all CausalPFN comparison values;
-* sensitivity and permutation values appearing in prose or tables;
-* downsampling robustness counts;
-* 9/9 MIMIC primary positive summaries;
-* 9/10 PhysioNet primary positive summaries;
-* negative PhysioNet shock;
-* 19/19 CausalForestDML–LinearDML directional agreement;
-* 18/19 all-three directional agreement;
-* abstract repetitions of those values.
+* active source;
+* completed thesis methods;
+* approved literature;
+* tracking logs;
+* result packet;
+* institutional requirements.
+
+Audit especially:
+
+* DAG node-family table;
+* adjustment-set logic;
+* causal assumptions;
+* estimator comparison;
+* prediction experiment matrix;
+* causal experiment matrix;
+* reproducibility-status table;
+* result-admission policy;
+* contribution table;
+* research-question table;
+* limitations table, if present.
+
+Block any cell that:
+
+* represents planned work as completed;
+* represents active defaults as producing settings;
+* calls a graph validated;
+* calls an estimator result causal without qualification;
+* claims exact hardware or software without archived evidence;
+* implies complete provenance;
+* implies a current faculty-form approval.
+
+---
+
+# 15. Table layout audit
+
+Render every page containing a table.
 
 Check:
 
-* sign;
-* rounding;
-* dataset;
-* estimator;
-* sampling condition;
-* exposure;
-* source row;
-* displayed precision;
-* table/prose agreement.
-
-Do not calculate a new aggregate for inclusion.
-
-A validation-only computation may be used internally and recorded in the report, but it must not enter reader-facing prose unless already authorized.
-
----
-
-# 9. Result hierarchy audit
-
-Verify throughout the thesis:
-
-```text
-Original cohorts = primary
-Outcome-downsampled cohorts = robustness only
-CausalForestDML = primary
-LinearDML = secondary comparator
-CausalPFN = exploratory
-Matching = descriptive empirical-support baseline
-No normalized-CATE main result
-No numerical pooling across datasets
-Every prespecified dataset-specific exposure retained
-InterpNet excluded
-```
-
-Audit:
-
-* Chapter 1;
-* Chapters 7–12;
-* both abstracts;
-* keywords;
-* nomenclature;
-* appendix.
-
-No text may imply that directional agreement establishes:
-
-* estimator equivalence;
-* correctness;
-* superiority;
-* interchangeable uncertainty;
-* valid causal identification;
-* treatment priority.
-
-PhysioNet shock must remain the visible disagreement where all-three agreement is summarized.
-
----
-
-# 10. Causal and clinical language audit
-
-Scan every reader-facing `.tex` file for high-risk language.
-
-Audit uses of:
-
-```text
-cause
-causal effect
-effect
-treatment
-intervention
-diagnosis
-phenotype
-ground truth
-validated
-clinical
-actionable
-protective
-recommendation
-deployment
-positivity
-exchangeability
-confounding
-proof
-prove
-superior
-expert
-discovery
-```
-
-Required boundaries:
-
-* proxy states are rule-derived analytical constructs;
-* positive tags are not diagnoses;
-* negative tags do not prove absence;
-* project DAGs are specified assumptions;
-* DAGs were not learned from data;
-* DAGs were not clinically validated;
-* matching is descriptive;
-* model-estimated CATE remains conditional;
-* mean estimated CATE is not automatically an ATE;
-* agreement is not causal validation;
-* a negative estimate is not a protective effect;
-* no treatment recommendation follows;
-* no clinical deployment readiness is established;
-* no global positivity or exchangeability is proven;
-* LLM prompts are design provenance only;
-* an LLM did not act as a medical expert or causal-discovery method.
-
-Use the smallest repair needed.
-
----
-
-# 11. Research-question and contribution audit
-
-Create a matrix for:
-
-* main research question;
-* SRQ-1 through SRQ-7;
-* each contribution in Chapter 1.
-
-For every item record:
-
-```text
-question_or_contribution
-Chapter 1 wording
-methods coverage
-results evidence
-discussion answer
-conclusion coverage
-abstract coverage
-status
-action
-```
-
-Check that:
-
-* every RQ receives an evidence-bounded answer;
-* no abstract introduces an eighth secondary question;
-* the conclusion does not omit a limitation that changes an answer;
-* contributions remain integration/application/evidence-tracking contributions;
-* no component method is claimed as invented;
-* no novelty is inferred from absence of literature;
-* evidence infrastructure is not equated with full reproducibility.
-
----
-
-# 12. Citation audit
-
-## 12.1 Citation-key integrity
-
-Extract every citation key used in all thesis `.tex` files.
-
-Verify:
-
-* every used key exists exactly once in `references.bib`;
-* no malformed key;
-* no unresolved citation;
-* no duplicate bibliography entry for the same cited work unless intentionally distinct;
-* no citation to an optional or excluded source contrary to corpus policy;
-* no bibliography key appears in reader-facing text.
-
-## 12.2 Claim-to-citation alignment
-
-For each cited sentence or paragraph, determine whether the cited source supports:
-
-* the method;
-* dataset;
-* clinical definition;
-* literature synthesis;
-* causal assumption;
-* limitation.
-
-Do not treat a general clinical guideline as validation of the project-specific proxy rule.
-
-Do not treat model papers as validation of local execution.
-
-Do not treat causal-method papers as validation of the project DAG or estimates.
-
-## 12.3 Uncited factual claims
-
-Identify factual literature claims that need a citation.
-
-Repair only when an already approved source and exact bibliography key clearly supports the statement.
-
-Otherwise:
-
-* bound or remove the claim;
-* record the unresolved source requirement;
-* do not browse;
-* do not add a paper.
-
-## 12.4 Citation placement
-
-Check that citations are attached to the claim they support and are not stranded at the end of a paragraph containing several unrelated claims.
-
-Do not add citations to abstracts or Chapter 12 unless absolutely necessary and already approved.
-
----
-
-# 13. Terminology audit
-
-Use:
-
-```text
-thesis-writing/planning/terminology_and_notation.md
-thesis-writing/audit/terminology_map.md
-```
-
-Audit consistency of:
-
-* irregular clinical time series;
-* proxy state;
-* rule-derived proxy label;
-* predicted proxy state;
-* aggregation;
-* exposure;
-* outcome;
-* adjustment variable;
-* effect modifier;
-* project-specified or project-authored DAG;
-* matching contrast;
-* model-estimated CATE;
-* mean model-estimated CATE;
-* observational analysis;
-* exploratory estimator;
-* evidence provenance;
-* clean-checkout reproducibility.
-
-Restricted terms must remain appropriately bounded:
-
-```text
-diagnosis
-ground truth
-validated phenotype
-causal effect
-treatment
-ATE
-ATT
-clinical actionability
-latent variable
-LLM-discovered DAG
-unbiased
-proof
-```
-
-Audit spelling and capitalization of:
-
-```text
-MIMIC-III
-PhysioNet 2012
-STraTS
-GRU
-GRU-D
-TCN
-SAnD
-CausalForestDML
-LinearDML
-CausalPFN
-DAG
-DML
-CATE
-AUROC
-AUPRC
-minRP
-```
-
-No InterpNet match is permitted in reader-facing thesis text.
-
----
-
-# 14. Abstract equivalence audit
-
-Audit:
-
-```text
-thesis-writing/thesis/frontmatter/abstract_primary.tex
-thesis-writing/thesis/frontmatter/abstract_secondary.tex
-```
-
-Create a sentence-level semantic matrix:
-
-```text
-component_id
-English claim
-Hebrew claim
-numbers
-estimator role
-qualification
-equivalent
-repair
-```
-
-Verify exact equivalence for:
-
-* objective;
-* datasets;
-* workflow;
-* five-family predictive evaluation;
-* proxy-state boundary;
-* DAG boundary;
-* 9/9;
-* 9/10;
-* negative shock;
-* 19/19;
-* 18/19;
-* CausalPFN exploratory status;
-* matching descriptive status;
-* no pooling;
-* contribution;
-* causal limitations;
-* clinical/deployment limitations;
-* reproducibility boundary;
-* future needs.
-
-Check:
-
-* each abstract is under 500 words;
-* no citations;
-* no footnotes;
-* no extra claim in one language;
-* no mistranslated causal strength;
-* no broken Hebrew/Latin direction;
-* no use of a Hebrew term that implies clinical diagnosis or confirmed causality more strongly than the English version.
-
-Use professional academic Hebrew, but repair only factual or materially unclear language—not stylistic preference.
-
----
-
-# 15. Front-matter and administrative audit
-
-Audit:
-
-```text
-thesis-writing/thesis/frontmatter/administrative_metadata.tex
-thesis-writing/thesis/frontmatter/title_pages.tex
-thesis-writing/thesis/frontmatter/keywords.tex
-thesis-writing/thesis/frontmatter/acknowledgements.tex
-thesis-writing/thesis/frontmatter/nomenclature.tex
-thesis-writing/thesis/main.tex
-```
-
-Verify:
-
-* the English title is identical everywhere;
-* the title remains explicitly provisional where tracked;
-* no Hebrew title is fabricated;
-* no author identity is inferred;
-* no supervisor identity is inferred;
-* no department or degree wording is invented;
-* no approval wording is invented;
-* no institutional ethics number is invented;
-* English-thesis authorization remains unresolved;
-* acknowledgements are omitted when no approved text exists;
-* keywords contain 10–15 entries in each language;
-* bilingual keyword sets are semantically aligned;
-* abbreviations are actually used;
-* notation entries are actually used;
-* unresolved CausalPFN naming/citation status is not concealed;
-* title-page gates are precise rather than generic drafting placeholders.
-
-Administrative gates must not be “repaired” without authoritative input.
+* column clipping;
+* text overlap;
+* font too small for normal reading;
+* detached caption;
+* repeated-header correctness;
+* longtable continuation;
+* page breaks;
+* table numbering;
+* table-list entry;
+* unexplained abbreviation;
+* inconsistent significant digits;
+* dollar-sign or minus-sign rendering;
+* incorrect Hebrew direction, where applicable.
+
+Do not resize a table solely to remove a warning if readability worsens.
+
+Repair layout only when the table is materially unreadable or incorrect.
 
 ---
 
 # 16. Appendix audit
 
-Audit the retained appendix:
+Audit:
 
 ```text
 thesis-writing/thesis/appendices/appendices.tex
 ```
 
-Confirm that it:
+The retained appendix is expected to address reproducibility and evidence boundaries.
 
-* has a scholarly reader purpose;
-* accurately distinguishes available traceability from unavailable rerun provenance;
-* contains no internal Codex chronology;
-* contains no raw absolute paths that should not be exposed;
-* contains no unsupported exact configuration;
-* contains no claim of clean-checkout reproducibility;
-* contains no newly introduced number without evidence;
-* contains no figure;
-* contains no empty placeholder chapter;
-* does not duplicate Chapters 3–11 unnecessarily.
+Verify every appendix statement against:
 
-Check that omitted appendices are not still referenced from:
+```text
+results_manifest.csv
+results_manifest.md
+results_source_packet.md
+results_decision_register.md
+results_checksums.sha256
+figure_selection_register.md
+Stage 5.1 report
+deferred_fixes.md
+unresolved_placeholders.md
+```
 
-* body chapters;
-* table of contents;
-* figure/table lists;
-* front matter;
-* planning comments that render into the PDF.
+Confirm that the appendix does not:
+
+* imply a clean-checkout rerun;
+* imply recovered exact producing commands;
+* imply recovered exact producing configurations;
+* imply complete raw/processed hashes;
+* imply complete checkpoint/export lineage;
+* imply complete source-version lineage;
+* imply institutional governance approval;
+* imply clinical review;
+* expose credentials;
+* expose protected raw-data contents;
+* include obsolete stage chronology;
+* duplicate entire methods chapters.
+
+Create:
+
+```text
+thesis-writing/logs/stage_5_2_appendix_audit.csv
+```
+
+Use one row per materially distinct appendix claim.
 
 ---
 
-# 17. Existing-figure preservation check
+# 17. Reproducibility-artifact consistency audit
 
-Stage 5.1 must not create, regenerate, edit, rename, copy, or newly reference any figure.
-
-Identify every figure currently included by the thesis.
-
-For each record:
+Cross-check:
 
 ```text
-figure_id
-path
-SHA-256
-source register entry
-chapter
-caption
-changed_since_stage_4_10C
+thesis-writing/results/results_manifest.csv
+thesis-writing/results/results_manifest.md
+thesis-writing/results/results_source_packet.md
+thesis-writing/results/results_decision_register.md
+thesis-writing/results/results_checksums.sha256
+thesis-writing/results/figure_selection_register.md
+thesis-writing/results/checked_figure_candidates.csv
 ```
 
-Confirm:
+Verify:
 
-* hashes match the Stage 5.1 baseline;
-* no blocked or excluded figure is included;
-* no figure changed during Stage 5.1;
-* no caption change alters the interpretation;
-* no newly included figure exists.
+* every referenced file exists or is explicitly external/missing;
+* every recorded hash corresponds to the stated file;
+* every selection status is consistent across records;
+* every primary/secondary/exploratory role is consistent;
+* excluded figures remain excluded;
+* blocked figures remain blocked;
+* the three generated result figures have current entries;
+* the two DAG figures have source-copy records;
+* no seminar slide is numerical authority;
+* no old optional image is treated as authoritative because of filename similarity;
+* no result-source path points to a failed artifact without explicit status;
+* no missing configuration is described as recovered.
 
-The detailed value-to-image validation belongs to Stage 5.2.
-
-If any figure changes unexpectedly, stop and report:
+Create:
 
 ```text
-BLOCKED BEFORE STAGE 5.2 — UNAUTHORIZED FIGURE CHANGE
+thesis-writing/logs/stage_5_2_reproducibility_artifact_audit.csv
+```
+
+Required columns:
+
+```text
+artifact_id
+artifact_path
+artifact_role
+exists
+sha256_recorded
+sha256_actual
+hash_match
+source_record
+selection_status
+thesis_usage
+consistency_status
+blocking_issue
+notes
 ```
 
 ---
 
-# 18. Reader-facing process-language audit
+# 18. Permitted repairs
 
-Scan for:
+Permitted repairs are limited to:
 
-```text
-Codex
-prompt.txt
-Stage 4
-Stage 5
-checked packet
-claim audit
-evidence report
-commit SHA
-git commit
-author decision freeze
-repository head
-worktree
-```
+* a table transcription error with an exact authoritative source;
+* an incorrect table status label;
+* an incorrect table caption;
+* a figure caption that overstates proven provenance;
+* a stale or ambiguous figure-register note;
+* a stale appendix claim;
+* a broken figure/table reference;
+* a materially unreadable table layout;
+* a reproducibility-record inconsistency that can be corrected without changing evidence.
 
-Internal repository or provenance terminology may remain only when necessary for reproducibility and expressed in reader-facing scholarly language.
+Every repair must:
 
-Remove internal workflow jargon that does not help the reader.
+1. have a ledger row;
+2. cite an exact source;
+3. be the smallest sufficient edit;
+4. preserve result hierarchy;
+5. preserve numerical authority;
+6. preserve figure files unless separately authorized after external review.
 
-Do not remove legitimate methodological uses of:
+Do not repair a figure file.
 
-* source code;
-* source version;
-* repository;
-* manifest;
-* checksum;
-* configuration;
-* provenance.
+Do not alter pixels.
 
----
+Do not regenerate into the thesis directory.
 
-# 19. Repair policy
+Do not introduce a new figure.
 
-A repair is allowed when the audit identifies:
+Do not replace a DAG with a newly rendered DAG.
 
-* incorrect number;
-* incorrect sign;
-* incorrect estimator;
-* incorrect cohort;
-* incorrect dataset;
-* inconsistent terminology;
-* missing qualification;
-* unsupported claim;
-* citation mismatch;
-* broken citation;
-* research-question drift;
-* contribution overclaim;
-* abstract mismatch;
-* stale internal-process language;
-* broken cross-reference;
-* malformed LaTeX;
-* nomenclature inconsistency;
-* appendix overclaim.
+Do not update a checked CSV.
 
-Use the smallest sufficient edit.
-
-Do not broadly rewrite a chapter.
-
-Do not alter the frozen result packet.
-
-Do not change research code.
-
-Do not change a figure.
-
-If an issue requires:
-
-* new literature;
-* new experiment;
-* new result;
-* supervisor decision;
-* clinician decision;
-* institutional documentation;
-* official administrative details;
-* new figure generation;
-
-do not resolve it in prose.
-
-Track it and classify it as external.
+Do not fill a missing provenance field by inference.
 
 ---
 
-# 20. Allowed edit scope
-
-You may edit reader-facing thesis `.tex` files only where required by a documented audit repair:
-
-```text
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/*.tex
-thesis-writing/thesis/chapters/*.tex
-thesis-writing/thesis/appendices/appendices.tex
-```
-
-You may edit:
-
-```text
-.gitignore
-```
-
-only for the narrow LaTeX-generated-file cleanup.
-
-You may update:
-
-```text
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-```
-
-only for a new issue, materially changed status, or exact Stage 5.1 disposition.
+# 19. Allowed edit scope
 
 You may create:
 
 ```text
-thesis-writing/logs/stage_5_1_master_claim_audit.csv
-thesis-writing/logs/stage_5_1_numeric_audit.csv
-thesis-writing/logs/stage_5_1_citation_audit.csv
-thesis-writing/logs/stage_5_1_rq_contribution_matrix.csv
-thesis-writing/logs/stage_5_1_abstract_equivalence.csv
-thesis-writing/logs/stage_5_1_evidence_report.md
+thesis-writing/logs/stage_5_2_figure_validation.csv
+thesis-writing/logs/stage_5_2_figure_values/
+thesis-writing/logs/stage_5_2_table_audit.csv
+thesis-writing/logs/stage_5_2_table_values/
+thesis-writing/logs/stage_5_2_appendix_audit.csv
+thesis-writing/logs/stage_5_2_reproducibility_artifact_audit.csv
+thesis-writing/logs/stage_5_2_external_review_summary.md
+thesis-writing/logs/stage_5_2_evidence_report.md
+```
+
+You may edit, only when supported by a documented repair:
+
+```text
+thesis-writing/thesis/chapters/*.tex
+thesis-writing/thesis/appendices/appendices.tex
+thesis-writing/results/figure_selection_register.md
+thesis-writing/thesis/figures/README.md
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
 ```
 
 You may regenerate:
@@ -1028,48 +1170,95 @@ You may regenerate:
 thesis-writing/thesis/main.pdf
 ```
 
-Do not retain auxiliary build files after final validation.
+Temporary regenerated figures must remain outside the repository or be deleted before completion.
 
 ---
 
-# 21. Forbidden edit scope
+# 20. Forbidden edit scope
 
 Do not edit:
 
 ```text
 prompt.txt
+thesis-writing/thesis/figures/*.png
 thesis-writing/results/checked_*.csv
 thesis-writing/results/results_manifest.csv
 thesis-writing/results/results_manifest.md
 thesis-writing/results/results_source_packet.md
 thesis-writing/results/results_decision_register.md
 thesis-writing/results/results_checksums.sha256
-thesis-writing/results/figure_selection_register.md
-thesis-writing/thesis/figures/
-thesis-writing/results/*.py
+thesis-writing/results/generate_stage_4_6B_main_figures.py
 thesis-writing/literature/
 thesis-writing/audit/
 thesis-writing/planning/
-router.py
-causal-irregular-time-series/
+causal-irregular-time-series/src/
 STraTS/
+router.py
 requirements*.txt
 tests/
 ```
 
 Do not browse the web.
 
-Do not add citations from outside the approved corpus.
+Do not download literature.
 
-Do not rerun research experiments.
+Do not run research experiments.
 
-Do not generate a figure.
+Do not alter source data.
+
+Do not commit or push.
 
 ---
 
-# 22. Final validation
+# 21. External-review summary
 
-Run:
+Create:
+
+```text
+thesis-writing/logs/stage_5_2_external_review_summary.md
+```
+
+This must be concise and specifically designed for independent assistant review.
+
+For each of the five figures include:
+
+```text
+Figure ID
+Thesis path
+Chapter and label
+Current hash and dimensions
+Exact source
+Generator or archived-artifact provenance
+Input hash
+Filters
+Expected displayed values
+Expected labels
+Expected title
+Expected axis and legend
+Regeneration result
+Byte/pixel comparison result
+Caption boundary
+Known limitation
+Codex self-check
+External review status
+Blocking question
+```
+
+For each table include only:
+
+* table ID;
+* exact source;
+* row/value match result;
+* layout result;
+* repair, if any.
+
+Do not hide details behind statements such as “all checks passed.”
+
+---
+
+# 22. Final build and render
+
+After any permitted text/table repair:
 
 ```bash
 cd thesis-writing/thesis
@@ -1079,84 +1268,67 @@ test -f main.pdf
 pdfinfo main.pdf
 ```
 
-After validation, remove auxiliary files while retaining `main.pdf`.
+Render all figure and table pages for final inspection.
 
-Then rebuild once more if necessary to prove that the repository source remains buildable without tracked auxiliaries.
+After validation:
 
-Validate:
+```bash
+latexmk -c
+```
+
+Retain:
+
+```text
+main.pdf
+```
+
+Remove all auxiliary files.
+
+Record final:
 
 * page count;
 * PDF SHA-256;
-* zero unresolved citations;
-* zero unresolved references;
-* zero duplicate labels;
-* zero fatal errors;
-* zero Biber errors;
-* zero missing glyphs;
-* zero bidi errors;
-* stable title;
-* both abstracts;
-* keyword counts;
-* TOC;
-* nomenclature;
-* lists;
-* appendix;
-* bibliography.
-
-Render the final PDF and inspect:
-
-* title pages;
-* Hebrew abstract;
-* English abstract;
-* keyword page;
-* TOC;
-* nomenclature;
-* Chapter 1 opening;
-* Chapter 10 result pages;
-* Chapter 11 limitation pages;
-* Chapter 12;
-* appendix;
-* bibliography transition.
+* citations;
+* references;
+* duplicate labels;
+* fatal errors;
+* Biber;
+* glyph/bidi status;
+* layout warnings;
+* rendered-page inspection.
 
 ---
 
-# 23. Required scans
+# 23. Final hash validation
 
-Run:
+Recheck every protected file.
 
-```bash
-grep -Rni "InterpNet\|interpnet" thesis-writing/thesis \
-  --include='*.tex' || true
+Prove:
 
-grep -RniE \
-'Stage [0-9]|Codex|prompt\.txt|claim audit|evidence report|author decision freeze|repository head|worktree' \
-thesis-writing/thesis \
---include='*.tex' || true
+* all checked CSVs unchanged;
+* all literature metadata unchanged;
+* result manifests unchanged except no edit is authorized;
+* source packet unchanged;
+* decision register unchanged;
+* checksum file unchanged;
+* generator unchanged;
+* graph sources unchanged;
+* all five thesis PNGs unchanged.
 
-grep -RniE \
-'diagnosis|ground truth|validated phenotype|caused mortality|protective effect|treatment recommendation|deployment ready|clinical decision support|confounding eliminated|positivity established|medical expert|causal discovery|unbiased' \
-thesis-writing/thesis \
---include='*.tex' || true
+If any protected figure hash changed, report:
 
-find thesis-writing/thesis -maxdepth 1 -type f \
-  \( -name '*.aux' -o -name '*.bbl' -o -name '*.bcf' -o -name '*.blg' \
-     -o -name '*.fdb_latexmk' -o -name '*.fls' -o -name '*.lof' \
-     -o -name '*.lot' -o -name '*.out' -o -name '*.run.xml' \
-     -o -name '*.toc' -o -name '*.xdv' \) -print
+```text
+BLOCKED — UNAUTHORIZED FIGURE MODIFICATION
 ```
 
-The final generated-file scan must return no tracked or retained auxiliary file.
-
-Manual review is required for every language-risk match.
-
 ---
 
-# 24. Stage 5.1 evidence report
+# 24. Stage 5.2 evidence report
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_1_evidence_report.md
+thesis-writing/logs/stage_5_2_evidence_report.md
 ```
 
 Use this structure.
@@ -1167,97 +1339,122 @@ Use this structure.
 * parent;
 * branch;
 * initial status;
-* Stage 4.10C readiness;
-* no-new-figure verification.
+* Stage 5.1 readiness;
+* protected hashes.
 
-## 24.2 Generated-file cleanup
-
-* files removed;
-* why they were generated artifacts;
-* `.gitignore` action;
-* confirmation that `main.pdf` remains tracked;
-* final auxiliary-file scan.
-
-## 24.3 Baseline build
+## 24.2 Build baseline
 
 * commands;
 * page count;
 * PDF hash;
-* citation/reference/label status;
 * warnings.
 
-## 24.4 Evidence hierarchy and sources inspected
+## 24.3 Included figure inventory
 
-List exact files.
+* five expected figures;
+* paths;
+* hashes;
+* dimensions;
+* chapters;
+* labels.
 
-## 24.5 Master claim audit
+## 24.4 Result-figure generator audit
 
-Report counts by support status and required action.
+* script hash;
+* filters;
+* assertions;
+* rounding;
+* sorting;
+* axis logic;
+* regeneration environment.
 
-## 24.6 Numerical audit
+## 24.5 Result-figure source validation
 
-List:
+For each result figure:
 
-* result expressions checked;
-* exact source;
+* source rows;
+* expected labels;
+* expected values;
+* expected order;
+* byte comparison;
+* pixel comparison;
+* conclusion.
+
+## 24.6 DAG source and copy validation
+
+For each DAG:
+
+* canonical source path;
+* duplicate-run hashes;
+* pickle hashes;
+* active-source comparison;
+* node/edge counts;
+* acyclicity;
+* copy match;
+* caption provenance.
+
+## 24.7 MIMIC hash-name collision
+
+State:
+
+* every file sharing the hash;
+* supported explanation A–E;
+* whether the thesis figure is valid;
+* whether the register requires clarification;
+* blocking status.
+
+## 24.8 Figure captions and references
+
+* labels;
+* references;
+* caption boundaries;
+* repairs.
+
+## 24.9 Visual readability
+
+* one row per figure;
+* PDF page;
+* readability;
+* clipping;
+* limitations.
+
+## 24.10 Table inventory
+
+* number of tables;
+* number of numerical tables;
+* number of non-numerical tables.
+
+## 24.11 Numerical tables
+
+* cells checked;
 * discrepancies;
-* repairs;
-* final validation.
-
-## 24.7 Result hierarchy
-
-Report every frozen hierarchy item.
-
-## 24.8 Research questions and contributions
-
-Summarize the matrix and any repairs.
-
-## 24.9 Citation audit
-
-Report:
-
-* used keys;
-* missing keys;
-* duplicate keys;
-* unsupported citation placements;
-* uncited claims;
 * repairs.
 
-## 24.10 Terminology audit
+## 24.12 Non-numerical tables
 
-Report inconsistent terms and repairs.
-
-## 24.11 Causal and clinical language audit
-
-Report every material match and disposition.
-
-## 24.12 Abstract equivalence
-
-Report:
-
-* English word count;
-* Hebrew word count;
-* numerical equivalence;
-* semantic-equivalence result;
+* claim validation;
+* discrepancies;
 * repairs.
 
-## 24.13 Front matter
+## 24.13 Table layout
 
-Report:
-
-* title consistency;
-* keyword counts;
-* nomenclature;
-* administrative gates;
-* acknowledgements.
+* rendered inspection;
+* unreadable tables;
+* repairs.
 
 ## 24.14 Appendix
 
-Report support and any repair.
+* claim count;
+* support;
+* overclaims;
+* repairs.
 
-## 24.15 Existing figures
+## 24.15 Reproducibility artifacts
 
-Report hashes and confirm no changes.
+* existence;
+* hashes;
+* cross-record consistency;
+* unresolved provenance.
 
 ## 24.16 Files changed
 
@@ -1265,124 +1462,133 @@ List exact paths.
 
 ## 24.17 Protected-file validation
 
-Report hash comparison for frozen evidence and figures.
+* total protected files;
+* changed count;
+* figure hashes;
+* generator hashes.
 
-## 24.18 Final build and render
-
-Report:
+## 24.18 Final build
 
 * page count;
 * PDF hash;
-* citations;
-* references;
-* labels;
-* fatal errors;
-* Biber;
-* glyph/bidi status;
+* compilation checks;
 * warning counts;
-* visual-inspection result.
+* visual inspection.
 
 ## 24.19 Remaining gates
 
 Carry forward:
 
+* assistant figure approval;
 * supervisor ratification;
 * clinical review;
 * CausalPFN source/version;
-* raw/configuration/split/checkpoint/source/archive provenance;
+* exact configurations;
+* raw/processed provenance;
+* predictive split/checkpoint/export lineage;
 * overlap/balance;
 * fairness;
 * external/prospective validation;
 * LLM human-review provenance;
-* ethics/governance wording;
-* title and English-thesis approval;
+* ethics/governance;
+* title/English authorization;
 * official administrative details;
 * acknowledgements;
-* current faculty forms;
-* detailed external figure correctness review in Stage 5.2.
+* current faculty forms.
 
 ## 24.20 Readiness decision
 
 Use exactly one:
 
 ```text
-READY FOR STAGE 5.2 WITH NON-BLOCKING WARNINGS
-BLOCKED BEFORE STAGE 5.2
+READY FOR EXTERNAL FIGURE VALIDATION
+BLOCKED BEFORE EXTERNAL FIGURE VALIDATION
 ```
+
+Do not declare readiness for Stage 5.3.
 
 ---
 
-# 25. Readiness rules
+# 25. Blocking rules
 
 Use:
 
 ```text
-READY FOR STAGE 5.2 WITH NON-BLOCKING WARNINGS
-```
-
-only if:
-
-* all reader-facing claims are supported or correctly qualified;
-* every repeated number matches;
-* citation keys resolve;
-* citation placement is defensible;
-* terminology is consistent;
-* result hierarchy is unchanged;
-* abstracts are equivalent;
-* no figure changed;
-* no auxiliary build files remain tracked or retained;
-* the thesis builds;
-* protected evidence is unchanged;
-* remaining gates require external human, clinical, institutional, provenance, or later figure review.
-
-Use:
-
-```text
-BLOCKED BEFORE STAGE 5.2
+BLOCKED BEFORE EXTERNAL FIGURE VALIDATION
 ```
 
 if:
 
-* an unsupported reader-facing claim remains;
-* a number cannot be reconciled;
-* a citation is materially wrong and no approved source supports repair;
-* an abstract differs materially from the thesis or its translation;
-* result hierarchy drift remains;
-* a body repair requires new research;
-* a figure changed;
+* a figure hash changed unexpectedly;
+* a source file is missing;
+* a numerical figure cannot be reproduced;
+* regenerated pixels differ without explanation;
+* a figure includes the wrong rows;
+* an axis, sign, value, label, title, or legend is wrong;
+* PhysioNet shock is hidden or sign-flipped;
+* a ranking uses an unauthorized estimator or aggregation;
+* a DAG copy does not match its archived canonical source;
+* the active-source graph and archived pickle differ materially;
+* the MIMIC hash-name collision remains unresolved;
+* a caption claims exact producing provenance not established by evidence;
 * an excluded figure entered the thesis;
-* auxiliary generated files remain committed or retained;
-* frozen evidence changed;
-* the thesis does not build.
+* a table contains an unreconciled value;
+* a failed or missing result is displayed as zero;
+* a robustness result is presented as primary;
+* a reproducibility artifact contains an unreconciled hash or status;
+* the thesis fails to build;
+* protected evidence changed.
+
+Use:
+
+```text
+READY FOR EXTERNAL FIGURE VALIDATION
+```
+
+only when:
+
+* every result figure is source-exact;
+* every result figure is byte- or pixel-equivalent to isolated regeneration;
+* every DAG is an exact canonical copy;
+* archived DAG pickles match active source structure;
+* the MIMIC duplicate-name issue has a supported explanation;
+* all captions are evidence-bounded;
+* every table is source-checked;
+* every appendix claim is supported;
+* reproducibility records are internally consistent;
+* all protected files are unchanged;
+* the thesis builds;
+* all five figures remain `PENDING_ASSISTANT_REVIEW`.
 
 ---
 
 # 26. Final Codex response
 
-At completion report:
+Report:
 
 1. verified head and parent;
 2. readiness status;
-3. generated files removed;
-4. `.gitignore` change;
-5. total claims audited;
-6. numerical discrepancies and repairs;
-7. citation issues and repairs;
-8. terminology issues and repairs;
-9. abstract-equivalence result;
-10. research-question and contribution result;
-11. causal/clinical-language result;
-12. appendix result;
-13. figure-preservation result;
-14. files changed;
-15. protected-file result;
-16. final page count and PDF hash;
-17. build and render result;
-18. remaining gates;
-19. exact next authorized stage.
+3. five included figures and hashes;
+4. result-figure regeneration result;
+5. byte/pixel equivalence result;
+6. DAG source/pickle comparison;
+7. MIMIC hash-name collision conclusion;
+8. caption repairs;
+9. table count and value checks;
+10. table repairs;
+11. appendix result;
+12. reproducibility-artifact result;
+13. files changed;
+14. protected-file result;
+15. final page count and PDF hash;
+16. build/render result;
+17. every blocking or pending question;
+18. explicit statement that all figures remain pending independent assistant review.
 
 Do not commit or push.
 
 Do not edit `prompt.txt`.
 
-Do not begin Stage 5.2.
+Do not begin Stage 5.3.
+
+Do not claim that Codex approved any figure.
