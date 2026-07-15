@@ -1,4 +1,4 @@
-# Stage 4.10A — Evidence-Constrained Draft of Chapter 12: Conclusions and Future Work
+# Stage 4.10B — Independent Conclusion Consistency Audit and Repair
 
 ## Model
 
@@ -6,65 +6,81 @@ GPT-5.6 Sol
 
 ## Reasoning
 
-High
+Extra High
 
 ## Task identity
 
 Implement this task as:
 
 ```text
-Stage 4.10A — Derive the Supported Conclusion Set and Draft Chapter 12
+Stage 4.10B — Independent Chapter 12 and Whole-Thesis Conclusion Consistency Audit
 ```
 
-The latest approved commit is expected to be:
+The current repository head is expected to be:
+
+```text
+46c3c87 step 4.10A
+```
+
+Its immediate parent is expected to be:
+
+```text
+212ded22 step 4.10A
+```
+
+Important distinction:
+
+* `212ded22` is the substantive Stage 4.10A thesis commit. It contains the Chapter 12 draft, conclusion evidence brief, Stage 4.10A evidence report, and rebuilt PDF.
+* `46c3c87` is a prompt-only follow-up commit. Its only intended change relative to `212ded22` is `prompt.txt`.
+* Do not treat the duplicate commit messages as evidence that two substantive Chapter 12 drafting stages occurred.
+
+The substantive Stage 4.10A commit follows:
 
 ```text
 5739832 step 4.9B
 ```
 
-Its immediate predecessor is expected to be:
+The next planned task after this audit is:
 
 ```text
-7ef3d97 step 4.9A
+Stage 4.10C — Final Title, Abstracts, Keywords, and Front/Back Matter Completion
 ```
 
-The next task after this one will be:
-
-```text
-Stage 4.10B — Independent Conclusion Consistency Audit and Repair
-```
-
-Do not begin Stage 4.10B.
+Do not begin Stage 4.10C.
 
 ---
 
 # 1. Objective
 
-Complete:
+Independently audit:
 
 ```text
 thesis-writing/thesis/chapters/12_conclusions_future_work.tex
 ```
 
-Before drafting the chapter, derive a bounded conclusion evidence brief that identifies:
+against the completed thesis, frozen result packet, author-approved result hierarchy, and unresolved evidence gates.
 
-1. the research problem actually addressed;
-2. the implemented workflow;
-3. the research questions answered by the available evidence;
-4. the supported methodological and engineering contributions;
-5. the principal verified findings;
-6. the findings that must remain exploratory;
-7. the limitations that materially constrain interpretation;
-8. future work that follows directly from those limitations;
-9. claims that must not appear in the conclusion.
+Do not merely confirm the claims made in the Stage 4.10A evidence report.
 
-Then draft Chapter 12 strictly from that evidence brief.
+Reconstruct the permitted conclusion set independently from the authoritative thesis and result sources, compare it with Chapter 12, and repair Chapter 12 only where the audit identifies a material inconsistency, unsupported claim, omitted qualification, numerical mismatch, hierarchy drift, or inappropriate future-work statement.
 
-The chapter must summarize and close the thesis. It must not introduce new evidence, methods, results, citations, interpretations, or contributions.
+A valid outcome may contain no Chapter 12 prose changes if the independent audit establishes that the current chapter is already correct.
+
+This stage must not:
+
+* introduce a new result;
+* introduce a new contribution;
+* introduce a new method;
+* conduct new research;
+* add new literature;
+* reinterpret the result hierarchy;
+* strengthen clinical or causal claims;
+* begin front-matter drafting;
+* rewrite earlier chapters.
 
 ---
 
-# 2. Repository and commit validation
+# 2. Mandatory repository verification
 
 From the repository root, run:
 
@@ -72,463 +88,63 @@ From the repository root, run:
 git status --short
 git branch --show-current
 git log -10 --oneline
-git show --stat --oneline 5739832
-git diff --stat 7ef3d97..5739832
+
+git show --stat --oneline 46c3c87
+git diff --stat 212ded22..46c3c87
+
+git show --stat --oneline 212ded22
+git diff --stat 5739832..212ded22
 ```
 
 Confirm:
 
-* `5739832` exists;
-* its message is `step 4.9B`;
-* it follows `7ef3d97 step 4.9A`;
-* `thesis-writing/logs/stage_4_9B_evidence_report.md` exists;
-* the report concludes that the thesis is ready for Stage 4.10A with non-blocking warnings;
-* the validated thesis contains 119 pages;
-* Chapter 10 was not numerically changed in Stage 4.9B;
-* Chapter 12 is still undrafted or contains only its approved placeholder structure.
+1. `46c3c87` exists and its message is `step 4.10A`.
+2. Its immediate parent is `212ded22`.
+3. The only intended change in `212ded22..46c3c87` is `prompt.txt`.
+4. `212ded22` exists and its message is also `step 4.10A`.
+5. `212ded22` follows `5739832 step 4.9B`.
+6. The substantive Stage 4.10A commit changed only:
 
-Record the initial worktree state.
-
-Do not overwrite or absorb unrelated pre-existing working-tree changes.
-
----
-
-# 3. Baseline build
-
-Before editing, run:
-
-```bash
-cd thesis-writing/thesis
-latexmk -C
-latexmk -xelatex main.tex
-test -f main.pdf
-pdfinfo main.pdf
-```
-
-Record:
-
-* command return status;
-* page count;
-* unresolved citations;
-* unresolved references;
-* duplicate labels;
-* Biber warnings or errors;
-* fatal errors;
-* layout warnings.
-
-The expected baseline is approximately 119 pages, but verify it directly.
-
----
-
-# 4. Required thesis inspection
-
-Read the complete current versions of:
+   * `thesis-writing/thesis/chapters/12_conclusions_future_work.tex`;
+   * `thesis-writing/logs/stage_4_10A_conclusion_evidence_brief.md`;
+   * `thesis-writing/logs/stage_4_10A_evidence_report.md`;
+   * `thesis-writing/thesis/main.pdf`.
+7. The Stage 4.10A report concludes:
 
 ```text
-thesis-writing/thesis/chapters/01_introduction.tex
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
-thesis-writing/thesis/chapters/05_proxy_state_construction.tex
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
-thesis-writing/thesis/chapters/07_causal_methodology.tex
-thesis-writing/thesis/chapters/08_diagnostics_sensitivity.tex
-thesis-writing/thesis/chapters/09_experimental_design.tex
-thesis-writing/thesis/chapters/10_results.tex
-thesis-writing/thesis/chapters/11_discussion.tex
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
+READY FOR STAGE 4.10B WITH NON-BLOCKING WARNINGS
 ```
 
-Chapter 2 may be inspected for terminology and literature positioning, but the conclusion should normally not become a miniature related-work chapter.
+8. The report records a successful 122-page build.
+9. The worktree may contain unrelated pre-existing changes.
 
-Treat:
-
-```text
-Chapter 10
-```
-
-as the numerical authority.
-
-Treat:
-
-```text
-Chapter 11
-```
-
-as the main authority for interpretation, limitations, clinical boundaries, and future implications.
-
-Treat:
-
-```text
-Chapter 1
-```
-
-as the authority for the original motivation, objectives, research questions, and claimed contribution structure, subject to correction by the actual evidence in Chapters 10 and 11.
-
----
-
-# 5. Required audit and planning inspection
-
-Inspect:
-
-```text
-thesis-writing/audit/claim_evidence_ledger.csv
-thesis-writing/audit/evidence_inventory.md
-thesis-writing/audit/experiment_inventory.csv
-thesis-writing/audit/unresolved_questions.md
-thesis-writing/audit/terminology_map.md
-```
-
-Inspect:
-
-```text
-thesis-writing/planning/thesis_story.md
-thesis-writing/planning/thesis_outline.md
-thesis-writing/planning/chapter_evidence_map.md
-thesis-writing/planning/terminology_and_notation.md
-thesis-writing/planning/writing_order.md
-```
-
-Inspect the latest Stage 4 reports, especially:
-
-```text
-thesis-writing/logs/stage_4_8_evidence_report.md
-thesis-writing/logs/stage_4_9A_evidence_report.md
-thesis-writing/logs/stage_4_9B_evidence_report.md
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-```
-
-Later approved thesis text and evidence reports take precedence over stale planning statements.
-
----
-
-# 6. Create the conclusion evidence brief
-
-Create:
-
-```text
-thesis-writing/logs/stage_4_10A_conclusion_evidence_brief.md
-```
-
-The brief must be created before drafting Chapter 12.
-
-Use the following structure.
-
-## 6.1 Research problem
-
-State the problem addressed by the thesis in no more than one concise paragraph.
-
-Distinguish:
-
-* irregular clinical time-series representation;
-* proxy-state construction and prediction;
-* downstream observational causal analysis;
-* the integration and provenance problem connecting these stages.
-
-## 6.2 Supported workflow summary
-
-List the actual workflow components represented in the thesis:
-
-* dataset preprocessing;
-* project-specific clinical proxy-state construction;
-* predictive modeling of proxy states;
-* prediction normalization or aggregation where applicable;
-* clinician- or project-authored causal graph use;
-* matching-based descriptive summaries;
-* CausalForestDML;
-* LinearDML;
-* exploratory CausalPFN analysis;
-* overlap, sensitivity, and permutation diagnostics where actually available.
-
-Do not describe an implemented component as executed unless the thesis evidence establishes execution.
-
-## 6.3 Supported contribution set
-
-For each proposed contribution, record:
-
-```text
-Contribution
-Evidence source
-Permitted wording
-Forbidden stronger wording
-Confidence: supported / supported with qualification / exploratory / blocked
-```
-
-Potential contribution classes include:
-
-* integrated pipeline design;
-* common proxy-state interface between predictive and causal stages;
-* cross-dataset application;
-* comparative predictive evaluation;
-* transparent rule-based proxy construction;
-* DAG-guided adjustment workflow;
-* heterogeneous-effect estimation;
-* estimator agreement and disagreement analysis;
-* evidence and provenance tracking.
-
-Do not invent novelty.
-
-Do not claim that the thesis invented the underlying time-series models, DML, causal forests, weak supervision, DAGs, matching, or sensitivity methods.
-
-## 6.4 Supported findings
-
-Extract only findings already reported in Chapter 10 and interpreted in Chapter 11.
-
-For every finding, record:
-
-```text
-Finding
-Exact source location
-Whether a number may be repeated
-Required qualification
-```
-
-Prefer a small set of central findings over a long catalogue of values.
-
-Check every repeated number directly against Chapter 10.
-
-## 6.5 Exploratory or bounded findings
-
-Explicitly identify findings that cannot be presented as primary conclusions, including:
-
-* CausalPFN findings;
-* findings with incomplete diagnostic support;
-* treatment or dataset comparisons with poor matching support;
-* estimates showing material estimator disagreement;
-* findings dependent on proxy-state validity;
-* downsampled-cohort robustness results;
-* findings with unresolved provenance limitations.
-
-## 6.6 Required limitations
-
-At minimum, evaluate whether the conclusion must retain:
-
-* observational identification assumptions;
-* unmeasured confounding;
-* overlap and empirical-support limitations;
-* project-specific proxy-state validity;
-* proxy-label and prediction error propagation;
-* uncertainty in the DAG;
-* estimator disagreement;
-* incomplete CausalPFN diagnostics and literature support;
-* missing clinical review;
-* data and artifact provenance limitations;
-* external validity;
-* absence of clinical deployment validation;
-* LLM-assisted design provenance limitations.
-
-## 6.7 Permitted future work
-
-Every future-work item must connect to a documented limitation or an uncompleted validation requirement.
-
-For each item, record:
-
-```text
-Future-work item
-Limitation addressed
-Concrete next research action
-Whether it requires new data, expert review, implementation, or experimentation
-```
-
-## 6.8 Forbidden conclusion claims
-
-Create an explicit list of statements the chapter must not make.
-
-At minimum prohibit claims that:
-
-* the proxy states are verified diagnoses;
-* the project DAG is clinically validated;
-* estimator use proves causality;
-* association, matching, or directional agreement proves a treatment effect;
-* CausalPFN has the same theoretical or diagnostic support as the DML estimators;
-* the models are ready for clinical deployment;
-* an LLM served as a medical expert or causal-discovery method;
-* the study established individualized treatment recommendations;
-* overlap or positivity was proven globally;
-* all experiments are reproducible from the tracked repository alone;
-* the thesis invented the cited models or causal estimators.
-
----
-
-# 7. Required Chapter 12 structure
-
-Use a compact structure with no unnecessary subsections.
-
-Preserve existing labels where present.
-
-Recommended structure:
-
-```latex
-\chapter{Conclusions and Future Work}
-\label{chap:conclusions-future-work}
-
-\section{Summary of the Study}
-
-\section{Main Findings and Contributions}
-
-\section{Limitations of the Conclusions}
-
-\section{Future Work}
-
-\section{Closing Perspective}
-```
-
-A four-section structure is also acceptable if the final section is naturally integrated into Future Work.
-
-Do not create a long chapter that repeats the Discussion.
-
-Target a concise conclusion chapter appropriate to the existing thesis length.
-
----
-
-# 8. Content requirements
-
-## 8.1 Summary of the study
-
-Summarize:
-
-* the motivating problem;
-* why irregular ICU time series and proxy clinical states matter;
-* how the predictive and causal components were connected;
-* the datasets and broad model families;
-* the role of evidence tracking and conservative interpretation.
-
-Do not repeat implementation-level detail.
-
-## 8.2 Findings and contributions
-
-Present the contributions in descending order of support.
-
-Clearly distinguish:
-
-* engineering or workflow contributions;
-* methodological application contributions;
-* empirical findings;
-* exploratory findings.
-
-Maintain the approved hierarchy:
-
-* original cohorts are primary;
-* outcome-downsampled analyses are robustness analyses;
-* CausalForestDML is primary;
-* LinearDML is secondary;
-* CausalPFN is exploratory;
-* matching is a descriptive and empirical-support baseline, not independent causal proof.
-
-Use numerical values sparingly.
-
-Any number included must be copied exactly from Chapter 10 and checked against its table or paragraph source.
-
-## 8.3 Limitations
-
-Do not replace limitations with generic statements.
-
-Focus on limitations that change interpretation of the findings.
-
-State clearly that:
-
-* proxy states are project-specific analytical constructs;
-* causal estimates depend on stated assumptions;
-* diagnostics reduce but do not eliminate uncertainty;
-* estimator agreement is informative but not proof;
-* disagreement is substantive evidence of fragility;
-* clinical utility and deployment were not validated.
-
-## 8.4 Future work
-
-Future work should be prioritized and concrete.
-
-Possible categories, only where supported by the evidence brief:
-
-1. clinical review and validation of proxy-state definitions;
-2. external and temporal validation on additional cohorts;
-3. improved provenance and fully reproducible artifact manifests;
-4. prospective or target-trial-aligned study designs;
-5. stronger overlap handling and support-aware estimands;
-6. richer uncertainty and sensitivity analysis;
-7. investigation of measurement and label error propagation;
-8. improved evaluation of predicted versus rule-derived proxy states;
-9. verified theoretical and diagnostic treatment of CausalPFN;
-10. clinically meaningful effect-modifier and subgroup validation;
-11. ablations isolating individual pipeline handoffs;
-12. human-governed documentation of LLM-assisted design decisions.
-
-Do not present planned work as completed.
-
-## 8.5 Closing perspective
-
-End with a measured statement about what the thesis demonstrates.
-
-The final paragraph should emphasize the value of transparent integration and evidence boundaries, not clinical readiness or definitive causal discovery.
-
----
-
-# 9. Citation policy
-
-The conclusion should normally rely on citations already used elsewhere only when needed for a foundational framing statement.
-
-Do not turn the conclusion into a literature review.
+Record the complete initial worktree state.
 
 Do not:
 
-* add a new bibliography entry;
-* add a new paper;
-* modify the literature corpus;
-* add a CausalPFN citation;
-* add an LLM-methodology citation;
-* cite repository files as academic literature.
+* reset;
+* clean;
+* switch branches;
+* discard changes;
+* stage files;
+* amend;
+* commit;
+* push;
+* absorb unrelated working-tree changes into this task.
 
-Where the chapter summarizes this thesis’s own methods and findings, refer to earlier chapters, figures, or tables rather than adding external citations unnecessarily.
-
----
-
-# 10. Numerical and causal-language protections
-
-Before writing any number:
-
-1. locate it in Chapter 10;
-2. verify its dataset, cohort, exposure, estimator, and metric;
-3. verify whether it is primary, secondary, exploratory, or robustness-only;
-4. preserve its sign, denominator, rounding, and qualification.
-
-Do not calculate a new aggregate.
-
-Do not average findings across datasets or estimators unless Chapter 10 already reports that aggregate.
-
-Avoid language such as:
+If the actual commit structure differs materially from the expected structure, stop substantive editing and report:
 
 ```text
-proved
-demonstrated causally
-clinically effective
-protective
-harmful
-treatment recommendation
-diagnosed
-validated phenotype
-clinically actionable
-```
-
-unless the exact local sentence explicitly rejects or qualifies that interpretation.
-
-Prefer:
-
-```text
-estimated
-was associated with
-was directionally consistent
-under the stated assumptions
-within the observed analytical sample
-project-specific proxy state
-exploratory finding
-supports further investigation
+BLOCKED BEFORE STAGE 4.10B — REPOSITORY BASELINE MISMATCH
 ```
 
 ---
 
-# 11. Protected scope
+# 3. Baseline preservation hashes
 
-Do not edit:
+Before editing, create a temporary local hash record for files that must remain unchanged.
+
+At minimum hash:
 
 ```text
 thesis-writing/thesis/chapters/01_introduction.tex
@@ -538,97 +154,667 @@ thesis-writing/thesis/chapters/04_data_preprocessing.tex
 thesis-writing/thesis/chapters/05_proxy_state_construction.tex
 thesis-writing/thesis/chapters/06_predictive_modeling.tex
 thesis-writing/thesis/chapters/07_causal_methodology.tex
-thesis-writing/thesis/chapters/08_diagnostics_sensitivity.tex
+thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
 thesis-writing/thesis/chapters/09_experimental_design.tex
 thesis-writing/thesis/chapters/10_results.tex
 thesis-writing/thesis/chapters/11_discussion.tex
+thesis-writing/results/checked_*.csv
+thesis-writing/results/results_manifest.md
+thesis-writing/results/results_source_packet.md
+thesis-writing/results/results_decision_register.md
+thesis-writing/results/results_checksums.sha256
+thesis-writing/literature/metadata/references.bib
+thesis-writing/literature/metadata/catalog.csv
 ```
 
-Do not edit:
+Use a temporary path outside the authorized deliverables or remove the temporary hash file after final comparison.
 
-* research code;
-* result artifacts;
-* figures;
-* tables;
-* bibliography;
-* literature metadata;
-* PDFs;
-* planning files;
-* audit files;
-* dataset configs;
-* previous Stage 4 reports.
+At the end, prove that all of these files are byte-for-byte unchanged.
 
-Allowed edits are limited to:
-
-```text
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
-thesis-writing/logs/stage_4_10A_conclusion_evidence_brief.md
-thesis-writing/logs/stage_4_10A_evidence_report.md
-thesis-writing/logs/unresolved_placeholders.md
-thesis-writing/logs/deferred_fixes.md
-prompt.txt
-```
-
-Update the two tracking logs only when Stage 4.10A identifies a genuinely new unresolved issue or changes the status of an existing one.
-
-Do not silently delete existing unresolved items.
+Chapter 12 is the only thesis chapter that may be repaired.
 
 ---
 
-# 12. Required self-audit
+# 4. Baseline build
 
-After drafting, compare Chapter 12 against Chapters 1, 10, and 11.
-
-Create a table in the evidence report with:
+Before editing, run from:
 
 ```text
-Conclusion claim
-Introduction alignment
-Results support
-Discussion support
-Evidence-brief status
+thesis-writing/thesis/
+```
+
+```bash
+latexmk -C
+latexmk -xelatex main.tex
+test -f main.pdf
+pdfinfo main.pdf
+```
+
+Record:
+
+* command return status;
+* PDF path;
+* page count;
+* unresolved citations;
+* unresolved references;
+* duplicate labels;
+* Biber warnings or errors;
+* fatal LaTeX errors;
+* overfull-box warnings;
+* underfull-box warnings.
+
+The prior report recorded 122 pages, but verify the current repository directly.
+
+Build success is a formatting check only. It does not establish scientific correctness.
+
+---
+
+# 5. Authoritative source hierarchy
+
+Use this hierarchy when claims conflict.
+
+## 5.1 Numerical and result authority
+
+Primary numerical authority:
+
+```text
+thesis-writing/results/checked_*.csv
+thesis-writing/results/results_manifest.md
+thesis-writing/results/results_source_packet.md
+thesis-writing/results/results_decision_register.md
+thesis-writing/results/results_checksums.sha256
+thesis-writing/thesis/chapters/10_results.tex
+```
+
+Use checked CSVs and the frozen result packet to validate numbers.
+
+Chapter 10 is the reader-facing numerical authority.
+
+Do not take a value from:
+
+* an optional figure;
+* a seminar slide;
+* an old planning document;
+* a source result with unresolved conflict;
+* an excluded historical artifact;
+* a prose summary when a checked table exists.
+
+## 5.2 Interpretation authority
+
+Use:
+
+```text
+thesis-writing/thesis/chapters/11_discussion.tex
+```
+
+as the principal authority for:
+
+* interpretation;
+* research-question answers;
+* causal boundaries;
+* proxy-state boundaries;
+* clinical meaning;
+* limitations;
+* external validity;
+* future implications.
+
+## 5.3 Objective and contribution authority
+
+Use:
+
+```text
+thesis-writing/thesis/chapters/01_introduction.tex
+```
+
+as the principal authority for:
+
+* motivation;
+* thesis gap;
+* objective;
+* main research question;
+* SRQ-1 through SRQ-7;
+* approved contribution hierarchy.
+
+The Introduction remains subordinate to actual evidence in Chapters 10 and 11.
+
+## 5.4 Method and execution authority
+
+Inspect, as needed:
+
+```text
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
+thesis-writing/thesis/chapters/04_data_preprocessing.tex
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
+thesis-writing/thesis/chapters/09_experimental_design.tex
+```
+
+Use these chapters to verify that a claimed workflow component, diagnostic, or contribution was actually described and supported.
+
+Consult active repository code only when a Chapter 12 implementation claim cannot be resolved from the completed thesis and audit files. Code inspection must remain read-only and narrowly targeted.
+
+## 5.5 Stage 4.10A materials
+
+Inspect:
+
+```text
+thesis-writing/logs/stage_4_10A_conclusion_evidence_brief.md
+thesis-writing/logs/stage_4_10A_evidence_report.md
+```
+
+These are the objects being audited, not higher authorities than the thesis and frozen result packet.
+
+Do not copy their conclusions without independent verification.
+
+---
+
+# 6. Required tracking and audit files
+
+Inspect:
+
+```text
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
+thesis-writing/audit/claim_evidence_ledger.csv
+thesis-writing/audit/evidence_inventory.md
+thesis-writing/audit/experiment_inventory.csv
+thesis-writing/audit/unresolved_questions.md
+thesis-writing/audit/terminology_map.md
+```
+
+At minimum carry forward the still-open classes of issues concerning:
+
+* supervisor ratification;
+* clinical review and construct validation;
+* primary CausalPFN source and version alignment;
+* exact causal configurations;
+* predictive split/checkpoint/export lineage;
+* raw and processed artifact provenance;
+* producing commits and archive-copy history;
+* overlap and balance evidence;
+* intervention and target-trial definition;
+* subgroup fairness;
+* external and prospective validation;
+* LLM prompt-run and human-review provenance;
+* ethics and governance wording;
+* final title and abstract alignment;
+* final numerical and causal-language review.
+
+Do not mark any external or human-review gate resolved without new authoritative evidence.
+
+Do not duplicate an existing deferred-fix entry merely because Chapter 12 mentions the issue.
+
+---
+
+# 7. Create the independent conclusion claim audit
+
+Create:
+
+```text
+thesis-writing/logs/stage_4_10B_conclusion_claim_audit.csv
+```
+
+Use one row per materially distinct Chapter 12 claim.
+
+Required columns:
+
+```text
+claim_id
+chapter12_section
+line_or_excerpt
+claim_type
+claim_summary
+authoritative_source
+exact_source_location
+numeric_expression
+support_status
+qualification_status
+hierarchy_status
+novelty_status
+wording_risk
+required_action
+notes
+```
+
+Use claim types such as:
+
+```text
+RESEARCH_PROBLEM
+WORKFLOW
+IMPLEMENTATION
+CONTRIBUTION
+PREDICTIVE_FINDING
+CAUSAL_MODEL_FINDING
+ESTIMATOR_COMPARISON
+EXPLORATORY_FINDING
+LIMITATION
+FUTURE_WORK
+NEGATIVE_BOUNDARY
+CLOSING_SYNTHESIS
+```
+
+Use support statuses:
+
+```text
+SUPPORTED
+SUPPORTED_WITH_QUALIFICATION
+EXPLORATORY_CORRECTLY_BOUNDED
+LIMITATION_SUPPORTED
+FUTURE_WORK_DERIVED
+UNSUPPORTED
+INCONSISTENT
+SOURCE_AMBIGUOUS
+```
+
+Use hierarchy statuses:
+
+```text
+CONSISTENT
+DRIFTED
+NOT_APPLICABLE
+```
+
+Use novelty statuses:
+
+```text
+ALREADY_ESTABLISHED
+NEW_UNSUPPORTED_CLAIM
+NOT_APPLICABLE
+```
+
+For every number or count, identify the exact checked or Chapter 10 source.
+
+Do not use vague locations such as “results chapter.” Identify the section, table, figure, checked file, or paragraph.
+
+---
+
+# 8. Independent audit procedure
+
+## 8.1 Reconstruct the permitted conclusion before judging Chapter 12
+
+Without relying first on the Stage 4.10A brief, derive:
+
+1. the research problem actually addressed;
+2. the implemented and empirically exercised workflow;
+3. the supported contribution hierarchy;
+4. the central predictive findings;
+5. the central model-estimated findings;
+6. the matching and diagnostic role;
+7. the permitted CausalPFN conclusion;
+8. the major limitations that change interpretation;
+9. the future work directly implied by those limitations;
+10. claims that remain prohibited.
+
+Then compare your independently derived set with:
+
+```text
+stage_4_10A_conclusion_evidence_brief.md
+12_conclusions_future_work.tex
+```
+
+Document both agreements and discrepancies.
+
+## 8.2 Research-question coverage
+
+Audit Chapter 12 against:
+
+* the main research question;
+* SRQ-1 through SRQ-7.
+
+Chapter 12 does not need to restate every SRQ separately.
+
+It must, however, close the thesis without contradicting or silently omitting a research-question answer whose absence would materially distort the contribution or conclusions.
+
+In the evidence report, include a compact matrix:
+
+```text
+Research question
+Authoritative answer
+Chapter 12 coverage
+Adequate / partial / misleading / absent-but-acceptable
 Action
 ```
 
-Verify:
+An omission is acceptable when the point is subordinate and already synthesized accurately.
 
-1. every stated objective corresponds to the final study;
-2. every claimed contribution is supported;
-3. every finding appears in Chapter 10;
-4. every interpretation is permitted by Chapter 11;
-5. no new result appears;
-6. no new method appears;
-7. no new citation appears without an approved reason;
-8. no future-work item is described as completed;
-9. no limitation disappears merely because it weakens the conclusion;
-10. no proxy state is described as a diagnosis;
-11. no estimator is presented as proof of causality;
-12. no result hierarchy changes.
+Do not expand Chapter 12 into a second Discussion chapter merely to mention every SRQ.
 
-Run searches for risky language:
+## 8.3 Contribution audit
 
-```bash
-grep -RniE \
-"proved|proves|definitive|clinically effective|clinically actionable|ready for deployment|diagnosed|validated phenotype|medical expert|causal discovery" \
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
+Verify that Chapter 12 does not claim invention or novelty for:
+
+* STraTS;
+* GRU;
+* GRU-D;
+* TCN;
+* SAnD;
+* weak supervision;
+* proxy phenotyping as a general concept;
+* DAG methodology;
+* matching;
+* DML;
+* causal forests;
+* heterogeneous-treatment-effect estimation;
+* sensitivity methods;
+* permutation testing.
+
+The supported thesis contribution is the transparent, evidence-tracked integration and evaluation of the project workflow, its interfaces, its cross-dataset application, and its bounded empirical analysis.
+
+Check that evidence/provenance infrastructure is described as improving traceability, not proving clean-checkout reproducibility.
+
+## 8.4 Numerical audit
+
+Programmatically extract every numerical expression from Chapter 12.
+
+At minimum verify:
+
+* all nine MIMIC-III primary CausalForestDML summaries were positive;
+* nine of ten PhysioNet primary CausalForestDML summaries were positive;
+* PhysioNet shock was the negative primary-forest exception;
+* CausalForestDML and LinearDML agreed in direction for 19 of 19 original-cohort comparisons;
+* all three estimators agreed in direction for 18 of 19 original-cohort comparisons;
+* PhysioNet shock was the all-three disagreement.
+
+Check the values against Chapter 10 and the frozen checked packet.
+
+No new aggregate may be calculated for Chapter 12.
+
+No numeric value may be added merely because it is available.
+
+If Chapter 12 uses a number unnecessarily, prefer removing it rather than expanding the conclusion into a result catalogue.
+
+## 8.5 Result hierarchy audit
+
+Verify throughout Chapter 12:
+
+```text
+Original cohorts = primary
+Outcome-downsampled cohorts = robustness only
+CausalForestDML = primary
+LinearDML = secondary
+CausalPFN = exploratory
+Matching = descriptive empirical-support baseline
+Normalized CATE = omitted from main thesis results
+No numerical pooling across datasets
+Every prespecified dataset-specific exposure retained
 ```
 
-Review every match manually.
+Directional agreement must not be presented as:
 
-Also confirm:
+* equivalence;
+* superiority;
+* estimator correctness;
+* causal validation;
+* interchangeable uncertainty;
+* a vote that resolves disagreement.
+
+PhysioNet shock must remain visible where estimator disagreement is discussed.
+
+## 8.6 Predictive-result audit
+
+Verify that Chapter 12 states only that:
+
+* the checked comparison included STraTS, GRU, GRU-D, TCN, and SAnD;
+* STraTS led the four archived test metrics in MIMIC-III;
+* GRU-D led the four archived test metrics in PhysioNet;
+* the result supports a dataset-specific pattern in the archived task.
+
+It must not claim:
+
+* universal superiority;
+* statistical significance;
+* confidence-interval separation;
+* clinical validity;
+* general benchmark superiority;
+* complete checkpoint/export lineage.
+
+Run a thesis-wide scan:
 
 ```bash
-grep -Rni "InterpNet\|interpnet" \
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
+grep -Rni "InterpNet\|interpnet" thesis-writing/thesis \
+  --include='*.tex' || true
 ```
 
-There must be no match.
+There must be zero matches.
+
+Historical audit and literature metadata may remain unchanged.
+
+## 8.7 Causal and clinical language audit
+
+Chapter 12 must not state or imply that:
+
+* proxy states are diagnoses;
+* proxy states are ground truth;
+* proxy states are validated phenotypes;
+* similarly named states are identical across datasets;
+* project DAGs were learned from data;
+* project DAGs are clinically validated;
+* adjustment proves exchangeability;
+* matching proves positivity or a treatment effect;
+* CATE summaries are unconditional ATEs;
+* a proxy state caused mortality;
+* changing a proxy would change mortality;
+* an estimator identified an intervention priority;
+* a negative estimate is protective;
+* CausalPFN has DML-equivalent theory or diagnostics;
+* an LLM acted as a medical expert;
+* an LLM performed causal discovery;
+* clinical deployment, bedside decision support, or treatment recommendations are supported;
+* the repository supplies complete clean-checkout reproducibility.
+
+Preferred language includes:
+
+```text
+clinically inspired proxy state
+rule-derived analytical construct
+project-authored or project-specified DAG
+DAG-guided adjustment
+mean model-estimated CATE over the analyzed sample
+descriptive matched-pair outcome difference
+directional concordance
+conditional on project assumptions
+retrospective research workflow
+hypothesis generation
+```
+
+## 8.8 Limitation audit
+
+Ensure that the conclusion retains the limitations that materially constrain interpretation:
+
+* construct validity and clinical review;
+* cross-dataset construct differences;
+* missingness and measurement error;
+* rule, prediction, and majority-vote error propagation;
+* intervention-definition problems;
+* graph uncertainty;
+* temporal ambiguity;
+* possible unmeasured confounding;
+* incomplete overlap and balance evidence;
+* estimator dependence and disagreement;
+* incomplete uncertainty;
+* CausalPFN literature and diagnostic gaps;
+* external-validity limitations;
+* fairness limitations;
+* no prospective or deployment validation;
+* raw, processed, configuration, split, checkpoint, commit, and archive provenance gaps;
+* incomplete human-governed LLM design records;
+* ethics and governance documentation requirements.
+
+Chapter 12 should remain concise. Related limitations may be grouped when their meaning is preserved.
+
+## 8.9 Future-work audit
+
+Every future-work item must be traceable to a documented limitation.
+
+Prioritize:
+
+1. clinical review and construct validation;
+2. target-trial-aligned intervention and estimand definition;
+3. overlap, balance, support-aware estimands, and uncertainty;
+4. exact data, configuration, model, and artifact provenance;
+5. external, temporal, subgroup, and prospective validation;
+6. pipeline-handoff and error-propagation ablations;
+7. verified CausalPFN source, version, theory, and diagnostics;
+8. human-governed LLM prompt and review provenance;
+9. ethics and governance completion.
+
+Do not introduce speculative future work unrelated to the completed thesis.
+
+Do not describe future work as already performed.
+
+Do not promise clinical deployment.
+
+## 8.10 Redundancy and closure audit
+
+Check whether Chapter 12:
+
+* closes the thesis rather than repeating Chapter 11;
+* answers the objective concisely;
+* presents contributions in descending order of support;
+* uses numbers sparingly;
+* preserves a measured final perspective;
+* contains no repository-internal process detail that distracts a thesis reader;
+* contains no internal Codex, prompt-stage, commit, or audit-stage terminology;
+* has no stale placeholder or drafting comment visible in the rendered text.
+
+Comments used only for stable section IDs or evidence maps may remain if consistent with the thesis convention.
+
+Do not perform a stylistic rewrite when a sentence is already accurate and readable.
 
 ---
 
-# 13. Final build and validation
+# 9. Repair policy
 
-After editing, run:
+Repair Chapter 12 only when the audit establishes one of the following:
+
+* factual inconsistency;
+* numerical mismatch;
+* contribution overclaim;
+* hierarchy drift;
+* causal or clinical overclaim;
+* unsupported implementation claim;
+* future work not derived from a limitation;
+* materially omitted qualification;
+* contradiction with Chapters 1, 10, or 11;
+* misleading redundancy;
+* broken reference or LaTeX issue.
+
+Use the smallest sufficient edit.
+
+Do not edit Chapters 1–11 in this stage.
+
+If Chapter 12 can be repaired without changing earlier chapters, repair it.
+
+If a genuine conflict requires changing an earlier chapter, frozen result decision, checked table, bibliography, code, configuration, or result packet:
+
+1. do not make that change;
+2. document the conflict;
+3. classify the stage as blocked;
+4. propose a narrowly scoped repair stage.
+
+A no-change Chapter 12 result is acceptable and preferable to unnecessary rewriting.
+
+---
+
+# 10. Literature and citation policy
+
+Do not:
+
+* browse the web;
+* download papers;
+* add papers;
+* remove papers;
+* edit PDFs;
+* edit `references.bib`;
+* edit `catalog.csv`;
+* edit literature checksums;
+* add a CausalPFN citation;
+* add formal LLM-methodology citations;
+* add citations merely to make Chapter 12 appear better supported.
+
+Chapter 12 currently contains no external citations. Retaining that design is acceptable because the chapter synthesizes claims already supported in the preceding thesis.
+
+If the audit finds that Chapter 12 would require a new external citation to sustain a claim, prefer removing or bounding that claim. Otherwise record a separate authorization requirement.
+
+---
+
+# 11. Allowed edit scope
+
+You may edit:
+
+```text
+thesis-writing/thesis/chapters/12_conclusions_future_work.tex
+```
+
+only when required by the independent audit.
+
+You may update:
+
+```text
+thesis-writing/logs/unresolved_placeholders.md
+thesis-writing/logs/deferred_fixes.md
+```
+
+only when:
+
+* a genuinely new issue is discovered;
+* an existing issue’s status materially changes;
+* a precise Stage 4.10B cross-reference is required.
+
+Do not duplicate existing issues.
+
+You may create:
+
+```text
+thesis-writing/logs/stage_4_10B_conclusion_claim_audit.csv
+thesis-writing/logs/stage_4_10B_evidence_report.md
+```
+
+You may regenerate:
+
+```text
+thesis-writing/thesis/main.pdf
+```
+
+through the required clean build.
+
+Do not edit:
+
+```text
+prompt.txt
+thesis-writing/thesis/chapters/01_introduction.tex
+thesis-writing/thesis/chapters/02_background_related_work.tex
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
+thesis-writing/thesis/chapters/04_data_preprocessing.tex
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
+thesis-writing/thesis/chapters/09_experimental_design.tex
+thesis-writing/thesis/chapters/10_results.tex
+thesis-writing/thesis/chapters/11_discussion.tex
+thesis-writing/thesis/frontmatter/
+thesis-writing/thesis/appendices/
+thesis-writing/results/
+thesis-writing/literature/
+thesis-writing/audit/
+thesis-writing/planning/
+router.py
+causal-irregular-time-series/
+STraTS/
+requirements*.txt
+tests/
+```
+
+Do not edit research code, configurations, results, checked CSVs, figures, or bibliography material.
+
+---
+
+# 12. Final validation
+
+After any repair—or after deciding that no prose repair is required—run:
 
 ```bash
 cd thesis-writing/thesis
@@ -638,103 +824,247 @@ test -f main.pdf
 pdfinfo main.pdf
 ```
 
-Check the log for:
+Validate:
 
-* unresolved citations;
-* unresolved references;
-* duplicate labels;
-* Biber warnings or errors;
-* fatal errors;
-* newly introduced layout warnings.
+* PDF exists;
+* compilation succeeds;
+* zero unresolved citations;
+* zero unresolved references;
+* zero duplicate labels;
+* zero fatal LaTeX errors;
+* Biber status;
+* page count;
+* layout-warning counts.
 
-Record the final PDF page count and SHA-256 hash.
+Run targeted scans across Chapter 12 and, where stated, the full thesis:
 
-The page count may increase from 119 because Chapter 12 is being drafted. Do not force a target page count.
+```bash
+grep -Rni "InterpNet\|interpnet" thesis-writing/thesis \
+  --include='*.tex' || true
+
+grep -niE \
+"diagnos|ground truth|validated phenotype|learned DAG|discovered DAG|proved caus|proven caus|caused mortality|protective effect|treatment recommendation|deployment ready|clinical decision support|confounding eliminated|positivity established|superior estimator|medical expert|causal discovery" \
+thesis-writing/thesis/chapters/12_conclusions_future_work.tex || true
+```
+
+Manually inspect every lexical match. Do not treat harmless substrings such as `approved` as violations.
+
+Check:
+
+* all Chapter 12 labels are unique;
+* all internal references resolve;
+* no external citation was added;
+* no placeholder was silently removed without resolution or tracking;
+* no Stage/Codex/commit language appears in rendered prose;
+* all numerical expressions in Chapter 12 appear in the claim-audit CSV;
+* the result hierarchy remains unchanged.
+
+Recalculate the preservation hashes and prove that every protected file is byte-for-byte unchanged.
+
+Record the final worktree state and distinguish:
+
+* Stage 4.10B files;
+* pre-existing unrelated changes;
+* generated build output.
 
 ---
 
-# 14. Evidence report
+# 13. Stage 4.10B evidence report
 
 Create:
 
 ```text
-thesis-writing/logs/stage_4_10A_evidence_report.md
+thesis-writing/logs/stage_4_10B_evidence_report.md
 ```
 
-Include:
+Use this structure:
 
-1. commit and branch validation;
-2. initial worktree state;
-3. baseline build result;
-4. files inspected;
-5. evidence brief summary;
-6. supported contribution set;
-7. supported findings used;
-8. exploratory findings retained as exploratory;
-9. limitations carried into the chapter;
-10. future-work derivation;
-11. forbidden claims checked;
-12. citations used or intentionally omitted;
-13. numerical values repeated and their Chapter 10 sources;
-14. cross-check against Chapters 1, 10, and 11;
-15. files changed;
-16. final worktree state;
-17. final build result;
-18. unresolved issues;
-19. readiness decision for Stage 4.10B.
+## 13.1 Repository baseline
 
-Conclude with exactly one of:
+* current head;
+* substantive Stage 4.10A commit;
+* parent relationship;
+* prompt-only latest commit verification;
+* branch;
+* initial worktree state.
+
+## 13.2 Baseline build
+
+* commands;
+* return codes;
+* page count;
+* citation/reference/label status;
+* warning counts.
+
+## 13.3 Independent sources inspected
+
+List the exact thesis chapters, result-packet files, checked CSVs, audit files, and tracking logs used.
+
+## 13.4 Independent conclusion reconstruction
+
+Summarize the conclusion set derived before comparison with Stage 4.10A.
+
+## 13.5 Claim-audit summary
+
+Report counts for:
+
+* total claims;
+* supported;
+* supported with qualification;
+* exploratory and correctly bounded;
+* limitations supported;
+* future work derived;
+* inconsistent;
+* unsupported;
+* repaired.
+
+## 13.6 Research-question coverage
+
+Include the main RQ and SRQ-1 through SRQ-7 matrix.
+
+## 13.7 Contribution consistency
+
+Explain whether Chapter 12 matches the Introduction’s contribution hierarchy and whether it introduces any novelty claim.
+
+## 13.8 Numerical validation
+
+List every repeated Chapter 12 count or numerical expression and its exact authority.
+
+## 13.9 Result hierarchy validation
+
+Explicitly report the status of:
+
+* original cohorts;
+* downsampling;
+* CausalForestDML;
+* LinearDML;
+* CausalPFN;
+* matching;
+* normalized CATE;
+* cross-dataset pooling.
+
+## 13.10 Causal, clinical, and LLM-language validation
+
+Report scan results and manual interpretation.
+
+## 13.11 Limitations and future-work derivation
+
+Confirm that every future-work item maps to an existing limitation.
+
+## 13.12 Repairs performed
+
+List each repair and its evidence.
+
+If no repair was needed, state:
 
 ```text
-READY FOR STAGE 4.10B
+No Chapter 12 prose repair was required after independent claim-level validation.
 ```
+
+## 13.13 Protected-file validation
+
+Report that Chapters 1–11, the result packet, checked CSVs, and literature metadata remained byte-for-byte unchanged.
+
+## 13.14 Files changed
+
+List exact files.
+
+## 13.15 Final build
+
+Record:
+
+* page count;
+* PDF hash;
+* citations;
+* references;
+* labels;
+* fatal errors;
+* warning counts.
+
+## 13.16 Remaining warnings
+
+Carry forward external and human-review gates without claiming resolution.
+
+## 13.17 Readiness decision
+
+Use exactly one:
 
 ```text
-READY FOR STAGE 4.10B WITH NON-BLOCKING WARNINGS
+READY FOR STAGE 4.10C
+READY FOR STAGE 4.10C WITH NON-BLOCKING WARNINGS
+BLOCKED BEFORE STAGE 4.10C
 ```
-
-```text
-NOT READY FOR STAGE 4.10B
-```
-
-Explain the decision.
 
 ---
 
-# 15. Commit
+# 14. Readiness rules
 
-If and only if:
-
-* Chapter 12 is complete;
-* the evidence brief is complete;
-* the evidence report is complete;
-* the build succeeds;
-* no unsupported conclusion claim remains;
-* no unrelated file was modified;
-
-commit the allowed changes with:
+Use:
 
 ```text
-step 4.10A
+READY FOR STAGE 4.10C
 ```
 
-Do not push.
+only if no unresolved issue relevant to title, abstracts, keywords, or front/back matter remains.
 
-Do not begin Stage 4.10B.
+Because external clinical, supervisor, provenance, and administrative gates are expected to remain, the likely valid status is:
+
+```text
+READY FOR STAGE 4.10C WITH NON-BLOCKING WARNINGS
+```
+
+Use that status only if:
+
+* Chapter 12 is fully supported;
+* every number matches;
+* the hierarchy is unchanged;
+* no unsupported conclusion remains;
+* no earlier chapter needs repair;
+* the thesis builds;
+* protected files are unchanged;
+* remaining issues are already bounded and do not prevent front-matter drafting.
+
+Use:
+
+```text
+BLOCKED BEFORE STAGE 4.10C
+```
+
+if:
+
+* a Chapter 12 claim conflicts materially with authoritative evidence;
+* a numerical discrepancy cannot be repaired within Chapter 12;
+* an earlier chapter or frozen result source must change;
+* a contribution is unsupported;
+* a prohibited clinical or causal claim cannot be safely repaired;
+* the thesis fails to compile;
+* InterpNet appears in reader-facing thesis prose;
+* protected files changed unexpectedly;
+* the repository baseline differs materially from the expected commits.
 
 ---
 
-# 16. Final response
+# 15. Final Codex response
 
-Report:
+At completion, report:
 
-1. commit SHA;
-2. files changed;
-3. Chapter 12 structure;
-4. principal supported conclusions included;
-5. principal limitations retained;
-6. future-work priorities;
-7. repeated numerical values and their source locations;
-8. build result and page count;
-9. remaining warnings;
-10. readiness status for Stage 4.10B.
+1. verified current head and substantive Stage 4.10A commit;
+2. readiness status;
+3. files inspected;
+4. files changed;
+5. whether Chapter 12 required repair;
+6. every repaired claim, if any;
+7. numerical-validation result;
+8. contribution and hierarchy result;
+9. RQ-coverage result;
+10. causal/clinical/LLM-language result;
+11. protected-file hash result;
+12. final build result and page count;
+13. remaining non-blocking warnings;
+14. exact next authorized stage.
+
+Do not commit or push.
+
+Do not edit `prompt.txt`.
+
+Do not begin Stage 4.10C.
