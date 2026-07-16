@@ -71,7 +71,7 @@ For MIMIC-III, all nine archived means were positive.  The largest mean was for 
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}p{0.34\textwidth}rrlp{0.16\textwidth}@{}}
+\begin{longtable}{@{}L{0.34\textwidth}rrlL{0.16\textwidth}@{}}
 \caption{Primary original-cohort MIMIC-III CausalForestDML results ($n=26{,}845$).  Prevalence and mean model-estimated CATE are proportions on their archived scales.}
 \label{tab:results-forest-mimic}\\
 \toprule
@@ -109,7 +109,7 @@ For PhysioNet, nine archived means were positive and the shock mean was negative
 \begingroup
 \footnotesize
 \setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}p{0.34\textwidth}rrlp{0.16\textwidth}@{}}
+\begin{longtable}{@{}L{0.34\textwidth}rrlL{0.16\textwidth}@{}}
 \caption{Primary original-cohort PhysioNet CausalForestDML results ($n=7{,}993$).  Prevalence and mean model-estimated CATE are proportions on their archived scales.}
 \label{tab:results-forest-physionet}\\
 \toprule
@@ -153,7 +153,7 @@ Eight of nine MIMIC exposures and seven of ten PhysioNet exposures produced a ma
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}lp{0.32\textwidth}rrrrp{0.20\textwidth}@{}}
+\begin{longtable}{@{}lL{0.32\textwidth}rrrrL{0.20\textwidth}@{}}
 \caption{Original-cohort descriptive matching and empirical-support summaries.  ``Difference'' is the descriptive matched-pair outcome difference; it is not a model-estimated CATE.}
 \label{tab:results-matching-support}\\
 \toprule
@@ -198,7 +198,7 @@ LinearDML and CausalForestDML agreed in mean-effect direction for all 19 origina
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}lp{0.43\textwidth}rrc@{}}
+\begin{longtable}{@{}lL{0.43\textwidth}rrc@{}}
 \caption{Original-cohort comparison of mean model-estimated CATE from CausalForestDML and LinearDML.}
 \label{tab:results-linear-comparison}\\
 \toprule
@@ -250,7 +250,7 @@ CausalPFN reproduced the prevailing direction in nearly every comparison, suppor
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}lp{0.43\textwidth}rrc@{}}
+\begin{longtable}{@{}lL{0.43\textwidth}rrc@{}}
 \caption{Original-cohort exploratory CausalPFN mean model-estimated CATE and direction agreement with both DML estimators.}
 \label{tab:results-pfn-comparison}\\
 \toprule
@@ -314,7 +314,7 @@ Table~\ref{tab:results-robustness-summary} summarizes availability rather than d
 \begingroup
 \scriptsize
 \setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}lllp{0.20\textwidth}p{0.22\textwidth}p{0.18\textwidth}@{}}
+\begin{longtable}{@{}lllL{0.20\textwidth}L{0.22\textwidth}L{0.18\textwidth}@{}}
 \caption{Robustness and diagnostic availability.  Counts are exposure-level statuses, not effect estimates.}
 \label{tab:results-robustness-summary}\\
 \toprule

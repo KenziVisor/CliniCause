@@ -12,6 +12,8 @@
 \usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{longtable}
+\usepackage{array}
+\usepackage{pdflscape}
 \usepackage{graphicx}
 \graphicspath{{figures/}}
 
@@ -32,6 +34,7 @@
 \setotherlanguage{hebrew}
 \newfontfamily\hebrewfont[Script=Hebrew]{FreeSerif}
 \newcommand{\HebrewTOC}[1]{\texthebrew{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \pdfstringdefDisableCommands{\def\HebrewTOC#1{#1}}
 
 \setcounter{tocdepth}{2}

@@ -12,11 +12,12 @@ Matching is greedy, one-to-one, and based on a binary representation of the sele
 
 Dedicated propensity-score distributions, common-support plots, covariate balance before and after matching, standardized mean differences, weighting effective sample sizes, treatment-probability histograms, and formal positivity diagnostics were not found in the approved archive.  Not every analysis necessarily requires every one of these diagnostics, but their absence limits the strength of overlap claims.  Limited overlap is a general concern for observational effect estimation, not evidence that this repository satisfies positivity \cite{crump_et_al_2009_limited_overlap}.
 
+\begin{landscape}
 \begingroup
 \small
 \sloppy
-\setlength{\tabcolsep}{2.5pt}
-\begin{longtable}{@{}p{0.15\textwidth}p{0.15\textwidth}p{0.18\textwidth}p{0.20\textwidth}p{0.10\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.16\linewidth}L{0.17\linewidth}L{0.21\linewidth}L{0.26\linewidth}L{0.13\linewidth}@{}}
 \caption{Overlap and support diagnostic design; this table contains no numerical results.}
 \label{tab:overlap-support-design}\\
 \toprule
@@ -35,6 +36,7 @@ Thesis support display & Validated original-cohort matching table in Chapter~\re
 \bottomrule
 \end{longtable}
 \endgroup
+\end{landscape}
 
 \section{Sensitivity and Robustness Values}
 \label{sec:robustness-sensitivity-validation-design:sensitivity-robustness-values}
@@ -51,11 +53,12 @@ Benchmark-confounder analysis seeks an interpretable scale: it compares a hypoth
 
 The CausalPFN branch does not implement the same EconML residual, interval, sensitivity, or permutation workflow.  Its missing diagnostics are therefore not zero sensitivity or robustness.  The citation and validation limitation for CausalPFN stated in Chapter~\ref{chap:causal-graph-effect-estimation-methodology} remains in force.
 
+\begin{landscape}
 \begingroup
 \small
 \sloppy
-\setlength{\tabcolsep}{2.5pt}
-\begin{longtable}{@{}p{0.12\textwidth}p{0.13\textwidth}p{0.13\textwidth}p{0.15\textwidth}p{0.14\textwidth}p{0.12\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.13\linewidth}L{0.14\linewidth}L{0.14\linewidth}L{0.17\linewidth}L{0.17\linewidth}L{0.17\linewidth}@{}}
 \caption{Sensitivity-diagnostic design and interpretation boundary.}
 \label{tab:sensitivity-diagnostic-design}\\
 \toprule
@@ -76,6 +79,7 @@ CausalPFN diagnostic status & Orchestration & CausalPFN & N/A for EconML workflo
 \bottomrule
 \end{longtable}
 \endgroup
+\end{landscape}
 
 No sensitivity contour is selected as main-text evidence.  Chapter~\ref{chap:results} reports validated availability and status counts rather than combining diagnostically non-equivalent magnitudes.
 
@@ -90,11 +94,12 @@ The script captures nonzero subprocess return codes and summary-schema failures 
 
 Configuration validation is a separate reproducibility control.  The Python and shell validators check the compact dataset-config schema and invoke active scripts with \texttt{--validate-config-only}; router tests additionally exercise command parsing and construction.  The causal orchestrator writes \texttt{run\_summary.json} with resolved stage commands, paths, statuses, timestamps, and expected outputs, while CATE and saved-analysis control-message CSVs record field-level provenance.  These are different evidence layers: schema/config validation, command-construction validation, stage execution status, artifact existence, and scientific validity.  A successful config check does not prove full execution, and a successful stage status does not validate a causal claim.
 
+\begin{landscape}
 \begingroup
 \small
 \sloppy
-\setlength{\tabcolsep}{2.5pt}
-\begin{longtable}{@{}p{0.14\textwidth}p{0.14\textwidth}p{0.16\textwidth}p{0.11\textwidth}p{0.13\textwidth}p{0.12\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.15\linewidth}L{0.16\linewidth}L{0.20\linewidth}L{0.12\linewidth}L{0.17\linewidth}L{0.13\linewidth}@{}}
 \caption{Permutation and reproducibility-validation design.}
 \label{tab:permutation-reproducibility-design}\\
 \toprule
@@ -113,3 +118,4 @@ Artifact-schema check & None; header/status inspection & Selected artifact path 
 \bottomrule
 \end{longtable}
 \endgroup
+\end{landscape}

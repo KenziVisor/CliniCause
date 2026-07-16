@@ -32,13 +32,14 @@ Benchmark work on MIMIC-III illustrates how a database can be converted into sta
 
 Table~\ref{tab:background-datasets} summarizes the two sources conceptually.  PhysioNet 2012 functions primarily as a bounded mortality-challenge resource derived for a shared task, whereas MIMIC-III provides a broader database that requires more extensive extraction and linkage.  The sources differ in scale, era, available variables, identifier structure, measurement process, and preprocessing burden.  A variable with a similar name can differ in unit, acquisition practice, aggregation, or missingness.  Likewise, a similarly named proxy phenotype can be produced from different evidence and should not be assumed to represent an identical construct.
 
-\begin{table}[htbp]
+\begin{landscape}
+\begin{table}[p]
 \centering
 \caption{Conceptual roles of the ICU datasets used in this thesis.}
 \label{tab:background-datasets}
 \small
-\setlength{\tabcolsep}{2pt}
-\begin{tabular}{@{}p{0.14\textwidth}p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}p{0.20\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}L{0.13\linewidth}L{0.21\linewidth}L{0.21\linewidth}L{0.21\linewidth}L{0.21\linewidth}@{}}
 \toprule
 Dataset & Research role & Longitudinal structure & Strength for this thesis & Important limitation \\
 \midrule
@@ -47,6 +48,7 @@ MIMIC-III & Broad controlled-access critical-care database supporting many inves
 \bottomrule
 \end{tabular}
 \end{table}
+\end{landscape}
 
 The purpose of using both sources is methodological portability, not population pooling.  A shared analytical sequence can be evaluated while preserving dataset-specific cohorts, identifiers, preprocessing, proxy rules, and graphs.  This distinction also prevents cross-dataset differences from being interpreted automatically as biological differences: they may arise from the data source, care process, construct definition, observation pattern, or model interface.
 
@@ -83,13 +85,14 @@ This design is well matched to sparse event streams, but it does not make prepro
 
 The comparison in Table~\ref{tab:background-model-families} is best understood as a comparison of inductive biases rather than a ladder of sophistication.  GRU supplies a general recurrent baseline; GRU-D makes missingness and elapsed time explicit within recurrence; TCN emphasizes multiscale local-to-long-range temporal filters; SAnD applies attention to a dense sequence; and STraTS applies attention to observed event triplets with a pretraining option.  Explicit missingness handling is central to GRU-D, implicit in the absence and timing of STraTS events, and otherwise dependent on the prepared inputs.  Likewise, pretraining is a defined part of STraTS but not an assumed property of every family.
 
-\begin{table}[htbp]
+\begin{landscape}
+\begin{table}[p]
 \centering
 \caption{Predictive model families included in the thesis comparison.}
 \label{tab:background-model-families}
-\scriptsize
-\setlength{\tabcolsep}{2pt}
-\begin{tabular}{@{}p{0.09\textwidth}p{0.19\textwidth}p{0.27\textwidth}p{0.27\textwidth}p{0.11\textwidth}@{}}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}L{0.09\linewidth}L{0.20\linewidth}L{0.28\linewidth}L{0.28\linewidth}L{0.09\linewidth}@{}}
 \toprule
 Model & Core temporal mechanism & Input and irregularity handling & Role in this thesis & Primary reference \\
 \midrule
@@ -101,6 +104,7 @@ SAnD & Masked self-attention with positional encoding. & Operates on a dense cli
 \bottomrule
 \end{tabular}
 \end{table}
+\end{landscape}
 
 Architecture suitability can vary with measurement density, missingness, preprocessing, label construction, sample size, and the supervised task.  A model can also exploit site-specific observation patterns rather than transferable physiology.  For these reasons, related work motivates empirical comparison but not a universal ranking.  The thesis-specific implementations and results are reserved for Chapters~\ref{chap:predictive-modeling-proxy-states} and~\ref{chap:results}.
 

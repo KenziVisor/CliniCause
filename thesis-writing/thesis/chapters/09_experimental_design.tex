@@ -12,7 +12,11 @@ The task is multi-label prediction of dataset-specific rule-derived proxy labels
 
 The crucial provenance gaps are processed-pickle hashes, split manifests, checkpoint-to-export mappings, exact producing wrappers/commands, and archive-copy history.  A requirements file describes an intended software environment, not proof of the environment that produced an archived training summary or export.
 
-\begin{longtable}{@{}p{0.10\textwidth}p{0.10\textwidth}p{0.11\textwidth}p{0.14\textwidth}p{0.11\textwidth}p{0.12\textwidth}p{0.13\textwidth}@{}}
+\begin{landscape}
+\begingroup
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.11\linewidth}L{0.10\linewidth}L{0.12\linewidth}L{0.17\linewidth}L{0.14\linewidth}L{0.16\linewidth}L{0.14\linewidth}@{}}
 \caption{Predictive experimental matrix and artifact-status design; no predictive metric is reported.}
 \label{tab:predictive-experimental-matrix}\\
 \toprule
@@ -27,6 +31,8 @@ PhysioNet 2012 and MIMIC-III & STraTS & Available for STraTS family & Split-awar
 PhysioNet 2012 and MIMIC-III & GRU, GRU-D, TCN, SAnD & Not the STraTS pretraining path & Dataset-specific irregular-series representation and proxy-label targets & Multi-label predictions and exports & Training summaries and exports archived & Final producing configuration and split/checkpoint linkage incomplete \\
 \bottomrule
 \end{longtable}
+\endgroup
+\end{landscape}
 
 \section{Causal Experiment Matrix}
 \label{sec:experimental-design:causal-experiment-matrix}
@@ -39,11 +45,12 @@ Outcome downsampling operates on mortality outcome classes, not exposure groups.
 
 Within each causal run, the exposure loop evaluates multiple dataset-specific binary proxy-state columns.  Inclusion of any exposure in a later Results chapter requires treatment-column availability, graph-node availability, valid binary values, adjustment and support diagnostics, artifact completeness, and approved estimand wording.  The exposure list is a design dimension, not a list of approved causal claims.
 
+\begin{landscape}
 \begingroup
 \footnotesize
 \sloppy
 \setlength{\tabcolsep}{2pt}
-\begin{longtable}{@{}p{0.10\textwidth}p{0.12\textwidth}p{0.09\textwidth}p{0.07\textwidth}p{0.11\textwidth}p{0.12\textwidth}p{0.10\textwidth}p{0.10\textwidth}@{}}
+\begin{longtable}{@{}L{0.108\linewidth}L{0.117\linewidth}L{0.108\linewidth}L{0.090\linewidth}L{0.135\linewidth}L{0.135\linewidth}L{0.126\linewidth}L{0.108\linewidth}@{}}
 \caption{Causal experimental matrix.  The table records run-family design, not effect estimates.}
 \label{tab:causal-experimental-matrix}\\
 \toprule
@@ -61,6 +68,7 @@ PhysioNet 2012 and MIMIC-III & CausalForest\allowbreak DML, LinearDML, CausalPFN
 \bottomrule
 \end{longtable}
 \endgroup
+\end{landscape}
 
 \section{Computational Environment and Reproducibility}
 \label{sec:experimental-design:computational-environment-reproducibility}
@@ -77,7 +85,7 @@ The result manifest records artifact paths and roles, datasets, models or estima
 \small
 \sloppy
 \setlength{\tabcolsep}{2.5pt}
-\begin{longtable}{@{}p{0.14\textwidth}p{0.14\textwidth}p{0.18\textwidth}p{0.15\textwidth}p{0.12\textwidth}@{}}
+\begin{longtable}{@{}L{0.16\textwidth}L{0.13\textwidth}L{0.16\textwidth}L{0.14\textwidth}L{0.16\textwidth}@{}}
 \caption{Reproducibility-status design.}
 \label{tab:reproducibility-status}\\
 \toprule
@@ -105,7 +113,7 @@ Result checksums and prompt/clinical review & Result hashes plus partial source 
 
 The result-admission policy applied before numerical reporting requires the producing run to be identified; the dataset, estimator or model, and sampling condition to be known; the source artifact to exist; the required schema to be validated; failed statuses to be excluded; source fields to be interpreted correctly; input/output relationships to be documented; fallback diagnostics to be labelled as fallback; the relevant estimand and population to be stated; and unresolved limitations to remain visible.  Directory names, copied summaries, or non-null cells alone are insufficient.
 
-\begin{longtable}{@{}p{0.08\textwidth}p{0.59\textwidth}p{0.24\textwidth}@{}}
+\begin{longtable}{@{}L{0.08\textwidth}L{0.59\textwidth}L{0.24\textwidth}@{}}
 \caption{Result-admission policy applied to the validated result sources.}
 \label{tab:result-admission-policy}\\
 \toprule

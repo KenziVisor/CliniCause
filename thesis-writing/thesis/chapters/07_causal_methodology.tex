@@ -23,7 +23,7 @@ The LLM has no estimator-time role in this chapter's workflow.  It is not called
 \label{fig:mimic-causal-dag}
 \end{figure}
 
-\begin{longtable}{@{}p{0.14\textwidth}p{0.18\textwidth}p{0.29\textwidth}p{0.29\textwidth}@{}}
+\begin{longtable}{@{}L{0.14\textwidth}L{0.18\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
 \caption{Implemented DAG node families used by the causal pipeline.}
 \label{tab:dag-node-families}\\
 \toprule
@@ -39,7 +39,7 @@ Latent or proxy state & Binary project proxy states.  Selected non-chronic state
 Observed measurements & Measurement aggregates and manifestations.  These document how clinical constructs relate to observed data but are excluded from adjustment-set candidates. & Ten observed aggregate nodes, including inflammatory, cardiac, respiratory, hemodynamic, renal, liver, hematologic, neurologic, metabolic, and availability-count measurements. & Fifteen observed aggregate nodes, including vital, laboratory, medication, procedure, ventilator, culture, and availability/count nodes. \\
 Treatment or care process & Care-process nodes retained in the graph to represent downstream clinical response or measurement context.  These are not treated as adjustment candidates. & Mechanical ventilation node. & Antibiotics, vasopressors, mechanical ventilation, and dialysis nodes. \\
 Missingness or measurement intensity & Process nodes for ordering and measurement availability.  These are graph variables but not adjustment candidates. & Lactate/ABG ordering, troponin ordering, and measurement intensity. & Measurement intensity, with outgoing links to availability, laboratory-count, and vital-count nodes. \\
-Outcome & Mortality endpoint. & \texttt{OUT\_InHospitalMortality}. & \texttt{OUT\_MORTALITY}. \\
+Outcome & Mortality endpoint. & \nolinkurl{OUT_InHospitalMortality}. & \nolinkurl{OUT_MORTALITY}. \\
 \bottomrule
 \end{longtable}
 
@@ -70,7 +70,7 @@ where \(\mathcal{A}_{\mathrm{allowed}}\) is the set of available graph nodes who
 
 The preferred helper is the safe expanded adjustment mode.  It begins with the full candidate pool, removes colliders on the encoded backdoor paths and removes their descendants, then checks whether the remaining pool blocks all encoded backdoor paths.  If it succeeds, this expanded pool is returned.  If it does not block all paths, the pipeline falls back to a greedy minimal helper that starts from the candidate pool and removes variables in sorted order only while all encoded backdoor paths remain blocked.  The resulting set is inclusion-minimal under the implementation order; it is not guaranteed to be the unique minimal adjustment set.
 
-\begin{longtable}{@{}p{0.20\textwidth}p{0.34\textwidth}p{0.36\textwidth}@{}}
+\begin{longtable}{@{}L{0.20\textwidth}L{0.34\textwidth}L{0.36\textwidth}@{}}
 \caption{Implemented adjustment-set logic and thesis interpretation.}
 \label{tab:adjustment-set-logic}\\
 \toprule
@@ -91,7 +91,7 @@ Identifiability flag & Records whether available mapped variables block all enco
 \bottomrule
 \end{longtable}
 
-\begin{longtable}{@{}p{0.16\textwidth}p{0.25\textwidth}p{0.22\textwidth}p{0.27\textwidth}@{}}
+\begin{longtable}{@{}L{0.16\textwidth}L{0.25\textwidth}L{0.22\textwidth}L{0.27\textwidth}@{}}
 \caption{Causal assumptions required for interpreting the estimator outputs.}
 \label{tab:causal-assumptions}\\
 \toprule
@@ -139,7 +139,7 @@ The CATE pipeline saves patient-level CATE values, normalized CATE values, optio
 
 The effect-modifier matrix \(X\) is selected from configured effect-modifier columns, typically baseline variables plus chronic and inflammation/sepsis proxy states when present.  The adjustment matrix \(W\) is the observed confounder set selected from the DAG helper.  The implementation can allow overlap between \(X\) and \(W\), because configured effect modifiers are not automatically removed from the adjustment set.  This is a source-supported behavior and a remaining methodological limitation.
 
-\begin{longtable}{@{}p{0.18\textwidth}p{0.24\textwidth}p{0.24\textwidth}p{0.24\textwidth}@{}}
+\begin{longtable}{@{}L{0.18\textwidth}L{0.24\textwidth}L{0.24\textwidth}L{0.24\textwidth}@{}}
 \caption{Implemented causal estimators and interpretation limits.}
 \label{tab:causal-estimator-methods}\\
 \toprule
@@ -152,7 +152,7 @@ method & implementation summary & main outputs & interpretation boundary \\
 \endhead
 Greedy Hamming matching & Binary adjustment matrix, median thresholding for non-binary covariates, median imputation, nearest available control within allowed Hamming distance, no default control reuse. & Matched pairs, pair effects, match rate, final distance, and per-treatment/global summaries. & Matched descriptive contrast; not automatically ATE or ATT. \\
 LinearDML & EconML \texttt{LinearDML} with random-forest nuisance outcome and treatment models, binary treatment handling, configured \(W\) and \(X\). & Patient-level CATE, optional intervals, coefficients when aligned, model artifact, global summaries. & Model-based heterogeneity estimate under project DAG, nuisance-model, overlap, and proxy-exposure assumptions. \\
-CausalForestDML & EconML \texttt{CausalForestDML} with random-forest nuisance models and a causal-forest final stage. & Patient-level CATE, optional intervals, feature importance, model artifact, global summaries. & Flexible heterogeneity estimate; feature importance is a model diagnostic, not mechanism proof. \\
+CausalForest\allowbreak DML & EconML \texttt{CausalForestDML} with random-forest nuisance models and a causal-forest final stage. & Patient-level CATE, optional intervals, feature importance, model artifact, global summaries. & Flexible heterogeneity estimate; feature importance is a model diagnostic, not mechanism proof. \\
 CausalPFN & Exploratory branch using deduplicated confounder and effect-modifier features.  It writes CATE CSVs and metadata but skips EconML-specific sensitivity and permutation stages. & Patient-level CATE and normalized CATE; interval columns are unavailable and stored as missing. & Exploratory only; its primary method source, implementation version, uncertainty, and comparable diagnostic support remain unresolved. \\
 \bottomrule
 \end{longtable}

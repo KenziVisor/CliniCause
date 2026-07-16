@@ -30,7 +30,8 @@ The LLM-generated outputs were design proposals subsequently selected and encode
 \caption{Prompt and document artifacts used as design provenance for proxy-state and DAG construction.}
 \label{tab:llm-prompt-artifact-provenance}
 \small
-\begin{tabular}{@{}p{0.20\textwidth}p{0.12\textwidth}p{0.25\textwidth}p{0.15\textwidth}p{0.20\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}L{0.20\textwidth}L{0.12\textwidth}L{0.25\textwidth}L{0.15\textwidth}L{0.20\textwidth}@{}}
 \toprule
 Artifact & Dataset & Role & Version status & Thesis relation \\
 \midrule
@@ -45,11 +46,12 @@ Manager-summary documents & Project & Management summaries of proxy/DAG and clin
 
 Earlier prompt-result exports dated 2026-04-29 are superseded design records rather than the final prompt runs.  At schema level, the final PhysioNet output proposes the same eleven active \texttt{LAT\_*} states as the active PhysioNet tagger, and the final MIMIC output proposes the same ten active states as the active MIMIC tagger.  Both outputs discuss measurement and missingness processes that also appear in the graph layer.  This alignment is high level: the implemented source contains more precise clauses and graph structure, and complete line-by-line correspondence between every LLM output and the active implementation has not been established.
 
+\begin{landscape}
 \begingroup
-\scriptsize
+\small
 \sloppy
-\setlength{\tabcolsep}{1.5pt}
-\begin{longtable}{@{}p{0.12\textwidth}p{0.14\textwidth}p{0.18\textwidth}p{0.18\textwidth}p{0.14\textwidth}p{0.15\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.11\linewidth}L{0.15\linewidth}L{0.19\linewidth}L{0.18\linewidth}L{0.16\linewidth}L{0.15\linewidth}@{}}
 \caption{Traceability from LLM-assisted design artifacts to implemented proxy and DAG artifacts.}
 \label{tab:llm-design-implementation-traceability}\\
 \toprule
@@ -62,21 +64,23 @@ Design element & LLM provenance artifact & Implemented source file & Generated a
 \endhead
 \bottomrule
 \endfoot
-PhysioNet proxy ontology & \nolinkurl{physionet-prompt.txt}; \nolinkurl{physionet-prompt-running.pdf} & \nolinkurl{tagging_latent_variables_physionet.py} & \nolinkurl{physionet-latent-tags.csv} & Eleven-state schema alignment; deterministic output present. & No chart adjudication; construct validity and line-level traceability incomplete. \\
-MIMIC proxy ontology & \nolinkurl{mimic-prompt.txt}; \nolinkurl{mimic-prompt-running.pdf} & \nolinkurl{tagging_latent_variables_mimiciii.py} & \nolinkurl{latent_tags.csv} & Ten-state schema alignment; deterministic output and descriptive summaries present. & No chart adjudication; input-mode and construct validity remain unresolved. \\
+PhysioNet proxy ontology & \nolinkurl{physionet-prompt.txt}; \nolinkurl{physionet-prompt-}\allowbreak\nolinkurl{running.pdf} & \nolinkurl{tagging_latent_variables_physionet.py} & \nolinkurl{physionet-latent-tags.csv} & Eleven-state schema alignment; deterministic output present. & No chart adjudication; construct validity and line-level traceability incomplete. \\
+MIMIC proxy ontology & \nolinkurl{mimic-prompt.txt}; \nolinkurl{mimic-prompt-}\allowbreak\nolinkurl{running.pdf} & \nolinkurl{tagging_latent_variables_mimiciii.py} & \nolinkurl{latent_tags.csv} & Ten-state schema alignment; deterministic output and descriptive summaries present. & No chart adjudication; input-mode and construct validity remain unresolved. \\
 PhysioNet decision rules & PhysioNet final prompt and run export & \nolinkurl{tagging_latent_variables_physionet.py} & PhysioNet proxy-label table and decision-tree artifacts & Active source clauses documented in this chapter. & Source is more precise than prompt narrative; no formal clinical-rule adjudication. \\
 MIMIC decision rules & MIMIC final prompt and run export & \nolinkurl{tagging_latent_variables_mimiciii.py} & MIMIC proxy-label, merged-feature, and decision-tree artifacts & Active source clauses and diagnostic summaries documented. & No proof every proposal was implemented unchanged; no formal clinical-rule adjudication. \\
 PhysioNet DAG & PhysioNet final prompt and run export & \nolinkurl{physionet2012_causal_graph.py} & \nolinkurl{physionet_causal_graph.pkl}; \nolinkurl{physionet_causal_dag.png} & Active source reproduces the archived graph artifact. & No clinical edge validation or complete selection-decision record. \\
 MIMIC DAG & MIMIC final prompt and run export & \nolinkurl{mimiciii_causal_graph.py} & \nolinkurl{mimic_causal_graph.pkl}; \nolinkurl{mimic_causal_dag.png} & Active source reproduces the archived graph artifact. & No clinical edge validation or complete selection-decision record. \\
 \end{longtable}
 \endgroup
+\end{landscape}
 
 \begin{table}[htbp]
 \centering
 \caption{Proxy-state source types used in the thesis pipeline.}
 \label{tab:proxy-source-types}
 \small
-\begin{tabular}{@{}p{0.20\textwidth}p{0.31\textwidth}p{0.34\textwidth}p{0.10\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}L{0.20\textwidth}L{0.31\textwidth}L{0.34\textwidth}L{0.10\textwidth}@{}}
 \toprule
 Source type & Generation mechanism & Interpretation boundary & Primary evidence \\
 \midrule
@@ -114,11 +118,12 @@ Missingness is handled conservatively in the active decision helpers.  A compari
 
 By default the script uses the clinically inspired thresholds embedded in the active source.  The command-line option \texttt{--optimized} switches to externally supplied thresholds loaded from \texttt{--thresholds-path}, with unspecified optimized keys falling back to defaults.  The existence of this option is not evidence that optimized thresholds generated the archived CSV.
 
+\begin{landscape}
 \begingroup
-\scriptsize
+\small
 \sloppy
-\setlength{\tabcolsep}{1.5pt}
-\begin{longtable}{@{}p{0.25\textwidth}p{0.14\textwidth}p{0.22\textwidth}p{0.25\textwidth}p{0.10\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.22\linewidth}L{0.15\linewidth}L{0.22\linewidth}L{0.24\linewidth}L{0.13\linewidth}@{}}
 \caption{PhysioNet rule-derived proxy-state definitions from the active tagger.}
 \label{tab:physionet-proxy-definitions}\\
 \toprule
@@ -137,13 +142,14 @@ Proxy-state column & Construct represented & Input measurements and aggregation 
 \texttt{LAT\_RESPIRATORY\_FAILURE} & Hypoxemia, ventilatory failure, or ventilatory support. & Mechanical ventilation flag; PF ratio; SaO2; PaO2; respiratory rate; PaCO2; pH. & At least 2 abnormal clauses or mechanical ventilation with PF \(<300\). Clauses include SaO2 \(<92\), PaO2 \(<60\), respiratory rate \(\ge 22\) or \(<8\), PaCO2 \(\ge 50\), or PaCO2 \(\ge 45\) with pH \(<7.30\). & Respiratory phenotyping and ARDS/oxygenation grounding \cite{essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping,ranieri_et_al_2012_berlin_ards}; not adjudicated ARDS. \\
 \texttt{LAT\_RENAL\_DYSFUNCTION} & Renal dysfunction. & Creatinine first and maximum; BUN maximum; urine helper; potassium maximum; bicarbonate minimum. & At least 2 abnormal clauses among creatinine \(\ge 2.0\), creatinine rise \(\ge 0.3\), BUN \(\ge 40\), urine \(<500\), potassium \(\ge 5.5\), or bicarbonate \(<18\); creatinine \(\ge 3.5\) is sufficient. & Renal concepts grounded by KDIGO \cite{kdigo_2012_acute_kidney_injury}; not full KDIGO staging. \\
 \texttt{LAT\_HEPATIC\_DYSFUNCTION} & Hepatic injury or reserve. & Bilirubin, AST, ALT, ALP, albumin, platelets. & Weighted score at least 2: bilirubin \(\ge 2.0\) counts twice; AST or ALT \(\ge 200\), ALP \(\ge 250\), albumin \(<2.5\), or platelets \(<100\) add one. & Bilirubin/organ-dysfunction grounding from SOFA \cite{vincent_et_al_1996_sofa}; transaminase and albumin clauses are project-specific. \\
-\texttt{LAT\_COAG\_HEME\_DYSFUNCTION} & Hematologic/coagulation stress. & Platelets, hematocrit, WBC, platelet first-to-minimum change. & Score at least 2. Platelets \(<100\) counts twice; platelets \(<150\), HCT \(<25\) or \(>55\), WBC \(<4\) or \(>20\), or platelet drop \(\ge 50\) add one. & Coagulation grounding from ISTH DIC and SOFA \cite{taylor_et_al_2001_isth_dic,vincent_et_al_1996_sofa}; not complete DIC score. \\
+\texttt{LAT\_COAG\_HEME\_DYSFUNCTION} & Hematologic/\allowbreak coagulation stress. & Platelets, hematocrit, WBC, platelet first-to-minimum change. & Score at least 2. Platelets \(<100\) counts twice; platelets \(<150\), HCT \(<25\) or \(>55\), WBC \(<4\) or \(>20\), or platelet drop \(\ge 50\) add one. & Coagulation grounding from ISTH DIC and SOFA \cite{taylor_et_al_2001_isth_dic,vincent_et_al_1996_sofa}; not complete DIC score. \\
 \shortstack[l]{\texttt{LAT\_INFLAMMATION\_}\\\texttt{SEPSIS\_BURDEN}} & Systemic inflammation or sepsis-like burden. & Temperature, WBC, HR, respiratory rate, PaCO2, lactate, platelets. & Score at least 3 across temperature \(>38.3\) or \(<36\), WBC \(>12\) or \(<4\), HR \(>90\), respiratory rate \(>20\) or PaCO2 \(<32\), lactate \(>2.0\), platelets \(<150\); also positive when temperature or WBC abnormality anchors lactate stress with score at least 2. & Sepsis context \cite{singer_2016_sepsis3}; rule is not formal Sepsis-3 diagnosis. \\
 \texttt{LAT\_NEUROLOGIC\_DYSFUNCTION} & Depressed consciousness or neurologic/metabolic stress. & GCS; sodium; glucose; PaCO2; SaO2; pH. & Score at least 2. GCS \(\le 12\) counts twice; GCS \(<15\), sodium \(<130\) or \(>150\), glucose \(<70\) or \(>300\), PaCO2 \(\ge 50\), SaO2 \(<90\), or pH \(<7.25\) contribute. & SOFA neurologic context \cite{vincent_et_al_1996_sofa}; sedation ambiguity remains unreviewed. \\
 \texttt{LAT\_CARDIAC\_INJURY\_STRAIN} & Myocardial injury, ischemia, or severe strain. & Troponin I/T; ICU type; HR; MAP; systolic pressure; lactate. & Score at least 2. Troponin I \(>0.1\) or troponin T \(>0.01\) counts twice; cardiac ICU type, HR \(\ge 130\) or \(<50\), MAP \(<70\) or systolic \(\le 90\), and lactate \(>2.0\) add one. & Project-specific cardiac proxy. \\
 \texttt{LAT\_METABOLIC\_DERANGEMENT} & Acid-base, lactate, electrolyte, or glucose derangement. & pH, bicarbonate, lactate, sodium, potassium, magnesium, glucose, PaCO2. & Score at least 2 across pH \(<7.30\) or \(>7.50\), bicarbonate \(<18\) or \(>32\), lactate \(>2.0\), sodium \(<130\) or \(>150\), potassium \(<3.0\) or \(>5.5\), magnesium \(<0.6\) or \(>1.2\), glucose \(<70\) or \(>250\), PaCO2 \(<32\) or \(>50\); critical pH \(<7.20\), lactate \(\ge 4.0\), or potassium \(\ge 6.0\) is sufficient. & Project-specific metabolic proxy. \\
 \end{longtable}
 \endgroup
+\end{landscape}
 
 The chronic baseline-risk, hepatic, cardiac, and metabolic families remain project-specific rules without complete exact clinical-source support or qualified clinical review.  They are therefore presented as analytical proxy definitions rather than formal diagnoses or validated clinical definitions.
 
@@ -175,11 +181,12 @@ The script supports three mutually exclusive input modes.  In summary-CSV mode, 
 
 Binary helper flags are treated as evidence only when they are positive or truthy.  Numeric comparisons require non-missing values.  Raw-concept mode fills absent binary helper columns with zero, while pickle mode inserts missing helper columns as missing; in both cases missing numeric evidence does not make a rule positive.  Consequently, input mode and concept extraction completeness affect which clauses can fire.
 
+\begin{landscape}
 \begingroup
-\scriptsize
+\small
 \sloppy
-\setlength{\tabcolsep}{1.5pt}
-\begin{longtable}{@{}p{0.24\textwidth}p{0.14\textwidth}p{0.22\textwidth}p{0.25\textwidth}p{0.11\textwidth}@{}}
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.21\linewidth}L{0.15\linewidth}L{0.22\linewidth}L{0.25\linewidth}L{0.13\linewidth}@{}}
 \caption{MIMIC rule-derived proxy-state definitions from the active tagger.}
 \label{tab:mimic-proxy-definitions}\\
 \toprule
@@ -204,6 +211,7 @@ Proxy-state column & Construct represented & Input measurements and aggregation 
 \texttt{LAT\_CARDIAC\_STRAIN} & Cardiac strain or injury. & Troponin flags and values, CK-MB, arrhythmia helper, HR, hypotension, cardiac care unit or surgery context. & Score at least 2 and requires biomarker or rhythm evidence. Biomarker clauses include troponin-positive flags, troponin T \(\ge 0.1\), troponin I \(\ge 0.4\), or CK-MB evidence; rhythm/hemodynamic clauses include arrhythmia, HR \(>150\) or \(<40\), HR stress with hypotension, or cardiac-care context. & Project-specific cardiac proxy. \\
 \end{longtable}
 \endgroup
+\end{landscape}
 
 Exact clinical-source support remains incomplete for the MIMIC chronic-burden, metabolic/electrolyte/acid-base, and cardiac-strain rule clauses.  These rows are therefore retained only as project-specific proxy definitions pending qualified clinical review.
 
