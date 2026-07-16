@@ -1,247 +1,397 @@
-Task: Replace and typographically repair the Hebrew thesis abstract
+Model: GPT-5.6 Sol
+Reasoning effort: Extra High
+
+Task: Replace and repair both the English and Hebrew thesis abstracts
 
 Repository:
 KenziVisor/CliniCause
 
-Primary target:
-thesis-writing/thesis/frontmatter/abstract_secondary.tex
+Expected HEAD:
+a8835516be53f3a72fa1ffe6e7ad72281deba721
 
-Objective:
-Replace the existing Hebrew abstract with the exact Hebrew abstract supplied
-below, and repair the Hebrew abstract page so that the final PDF is readable,
-properly right-to-left, correctly aligned, and free of clipping, overflow, or
-bidirectional-text corruption.
+Primary targets:
+- thesis-writing/thesis/frontmatter/abstract_primary.tex
+- thesis-writing/thesis/frontmatter/abstract_secondary.tex
 
-This is a narrow repair task. Do not rewrite the English abstract, scientific
-chapters, results, captions, tables, bibliography, or unrelated front matter.
+Objective
+=========
 
-Before editing
-==============
+Replace both thesis abstracts with the exact author-approved texts supplied
+below.
 
-1. Inspect the repository baseline:
+The English abstract must be rewritten as an independent academic abstract,
+not as a literal translation of the Hebrew version. The Hebrew abstract must
+likewise read as independently written Hebrew rather than translated English.
+
+The two abstracts must nevertheless be equivalent at the level of:
+
+- research problem;
+- datasets;
+- workflow;
+- LLM role;
+- predictive-model families;
+- final aggregate lineage;
+- estimator hierarchy;
+- principal numerical results;
+- causal and clinical qualifications;
+- contribution;
+- limitations and future work.
+
+The previous Codex task correctly identified scientific conflicts and stopped
+without editing abstract_secondary.tex. Those conflicts are now resolved by
+the author. Do not block on them again.
+
+Authoritative conflict resolutions
+==================================
+
+Treat the following as authoritative for this task:
+
+1. Primary original-cohort CausalForestDML results:
+   - MIMIC-III: 9 of 9 proxy-state summaries are positive.
+   - PhysioNet: 9 of 10 proxy-state summaries are positive.
+   - The PhysioNet shock estimate is negative.
+
+2. Estimator-direction agreement:
+   - CausalForestDML and LinearDML agree in direction in all 19
+     dataset--proxy-state comparisons.
+   - All three estimators agree in 18 of 19 comparisons.
+   - The sole three-estimator disagreement is PhysioNet shock.
+
+3. Estimator hierarchy:
+   - CausalForestDML is primary.
+   - LinearDML is the secondary comparator.
+   - CausalPFN is exploratory and must not be presented as methodologically
+     equivalent to the two DML estimators.
+
+4. Predictive-model evidence:
+   - Five evaluated predictive families:
+     STraTS, GRU, GRU-D, TCN, and SAnD.
+   - The archived final five-source aggregate contains:
+     one rule-derived source, plus predicted-label sources from
+     GRU, GRU-D, STraTS, and TCN.
+   - SAnD was evaluated but was not one of the final aggregate voters.
+   - Do not mention Interpolation-Prediction Networks in either abstract.
+
+5. LLM role:
+   - The LLM was used during the design stage to assist in proposing
+     proxy-state ontologies, decision-rule families, missingness
+     considerations, and dataset-specific DAGs.
+   - Project-selected proposals were encoded as deterministic source code.
+   - The LLM was not a runtime estimator.
+   - The work does not establish that the LLM is a validated medical expert.
+   - The proxy states are not chart-adjudicated diagnoses.
+   - The DAGs were not learned from patient-level data and are not clinically
+     validated.
+
+6. Matching:
+   - Matching provides descriptive matched-record outcome comparisons.
+   - It is not confirmation of an intervention effect.
+
+7. Dataset reporting:
+   - PhysioNet and MIMIC-III results are reported separately.
+   - No numerical effect estimate is pooled across the datasets.
+
+Repository verification
+=======================
+
+Before editing:
+
+1. Run and record:
 
    git status --short
    git branch --show-current
    git log -10 --oneline
 
-2. Read all applicable local instructions, including AGENTS.md files.
+2. Confirm that HEAD is the expected commit.
 
-3. Inspect at least:
+3. Read all applicable AGENTS.md and repository instructions.
 
+4. Inspect at least:
+
+   - thesis-writing/thesis/frontmatter/abstract_primary.tex
    - thesis-writing/thesis/frontmatter/abstract_secondary.tex
-   - the English abstract source
    - thesis-writing/thesis/main.tex
-   - the LaTeX preamble and font/language configuration
+   - the thesis preamble and language/font configuration
+   - thesis-writing/logs/hebrew_abstract_repair.md
    - thesis-writing/logs/stage_5_1_abstract_equivalence.csv
    - thesis-writing/logs/stage_5_5_terminology_audit.csv
    - thesis-writing/logs/stage_5_5A_overfull_localization.csv
-   - the current compiled main.pdf, especially the Hebrew abstract page
+   - thesis-writing/thesis/chapters/10_results.tex
+   - checked result artifacts supporting the abstract counts
+   - the current main.pdf
 
-4. Record all pre-existing modified or untracked files. Do not reset, clean,
-   normalize, stage, or overwrite unrelated work.
+5. Record all pre-existing modified and untracked files.
 
-Required content change
-=======================
+6. Do not reset, clean, normalize, stage, overwrite, or otherwise modify
+   unrelated work.
 
-Replace the full body of the current Hebrew abstract with the following text.
-Preserve the scientific qualifications. Do not strengthen causal or clinical
-claims. Do not turn proxy states into verified diagnoses. Do not add citations,
-footnotes, references, headings, numerical results, or new claims inside the
-abstract.
+Approved English abstract
+=========================
+
+Replace the full English abstract body with the following text.
+
+Do not add citations, footnotes, references, or additional numerical claims.
+
+--- BEGIN APPROVED ENGLISH ABSTRACT ---
+
+Irregularly sampled intensive care unit records contain measurements collected at different times and frequencies, with missingness patterns that may reflect both the patient’s condition and the clinical process. This thesis develops and evaluates a computational framework that combines design-time knowledge elicitation assisted by a large language model, deterministic construction of clinically inspired proxy states, prediction of those states from irregular medical time series, and directed-acyclic-graph-guided observational analyses of in-hospital mortality. The objective is to examine whether these stages can be integrated into a transparent and traceable analytical workflow, rather than to validate a clinical decision system or recommend treatment.
+
+The framework was evaluated separately on the PhysioNet 2012 and MIMIC-III cohorts. During the design stage, a large language model was used to assist in proposing dataset-specific proxy-state ontologies, decision-rule families, missingness considerations, and causal graphs. Proposals selected for the project were subsequently encoded as deterministic source-code rules and graph structures. Five time-series model families—STraTS, GRU, GRU-D, TCN, and SAnD—were evaluated for predicting rule-derived proxy labels. The aggregate used in the archived causal analyses combined one rule-derived source with predicted labels from GRU, GRU-D, STraTS, and TCN. The language model was not used as a runtime estimator. The proxy states are not chart-adjudicated diagnoses, and the causal graphs were neither learned from patient data nor clinically validated.
+
+For the primary original-cohort CausalForestDML analyses, the mean model-estimated effect was positive for all nine proxy states examined in MIMIC-III. In PhysioNet, nine of ten estimates were positive, while the estimate for shock was negative. CausalForestDML and LinearDML agreed in direction in all 19 dataset–proxy-state comparisons. All three estimators agreed in 18 of 19 comparisons; CausalPFN was retained as an exploratory estimator because its available methodological provenance and diagnostic support were more limited. Matching analyses provided descriptive comparisons between matched records and were not interpreted as evidence of an intervention effect. Results were reported separately for the two datasets and were not pooled.
+
+The main contribution of this work is an integrated and inspectable workflow that connects language-model-assisted design proposals with source-encoded rules and graphs, and then follows the resulting proxy constructs through prediction and observational analysis. The estimates remain conditional on the validity of the proxy definitions, the correctness of the assumed graphs and temporal ordering, adequate control of measured confounding, sufficient overlap, model assumptions, and the absence of important unmeasured confounding. Consequently, the findings do not establish that the proxy states caused mortality or that modifying them would change clinical outcomes. Clinical review, external validation, stronger causal designs, and more complete computational provenance remain necessary.
+
+--- END APPROVED ENGLISH ABSTRACT ---
+
+Approved Hebrew abstract
+========================
+
+Replace the full Hebrew abstract body with the following text.
+
+Preserve the wording except for LaTeX commands required for correct
+bidirectional rendering.
+
+Do not add citations, footnotes, references, or additional numerical claims.
 
 --- BEGIN APPROVED HEBREW ABSTRACT ---
 
-רשומות רפואיות מיחידות טיפול נמרץ מתעדות את מצבו המשתנה של המטופל באמצעות מדידות רבות הנאספות בזמנים לא סדירים. אף שמידע זה עשוי לסייע בהבנת התפתחותם של מצבים קליניים ובהערכת הקשר בינם לבין תוצאות הטיפול, ניתוחו מציב קושי כפול: המדידות חלקיות ולא אחידות, והקשרים הנצפים בהן אינם מעידים בהכרח על השפעה סיבתית. מטרת עבודה זו היא לפתח מסגרת חישובית המשלבת ייצוג של סדרות עתיות רפואיות לא־סדירות עם ניתוח סיבתי של מצבים קליניים נגזרים.
+רשומות רפואיות מיחידות טיפול נמרץ כוללות מדידות רבות הנאספות בזמנים לא אחידים ובתדירות המשתנה בין מטופלים ומשתנים. זמינותן החלקית של המדידות ודפוסי החסר עשויים לשקף הן את מצבו של המטופל והן את תהליך הטיפול. עבודה זו בוחנת מסגרת חישובית העוקבת במפורש אחר מקורות הראיות ומשלבת הפקת ידע קליני וסיבתי בסיוע מודל שפה גדול, הגדרה דטרמיניסטית של מצבי־פרוקסי, חיזוים מתוך סדרות זמן רפואיות לא־סדירות וניתוחים מתוקננים של תמותה באשפוז בהנחיית גרפים סיבתיים. מטרת העבודה היא לבחון את השילוב בין שלבי התהליך ואת המעברים ביניהם, ולא לספק תיקוף קליני, המלצת טיפול או מערכת המוכנה להטמעה.
 
-המחקר מבוסס על שני מאגרי נתונים ציבוריים של אשפוזים בטיפול נמרץ: PhysioNet 2012 ו־MIMIC-III. תחילה עובדו הרשומות הגולמיות למבנה אחיד של מדידות המתויגות לפי מטופל וזמן. לאחר מכן הוגדרו, באמצעות כללים קליניים, מצבי־פרוקסי המתארים היבטים כגון חומרה כללית, הלם, כשל נשימתי, כשל כלייתי ופגיעה במערכות גוף נוספות. מצבים אלה אינם אבחנות רפואיות מאומתות, אלא ייצוגים חישוביים הנגזרים מן המדידות הזמינות.
+המסגרת נבחנה בנפרד על נתוני PhysioNet 2012 ועל נתוני MIMIC-III. בשלב התכנון שימש מודל שפה גדול ככלי מסייע להצעת אונטולוגיות של מצבי־פרוקסי, משפחות של כללי החלטה, התייחסויות לדפוסי חסר וגרפים סיבתיים המותאמים לכל מאגר. ההצעות שנבחרו במסגרת הפרויקט קודדו לאחר מכן ככללים וכגרפים דטרמיניסטיים. חמש משפחות של מודלים לסדרות זמן — STraTS, ‏GRU, ‏GRU-D, ‏TCN ו־SAnD — אומנו לחזות את התוויות שהפיקו כללי ההחלטה. האיגוד ששימש בניתוחים הסיבתיים הסופיים כלל מקור אחד המבוסס על הכללים וארבעה מקורות של תוויות חזויות, שהופקו באמצעות GRU, ‏GRU-D, ‏STraTS ו־TCN. מודל השפה לא השתתף כאומד בזמן הריצה. מצבי־הפרוקסי אינם אבחנות שאומתו בבדיקת תיקים רפואיים, והגרפים הסיבתיים לא נלמדו מנתוני המטופלים ולא עברו תיקוף קליני.
 
-לצורך חיזוי מצבי־הפרוקסי מתוך סדרות המדידות נבחנו מודלים המותאמים לנתונים רפואיים לא־סדירים, ובהם STraTS, ‏TCN, ‏GRU, ‏GRU-D, ‏SAnD ו־Interpolation-Prediction Networks. התחזיות שהפיקו המודלים אוחדו באמצעות הצבעת רוב, וכך התקבל ייצוג משותף ששימש להמשך הניתוח. במקביל נבנו גרפים סיבתיים מכוונים המתארים את הקשרים המשוערים בין מאפייני הרקע, מצבי־הפרוקסי והתמותה באשפוז. מודל שפה שימש כלי מסייע בניסוח ובהרחבת המבנה הראשוני של הגרפים, אך הגרפים נותרו הנחות מידול הדורשות בחינה ואישור של מומחי תחום.
+באומדני CausalForestDML הראשיים על העוקבות המקוריות התקבל אומדן ממוצע חיובי בכל תשעת מצבי־הפרוקסי שנבחנו ב־MIMIC-III. ב־PhysioNet התקבל אומדן חיובי בתשעה מתוך עשרת המצבים, ואילו אומדן ההלם היה שלילי. CausalForestDML ו־LinearDML הסכימו בכיוון בכל 19 ההשוואות בין מאגר למצב־פרוקסי. שלושת האומדים הסכימו בכיוון ב־18 מתוך 19 ההשוואות; CausalPFN נשמר כאומד חקרני בלבד בשל מגבלות בתיעוד המקור המתודולוגי ובתמיכה האבחונית הזמינה עבורו. ניתוחי ההתאמה שימשו כתמיכה תיאורית באמצעות השוואת תוצאות בזוגות מותאמים, ולא כהוכחה להשפעת התערבות. תוצאות שני המאגרים דווחו בנפרד ולא אוגמו.
 
-השפעתם של מצבי־הפרוקסי על תמותה באשפוז נאמדה באמצעות LinearDML ו־CausalForestDML, תוך בחירת משתני התאמה על סמך מבנה הגרף הסיבתי. נוסף על כך בוצעו ניתוחי רגישות ובדיקות תמורה, שנועדו לבחון את יציבות האומדנים ואת התנהגותם כאשר הקשר בין החשיפה או התוצאה לבין הנתונים מופר באופן מלאכותי.
-
-ברוב הניתוחים התקבל כיוון השפעה חיובי, כלומר נוכחותם של מצבי־פרוקסי חמורים יותר נקשרה לעלייה בסיכון המוערך לתמותה. ב־PhysioNet 2012 התקבל כיוון חיובי בכל 19 ההשוואות שנבחנו, וב־MIMIC-III ב־18 מתוך 19. עם זאת, עוצמת האומדנים ומידת ההטרוגניות השתנו בין המאגרים, המצבים והאומדים. תוצאות אלו אינן מוכיחות קשר סיבתי במובן ניסויי, אלא מציגות אומדנים התלויים בתקפות הגרפים, באיכות מצבי־הפרוקסי, בחפיפה בין קבוצות ההשוואה ובהיעדר גורמים מערפלים שלא נמדדו.
-
-העבודה מדגימה תהליך מקצה לקצה לניתוח סיבתי של סדרות עתיות קליניות לא־סדירות: החל מעיבוד הרשומות, דרך הפקת ייצוגים קליניים ניתנים לפרשנות וחיזוים, ועד לאמידת השפעות ולבדיקות רגישות. תרומתה המרכזית היא במסגרת אינטגרטיבית ושחזורית המאפשרת לחקור שאלות סיבתיות בנתוני טיפול נמרץ תוך הצגה מפורשת של הנחות המידול ומגבלות המסקנות.
+תרומתה המרכזית של העבודה היא באינטגרציה שקופה של תהליך המשתרע מהצעות תכנון בסיוע מודל שפה, דרך כללים וגרפים המקודדים בקוד מקור, ועד לחיזוי ולניתוח תצפיתי. האומדנים תלויים בתקפות מצבי־הפרוקסי, בנכונות הגרפים, בסדר הזמנים, באיכות ההתאמה לגורמים מערפלים שנמדדו, בחפיפה בין הקבוצות, בהנחות המודלים ובהיעדר ערבול בלתי נמדד. לפיכך העבודה אינה קובעת שמצבי־הפרוקסי גרמו לתמותה או ששינוים ישנה תוצאות קליניות. תיעוד הראיות משפר את העקיבות המספרית, אך אינו מוכיח שחזור חישובי מלא. נדרשים בהמשך תיקוף קליני, תכנונים סיבתיים חזקים יותר, תיקוף חיצוני והשלמת הפרובננס.
 
 --- END APPROVED HEBREW ABSTRACT ---
 
-Scientific verification gate
-============================
+English layout requirements
+===========================
 
-Before finalizing the replacement, verify the following numerical statements
-against the checked thesis result artifacts, not merely against the existing
-English abstract:
+1. Preserve the normal left-to-right English layout.
+2. Use the existing thesis font, abstract heading style, margins, font size,
+   paragraph spacing, and line spacing.
+3. Do not add manual line breaks to force pagination.
+4. Do not reduce the font size to fit the text.
+5. Ensure that long estimator names do not cross the margins.
+6. Keep the English abstract below 500 words.
+7. Keep it free of citations and footnotes.
 
-- 19 positive-direction comparisons for PhysioNet 2012;
-- 18 of 19 positive-direction comparisons for MIMIC-III.
+Hebrew layout requirements
+==========================
 
-Also verify that the thesis evidence supports the description of the language
-model as an assisting tool in DAG formulation or expansion.
+1. Place the heading “תקציר” in a true Hebrew/RTL context.
+   The current heading is outside the Hebrew environment and therefore uses
+   the English chapter layout.
 
-If any of these statements conflict with the checked result packet, provenance
-ledgers, or approved thesis claims:
+2. Render the entire body in true right-to-left direction.
 
-- do not silently alter them;
-- stop the content replacement at that point;
-- report the exact conflict, source paths, and supported wording;
-- mark the task BLOCKED FOR CONTENT CONFIRMATION.
+3. Use right alignment with a ragged left edge. Do not retain full
+   justification if it produces stretched spacing or unsafe mixed-direction
+   lines.
 
-Do not use the old Hebrew abstract as scientific authority.
+4. Continue using the existing XeLaTeX, polyglossia, FreeSerif, and
+   \textenglish{...} infrastructure.
 
-Hebrew layout and typography requirements
-==========================================
+5. Do not change or replace the thesis-wide font.
 
-The final Hebrew abstract page must:
-
-1. Use true right-to-left paragraph direction.
-2. Be right-aligned throughout.
-3. Use a clearly readable Hebrew typeface already available through the thesis
-   build system. Prefer an existing project-approved Hebrew font. Do not add or
-   distribute font files.
-4. Use a font size and line spacing consistent with the English abstract and
-   institutional requirements.
-5. Avoid justified spacing if it causes visibly stretched Hebrew lines. Prefer
-   clean right alignment when necessary.
-6. Keep the heading “תקציר” correctly positioned and clearly separated from
-   the body.
-7. Prevent all text from crossing the page margins.
-8. Eliminate the visible overflow currently occurring near the phrase
-   containing “III”.
-9. Handle embedded English and Latin tokens correctly, including:
+6. Wrap each Latin-language expression separately with the project’s existing
+   bidirectional-language mechanism, including:
 
    - PhysioNet 2012
    - MIMIC-III
    - STraTS
-   - TCN
    - GRU
    - GRU-D
+   - TCN
    - SAnD
-   - Interpolation-Prediction Networks
-   - LinearDML
    - CausalForestDML
+   - LinearDML
+   - CausalPFN
 
-   Wrap Latin fragments using the project’s existing bidirectional-language
-   mechanism, such as \textenglish{...}, \LR{...}, or an equivalent command
-   already supported by the preamble.
+7. Provide safe line-breaking opportunities around long Latin expressions
+   without inserting arbitrary manual line breaks.
 
-10. Do not insert manual line breaks merely to hide overflow.
-11. Do not solve the problem by shrinking the entire page to an unreadable
-    font size.
-12. Use nonbreaking or direction-safe punctuation where needed so that hyphens,
-    parentheses, numbers, and acronyms appear in the correct visual order.
-13. Preserve normal paragraph spacing. The abstract must not appear as one
-    dense, uninterrupted block.
-14. Keep the abstract at no more than 500 words.
-15. Do not add citations or footnotes to the abstract.
+8. Eliminate the existing approximately 49-point horizontal overflow.
 
-Important:
-Inspect the existing language and font stack before changing the preamble.
-Make the smallest sufficient typographic change. Do not replace the thesis-wide
-font or language system unless the current setup cannot correctly render Hebrew,
-and document the evidence before making any global change.
+9. Verify that no token, including the “III” portion of MIMIC-III, crosses the
+   page margin or becomes detached by bidirectional reordering.
 
-Permitted files
-===============
+10. Preserve readable paragraph separation and the existing front-matter
+    page-numbering scheme.
 
-Prefer editing only:
+11. Keep the Hebrew abstract below 500 words.
 
-- thesis-writing/thesis/frontmatter/abstract_secondary.tex
+12. Keep it free of citations and footnotes.
 
-A preamble or thesis-style file may be edited only when a local change in the
-abstract file cannot fix the RTL/font problem. Any such edit must be minimal and
-must not change the visual appearance of unrelated thesis pages.
-
-Do not edit:
-
-- the English abstract;
-- checked numerical result files;
-- literature metadata or PDFs;
-- research code;
-- figures;
-- tables;
-- bibliography;
-- chapter prose;
-- title-page metadata;
-- prior audit reports, except for the new repair report requested below.
-
-Build and validation
-====================
-
-1. Build the thesis using the repository’s documented clean LaTeX command and
-   engine.
-
-2. Confirm:
-
-   - successful compilation;
-   - no missing Hebrew glyphs;
-   - no bidi-related compilation errors;
-   - no unresolved references introduced by this task;
-   - no new material overfull boxes;
-   - no text outside the abstract page margins;
-   - no clipping or overlap;
-   - no accidental change to unrelated pages.
-
-3. Render the Hebrew abstract page individually at high resolution, at least
-   200 DPI.
-
-4. Inspect the full-size page, not only a contact sheet.
-
-5. Check visually:
-
-   - heading placement;
-   - right alignment;
-   - paragraph direction;
-   - Hebrew readability;
-   - Latin-token ordering;
-   - line spacing;
-   - paragraph separation;
-   - all four margins;
-   - page number;
-   - absence of clipping and overflow.
-
-6. Compare the pages immediately before and after the Hebrew abstract to ensure
-   that the repair did not disturb front-matter ordering or pagination.
-
-7. Count the abstract words and report the method and result.
-
-8. Compare the Hebrew and English abstracts at the claim level. They do not
-   need to be literal translations, but they must describe the same study,
-   methods, principal results, qualifications, and contribution. Report any
-   material mismatch rather than rewriting the English abstract.
-
-Required evidence report
+Equivalence requirements
 ========================
 
-Create:
+The abstracts do not need identical sentence structures or literal translations.
 
+They must, however, make equivalent claims regarding:
+
+- the irregular ICU data problem;
+- the research objective;
+- the two datasets;
+- the design-time role of the LLM;
+- deterministic implementation;
+- the five evaluated predictive families;
+- the four predicted-label sources used in the final aggregate;
+- the rule-derived fifth source;
+- the primary, secondary, and exploratory estimator roles;
+- the 9/9 and 9/10 positive-result counts;
+- the negative PhysioNet shock estimate;
+- the 19/19 two-estimator agreement;
+- the 18/19 three-estimator agreement;
+- the descriptive role of matching;
+- separate dataset reporting;
+- the integration contribution;
+- causal, clinical, and reproducibility limitations.
+
+Neither abstract may introduce a claim absent from the other.
+
+Protected scope
+===============
+
+Do not modify:
+
+- thesis chapters;
+- result tables;
+- figures or captions;
+- checked result artifacts;
+- research code;
+- literature PDFs or metadata;
+- bibliography;
+- title pages;
+- acknowledgements;
+- keywords;
+- institutional metadata;
+- previous historical stage reports.
+
+The substantive source diff for this task must include both:
+
+- abstract_primary.tex
+- abstract_secondary.tex
+
+A rebuilt main.pdf without changes to both source files is not a completed
+repair.
+
+Validation
+==========
+
+From thesis-writing/thesis, run the documented clean build:
+
+latexmk -C
+latexmk -xelatex main.tex
+
+Then perform all of the following:
+
+1. Confirm successful XeLaTeX compilation.
+
+2. Confirm no missing Hebrew or English glyphs.
+
+3. Confirm no new unresolved references.
+
+4. Inspect the LaTeX log for overfull boxes involving either abstract.
+
+5. Render each abstract page individually at 300 DPI.
+
+6. Inspect both pages at full resolution, not only in a contact sheet.
+
+7. For the English page, inspect:
+   - heading placement;
+   - paragraph spacing;
+   - line wrapping;
+   - margins;
+   - clipping;
+   - readability.
+
+8. For the Hebrew page, inspect:
+   - RTL heading placement;
+   - right alignment;
+   - ragged left edge;
+   - Latin-token ordering;
+   - MIMIC-III rendering;
+   - all margins;
+   - clipping;
+   - paragraph spacing;
+   - page number.
+
+9. Inspect the pages immediately before and after both abstracts to detect
+   unintended front-matter order or pagination changes.
+
+10. Count words in each source-language abstract and report the exact counting
+    method and result.
+
+11. Verify every numerical claim against the checked result artifacts.
+
+12. Compare both abstracts against chapters 05, 07, and 10 for methodological
+    and result consistency.
+
+13. Run:
+
+    git diff -- thesis-writing/thesis/frontmatter/abstract_primary.tex
+    git diff -- thesis-writing/thesis/frontmatter/abstract_secondary.tex
+
+    Confirm that both files contain substantive changes.
+
+Evidence records
+================
+
+Do not rewrite the previous blocked report as though the block never occurred.
+
+Preserve:
 thesis-writing/logs/hebrew_abstract_repair.md
 
-Include:
+Create:
+thesis-writing/logs/bilingual_abstract_repair.md
+
+The report must include:
 
 - baseline commit and branch;
 - pre-existing dirty files;
 - files inspected;
 - files changed;
-- exact cause of the original RTL/font/overflow defects;
-- scientific verification sources for the 19/19 and 18/19 statements;
-- verification source for the language-model/DAG statement;
-- font and bidi mechanism used;
-- build command;
-- build result;
-- Hebrew abstract word count;
-- overfull/underfull warning result for the affected page;
-- rendered page number;
-- page-level visual inspection result;
-- Hebrew–English claim-equivalence result;
-- confirmation that unrelated protected content was unchanged;
+- scientific conflicts from the previous attempt;
+- the author-approved resolutions;
+- numerical verification sources;
+- predictive-family and aggregate-lineage verification;
+- estimator hierarchy verification;
+- LLM-role verification;
+- Hebrew typography diagnosis and repair;
+- English typography result;
+- build command and result;
+- page numbers of both abstracts;
+- word counts;
+- overfull-box results;
+- full-resolution visual-review results;
+- confirmation that both source files changed;
+- confirmation that protected files did not change;
 - unresolved issues;
-- one readiness line.
+- final readiness wording.
 
-Use exactly one of:
+Also create:
+thesis-writing/logs/bilingual_abstract_equivalence.csv
+
+Use one row per major claim and include at least:
+
+component_id
+English_claim
+Hebrew_claim
+numbers
+estimator_role
+qualification
+equivalent
+evidence_source
+repair_needed
+
+Finish the Markdown report with exactly one of:
 
 READY FOR AUTHOR REVIEW
 
-BLOCKED FOR CONTENT CONFIRMATION — <reason>
+BLOCKED FOR SCIENTIFIC CONTENT — <reason>
 
 BLOCKED FOR TYPOGRAPHIC REPAIR — <reason>
 
