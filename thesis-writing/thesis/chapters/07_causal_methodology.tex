@@ -12,36 +12,18 @@ The LLM has no estimator-time role in this chapter's workflow.  It is not called
 \begin{figure}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{physionet_causal_dag.png}
-\caption{Project-specified PhysioNet 2012 DAG used by the causal pipeline.  The figure is a thesis-local byte-identical copy of the canonical archived graph artifact.  The active PhysioNet graph-construction source reproduced that artifact byte-for-byte in the audited environment, while the exact historical producing command remains unrecovered.  Arrows encode assumed causal directions rather than statistically learned relationships; exact node and edge definitions remain source-code definitions.}
+\caption{Project-specified PhysioNet 2012 DAG used by the causal pipeline.  The active graph source reproduces the archived artifact; arrows encode assumed rather than learned or clinically validated relationships.}
 \label{fig:physionet-causal-dag}
 \end{figure}
 
 \begin{figure}[p]
 \centering
 \includegraphics[width=0.95\textwidth]{mimic_causal_dag.png}
-\caption{Project-specified MIMIC-III DAG used by the causal pipeline.  The figure is a thesis-local byte-identical copy of the canonical archived graph artifact.  The active MIMIC graph-construction source reproduced that artifact byte-for-byte in the audited environment, while the exact historical producing command remains unrecovered.  Arrows encode assumed causal directions rather than statistically learned relationships; exact node and edge definitions remain source-code definitions.}
+\caption{Project-specified MIMIC-III DAG used by the causal pipeline.  The active graph source reproduces the archived artifact; arrows encode assumed rather than learned or clinically validated relationships.}
 \label{fig:mimic-causal-dag}
 \end{figure}
 
-\begin{longtable}{@{}L{0.14\textwidth}L{0.18\textwidth}L{0.29\textwidth}L{0.29\textwidth}@{}}
-\caption{Implemented DAG node families used by the causal pipeline.}
-\label{tab:dag-node-families}\\
-\toprule
-family & role in graph & PhysioNet 2012 implementation & MIMIC-III implementation \\
-\midrule
-\endfirsthead
-\toprule
-family & role in graph & PhysioNet 2012 implementation & MIMIC-III implementation \\
-\midrule
-\endhead
-Background & Baseline variables allowed as adjustment candidates if mapped to dataframe columns. & Four nodes: age, gender, height/weight/BMI, and ICU type. & Five nodes: age, sex, ethnicity/insurance/language, admission context, and ICU unit. \\
-Latent or proxy state & Binary project proxy states.  Selected non-chronic states are analyzed as exposure variables; eligible pre-exposure latent nodes may also enter adjustment sets. & Eleven nodes, including chronic baseline risk, inflammation/sepsis burden, global severity, shock, respiratory failure, renal dysfunction, hepatic dysfunction, coagulation/hematologic dysfunction, neurologic dysfunction, cardiac injury/strain, and metabolic derangement. & Ten nodes, including chronic burden, inflammation/sepsis, global severity, cardiac strain, shock, respiratory failure, renal dysfunction, hepatic/coagulation dysfunction, neurologic dysfunction, and metabolic derangement. \\
-Observed measurements & Measurement aggregates and manifestations.  These document how clinical constructs relate to observed data but are excluded from adjustment-set candidates. & Ten observed aggregate nodes, including inflammatory, cardiac, respiratory, hemodynamic, renal, liver, hematologic, neurologic, metabolic, and availability-count measurements. & Fifteen observed aggregate nodes, including vital, laboratory, medication, procedure, ventilator, culture, and availability/count nodes. \\
-Treatment or care process & Care-process nodes retained in the graph to represent downstream clinical response or measurement context.  These are not treated as adjustment candidates. & Mechanical ventilation node. & Antibiotics, vasopressors, mechanical ventilation, and dialysis nodes. \\
-Missingness or measurement intensity & Process nodes for ordering and measurement availability.  These are graph variables but not adjustment candidates. & Lactate/ABG ordering, troponin ordering, and measurement intensity. & Measurement intensity, with outgoing links to availability, laboratory-count, and vital-count nodes. \\
-Outcome & Mortality endpoint. & \nolinkurl{OUT_InHospitalMortality}. & \nolinkurl{OUT_MORTALITY}. \\
-\bottomrule
-\end{longtable}
+Both graphs distinguish background variables, proxy states, observed measurements, care processes, missingness or measurement-intensity processes, and the mortality outcome.  Only mapped background and eligible upstream proxy nodes can enter adjustment sets; measurement, care-process, missingness, and outcome nodes remain in the causal hypothesis but are excluded as adjustment candidates.  MIMIC includes richer administrative and care-process structure, whereas PhysioNet uses a smaller background and observation vocabulary.
 
 The PhysioNet graph contains 30 nodes and 45 directed edges.  The implemented exposure list contains the ten non-chronic latent proxy states in the PhysioNet configuration: global severity, shock, respiratory failure, renal dysfunction, hepatic dysfunction, coagulation/hematologic dysfunction, inflammation/sepsis burden, neurologic dysfunction, cardiac injury/strain, and metabolic derangement.  Chronic baseline risk is retained as an upstream baseline proxy and effect-modifier candidate rather than as an analyzed exposure.
 
@@ -68,28 +50,7 @@ Let \(G\) denote the implemented project DAG, \(A\) the binary proxy-state expos
 
 where \(\mathcal{A}_{\mathrm{allowed}}\) is the set of available graph nodes whose node type is background or latent.  The implementation then enumerates backdoor paths between \(A\) and \(Y\) in the undirected skeleton whose first directed edge points into \(A\).  A path is treated as blocked if an adjusted non-collider is present or if an unadjusted collider has no adjusted descendant.  This is an encoded graphical test over the project DAG, not proof that all real-world confounding has been controlled.
 
-The preferred helper is the safe expanded adjustment mode.  It begins with the full candidate pool, removes colliders on the encoded backdoor paths and removes their descendants, then checks whether the remaining pool blocks all encoded backdoor paths.  If it succeeds, this expanded pool is returned.  If it does not block all paths, the pipeline falls back to a greedy minimal helper that starts from the candidate pool and removes variables in sorted order only while all encoded backdoor paths remain blocked.  The resulting set is inclusion-minimal under the implementation order; it is not guaranteed to be the unique minimal adjustment set.
-
-\begin{longtable}{@{}L{0.20\textwidth}L{0.34\textwidth}L{0.36\textwidth}@{}}
-\caption{Implemented adjustment-set logic and thesis interpretation.}
-\label{tab:adjustment-set-logic}\\
-\toprule
-implementation step & source behavior & thesis interpretation \\
-\midrule
-\endfirsthead
-\toprule
-implementation step & source behavior & thesis interpretation \\
-\midrule
-\endhead
-Graph and column aliasing & Maps selected dataframe columns such as age, sex/gender, ICU type, admission context, and chronic proxy states to project graph nodes. & Adjustment is limited by what the analysis dataframe actually contains; graph nodes without available mapped columns cannot be adjusted for. \\
-Allowed nodes & Keeps only graph nodes typed as background or latent and available in the dataframe. & Measurement, care-process, missingness, and outcome variables are deliberately excluded from candidate adjustment sets. \\
-Candidate pool & Intersects allowed nodes with ancestors of exposure and ancestors of outcome in the outgoing-edge-removed graph, then removes exposure descendants and the exposure/outcome nodes. & Candidate variables are source-defined pre-exposure or upstream variables under the project DAG. \\
-Backdoor-path check & Enumerates encoded backdoor paths and applies collider/non-collider blocking rules. & The check assesses the implemented graph, not unmeasured real-world mechanisms outside the DAG. \\
-Safe expanded set & Removes colliders and descendants of colliders before testing whether the remaining pool blocks paths. & Main adjustment mode, intended to reduce collider-conditioning risk. \\
-Minimal fallback & Greedily removes sorted candidate variables while preserving path blocking. & A deterministic implementation fallback, not a claim that no alternative sufficient set exists. \\
-Identifiability flag & Records whether available mapped variables block all encoded backdoor paths in the project DAG. & A project-DAG availability diagnostic; it should not be described as definitive causal identification in the clinical population. \\
-\bottomrule
-\end{longtable}
+The preferred helper is the safe expanded adjustment mode.  It removes encoded colliders and their descendants from the full candidate pool, then tests whether the remaining mapped variables block every encoded backdoor path.  If not, a deterministic greedy fallback removes sorted candidates only while path blocking is preserved.  The returned set is inclusion-minimal under that order, not necessarily unique.  The accompanying identifiability flag is therefore an availability diagnostic within the implemented graph, not proof of exchangeability in the clinical population.
 
 \begin{longtable}{@{}L{0.16\textwidth}L{0.25\textwidth}L{0.22\textwidth}L{0.27\textwidth}@{}}
 \caption{Causal assumptions required for interpreting the estimator outputs.}
@@ -133,7 +94,7 @@ The matching estimator is a deterministic baseline.  For each proxy exposure, th
 
 and the matching summary reports the mean and standard deviation of these matched-pair differences, the number of matched pairs, the match rate, the final allowed Hamming distance, and the observed adjustment columns.  This output is useful as a transparent matched descriptive contrast.  It should not be labeled as an average treatment effect unless the estimand, graph assumptions, overlap, and matching design are later approved for that interpretation.
 
-For model-based heterogeneous effects, the pipeline includes EconML double-machine-learning estimators and an exploratory CausalPFN branch.  The prespecified hierarchy treats CausalForestDML as primary, LinearDML as the secondary comparator, and CausalPFN as exploratory.  Double machine learning estimates nuisance outcome and treatment models and then estimates treatment effects after residualization, reducing sensitivity to nuisance-model overfitting under appropriate assumptions \cite{chernozhukov2018dml,oprescu_et_al_2019_econml}.  The LinearDML branch uses random-forest nuisance models with a linear final effect model.  The CausalForestDML branch uses the same random-forest nuisance-model family and a causal forest final stage, drawing on generalized random-forest and causal-forest ideas for heterogeneous treatment effects \cite{wager2018causalforest,athey2019grf}.  This modeling choice is consistent with the broader use of machine learning for individualized treatment-effect estimation in electronic health record and critical-care settings, while still requiring domain-specific validation \cite{smit_2023_causal_inference_icu_scoping_review,bica_2021_individualized_treatment_effects_ehr_ml,lipkovich_2024_modern_hte_methods,curth_2024_ml_individualized_treatment_effects,iwashyna_2015_hte_critical_care}.
+For model-based heterogeneous effects, the pipeline includes EconML double-machine-learning estimators and an exploratory CausalPFN branch.  The prespecified hierarchy treats CausalForestDML as primary, LinearDML as the secondary comparator, and CausalPFN as exploratory.  Double machine learning estimates nuisance outcome and treatment models before estimating effects from residuals, reducing sensitivity to nuisance-model overfitting under appropriate assumptions \cite{chernozhukov2018dml,oprescu_et_al_2019_econml}.  The LinearDML branch uses random-forest nuisance models with a linear final effect model.  The CausalForestDML branch uses the same nuisance-model family and a causal-forest final stage, drawing on generalized random-forest and causal-forest ideas for heterogeneous treatment effects \cite{wager2018causalforest,athey2019grf}.  This choice is consistent with broader machine-learning work on individualized treatment effects in electronic health records and critical care, while still requiring domain-specific validation \cite{smit_2023_causal_inference_icu_scoping_review,bica_2021_individualized_treatment_effects_ehr_ml,lipkovich_2024_modern_hte_methods,curth_2024_ml_individualized_treatment_effects,iwashyna_2015_hte_critical_care}.
 
 The CATE pipeline saves patient-level CATE values, normalized CATE values, optional 95 percent effect-interval columns when the estimator provides them, feature-importance or coefficient diagnostics when available, model artifacts, and run-level summaries.  In the current source, \(\texttt{mean\_cate}\) is the arithmetic mean of patient-level CATE estimates over the model rows.  It is an aggregate of the fitted model's conditional estimates and should not automatically be described as the study ATE.  The normalized CATE column is computed by dividing CATE by the sample outcome rate when that rate is positive.  It is an implementation-defined rescaling for comparison within this project; it is not a risk ratio, relative risk, or percent reduction.
 

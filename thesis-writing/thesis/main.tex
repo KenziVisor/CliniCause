@@ -28,7 +28,7 @@
   \renewcommand{\headrulewidth}{0pt}%
 }
 
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks,hypertexnames=false]{hyperref}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \addbibresource{../literature/metadata/references.bib}
 \setotherlanguage{hebrew}
@@ -74,7 +74,6 @@
 \input{chapters/06_predictive_modeling}
 \input{chapters/07_causal_methodology}
 \input{chapters/08_robustness_sensitivity_validation}
-\input{chapters/09_experimental_design}
 \input{chapters/10_results}
 \input{chapters/11_discussion}
 \input{chapters/12_conclusions_future_work}
@@ -83,7 +82,10 @@
 \input{appendices/appendices}
 
 \clearpage
+\begingroup
+\emergencystretch=2em
 \printbibliography[heading=bibintoc,title={Bibliography}]
+\endgroup
 \clearpage
 \input{frontmatter/hebrew_cover}
 

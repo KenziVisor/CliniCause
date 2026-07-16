@@ -3,7 +3,7 @@
 
 This chapter describes the predictive layer that estimates rule-derived proxy-state vectors from ICU time-series records.  Its supervision chain is LLM-assisted decision-rule design, project selection and deterministic source encoding, generation of rule-derived proxy labels, and deep-model prediction of those labels.  The supervised target is the resulting rule-derived proxy-label matrix loaded from a separate CSV file keyed by \texttt{ts\_id}; the inputs are irregular measurement histories plus static covariates prepared under the data contracts described in Chapter~\ref{chap:data-preprocessing}.  The models therefore predict analytical proxy labels rather than adjudicated clinical states.
 
-The implementation compares STraTS-family irregular-observation models with recurrent, convolutional, attention-based, and decay-based baselines.  This chapter defines the representation, training, evaluation, and export mechanics needed to connect these predictors to the later proxy-aggregation workflow.  Final run configurations, selected result artifacts, and numerical model comparisons are intentionally deferred to Chapters~\ref{chap:experimental-design} and~\ref{chap:results}.
+The final comparison contains four learned models: STraTS, GRU, GRU-D, and TCN.  This chapter defines their representation, training, evaluation, and export mechanics; experiment selection and numerical comparisons are deferred to Chapters~\ref{chap:experimental-design} and~\ref{chap:results}.
 
 \section{Self-Supervised STraTS Pretraining}
 \label{sec:predictive-modeling-proxy-states:self-supervised-strats-pretraining}
@@ -12,7 +12,7 @@ The implementation compares STraTS-family irregular-observation models with recu
 
 STraTS represents an irregular time series as a set of observed measurement tokens rather than as a fully imputed grid.  The implemented STraTS class constructs each token by adding three learned components: a continuous embedding of measurement time, a continuous embedding of the normalized measurement value, and an embedding of the variable identity.  The token sequence is contextualized with a transformer-style block and then pooled with fusion attention to obtain a fixed-dimensional time-series representation \cite{tipirneni2022strats}.  Static covariates are combined with this representation before either the self-supervised forecasting head or the supervised proxy-label head is applied.
 
-The same source file implements both \texttt{strats} and \texttt{istrats} model types.  In the verified implementation, \texttt{strats} pools contextualized observation embeddings and passes static covariates through a learned demographic embedding.  The \texttt{istrats} branch instead pools the initial triplet embeddings and concatenates the raw static-covariate vector.  The pretraining command-line guard permits self-supervised pretraining only for \texttt{strats} and \texttt{istrats}; the recurrent, convolutional, attention-grid, and decay baselines do not have a supported self-supervised pretraining path in the current source.
+In the verified STraTS implementation, contextualized observation embeddings are pooled and combined with a learned embedding of static covariates.  The recurrent, convolutional, and decay baselines in the final comparison do not have a supported self-supervised pretraining path in the current source.
 
 The pretraining dataset loader reads the split-aware processed artifact and removes held-out test identifiers before constructing unsupervised examples.  It builds the variable vocabulary from variables observed in the pretraining train split, derives value means and standard deviations from that train split, and saves the resulting variable list, normalization table, and maximum time horizon to \texttt{pt\_saved\_variables.pkl}.  For PhysioNet 2012 the maximum time is 48 hours.  For MIMIC-III the loader permits observations up to five days but samples at most a 24-hour input context and clamps implausibly old age values in the same way as the supervised loader.
 
@@ -29,9 +29,9 @@ Checkpoint-loaded supervised training is implemented by constructing the target 
 
 The supervised prediction task uses a deterministic rule-derived latent-label CSV as its target matrix.  The loader accepts identifier columns named \texttt{ts\_id}, \texttt{icustay\_id}, or \texttt{ICUSTAY\_ID}, canonicalizes them to \texttt{ts\_id}, and checks consistency when more than one accepted identifier column is present.  It then filters the label table to the supervised split identifiers, raises an error for missing labels, raises an error for duplicate normalized identifiers, sorts rows to match the internal supervised identifier order, and treats every non-\texttt{ts\_id} column as a proxy-label target.  The number and order of supervised targets are therefore determined at runtime by the CSV schema, but their semantic status remains rule-derived rather than clinical ground truth.
 
-All supervised backends share a multi-label output contract.  During training the model returns binary cross-entropy with logits against the full target vector, using per-target positive-class weights computed from the supervised train split.  During evaluation or prediction export, the same model call without labels returns sigmoid probabilities.  Static covariates are normalized from training rows and are concatenated, either after a learned demographic embedding or directly in the \texttt{istrats} branch, with each model's time-series representation.  In scratch supervised training the binary head maps the combined representation directly to the proxy-label logits.  In checkpoint-loaded training the source inserts an intermediate forecasting head before the binary head so that overlapping pretraining tensors can be reused.
+All supervised backends share a multi-label output contract.  During training the model returns binary cross-entropy with logits against the full target vector, using per-target positive-class weights computed from the supervised train split.  During evaluation or prediction export, the same model call without labels returns sigmoid probabilities.  Static covariates are normalized from training rows and combined with each model's time-series representation.  In scratch training the binary head maps the combined representation directly to proxy-label logits; checkpoint-loaded STraTS training uses an intermediate forecasting head so overlapping pretraining tensors can be reused.
 
-The STraTS supervised backend uses the irregular observation triplets described in Section~\ref{sec:predictive-modeling-proxy-states:self-supervised-strats-pretraining}: time, value, and variable embeddings, transformer contextualization, fusion attention, and static-feature combination \cite{tipirneni2022strats}.  The \texttt{istrats} branch shares the same triplet construction and fusion-attention module, but its verified pooling and static-feature path differ as described above.  The final artifact archive contains STraTS prediction CSVs, while no final iSTraTS prediction artifact was found.
+The STraTS supervised backend uses the irregular observation triplets described in Section~\ref{sec:predictive-modeling-proxy-states:self-supervised-strats-pretraining}: time, value, and variable embeddings, transformer contextualization, fusion attention, and static-feature combination \cite{tipirneni2022strats}.
 
 The GRU baseline uses a dense hourly grid rather than the raw irregular token set.  For each hour and variable, the loader builds value, observation-mask, and elapsed-time-since-observation channels, mean-fills unobserved values from training data, normalizes the filled values, and concatenates the three channel groups before passing them to a gated recurrent unit \cite{cho2014gru}.  The final recurrent hidden state is concatenated with the static-feature embedding and projected through the shared supervised head.
 
@@ -39,28 +39,7 @@ The GRU-D backend uses a model-specific irregular sequence representation contai
 
 The TCN baseline uses the same dense hourly value, observation-mask, and elapsed-time representation as the GRU baseline, but processes the sequence with temporal convolutional residual blocks \cite{bai2018tcn}.  The implementation permutes the dense grid into channel-first form, applies a temporal convolutional network, takes the last temporal embedding, and concatenates it with the static-feature embedding before projection to proxy-label logits.
 
-\begingroup
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{longtable}{@{}L{0.10\textwidth}L{0.31\textwidth}L{0.24\textwidth}L{0.25\textwidth}@{}}
-\caption{Implemented predictive model families and non-numeric evidence status.}
-\label{tab:predictive-model-comparison}\\
-\toprule
-Model & Temporal representation and irregularity handling & Static features and pretraining path & Citation and repository evidence status \\
-\midrule
-\endfirsthead
-\toprule
-Model & Temporal representation and irregularity handling & Static features and pretraining path & Citation and repository evidence status \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-STraTS & Irregular observation tokens built from time, value, and variable embeddings; observation masks handle padding, and fusion attention pools contextualized tokens. & Learned demographic embedding is concatenated with the pooled representation; self-supervised pretraining is supported. & \cite{tipirneni2022strats}.  Implementation confirmed; wrappers and archived STraTS outputs present; final checkpoint-to-export manifest incomplete. \\
-GRU & Dense hourly grid with value, observation-mask, and elapsed-time channels; unobserved values are mean-filled before normalization. & Learned demographic embedding is concatenated with the final recurrent state; pretraining is not supported by the current guard. & \cite{cho2014gru}.  Implementation confirmed; archived GRU prediction CSVs present; export provenance incomplete. \\
-GRU-D & Irregular sequence of value, mask, elapsed-time, and sequence-length tensors; learned decays and masks enter the recurrent update. & Learned demographic embedding is concatenated with the final valid recurrent state; pretraining is not supported by the current guard. & \cite{che2018grud}.  Implementation confirmed; archived GRU-D prediction CSVs present; export provenance incomplete. \\
-TCN & Dense hourly grid with value, observation-mask, and elapsed-time channels processed by temporal convolutional residual blocks. & Learned demographic embedding is concatenated with the last convolutional embedding; pretraining is not supported by the current guard. & \cite{bai2018tcn}.  Implementation confirmed; archived TCN prediction CSVs present; export provenance incomplete. \\
-\end{longtable}
-\endgroup
+Together, these backends compare sparse-event attention, ordinary recurrence on a prepared grid, missingness-aware recurrence with learned decay, and temporal convolution.  All four have archived prediction outputs for both datasets, while checkpoint-to-export, split, and archive-copy lineage remains incomplete.  Table~\ref{tab:background-model-families} summarizes their inductive biases without ranking them by sophistication.
 
 The supervised evaluator computes metrics independently for each rule-derived target column in the requested split.  Target columns with only one observed class in that split are skipped.  For the remaining targets, it computes AUROC, area under the precision-recall curve, and the maximum value of the pointwise minimum of precision and recall.  The reported split-level values are simple averages over the non-degenerate target columns, with loss and negative loss also recorded.  During supervised training, checkpoint selection uses the validation value of \texttt{auprc + auroc}; this validation score should not be interpreted as a test score.  These metrics quantify learnability or reproducibility of rule-derived targets, not clinical construct validity or correctness of the LLM-assisted decision-rule design.  A model can reproduce both useful rule structure and systematic rule error.
 
@@ -75,20 +54,4 @@ Prediction export is requested with \texttt{--save\_pred\_csv\_path}.  The expor
 
 For every exported row, the exporter removes labels from the batch, obtains probability outputs from the model, thresholds each probability at 0.5, and writes a combined CSV.  The first column is \texttt{ts\_id}.  It is followed by one probability column named \texttt{<label>\_prob} for each target and then one thresholded binary prediction column named exactly as the target label.  These binary columns are model-predicted proxy labels, not rule-derived labels and not clinical adjudications.
 
-\begin{table}[htbp]
-\centering
-\caption{Prediction export schema before downstream voter normalization.}
-\label{tab:prediction-export-schema}
-\small
-\begin{tabular}{@{}L{0.18\textwidth}L{0.25\textwidth}L{0.28\textwidth}L{0.20\textwidth}@{}}
-\toprule
-Column group & Naming pattern & Meaning & Source of value \\
-\midrule
-Identifier & \texttt{ts\_id} & Normalized supervised record identifier. & STraTS dataset loader and split object. \\
-Probability outputs & \texttt{<label>\_prob} & Sigmoid model probability for a proxy-label target. & Supervised model called without labels. \\
-Binary predictions & \texttt{<label>} & Thresholded model-predicted proxy label. & Probability output thresholded at 0.5. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The combined prediction CSV is not the same file shape required by downstream voter aggregation.  The helper \texttt{split\_predicted\_latent\_tags.py} validates that \texttt{ts\_id} is the first column, expects an even number of non-identifier columns, splits the first half into probability columns and the second half into binary tag columns, and writes separate probability and absolute-tag CSVs.  The majority-vote input contract is stricter: each voter file must contain \texttt{ts\_id} plus binary proxy columns, with all voter files sharing the same latent-column set after validation.  The parent router can collect STraTS outputs, drop probability columns, enforce the approved latent ordering, and write normalized voter CSVs for later aggregation.  The semantics of the aggregated proxy-label representation belong to Chapter~\ref{chap:clinical-proxy-state-construction}; the archived final vote combines one rule-derived table with predicted-label tables from GRU, GRU-D, STraTS, and TCN.  Here the important point is the predictive handoff contract.  Majority voting is algorithmic aggregation, not expert consensus.
+The combined prediction CSV is not the same file shape required by downstream voter aggregation.  The normalization helper validates \texttt{ts\_id}, separates probability and binary fields, and writes binary-only voter files.  The majority-vote contract then requires a shared identifier and binary proxy schema in the approved order.  The archived final vote combines one rule-derived table with predicted-label tables from GRU, GRU-D, STraTS, and TCN; Chapter~\ref{chap:clinical-proxy-state-construction} defines its semantics.  This is an algorithmic handoff, not expert consensus.

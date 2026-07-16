@@ -63,7 +63,7 @@ The original causal-analysis populations contained 26,845 MIMIC records and 7,99
 
 Broad methodological replication across both datasets is a strength: the pipeline operated with the same overall sequence of representation, proxy prediction, aggregation, graph-guided adjustment, and estimator comparison.  However, similarly named proxy states are not automatically construct-equivalent.  MIMIC combines some domains that PhysioNet separates, and the rules and graphs are dataset specific.  The deliberate no-pooling policy is therefore essential.  Cross-dataset differences are evidence about portability of the workflow and sensitivity to context, not a pooled clinical effect or proof of biological inconsistency.
 
-Outcome-based downsampling remained a contained robustness analysis.  It retained outcome-positive records and sampled outcome-negative records, thereby changing the empirical population and outcome prevalence.  Original and downsampled means do not automatically target the same population quantity.  Nevertheless, direction was preserved in 55 of 57 matched estimator--dataset--exposure comparisons, which indicates broad sign stability under a substantial sampling perturbation and suggests that many sign patterns were not solely driven by the original mortality imbalance.  Every paired mean changed numerically, and two PhysioNet comparisons changed sign.  The procedure is not formal transport or reweighting; magnitude changes cannot be read as stronger or weaker original-population effects, and directional preservation does not validate causal identification.
+Outcome-based downsampling remained a contained robustness analysis.  It retained outcome-positive records and sampled outcome-negative records, thereby changing the empirical population and outcome prevalence.  Original and downsampled means do not automatically target the same population quantity.  Nevertheless, direction was preserved in 55 of 57 matched comparisons across estimator, dataset, and exposure.  This broad sign stability under a substantial sampling perturbation suggests that many sign patterns were not solely driven by the original mortality imbalance.  Every paired mean changed numerically, and two PhysioNet comparisons changed sign.  The procedure is not formal transport or reweighting; magnitude changes cannot be read as stronger or weaker original-population effects, and directional preservation does not validate causal identification.
 
 \subsection{Relationship to Prior Work and Methodological Implications}
 \label{subsec:discussion:prior-work-implications}
@@ -79,29 +79,6 @@ The proxy states summarize clinically inspired patterns and are analytically use
 
 \paragraph{SRQ-7---principal limitations.}
 The main limitations arise from proxy-label construct validity and measurement error; ill-defined or non-manipulable exposures; unvalidated DAG assumptions and possible unmeasured confounding; temporal ambiguity; incomplete empirical support; model dependence; outcome-class downsampling; dataset heterogeneity; incomplete final-run provenance; and the absence of clinical, fairness, and deployment validation.  The answer is therefore \emph{empirically supported with substantial unresolved boundaries}.  These limitations determine the strength of every preceding answer and motivate the validity analysis below.
-
-\begin{longtable}{@{}L{0.10\textwidth}L{0.34\textwidth}L{0.18\textwidth}L{0.28\textwidth}@{}}
-\caption{Evidence-based answers to the research questions.}
-\label{tab:discussion-rq-answers}\\
-\toprule
-Question & Evidence-based answer & Strength of answer & Principal boundary \\
-\midrule
-\endfirsthead
-\toprule
-Question & Evidence-based answer & Strength of answer & Principal boundary \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-Main RQ & An auditable workflow links LLM-assisted design, irregular measurements, deterministic proxy construction, deep prediction, algorithmic aggregation, project DAGs, and adjusted analyses across both datasets. & Implementation supported & Clinical and causal meaning remains assumption dependent. \\
-SRQ-1 & Separate causal and split-aware predictive contracts are connected through normalized identifiers, routing, and explicit export schemas. & Implementation supported & Producing hashes, commands, and split lineage are incomplete. \\
-SRQ-2 & Prompt, source, and generated artifacts trace selected LLM-assisted proxy, rule, and DAG designs at schema level. & Partially traceable; unresolved clinically & Human selection, line-level correspondence, chart adjudication, and graph review are incomplete. \\
-SRQ-3 & The included model families completed the proxy-label task; the leading family differed by dataset. & Empirically supported with qualifications & No uncertainty or paired superiority tests; target validity and provenance are incomplete. \\
-SRQ-4 & Exports are normalized to probability/binary pairs; final-run votes combine one rule source with four prediction sources. & Implementation supported & Voting is not clinical consensus and can preserve shared error. \\
-SRQ-5 & Source-coded DAGs yield exposure-specific observed adjustment sets. & Conditional on assumptions & Graph correctness, temporal ordering, and identifiability are unresolved. \\
-SRQ-6 & Primary, secondary, exploratory, matching, and diagnostic analyses show broad directional triangulation with explicit exceptions. & Empirically supported with qualifications & Agreement is not estimator equivalence or causal validation. \\
-SRQ-7 & Construct, identification, support, modeling, transport, provenance, and clinical-use limitations materially bound all findings. & Partially supported & Several limitations require new clinical review, provenance, or validation evidence. \\
-\end{longtable}
 
 \section{Limitations and Threats to Validity}
 \label{sec:discussion:limitations-threats-validity}
@@ -165,41 +142,4 @@ Misclassification can misrepresent a record's clinical condition, amplify measur
 
 No dedicated fairness audit was performed.  The presence of age, gender, ICU type, or other variables in an adjustment set does not constitute fairness validation, and subgroup predictive performance and effect stability remain untested.  The repository does not establish the project-specific institutional approval, consent or waiver procedure, data-use agreement, or governance determination.  These facts must be supplied from authoritative institutional records and must not be inferred from dataset access, de-identification, or repository contents.
 
-The deployment boundary is unambiguous: \emph{the system is a retrospective research workflow and is not suitable for patient-level clinical deployment or treatment recommendation in its current form}.  No prospective safety, workflow, impact, or human-factors evaluation was performed.  This limitation is not cured by predictive accuracy, estimator agreement, or artifact traceability.
-
-\begingroup
-\scriptsize
-\sloppy
-\setlength{\tabcolsep}{2pt}
-\begin{longtable}{@{}L{0.14\textwidth}L{0.24\textwidth}L{0.18\textwidth}L{0.19\textwidth}L{0.17\textwidth}@{}}
-\caption{Study-specific limitations and threats to validity.}
-\label{tab:discussion-limitations}\\
-\toprule
-Validity domain & Repository-specific limitation & Potential impact & Existing mitigation & Residual risk \\
-\midrule
-\endfirsthead
-\toprule
-Validity domain & Repository-specific limitation & Potential impact & Existing mitigation & Residual risk \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-Proxy construct validity & Rule-defined states lack chart-adjudicated reference labels. & Construct error can distort prediction targets and exposure contrasts. & Explicit rules, proxy terminology, and source traceability. & High; clinical review and validation remain absent. \\
-Prediction-label validity & Models learn rule-derived targets and voters may share error. & Performance can be high against an imperfect label source. & Separate rule, prediction, and vote terminology. & High; voting cannot remove correlated systematic error. \\
-Exposure definition & Binary illness-state proxies are not necessarily manipulable interventions. & Consistency and causal meaning may be ill defined. & Exposure wording and no treatment recommendation. & High; intervention definition remains unresolved. \\
-Temporal ordering & Proxy, covariate, and outcome timing is not established by graph topology. & Reverse ordering or post-exposure adjustment can bias estimates. & DAG descendant filtering and explicit caveats. & High; record-level timing needs validation. \\
-DAG validity & Project graphs were not learned or empirically validated. & Misspecified arrows can select inadequate adjustment sets. & Source-coded transparency and prompt/code traceability. & High; expert review is incomplete. \\
-Unmeasured confounding & Available variables may not block real-world backdoor paths. & Adjusted estimates may retain bias. & DML adjustment and layered sensitivity diagnostics. & High; sensitivity does not eliminate omitted-variable bias. \\
-Overlap and support & Dedicated propensity and balance diagnostics are absent; matching failures occur. & Weakly supported contrasts may be unstable or nontransportable. & Pair, rate, distance, warning, and failure fields. & High; positivity is unestablished. \\
-Estimator/model dependence & Estimators differ in structure, magnitude, ranking, and diagnostics. & Conclusions may depend on model form or tuning. & Prespecified hierarchy and multi-estimator triangulation. & Medium--high; agreement is mainly directional. \\
-Uncertainty and comparisons & Intervals are unavailable for many displayed means; no multiplicity plan exists. & Precision and false-discovery risk cannot be fully assessed. & No new significance claims or tests. & High for exposure-specific inference. \\
-Outcome downsampling & Sampling changes outcome prevalence and the empirical population. & Means no longer target an automatically identical population quantity. & Robustness-only role, no pooling, explicit sign-change report. & Medium--high; some conclusions are sampling sensitive. \\
-Cross-dataset transport & Datasets differ in era, size, variables, proxies, DAGs, and populations. & Local patterns may not transport or be construct equivalent. & Dataset-specific reporting and no numerical pooling. & High; no external transport validation. \\
-Missing result configurations & Numbered producing causal configs are unavailable. & Exact reruns and setting verification are blocked. & Run summaries and result manifest. & High for computational reproduction. \\
-Predictive provenance & Split, checkpoint-to-export, and copy lineage are incomplete. & Final export and out-of-sample claims remain qualified. & Schema checks, paired logs, and wrappers. & High until per-export lineage is recovered. \\
-Ignored result archive & \texttt{final-results/} is ignored or untracked. & Clean-checkout artifact recovery is not guaranteed. & Checksums, source packet, and canonical-source register. & Medium--high; external archival record is needed. \\
-LLM-assisted design & Prompt/system settings, model sensitivity, accepted/rejected decisions, and line-level code traceability are incomplete. & Hallucination, anchoring, hidden-data dependence, and propagated rule or graph error are possible. & Preserved prompts, explicit source-code authority, and conservative claim boundaries. & High until blinded clinical review, replication, and sensitivity studies are completed. \\
-Clinical validation & No prospective, chart-review, or external clinical validation was performed. & Clinical accuracy and utility are unknown. & Retrospective, hypothesis-generating use boundary. & High; bedside use is inappropriate. \\
-Fairness and deployment & No subgroup fairness, safety, impact, or human-factors audit was performed. & Unequal errors and automation harm may go undetected. & Explicit non-deployment boundary. & High; dedicated evaluation is required. \\
-\end{longtable}
-\endgroup
+The deployment boundary is unambiguous: \emph{the system is a retrospective research workflow and is not suitable for patient-level clinical deployment or treatment recommendation in its current form}.  No prospective safety, workflow, impact, or human-factors evaluation was performed.  This limitation is not cured by predictive accuracy, estimator agreement, or artifact traceability.  Taken together, construct measurement, intervention definition, graph validity, temporal ordering, unmeasured confounding, support, uncertainty, transport, provenance, LLM-design reproducibility, fairness, and clinical validation remain the decisive threats to stronger interpretation.

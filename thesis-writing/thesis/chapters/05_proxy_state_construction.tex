@@ -1,234 +1,69 @@
 \chapter{Clinical Proxy-State Construction}
 \label{chap:clinical-proxy-state-construction}
 
-This chapter describes how an LLM-assisted design protocol and deterministic project source transform heterogeneous, irregular ICU measurements into a smaller set of interpretable binary constructs.  The protocol elicited proposed proxy ontologies, decision rules, missingness considerations, and DAGs; project-selected designs were subsequently encoded as tagger and graph source files.  The deterministic taggers generate supervised targets for the proxy-state prediction task introduced in Chapter~\ref{chap:problem-definition-study-design}, and predicted or aggregated proxy labels become structured exposures for later observational analyses.  Their interpretability comes from inspectable source-code rules and stable \texttt{LAT\_*} column names, not from chart-adjudicated clinical reference labels.  They should therefore be read as proxy states: useful analytical representations whose value depends on construct validity, source-variable availability, measurement quality, missingness, and later clinical review.
+This chapter explains how LLM-assisted design proposals and deterministic project source transform heterogeneous ICU measurements into interpretable binary proxy states.  Project-selected ontologies, decision rules, missingness considerations, and DAG proposals were encoded in tagger and graph source files.  The taggers generate the rule-derived targets used for prediction, while predicted and aggregated labels provide structured inputs to the later observational analyses.  Interpretability comes from inspectable rules and stable \texttt{LAT\_*} interfaces, not from chart-adjudicated reference labels.
 
-The chapter is limited to methods and construct definition.  It documents the design-provenance artifacts and active rule implementations for PhysioNet 2012 and MIMIC-III, describes available validation artifacts without reporting their numerical contents, and explains how rule-derived proxy labels differ from predicted and aggregated predicted proxy labels.  Predictive-model architecture and training mechanics are presented in Chapter~\ref{chap:predictive-modeling-proxy-states}; final numerical results are reported in Chapter~\ref{chap:results}.
+The chapter retains the scientific meaning of each proxy family and the active aggregation rule.  Exhaustive prompt inventories, artifact hashes, prompt-to-source matrices, and clause-level rule tables are maintained in the repository evidence package rather than repeated in the main narrative.  Predictive architectures appear in Chapter~\ref{chap:predictive-modeling-proxy-states}, and numerical results in Chapter~\ref{chap:results}.
 
 \section{Rationale and Terminology}
 \label{sec:clinical-proxy-state-construction:rationale-terminology}
-% Section ID: C5.1.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-Electronic health-record phenotyping often uses structured measurements, codes, and rules to construct clinically meaningful variables when direct expert labels are unavailable \cite{banda_2018_electronic_phenotyping}.  This thesis uses the same conservative framing.  A \emph{proxy state} is a binary construct intended to summarize evidence for a clinically meaningful condition or physiologic state from the available data.  A \emph{proxy phenotype} is the same family of construct, with emphasis on phenotype-like grouping rather than direct measurement.  A \emph{clinically inspired proxy label} is a weak label based on clinical measurements, thresholds, or rule clauses rather than a chart-adjudicated endpoint.  A \emph{rule-derived proxy label} is assigned by deterministic source-code rules.  A \emph{predicted proxy label} is produced by a supervised time-series model trained to estimate rule-derived labels.  An \emph{aggregated predicted proxy-label representation} is an algorithmic aggregate used downstream; in the archived final causal runs, its deterministic vote combines one rule-derived source with four aligned binary model-prediction sources.  A \emph{binary proxy-state tag} is the realized 0/1 value for one \texttt{ts\_id} and one proxy-state column.
+Electronic phenotyping uses structured measurements, codes, and rules to construct analytical variables when direct adjudication is unavailable \cite{banda_2018_electronic_phenotyping}.  Here a \emph{proxy state} or \emph{proxy phenotype} is a binary construct summarizing available evidence for a clinically meaningful condition or physiologic pattern.  A \emph{rule-derived proxy label} is assigned by deterministic source rules; a \emph{predicted proxy label} is a supervised model estimate of that rule-derived label; and an \emph{aggregated predicted proxy-label representation} is the deterministic mixed-source vote used downstream.  A binary proxy-state tag is the realized 0/1 value for one \texttt{ts\_id} and proxy-state column.
 
-The repository historically uses the names \texttt{latent}, \texttt{latent variable}, \texttt{latent tag}, and \texttt{LAT\_*}.  Those names are stable implementation vocabulary.  The thesis retains the \texttt{LAT\_*} column names when identifying artifacts, configuration fields, prediction targets, and downstream exposure variables, but uses ``proxy state'' in explanatory prose.  This avoids implying that the implementation has discovered or validated a hidden biologic state.
+Repository names such as \texttt{latent}, \texttt{latent tag}, and \texttt{LAT\_*} remain stable implementation vocabulary, but they do not show that a hidden biological state was discovered.  The proxy layer converts selected designs into source-coded constructs, supplies multi-label prediction targets, and provides a common schema for aggregation, mortality analysis, matching, and CATE estimation.  No chart-adjudicated gold standard was found; missing measurements can prevent clauses from firing; thresholds approximate rather than reproduce complete clinical definitions; and dataset-specific states are not automatically construct-equivalent.  This project also does not implement the Snorkel generative label model \cite{ratner_et_al_2020_snorkel}.
 
-The proxy-state layer serves four methodological roles.  First, it converts selected LLM-assisted design proposals into source-coded, patient- or stay-level analytical constructs.  Second, it supplies rule-derived supervised targets for multi-label prediction.  Third, it establishes a consistent variable interface for downstream aggregation, mortality, matching, and CATE scripts.  Fourth, it preserves a transparent mapping from each \texttt{LAT\_*} column back to measurement families and rule clauses.
-
-The limitations are equally central.  No chart-adjudicated reference labels or clinician-reviewed gold-standard labels were found in the inspected archive.  Thresholds approximate clinical ideas but are not equivalent to complete formal clinical definitions.  Missing measurements can prevent rule clauses from firing; a negative tag therefore does not prove absence of the condition, and a positive tag does not establish a clinical diagnosis.  Source-variable availability differs between PhysioNet and MIMIC-III, so similarly named cross-dataset states are not automatically identical constructs.  Weak-supervision literature supports the broad idea that noisy labeling sources and aggregation can be useful, but this project does not implement the Snorkel generative label model \cite{ratner_et_al_2020_snorkel}.
-
-\subsection{LLM-Assisted Proxy-State, Decision-Rule, and DAG Construction}
+\subsection{LLM-Assisted Design of Proxy States, Rules, and DAGs}
 \label{subsec:clinical-proxy-state-construction:llm-assisted-elicitation}
 
-The proxy-state ontology, decision rules, and dataset-specific DAGs have prompt-provenance artifacts under \texttt{thesis-writing/prompts-and-documents/}.  Those artifacts document a substantive design-time LLM-assisted elicitation process that requested a dataset audit, clinical and causal ontology, proxy-state definitions, binary decision-tree proposals, missingness and measurement-process reasoning, and a DAG for PhysioNet 2012 and MIMIC-III.  The final dataset prompts instantiate a generic prompt template with only the dataset name and official dataset-description URL changed.  The final PhysioNet and MIMIC prompt runs were exported on 2026-05-01.  Project-supplied metadata identifies the model as ChatGPT 5.4 with extended reasoning, but the PDF metadata does not independently encode that model/version field; the exact system instructions, decoding settings, browsing or research mode, follow-up interactions, and export procedure remain incompletely documented.
+The structured elicitation protocol requested a dataset audit, proxy-state ontology, binary decision-rule families, missingness and measurement-process reasoning, and a dataset-specific DAG for PhysioNet 2012 and MIMIC-III.  The final dataset prompts instantiate a common template with dataset-specific names and official description links.  Their exported runs preserve the resulting design proposals, but the exact system instructions, decoding settings, hosted-model configuration, follow-up interactions, and export procedure are incompletely documented.
 
-The LLM-generated outputs were design proposals subsequently selected and encoded by the project, not clinical validation or source-code authority.  The LLM did not learn labels or graphs from patient-level records in this repository, did not execute preprocessing, deterministic labeling, prediction, majority voting, adjustment selection, or causal estimation, and did not produce chart-adjudicated reference labels.  The implemented rule-derived proxy labels are defined by the active tagger source files, and the implemented DAG artifacts are defined by the active graph scripts.  The prompt outputs explain the design history, whereas any claim about implemented behavior must trace to source code, configuration, and run artifacts.
+The outputs were proposals subsequently selected and encoded by the project, not clinical validation or executable authority.  The LLM did not inspect patient records at runtime, generate final labels, aggregate voters, select adjustment variables dynamically, or estimate effects.  Active tagger and graph source defines implemented behavior; prompts document design provenance.  The final outputs align at schema level with the eleven active PhysioNet states and ten active MIMIC states, but complete accepted/rejected decisions and line-level prompt-output-to-code correspondence have not been established.
 
-\begin{table}[htbp]
-\centering
-\caption{Prompt and document artifacts used as design provenance for proxy-state and DAG construction.}
-\label{tab:llm-prompt-artifact-provenance}
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}L{0.20\textwidth}L{0.12\textwidth}L{0.25\textwidth}L{0.15\textwidth}L{0.20\textwidth}@{}}
-\toprule
-Artifact & Dataset & Role & Version status & Thesis relation \\
-\midrule
-Generic prompt template & Generic & Template for staged ontology, rule, missingness, and DAG elicitation. & Final template & Design-time elicitation protocol; not execution or validation. \\
-PhysioNet prompt and run export & PhysioNet & Dataset-specific prompt and exported ChatGPT run. & Final run & Design proposals subsequently selected and source-encoded; not implementation authority. \\
-MIMIC prompt and run export & MIMIC-III & Dataset-specific prompt and exported ChatGPT run. & Final run & Design proposals subsequently selected and source-encoded; not implementation authority. \\
-Earlier prompt-result exports & Both & Earlier prompt outputs. & Superseded & Historical design trace only. \\
-Manager-summary documents & Project & Management summaries of proxy/DAG and clinical CATE review concepts. & Project documents & Do not establish a complete human or clinical review chain. \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Earlier prompt-result exports dated 2026-04-29 are superseded design records rather than the final prompt runs.  At schema level, the final PhysioNet output proposes the same eleven active \texttt{LAT\_*} states as the active PhysioNet tagger, and the final MIMIC output proposes the same ten active states as the active MIMIC tagger.  Both outputs discuss measurement and missingness processes that also appear in the graph layer.  This alignment is high level: the implemented source contains more precise clauses and graph structure, and complete line-by-line correspondence between every LLM output and the active implementation has not been established.
-
-\begin{landscape}
-\begingroup
-\small
-\sloppy
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.11\linewidth}L{0.15\linewidth}L{0.19\linewidth}L{0.18\linewidth}L{0.16\linewidth}L{0.15\linewidth}@{}}
-\caption{Traceability from LLM-assisted design artifacts to implemented proxy and DAG artifacts.}
-\label{tab:llm-design-implementation-traceability}\\
-\toprule
-Design element & LLM provenance artifact & Implemented source file & Generated artifact & Validation status & Principal limitation \\
-\midrule
-\endfirsthead
-\toprule
-Design element & LLM provenance artifact & Implemented source file & Generated artifact & Validation status & Principal limitation \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-PhysioNet proxy ontology & \nolinkurl{physionet-prompt.txt}; \nolinkurl{physionet-prompt-}\allowbreak\nolinkurl{running.pdf} & \nolinkurl{tagging_latent_variables_physionet.py} & \nolinkurl{physionet-latent-tags.csv} & Eleven-state schema alignment; deterministic output present. & No chart adjudication; construct validity and line-level traceability incomplete. \\
-MIMIC proxy ontology & \nolinkurl{mimic-prompt.txt}; \nolinkurl{mimic-prompt-}\allowbreak\nolinkurl{running.pdf} & \nolinkurl{tagging_latent_variables_mimiciii.py} & \nolinkurl{latent_tags.csv} & Ten-state schema alignment; deterministic output and descriptive summaries present. & No chart adjudication; input-mode and construct validity remain unresolved. \\
-PhysioNet decision rules & PhysioNet final prompt and run export & \nolinkurl{tagging_latent_variables_physionet.py} & PhysioNet proxy-label table and decision-tree artifacts & Active source clauses documented in this chapter. & Source is more precise than prompt narrative; no formal clinical-rule adjudication. \\
-MIMIC decision rules & MIMIC final prompt and run export & \nolinkurl{tagging_latent_variables_mimiciii.py} & MIMIC proxy-label, merged-feature, and decision-tree artifacts & Active source clauses and diagnostic summaries documented. & No proof every proposal was implemented unchanged; no formal clinical-rule adjudication. \\
-PhysioNet DAG & PhysioNet final prompt and run export & \nolinkurl{physionet2012_causal_graph.py} & \nolinkurl{physionet_causal_graph.pkl}; \nolinkurl{physionet_causal_dag.png} & Active source reproduces the archived graph artifact. & No clinical edge validation or complete selection-decision record. \\
-MIMIC DAG & MIMIC final prompt and run export & \nolinkurl{mimiciii_causal_graph.py} & \nolinkurl{mimic_causal_graph.pkl}; \nolinkurl{mimic_causal_dag.png} & Active source reproduces the archived graph artifact. & No clinical edge validation or complete selection-decision record. \\
-\end{longtable}
-\endgroup
-\end{landscape}
-
-\begin{table}[htbp]
-\centering
-\caption{Proxy-state source types used in the thesis pipeline.}
-\label{tab:proxy-source-types}
-\small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}L{0.20\textwidth}L{0.31\textwidth}L{0.34\textwidth}L{0.10\textwidth}@{}}
-\toprule
-Source type & Generation mechanism & Interpretation boundary & Primary evidence \\
-\midrule
-Rule-derived proxy label & Deterministic clinical rules applied to summary features or helper flags. & Transparent weak label; not a verified diagnosis or formal score unless the full score is implemented. & Active tagger source and rule artifacts. \\
-Predicted proxy label & Time-series model probability thresholded at 0.5 for each target column. & Model estimate of a rule-derived proxy label; not a direct clinical measurement. & STraTS export source and prediction CSV schema. \\
-Aggregated predicted proxy-label representation & Deterministic vote across one rule-derived CSV and four aligned binary model-prediction CSVs in the archived final causal runs. & Mixed-source aggregated binary proxy; not clinical consensus and not a probabilistic label model. & Majority-vote logs, source, and causal run summaries. \\
-\bottomrule
-\end{tabular}
-\end{table}
+The full prompt inventory, version comparison, hashes, execution-metadata boundary, and prompt-to-source assessment are retained in \nolinkurl{thesis-writing/audit/llm_prompt_provenance_audit.md}.  Exact implemented proxy clauses and their citation status are retained in the active taggers and \nolinkurl{thesis-writing/logs/stage_4_9B_proxy_rule_citation_matrix.csv}.  These repository records form the technical evidence package; the main text below summarizes the constructs and behaviors needed to understand the method.
 
 \section{PhysioNet Proxy-State Rules}
 \label{sec:clinical-proxy-state-construction:physionet-proxy-state-rules}
-% Section ID: C5.2.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-The active PhysioNet implementation is \texttt{tagging\_latent\_variables\_physionet.py} in the causal repository's \texttt{src/} directory.  It loads the processed PhysioNet pickle, pivots the long table by \texttt{ts\_id} and minute, computes per-record summary columns using minimum, maximum, mean, first observed value, and last observed value, and then applies one decision function per configured \texttt{LAT\_*} column.  The active output order is:
-\[
-\begin{gathered}
-\texttt{LAT\_CHRONIC\_BASELINE\_RISK},\
-\texttt{LAT\_GLOBAL\_SEVERITY},\
-\texttt{LAT\_SHOCK},\
-\texttt{LAT\_RESPIRATORY\_FAILURE},\\
-\texttt{LAT\_RENAL\_DYSFUNCTION},\
-\texttt{LAT\_HEPATIC\_DYSFUNCTION},\
-\texttt{LAT\_COAG\_HEME\_DYSFUNCTION},\\
-\texttt{LAT\_INFLAMMATION\_SEPSIS\_BURDEN},\
-\texttt{LAT\_NEUROLOGIC\_DYSFUNCTION},\\
-\texttt{LAT\_CARDIAC\_INJURY\_STRAIN},\
-\texttt{LAT\_METABOLIC\_DERANGEMENT}.
-\end{gathered}
-\]
-The archived \texttt{final-results/trees/physionet-tags/physionet-latent-tags.csv} header matches this active column set and contains binary values with no duplicate \texttt{ts\_id} values in the validated artifact.  That artifact-level agreement supports the schema, but it does not by itself prove the producing command, input-artifact hash, source commit, or default-versus-optimized threshold mode.
+The active PhysioNet tagger pivots the long event table by \texttt{ts\_id} and minute, computes per-record minima, maxima, means, first values, and last values, and applies one decision function per proxy column.  Its eleven-state ontology comprises chronic baseline risk, global severity, shock, respiratory failure, renal dysfunction, hepatic dysfunction, coagulation/hematologic dysfunction, inflammation/sepsis burden, neurologic dysfunction, cardiac injury/strain, and metabolic derangement.  The archived rule-derived CSV matches this schema and contains binary tags without duplicate normalized identifiers in the validated artifact; producing-command, input-hash, source-version, and threshold-mode provenance remain incomplete.
 
-Missingness is handled conservatively in the active decision helpers.  A comparison such as \(x < c\) or \(x \ge c\) contributes positive evidence only when a non-missing value exists.  Missing values therefore do not count as abnormal.  The active summarizer does not implement explicit time windows beyond whatever time span is already present in the processed PhysioNet record.  It also does not compute a fresh urine sum; urine-related clauses fire only if a compatible precomputed summary column such as \texttt{Urine\_24h\_min}, \texttt{Urine\_24h\_sum}, or \texttt{Urine\_sum} is present.  For oxygenation, the implementation uses \texttt{PF\_min} when available and otherwise approximates the PaO2/FiO2 ratio from PaO2 and FiO2 summary columns.
+Numeric comparisons contribute positive evidence only when a non-missing value exists, so missing measurements are not treated as normal or abnormal.  The active summarizer does not impose new time windows beyond the processed record.  Urine clauses require a compatible precomputed urine summary, and oxygenation uses an available PaO2/FiO2 summary or an approximation from component summaries.  Default source thresholds can be replaced by an explicit optimized-threshold file, but the archive does not establish that this option produced the final CSV.
 
-By default the script uses the clinically inspired thresholds embedded in the active source.  The command-line option \texttt{--optimized} switches to externally supplied thresholds loaded from \texttt{--thresholds-path}, with unspecified optimized keys falling back to defaults.  The existence of this option is not evidence that optimized thresholds generated the archived CSV.
-
-\begin{landscape}
-\begingroup
-\small
-\sloppy
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.22\linewidth}L{0.15\linewidth}L{0.22\linewidth}L{0.24\linewidth}L{0.13\linewidth}@{}}
-\caption{PhysioNet rule-derived proxy-state definitions from the active tagger.}
-\label{tab:physionet-proxy-definitions}\\
-\toprule
-Proxy-state column & Construct represented & Input measurements and aggregation & Rule structure or threshold family & Grounding and validation status \\
-\midrule
-\endfirsthead
-\toprule
-Proxy-state column & Construct represented & Input measurements and aggregation & Rule structure or threshold family & Grounding and validation status \\
-\midrule
-\endhead
-\bottomrule
-\endfoot
-\texttt{LAT\_CHRONIC\_BASELINE\_RISK} & Baseline vulnerability or limited reserve. & Age first value; BMI from height and weight first values; albumin minimum; ICU type first value. & Score at least 2 across age \(\ge 75\), BMI \(<18.5\) or \(\ge 40\), albumin \(<3.0\), or ICU type in \(\{1,3\}\). & Phenotyping context \cite{banda_2018_electronic_phenotyping}; exact clauses are project-specific. \\
-\texttt{LAT\_GLOBAL\_SEVERITY} & Multi-domain acute physiologic severity. & Hemodynamic, respiratory, neurologic, renal, hepatic/coagulation, metabolic, cardiac summaries: minima, maxima, and helper flags. & At least 3 abnormal domains, or at least 2 domains plus a critical marker: lactate \(\ge 4.0\), pH \(<7.20\), mechanical ventilation, GCS \(\le 8\), or MAP \(<60\). Domain thresholds include MAP \(<70\), PF \(<300\), GCS \(<15\), creatinine \(\ge 2.0\), bilirubin \(\ge 2.0\), platelets \(<100\), lactate \(>2.0\), and HR \(\ge 130\). & Broad organ-dysfunction grounding from Sepsis-3 and SOFA \cite{singer_2016_sepsis3,vincent_et_al_1996_sofa}; not complete SOFA. \\
-\texttt{LAT\_SHOCK} & Circulatory shock or hemodynamic instability. & MAP, noninvasive MAP, systolic pressure, lactate, heart rate, urine helper, pH, bicarbonate. & At least 2 abnormal clauses among MAP \(<70\), SBP \(\le 90\), lactate \(>2.0\), HR \(\ge 110\), urine \(<500\), pH \(<7.30\), or bicarbonate \(<18\); also positive for low MAP with lactate \(\ge 4.0\). & Shock/lactate concepts grounded by Sepsis-3 \cite{singer_2016_sepsis3}; no vasopressor requirement in PhysioNet rule. \\
-\texttt{LAT\_RESPIRATORY\_FAILURE} & Hypoxemia, ventilatory failure, or ventilatory support. & Mechanical ventilation flag; PF ratio; SaO2; PaO2; respiratory rate; PaCO2; pH. & At least 2 abnormal clauses or mechanical ventilation with PF \(<300\). Clauses include SaO2 \(<92\), PaO2 \(<60\), respiratory rate \(\ge 22\) or \(<8\), PaCO2 \(\ge 50\), or PaCO2 \(\ge 45\) with pH \(<7.30\). & Respiratory phenotyping and ARDS/oxygenation grounding \cite{essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping,ranieri_et_al_2012_berlin_ards}; not adjudicated ARDS. \\
-\texttt{LAT\_RENAL\_DYSFUNCTION} & Renal dysfunction. & Creatinine first and maximum; BUN maximum; urine helper; potassium maximum; bicarbonate minimum. & At least 2 abnormal clauses among creatinine \(\ge 2.0\), creatinine rise \(\ge 0.3\), BUN \(\ge 40\), urine \(<500\), potassium \(\ge 5.5\), or bicarbonate \(<18\); creatinine \(\ge 3.5\) is sufficient. & Renal concepts grounded by KDIGO \cite{kdigo_2012_acute_kidney_injury}; not full KDIGO staging. \\
-\texttt{LAT\_HEPATIC\_DYSFUNCTION} & Hepatic injury or reserve. & Bilirubin, AST, ALT, ALP, albumin, platelets. & Weighted score at least 2: bilirubin \(\ge 2.0\) counts twice; AST or ALT \(\ge 200\), ALP \(\ge 250\), albumin \(<2.5\), or platelets \(<100\) add one. & Bilirubin/organ-dysfunction grounding from SOFA \cite{vincent_et_al_1996_sofa}; transaminase and albumin clauses are project-specific. \\
-\texttt{LAT\_COAG\_HEME\_DYSFUNCTION} & Hematologic/\allowbreak coagulation stress. & Platelets, hematocrit, WBC, platelet first-to-minimum change. & Score at least 2. Platelets \(<100\) counts twice; platelets \(<150\), HCT \(<25\) or \(>55\), WBC \(<4\) or \(>20\), or platelet drop \(\ge 50\) add one. & Coagulation grounding from ISTH DIC and SOFA \cite{taylor_et_al_2001_isth_dic,vincent_et_al_1996_sofa}; not complete DIC score. \\
-\shortstack[l]{\texttt{LAT\_INFLAMMATION\_}\\\texttt{SEPSIS\_BURDEN}} & Systemic inflammation or sepsis-like burden. & Temperature, WBC, HR, respiratory rate, PaCO2, lactate, platelets. & Score at least 3 across temperature \(>38.3\) or \(<36\), WBC \(>12\) or \(<4\), HR \(>90\), respiratory rate \(>20\) or PaCO2 \(<32\), lactate \(>2.0\), platelets \(<150\); also positive when temperature or WBC abnormality anchors lactate stress with score at least 2. & Sepsis context \cite{singer_2016_sepsis3}; rule is not formal Sepsis-3 diagnosis. \\
-\texttt{LAT\_NEUROLOGIC\_DYSFUNCTION} & Depressed consciousness or neurologic/metabolic stress. & GCS; sodium; glucose; PaCO2; SaO2; pH. & Score at least 2. GCS \(\le 12\) counts twice; GCS \(<15\), sodium \(<130\) or \(>150\), glucose \(<70\) or \(>300\), PaCO2 \(\ge 50\), SaO2 \(<90\), or pH \(<7.25\) contribute. & SOFA neurologic context \cite{vincent_et_al_1996_sofa}; sedation ambiguity remains unreviewed. \\
-\texttt{LAT\_CARDIAC\_INJURY\_STRAIN} & Myocardial injury, ischemia, or severe strain. & Troponin I/T; ICU type; HR; MAP; systolic pressure; lactate. & Score at least 2. Troponin I \(>0.1\) or troponin T \(>0.01\) counts twice; cardiac ICU type, HR \(\ge 130\) or \(<50\), MAP \(<70\) or systolic \(\le 90\), and lactate \(>2.0\) add one. & Project-specific cardiac proxy. \\
-\texttt{LAT\_METABOLIC\_DERANGEMENT} & Acid-base, lactate, electrolyte, or glucose derangement. & pH, bicarbonate, lactate, sodium, potassium, magnesium, glucose, PaCO2. & Score at least 2 across pH \(<7.30\) or \(>7.50\), bicarbonate \(<18\) or \(>32\), lactate \(>2.0\), sodium \(<130\) or \(>150\), potassium \(<3.0\) or \(>5.5\), magnesium \(<0.6\) or \(>1.2\), glucose \(<70\) or \(>250\), PaCO2 \(<32\) or \(>50\); critical pH \(<7.20\), lactate \(\ge 4.0\), or potassium \(\ge 6.0\) is sufficient. & Project-specific metabolic proxy. \\
-\end{longtable}
-\endgroup
-\end{landscape}
-
-The chronic baseline-risk, hepatic, cardiac, and metabolic families remain project-specific rules without complete exact clinical-source support or qualified clinical review.  They are therefore presented as analytical proxy definitions rather than formal diagnoses or validated clinical definitions.
-
-Decision-tree pickle files and rendered tree images exist under the inspected archive and repository tree directories.  However, the figure-generation path depends on saved callable objects and plotting code, and the active PhysioNet script's CLI tree-save path requires provenance review before the images can be treated as thesis figures.  The rules in Table~\ref{tab:physionet-proxy-definitions} therefore come from the active source and CSV schema rather than from unpickled tree artifacts.
+The rules combine clinically recognizable evidence domains with project-specific Boolean or score thresholds.  Global severity aggregates several organ domains; shock combines hypotension, perfusion, urine, and acid-base evidence; respiratory failure combines oxygenation, ventilation, and respiratory-rate evidence; renal dysfunction combines creatinine, BUN, urine, electrolyte, and acid-base evidence; and the remaining families combine their named physiologic domains.  Sepsis-3, SOFA, KDIGO, ISTH DIC, ARDS, and respiratory-phenotyping sources provide limited conceptual grounding \cite{singer_2016_sepsis3,vincent_et_al_1996_sofa,kdigo_2012_acute_kidney_injury,taylor_et_al_2001_isth_dic,ranieri_et_al_2012_berlin_ards,essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping}.  The implementation is not a complete reproduction of those formal definitions, and the chronic, hepatic, cardiac, and metabolic clauses remain partly project specific.
 
 \section{MIMIC Proxy-State Rules and Validation Artifacts}
 \label{sec:clinical-proxy-state-construction:mimic-proxy-state-rules-validation-artifacts}
-% Section ID: C5.3.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-The active MIMIC implementation is \texttt{tagging\_latent\_variables\_mimiciii.py} in the causal repository's \texttt{src/} directory.  Its active column set differs from PhysioNet:
-\[
-\begin{gathered}
-\texttt{LAT\_CHRONIC\_BURDEN},\
-\texttt{LAT\_INFLAMMATION\_SEPSIS},\
-\texttt{LAT\_GLOBAL\_SEVERITY},\
-\texttt{LAT\_SHOCK},\\
-\texttt{LAT\_RESPIRATORY\_FAILURE},\
-\texttt{LAT\_RENAL\_DYSFUNCTION},\
-\texttt{LAT\_HEPATIC\_COAG\_DYSFUNCTION},\\
-\texttt{LAT\_NEUROLOGIC\_DYSFUNCTION},\
-\texttt{LAT\_METABOLIC\_DERANGEMENT},\
-\texttt{LAT\_CARDIAC\_STRAIN}.
-\end{gathered}
-\]
-The MIMIC archive header matches this set.  Compared with PhysioNet, MIMIC uses a chronic-burden column rather than chronic-baseline-risk, combines hepatic and coagulation evidence into one construct, shortens the inflammation/sepsis and cardiac-strain names, and changes several rule inputs.  These naming differences are therefore construct and source-feature differences, not just cosmetic renaming.
+The active MIMIC tagger defines ten states: chronic burden, inflammation/sepsis, global severity, shock, respiratory failure, renal dysfunction, combined hepatic/coagulation dysfunction, neurologic dysfunction, metabolic derangement, and cardiac strain.  Relative to PhysioNet, it uses a chronic-burden construct, combines hepatic and coagulation evidence, and changes several available inputs and helper flags.  These are construct and source-feature differences, not cosmetic renaming.
 
-The script supports three mutually exclusive input modes.  In summary-CSV mode, a precomputed one-row-per-stay table is loaded; accepted identifier columns include \texttt{icustay\_id}, \texttt{patient\_id}, or \texttt{stay\_id}.  In canonical-pickle mode, the script reads a PhysioNet-compatible MIMIC payload \([\texttt{ts},\texttt{oc},\texttt{ts\_ids}]\), canonicalizes \texttt{ts\_id}, reconstructs summary features from long events, derives GCS minima from \texttt{GCS\_eye}, \texttt{GCS\_motor}, and \texttt{GCS\_verbal}, aggregates first-24-hour urine output and rolling 6-hour ml/kg/hour urine rates when weight is available, and merges optional outcome/context fields from \texttt{oc}.  Aliases include \texttt{MBP} to MAP, \texttt{PCO2} to PaCO2, \texttt{PO2} to PaO2, \texttt{O2 Saturation} to SpO2, \texttt{Creatinine Blood} to creatinine, and \texttt{Bilirubin (Total)} to bilirubin.  In raw-concept mode, the admissions table is required, and optional diagnoses, vitals, labs, urine, vasopressor, ventilation, infection, and troponin-map CSVs are aggregated into the summary table.
+The tagger accepts three input modes.  Summary-CSV mode consumes one row per stay.  Canonical-pickle mode reconstructs rule features from \texttt{[ts, oc, ts\_ids]}, including GCS components, first-24-hour urine output, rolling urine rates when weight is available, identifier normalization, and selected measurement aliases.  Raw-concept mode aggregates admission, diagnosis, vital, laboratory, urine, vasopressor, ventilation, infection, and biomarker sources when supplied.  Positive binary helpers and non-missing numeric comparisons provide evidence; absent numeric evidence does not make a rule positive.  Input mode and extraction completeness therefore affect which clauses can fire.
 
-Binary helper flags are treated as evidence only when they are positive or truthy.  Numeric comparisons require non-missing values.  Raw-concept mode fills absent binary helper columns with zero, while pickle mode inserts missing helper columns as missing; in both cases missing numeric evidence does not make a rule positive.  Consequently, input mode and concept extraction completeness affect which clauses can fire.
+MIMIC rules use the same broad score-or-sufficient-condition structure while exploiting richer care-process evidence.  Examples include infection anchors for inflammation/sepsis, vasopressor and hypoperfusion evidence for shock, respiratory-support evidence for respiratory failure, dialysis evidence for renal dysfunction, and biomarker or rhythm evidence for cardiac strain.  The clinical sources above provide partial grounding, but the chronic-burden, combined hepatic/coagulation, metabolic, and cardiac constructs require qualified review and remain project-specific proxies.
 
-\begin{landscape}
-\begingroup
+\begin{table}[htbp]
+\centering
+\caption{Dataset-specific proxy-state construction retained in the main thesis.  Complete source clauses are preserved in the technical evidence package.}
+\label{tab:proxy-family-summary}
 \small
-\sloppy
-\setlength{\tabcolsep}{3pt}
-\begin{longtable}{@{}L{0.21\linewidth}L{0.15\linewidth}L{0.22\linewidth}L{0.25\linewidth}L{0.13\linewidth}@{}}
-\caption{MIMIC rule-derived proxy-state definitions from the active tagger.}
-\label{tab:mimic-proxy-definitions}\\
+\begin{tabular}{@{}L{0.13\textwidth}L{0.28\textwidth}L{0.31\textwidth}L{0.20\textwidth}@{}}
 \toprule
-Proxy-state column & Construct represented & Input measurements and aggregation & Rule structure or threshold family & Grounding and validation status \\
+Dataset & Proxy families & Evidence and rule form & Principal boundary \\
 \midrule
-\endfirsthead
-\toprule
-Proxy-state column & Construct represented & Input measurements and aggregation & Rule structure or threshold family & Grounding and validation status \\
-\midrule
-\endhead
+PhysioNet 2012 & Eleven states spanning baseline risk, global severity, shock, respiratory, renal, hepatic, coagulation, inflammatory, neurologic, cardiac, and metabolic domains. & Per-record event summaries; non-missing threshold clauses combined by scores or sufficient critical markers. & No new tagger time windows; some urine evidence must be precomputed; exact clinical support is incomplete. \\
+MIMIC-III & Ten states spanning chronic burden, inflammation/sepsis, global severity, shock, respiratory, renal, combined hepatic/coagulation, neurologic, metabolic, and cardiac domains. & Summary, canonical-pickle, or raw-concept inputs; measurement thresholds plus positive infection, support, medication, procedure, and biomarker helpers. & Input-mode dependence, incomplete construct review, and no chart-adjudicated reference labels. \\
 \bottomrule
-\endfoot
-\texttt{LAT\_CHRONIC\_BURDEN} & Baseline chronic burden or vulnerability. & Age; deidentified-old flag; comorbidity count; Elixhauser score; chronic ICD/organ disease helpers; malignancy or immunosuppression; admission type. & Score at least 2 across age \(\ge 75\) or old-age flag, comorbidity count \(\ge 2\) or Elixhauser \(\ge 5\), chronic disease helper, malignancy/immunosuppression helper, or emergency/urgent admission. & Electronic phenotyping context \cite{banda_2018_electronic_phenotyping}; exact mix is project-specific and input-mode dependent. \\
-\texttt{LAT\_INFLAMMATION\_SEPSIS} & Inflammation, suspected infection, or sepsis-like burden. & Temperature, WBC, lactate, culture/suspected-infection flags, antibiotic/suspected-infection flags. & Score at least 2 across temperature \(\ge 38.3\) or \(<36\), WBC \(>12\) or \(<4\), lactate \(>2.0\), culture evidence, or antibiotic evidence; requires infection/inflammation anchoring by culture, antibiotic, temperature, or WBC evidence. & Sepsis context \cite{singer_2016_sepsis3}; not formal Sepsis-3 diagnosis. \\
-\texttt{LAT\_GLOBAL\_SEVERITY} & Multi-domain acute physiologic severity. & Circulatory, respiratory, neurologic, renal, metabolic, inflammatory, hepatic/coagulation domains from summaries and helper flags. & At least 3 domains. Clauses include MAP \(<70\), SBP \(\le 100\), vasopressors, SpO2 \(<92\), PF \(\le 300\), mechanical ventilation, GCS \(<15\), RASS \(\le -3\) or \(\ge 2\), creatinine \(\ge 2.0\), urine \(<500\), lactate \(>2.0\), pH \(<7.30\), bicarbonate \(<18\), inflammatory thresholds, bilirubin \(\ge 2.0\), platelets \(<100\), or INR \(\ge 1.5\). & Broad Sepsis-3/SOFA grounding \cite{singer_2016_sepsis3,vincent_et_al_1996_sofa}; not complete SOFA. \\
-\texttt{LAT\_SHOCK} & Shock or hemodynamic instability. & MAP, SBP, sustained hypotension helper, vasopressors, lactate, urine output, pH, base excess. & Score at least 2, or vasopressor use plus tissue hypoperfusion, acidosis, or hypotension. Thresholds include MAP \(<65\), SBP \(\le 90\), lactate \(>2.0\), urine \(<500\) in 24 hours or \(<0.5\) ml/kg/hour over 6 hours, pH \(<7.30\), base excess \(\le -5\). & Shock/lactate grounding \cite{singer_2016_sepsis3}; proxy rule remains source-specific. \\
-\texttt{LAT\_RESPIRATORY\_FAILURE} & Respiratory failure or respiratory support. & SpO2, PF ratio, FiO2, mechanical/noninvasive ventilation, respiratory rate, PaCO2, pH. & Score at least 2, or respiratory support plus hypoxemia, oxygenation failure, or ventilatory failure. Thresholds include SpO2 \(<92\), PF \(\le 300\), FiO2 \(\ge 0.5\), RR \(\ge 30\) or \(\le 8\), and PaCO2 \(\ge 50\) with pH \(<7.30\). & Respiratory phenotyping/ARDS context \cite{essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping,ranieri_et_al_2012_berlin_ards}; not adjudicated ARDS. \\
-\texttt{LAT\_RENAL\_DYSFUNCTION} & Renal dysfunction. & Creatinine maximum and delta, BUN, urine output, potassium, bicarbonate, dialysis/CRRT helper. & Score at least 2, or dialysis/CRRT present. Clauses include creatinine \(\ge 2.0\) or delta \(\ge 0.3\), BUN \(\ge 40\), low urine output, potassium \(\ge 5.5\), or bicarbonate \(<18\). & KDIGO grounding for creatinine/urine concepts \cite{kdigo_2012_acute_kidney_injury}; not full KDIGO staging. \\
-\shortstack[l]{\texttt{LAT\_HEPATIC\_COAG\_}\\\texttt{DYSFUNCTION}} & Combined hepatic and coagulation dysfunction. & Bilirubin, AST, ALT, platelets, INR, PT/PTT helpers, albumin. & Score at least 2 across bilirubin \(\ge 2.0\), AST or ALT \(\ge 120\), platelets \(<100\), INR \(\ge 1.5\) or PT/PTT prolonged, or albumin \(<2.5\). & SOFA and ISTH DIC context \cite{vincent_et_al_1996_sofa,taylor_et_al_2001_isth_dic}; combined construct needs clinical review. \\
-\texttt{LAT\_NEUROLOGIC\_DYSFUNCTION} & Neurologic dysfunction with sedation caveat. & GCS, GCS component abnormality, RASS, pupil/focal-neurologic helper, sedation/intubation helper. & Score at least 2. GCS \(\le 8\) counts twice; GCS \(\le 13\), abnormal GCS component, RASS \(\le -3\) or \(\ge 2\), and pupil/focal abnormality contribute. A single sedation/intubation-confounded point is not sufficient. & SOFA neurologic context \cite{vincent_et_al_1996_sofa}; sedation ambiguity remains. \\
-\texttt{LAT\_METABOLIC\_DERANGEMENT} & Acid-base, lactate, electrolyte, or glucose derangement. & pH, bicarbonate, base excess, lactate, potassium, sodium, glucose. & Score at least 2 across pH \(<7.30\) or \(>7.55\), bicarbonate \(<18\) or \(>35\), base excess \(\le -5\), lactate \(>2.0\), potassium \(<3.0\) or \(\ge 5.5\), sodium \(<130\) or \(>150\), or glucose \(<70\) or \(>250\). & Project-specific metabolic proxy. \\
-\texttt{LAT\_CARDIAC\_STRAIN} & Cardiac strain or injury. & Troponin flags and values, CK-MB, arrhythmia helper, HR, hypotension, cardiac care unit or surgery context. & Score at least 2 and requires biomarker or rhythm evidence. Biomarker clauses include troponin-positive flags, troponin T \(\ge 0.1\), troponin I \(\ge 0.4\), or CK-MB evidence; rhythm/hemodynamic clauses include arrhythmia, HR \(>150\) or \(<40\), HR stress with hypotension, or cardiac-care context. & Project-specific cardiac proxy. \\
-\end{longtable}
-\endgroup
-\end{landscape}
+\end{tabular}
+\end{table}
 
-Exact clinical-source support remains incomplete for the MIMIC chronic-burden, metabolic/electrolyte/acid-base, and cardiac-strain rule clauses.  These rows are therefore retained only as project-specific proxy definitions pending qualified clinical review.
-
-The MIMIC output directory contains a binary tag CSV, a merged feature table, prevalence and co-occurrence summaries, mortality-association summaries, a JSON validation summary, and a decision-tree pickle.  The tag CSV, \texttt{latent\_tags.csv}, is keyed by \texttt{ts\_id}.  The merged feature table retains the summary features used by the rules together with the resulting tags, making it a diagnostic trace of the construction process.  The prevalence table describes how often each proxy label fires; those values are descriptive properties of the labels, not clinical validation.  The mortality-by-tag table reports unadjusted mortality association by proxy value, and its risk ratios are not causal estimates.  The co-occurrence table reports pairwise association among proxy states.  The JSON validation summary stores available-latent metadata, prevalence records, mortality-association records, sanity checks, and interpretation notes.  None of these files is a substitute for expert chart-review validation.
+The MIMIC output package contains the binary tag table, the merged features used by the rules, prevalence and co-occurrence summaries, unadjusted mortality-by-tag summaries, a JSON validation summary, and a decision-tree artifact.  These files support implementation and descriptive validation only: prevalence is not clinical accuracy, risk ratios in the mortality table are not causal effects, and co-occurrence is not construct validation.
 
 \section{Predicted and Aggregated Proxy Labels}
 \label{sec:clinical-proxy-state-construction:predicted-majority-vote-proxy-states}
-% Section ID: C5.4.
-% Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-The same \texttt{LAT\_*} column names can appear in three different source types.  A rule-derived proxy label is generated by the PhysioNet or MIMIC tagger rules above.  A predicted proxy label is exported by one of the four supervised time-series models described in Chapter~\ref{chap:predictive-modeling-proxy-states}.  An aggregated predicted proxy-label representation is generated by aligning binary voter files and applying a deterministic majority-vote rule.  These source types share an interface but not a generation mechanism.  Across all twelve archived final causal runs, the vote logs enumerate exactly five sources: the dataset's deterministic rule-derived proxy-label table and thresholded predicted-label tables from GRU, GRU-D, STraTS, and TCN.  The logs verify the filenames and downstream handoff, but the external voter files, their hashes, and their checkpoint-to-export mappings are not retained within the run folders.
+The same \texttt{LAT\_*} interface can represent three generation mechanisms.  Rule-derived labels come from the taggers, predicted labels from the four supervised time-series models in Chapter~\ref{chap:predictive-modeling-proxy-states}, and the final aggregate from deterministic voting over aligned binary files.  Across all twelve archived final causal runs, the logs enumerate exactly five sources: one dataset-specific rule-derived table and predicted-label tables from GRU, GRU-D, STraTS, and TCN.  The logs establish filenames and downstream handoff but do not co-archive the voter bytes, hashes, or checkpoint-to-export mappings.
 
-Prediction exports contain \texttt{ts\_id}, one probability column named \texttt{<label>\_prob} per proxy target, and one thresholded binary column named exactly as the target label.  The STraTS export code thresholds probabilities at 0.5.  Downstream voting does not consume probability columns as votes.  The helper \texttt{split\_predicted\_latent\_tags.py} separates the probability half and binary-tag half of a combined prediction CSV, while the parent router can also drop \texttt{\_prob} columns and write a binary-only voter table in configured \texttt{LAT\_*} order.  Export provenance remains incomplete, so this chapter does not claim that every archived prediction CSV is out-of-sample or tied to a verified checkpoint manifest.
+Prediction exports contain \texttt{ts\_id}, one probability column \texttt{<label>\_prob} per target, and one corresponding binary column thresholded at 0.5.  Voting consumes only the binary columns.  The normalization helpers separate probability and binary fields, enforce the configured proxy order, and reject duplicate identifiers, nonbinary values, or incompatible schemas.  Voter rows are aligned on the shared normalized identifier intersection, with the first sorted voter file defining output column and row order.
 
-The active majority-vote script discovers non-hidden \texttt{.csv} files in the input voter directory, sorts them by path string, and treats the first file as the reference column-order file.  Every voter file must contain \texttt{ts\_id}, have no duplicate normalized identifiers, and contain at least one non-identifier column.  All non-\texttt{ts\_id} columns are treated as latent columns; nonbinary values, including unsplit probability columns, cause validation failure.  Later voters must have exactly the same latent-column set as the reference, although they are reordered to the reference order before voting.  Rows are aligned on the intersection of \texttt{ts\_id} values shared by all voters, and the output order follows the reference file restricted to that shared intersection.
-
-For record \(i\), proxy state \(k\), and \(M\) aligned voter files, write \(L_{ik}^{(m)}\) for the binary value from voter \(m\).  The implemented rule is
+For record $i$, proxy state $k$, and $M$ aligned voter files, let $L_{ik}^{(m)}$ be the binary value from voter $m$.  The implemented rule is
 \[
 \widetilde{L}_{ik}
 =
@@ -239,6 +74,6 @@ For record \(i\), proxy state \(k\), and \(M\) aligned voter files, write \(L_{i
 \left\lceil \frac{M}{2}\right\rceil
 \right).
 \]
-This is equivalent to the source expression \texttt{2 * ones\_count >= n\_voters}; therefore an even-voter tie is mapped to 1.  The output schema is \texttt{ts\_id} followed by the reference latent columns.  The causal orchestrator writes this mixed-source aggregated proxy-label table under the run's \texttt{majority\_vote/} directory and then passes it to mortality prediction, matching, CATE estimation, sensitivity analysis, and permutation stages.
+It is equivalent to \texttt{2 * ones\_count >= n\_voters}, so an even-voter tie maps to 1.  The orchestrator writes the resulting \texttt{ts\_id}-keyed mixed-source table and passes it to mortality prediction, matching, CATE estimation, sensitivity analysis, and permutation stages.
 
-Majority voting is an algorithmic aggregation of a binary rule-derived source and binary model-prediction sources, not expert consensus.  It does not establish clinical truth, remove shared model bias, guarantee independence among voters, or prove ensemble superiority.  It can amplify correlated errors because the predicted voters were trained against the same rule-derived targets and the rule source itself participates in the vote.  Its interpretation depends on identical construct definitions, aligned identifiers, binary-only inputs, and the exact voter set supplied to each run.  The archived logs enumerate that voter set, but the external source files and hashes are not archived with each run.
+This majority vote is algorithmic aggregation, not expert consensus, clinical truth, or a learned probabilistic label model.  The four predicted voters were trained against the rule-derived targets, and the rule source also participates in the vote; correlated error can therefore persist or be amplified.  Interpretation depends on stable construct definitions, aligned identifiers, binary-only inputs, and the exact five-source lineage.

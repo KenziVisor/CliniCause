@@ -30,27 +30,27 @@ Benchmark work on MIMIC-III illustrates how a database can be converted into sta
 
 \subsection{Dataset differences relevant to this thesis}
 
-Table~\ref{tab:background-datasets} summarizes the two sources conceptually.  PhysioNet 2012 functions primarily as a bounded mortality-challenge resource derived for a shared task, whereas MIMIC-III provides a broader database that requires more extensive extraction and linkage.  The sources differ in scale, era, available variables, identifier structure, measurement process, and preprocessing burden.  A variable with a similar name can differ in unit, acquisition practice, aggregation, or missingness.  Likewise, a similarly named proxy phenotype can be produced from different evidence and should not be assumed to represent an identical construct.
+PhysioNet 2012 functions as a bounded mortality-challenge resource with admission descriptors and time-stamped early-ICU measurements, whereas MIMIC-III is a broader relational database requiring investigator-defined extraction and linkage.  Their complementary roles test whether one analytical sequence can operate across distinct scales, eras, variables, identifiers, and measurement processes.  Neither role implies that the local pipeline reproduces the original challenge or benchmark unchanged.
 
-\begin{landscape}
-\begin{table}[p]
+Table~\ref{tab:background-datasets} summarizes these roles and their principal interpretation boundary.
+
+\begin{table}[htbp]
 \centering
 \caption{Conceptual roles of the ICU datasets used in this thesis.}
 \label{tab:background-datasets}
 \small
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}L{0.13\linewidth}L{0.21\linewidth}L{0.21\linewidth}L{0.21\linewidth}L{0.21\linewidth}@{}}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}L{0.15\textwidth}L{0.37\textwidth}L{0.40\textwidth}@{}}
 \toprule
-Dataset & Research role & Longitudinal structure & Strength for this thesis & Important limitation \\
+Dataset & Role in the study & Interpretation boundary \\
 \midrule
-PhysioNet 2012 & Bounded critical-care mortality challenge and compact benchmark-style source. & Admission descriptors plus time-stamped early-ICU measurements organized as challenge records. & Provides a clearly framed setting for exercising irregular-time-series prediction and downstream interfaces. & A local pipeline need not reproduce every original challenge rule, split, or preprocessing convention. \\
-MIMIC-III & Broad controlled-access critical-care database supporting many investigator-defined studies. & Relational admission, stay, event, intervention, and outcome tables requiring cohort construction and linkage. & Tests whether the workflow can operate on a richer EHR source with different variables and care-process information. & Any benchmark or local extraction is only one view of the database and carries site-, era-, and definition-specific choices. \\
+PhysioNet 2012 & Bounded mortality-challenge resource and compact benchmark-style source. & The local pipeline need not reproduce every original challenge rule, split, or preprocessing convention. \\
+MIMIC-III & Broad relational critical-care database requiring cohort extraction and linkage. & The local extraction is one site-, era-, and definition-specific view of the database. \\
 \bottomrule
 \end{tabular}
 \end{table}
-\end{landscape}
 
-The purpose of using both sources is methodological portability, not population pooling.  A shared analytical sequence can be evaluated while preserving dataset-specific cohorts, identifiers, preprocessing, proxy rules, and graphs.  This distinction also prevents cross-dataset differences from being interpreted automatically as biological differences: they may arise from the data source, care process, construct definition, observation pattern, or model interface.
+The purpose of using both sources is methodological portability, not population pooling.  Dataset-specific cohorts, preprocessing, proxy rules, and graphs are retained because similarly named variables or proxy states can differ in units, acquisition, aggregation, missingness, and construct definition.  Cross-dataset differences may therefore reflect the data source, care process, representation, or model interface rather than biology alone.
 
 \section{Irregular Time-Series Representation Models}
 \label{sec:background-related-work:irregular-time-series-representation-models}
@@ -77,7 +77,7 @@ STraTS is designed for sparse and irregular multivariate clinical series.  It tr
 
 This design is well matched to sparse event streams, but it does not make preprocessing irrelevant.  Event selection, normalization, truncation, static features, and the variable vocabulary still determine what the transformer sees.  Moreover, the published method and the thesis's supervised multi-label adaptation are distinct objects.  The paper supports the triplet representation, attention mechanism, and pretraining rationale; Chapter~\ref{chap:predictive-modeling-proxy-states} defines the local target heads, training, and export contract.
 
-\subsection{Relationship among the five included families}
+\subsection{Relationship among the four included model families}
 
 The comparison in Table~\ref{tab:background-model-families} is best understood as a comparison of inductive biases rather than a ladder of sophistication.  GRU supplies a general recurrent baseline; GRU-D makes missingness and elapsed time explicit within recurrence; TCN emphasizes multiscale local-to-long-range temporal filters; and STraTS applies attention to observed event triplets with a pretraining option.  Explicit missingness handling is central to GRU-D, implicit in the absence and timing of STraTS events, and otherwise dependent on the prepared inputs.  Likewise, pretraining is a defined part of STraTS but not an assumed property of every model.
 
@@ -140,7 +140,7 @@ Advanced LLMs can encode and express substantial medical knowledge under structu
 
 LLM semantic judgments have also been studied as prior information for causal-graph construction.  Darvariu and colleagues evaluate prompt designs and soft LLM-derived priors for causal discovery, reporting the greatest benefit for edge orientation in selected common-sense benchmark settings while also finding that standalone LLM priors are not uniformly beneficial \cite{darvariu_et_al_2024_llm_causal_graph_priors}.  This is a methodological precedent for treating model output as candidate relations or orientation information, not evidence that the CliniCause DAGs are correct.  The local graphs were not learned from patient-level data, the study did not implement the paper's discovery algorithm, and formal adjustment validity still depends on the correctness and completeness of the project-specified assumptions.
 
-The transition from elicited domain reasoning to executable labels has a separate programmatic-labeling precedent.  Data programming represents heuristics as inspectable labeling functions that can generate large weakly labeled data sets for discriminative learning \cite{ratner_et_al_2016_data_programming}.  The deterministic CliniCause decision trees play a conceptually related role by translating selected design proposals into source-coded rules that generate proxy-label targets from observed variables.  CliniCause does not reproduce the data-programming generative model, its noise-aware loss, or every element of its multi-source framework.
+A separate precedent for turning elicited reasoning into executable labels is programmatic labeling.  Data programming represents heuristics as inspectable labeling functions that can generate large weakly labeled data sets for discriminative learning \cite{ratner_et_al_2016_data_programming}.  The deterministic CliniCause decision trees play a conceptually related role by translating selected design proposals into source-coded rules that generate proxy-label targets from observed variables.  CliniCause does not reproduce the data-programming generative model, its noise-aware loss, or every element of its multi-source framework.
 
 Snorkel further illustrates a workflow in which noisy and correlated rule sources are combined through a learned generative label model before a downstream discriminative model is trained \cite{ratner_et_al_2020_snorkel}.  CliniCause instead uses its own deterministic decision-rule construction and implemented aggregation workflow.  Its majority vote is a fixed algorithmic operation, not Snorkel's learned generative label model, and the citation supplies conceptual weak-supervision context rather than implementation equivalence.
 

@@ -23,22 +23,7 @@ The primary patient- or stay-level outcome used by the downstream causal reposit
 
 The framework distinguishes a design-time knowledge-construction layer from the patient-level analytical layer.  At design time, the official dataset-description link and instructions to research relevant clinical, causal, and time-series literature were supplied to a structured LLM-assisted elicitation protocol.  The protocol requested a dataset audit, proxy-state ontology, binary decision-rule families, missingness and measurement-process reasoning, and a dataset-specific DAG.  The resulting proposals were project-selected and encoded in deterministic tagger and graph source files.  Available evidence does not establish that every proposal was implemented unchanged, a complete line-by-line prompt-output-to-code mapping, or a formal clinician-review chain.
 
-The analytical layer begins only after those designs have been encoded.  It preprocesses raw ICU data, applies deterministic decision-tree rules to generate rule-derived proxy labels, trains deep irregular-time-series models to predict those labels, normalizes predicted outputs, and forms the archived final aggregate from one rule-derived source and four predicted-label sources before DAG-guided matching, effect estimation, sensitivity analysis, and permutation diagnostics.  No LLM is invoked for patient-level preprocessing, label generation, prediction, adjustment selection, or effect estimation during this executed layer.
-
-\begin{table}[htbp]
-\centering
-\caption{Separation of design-time knowledge construction from executed patient-level analysis.}
-\label{tab:study-design-layers}
-\small
-\begin{tabular}{@{}L{0.18\textwidth}L{0.48\textwidth}L{0.24\textwidth}@{}}
-\toprule
-Layer & Sequence & Evidence boundary \\
-\midrule
-Design time & Official dataset-description link and instructions to research relevant clinical, causal, and time-series literature $\rightarrow$ structured LLM elicitation $\rightarrow$ proposed ontology, rules, missingness considerations, and DAG $\rightarrow$ project selection and source-code encoding. & Prompts document proposals; active source defines implementation; formal clinical review remains incomplete. \\
-Executed analysis & Raw data $\rightarrow$ preprocessing $\rightarrow$ deterministic rule-derived labels $\rightarrow$ deep prediction $\rightarrow$ prediction normalization and mixed-source aggregation $\rightarrow$ DAG-guided estimation and diagnostics. & No runtime LLM call; every downstream inference remains conditional on proxy, graph, support, and model assumptions. \\
-\bottomrule
-\end{tabular}
-\end{table}
+The analytical layer begins only after those designs have been encoded.  It preprocesses raw ICU data, applies deterministic decision-tree rules to generate rule-derived proxy labels, trains deep irregular-time-series models to predict those labels, normalizes predicted outputs, and forms the archived final aggregate from one rule-derived source and four predicted-label sources before DAG-guided matching, effect estimation, sensitivity analysis, and permutation diagnostics.  No LLM is invoked for patient-level preprocessing, label generation, prediction, adjustment selection, or effect estimation during this executed layer.  Thus prompts document design proposals, active source defines implementation, and every downstream inference remains conditional on proxy, graph, support, and model assumptions.
 
 \section{Prediction Task}
 \label{sec:problem-definition-study-design:prediction-task}
