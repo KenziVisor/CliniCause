@@ -42,9 +42,7 @@
 \pagenumbering{gobble}
 
 \input{frontmatter/administrative_metadata}
-% The official title and approval pages are intentionally not rendered in this
-% draft.  Current faculty forms, authoritative identity metadata, English-thesis
-% authorization, and approved institutional wording have not been supplied.
+\input{frontmatter/title_pages}
 \clearpage
 \pagenumbering{roman}
 \input{frontmatter/abstract_secondary}
@@ -83,5 +81,7 @@
 
 \clearpage
 \printbibliography[heading=bibintoc,title={Bibliography}]
+\clearpage
+\input{frontmatter/hebrew_cover}
 
 \end{document}
