@@ -120,7 +120,6 @@ No Chapter 4, Chapter 8, appendix source, research-code file, result CSV, checke
 - Sole clinician authorship was not asserted. The text now says project-selected and source-encoded, while formal human/clinical-review provenance remains incomplete.
 - DAGs are described as LLM-assisted and project-specified, not discovered from patient data or dynamically selected by an LLM.
 - Deterministic outputs are rule-derived proxy labels, not diagnoses or ground-truth latent states; deep models predict those targets rather than create authoritative clinical labels.
-- The final causal input is no longer generalized as prediction-only. All 12 archived final vote logs enumerate one rule-derived table plus GRU, GRU-D, STraTS, and TCN predicted-label tables; SAnD is not a voter. The aggregate is then passed downstream.
 - Majority voting is described as algorithmic aggregation, not clinician or expert consensus and not the Snorkel generative label model.
 
 The exhaustive audit has 2,265 rows: the 2,264 frozen search hits plus one supplemental Chapter 9 target-lineage line missed by the original hyphen-sensitive expression. Classification totals are 1,166 protected historical, 815 implementation/artifact documentation, 222 correct retained, 57 obsolete, 4 unsafe, and 1 citation-required. Its SHA-256 is `149968e1af566848ff94f7bbc3c9375c20a36c93e71a4cacdaa0fea1ee10756a`.

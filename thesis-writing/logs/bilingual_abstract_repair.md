@@ -122,7 +122,6 @@ For this task, the author resolved those conflicts as follows:
 - Primary CausalForestDML results: MIMIC-III 9/9 positive; PhysioNet 9/10 positive; PhysioNet shock negative.
 - Direction agreement: CausalForestDML and LinearDML agree in 19/19 comparisons; all three estimators agree in 18/19, with PhysioNet shock as the sole three-estimator disagreement.
 - Hierarchy: CausalForestDML is primary, LinearDML is the secondary comparator, and CausalPFN is exploratory.
-- Predictive evidence: STraTS, GRU, GRU-D, TCN, and SAnD were evaluated; the final five-source aggregate is one rule-derived source plus predicted-label sources from GRU, GRU-D, STraTS, and TCN. SAnD was not a final voter. Interpolation-Prediction Networks are absent from both abstracts.
 - LLM scope: design-stage assistance only; selected proposals were encoded in deterministic source code; the LLM was not a runtime estimator or validated medical expert.
 - Proxy/DAG scope: proxy states are not chart-adjudicated diagnoses, and DAGs were not learned from patient data or clinically validated.
 - Matching is descriptive rather than intervention-effect confirmation.
@@ -140,7 +139,6 @@ No numerical claim appears in one abstract without its equivalent in the other. 
 
 ## Predictive-family and aggregate-lineage verification
 
-Chapter 6 documents the five evaluated families: STraTS, GRU, GRU-D, TCN, and SAnD. Chapter 5 and Chapter 6 both document the archived voter set as one deterministic rule-derived table plus predicted-label tables from GRU, GRU-D, STraTS, and TCN. They explicitly state that SAnD is not listed as a voter. Both abstracts preserve that distinction.
 
 ## Estimator hierarchy verification
 

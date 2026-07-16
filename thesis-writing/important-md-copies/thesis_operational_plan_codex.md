@@ -436,7 +436,6 @@ The corpus should cover the following areas.
 - STraTS;
 - TCN;
 - InterpNet;
-- SAnD;
 - GRU;
 - GRU-D.
 
@@ -873,7 +872,6 @@ This stage defines what the thesis will say, but still does not draft full prose
 - STraTS;
 - TCN;
 - InterpNet;
-- SAnD;
 - GRU;
 - GRU-D;
 - training protocol;

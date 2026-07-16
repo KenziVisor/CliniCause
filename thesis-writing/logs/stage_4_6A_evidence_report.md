@@ -21,9 +21,9 @@
 
 ## Predictive Validation
 
-- Ten completed final training summaries were parsed, with separate validation/test rows and paired-log numerical comparison.
+- Eight completed final training summaries were parsed, with separate validation/test rows and paired-log numerical comparison.
 - InterpNet is retained as `BLOCKED_MISSING_RESULT` for both datasets.
-- Ten archived exports were schema checked; their split and checkpoint provenance remain unverified.
+- Eight archived exports were schema checked; their split and checkpoint provenance remain unverified.
 
 ## Proxy Validation
 

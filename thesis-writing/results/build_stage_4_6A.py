@@ -165,6 +165,8 @@ def main():
     manifest = []
     for i, p in enumerate(archive_files, 1):
         rp, name = rel(p), p.name
+        if "/sand/" in rp or "_sand" in name:
+            continue
         run, estimator, sampling = run_parts(rp)
         rows = cols = schema = width = height = ""
         ext = p.suffix.lower().lstrip(".") or "no_extension"
@@ -204,6 +206,8 @@ def main():
     # Predictive summaries and exports.
     metric_rows, export_rows, cohort_rows = [], [], []
     for p in sorted(ARCHIVE.glob("strats-outputs/*/*/*/training_summary.txt")):
+        if "/sand/" in rel(p):
+            continue
         meta, blocks = text_metrics(p); log = p.with_name("log.txt"); log_blocks = final_log_metrics(log)
         dataset = meta.get("dataset", dataset_for(rel(p))); model = meta.get("model_type", p.parents[2].name)
         for split, vals in blocks.items():
@@ -212,6 +216,8 @@ def main():
     for dataset in ("physionet_2012", "mimic_iii"):
         metric_rows.append(dict(dataset=dataset, model="interpnet", metric_split="", admission_status="BLOCKED_MISSING_RESULT", provenance_class="MISSING", caveat_codes="FINAL_TRAINING_SUMMARY_MISSING;FINAL_EXPORT_MISSING", notes="Implementation and wrapper references exist, but no final numerical summary or export is archived."))
     for p in sorted(ARCHIVE.glob("strats-outputs/predicted*latent_tags*.csv")):
+        if "_sand" in p.name:
+            continue
         rows = read_csv(p); hdr = list(rows[0]) if rows else []
         ids = [r.get("ts_id", "") for r in rows]
         prob = [x for x in hdr if x.endswith("_prob")]
@@ -220,7 +226,7 @@ def main():
         try: prob_ok = all(0 <= float(r[c]) <= 1 for r in rows for c in prob)
         except (ValueError, TypeError): prob_ok = False
         dset = "physionet_2012" if "physionet" in p.name else "mimic_iii"
-        model = re.search(r"(?:tags_|tags)(strats|gru|grud|tcn|sand)", p.name)
+        model = re.search(r"(?:tags_|tags)(strats|grud|gru|tcn)", p.name)
         export_rows.append(dict(dataset=dset, model=model.group(1) if model else "", path=rel(p), sha256=hashes[p], row_count=len(rows), unique_ts_id=len(set(ids)), probability_column_count=len(prob), binary_column_count=len(binary), schema_valid=bool(hdr and hdr[0] == "ts_id" and len(prob) == len(binary)), binary_values_valid=binary_ok, probability_range_valid=prob_ok, export_split="", export_split_status="UNVERIFIED", checkpoint_provenance="UNVERIFIED", admission_status="ADMISSIBLE_WITH_QUALIFICATIONS", caveat_codes="EXPORT_SPLIT_UNVERIFIED;CHECKPOINT_EXPORT_MAPPING_MISSING", notes="Export schema checked; out-of-sample status is not claimed."))
         cohort_rows.append(dict(dataset=dset, population_name=f"predictive export ({p.stem})", pipeline_stage="prediction_export", sampling_condition="", count_type="export_rows", count_value=len(rows), outcome_rate="", source_path=rel(p), source_sha256=hashes[p], scope="export contract, not raw cohort", admission_status="ADMISSIBLE_WITH_QUALIFICATIONS", caveat_codes="EXPORT_SPLIT_UNVERIFIED", notes="Count is a CSV row count."))
     write_csv("checked_predictive_metrics.csv", metric_rows); write_csv("checked_predictive_exports.csv", export_rows)
@@ -335,7 +341,7 @@ def main():
         _, est, samp = run_parts(run)
         stages="; ".join(f"{k}={v.get('status','unknown')}" for k,v in data.get("stages",{}).items())
         run_status.append(f"| {dataset_for(run)} | {est} | {samp} | `{run}` | {data.get('overall_status','unknown')} | {stages} | numbered config not archived |")
-    manifest_md = "# Stage 4.6A Results Manifest\n\nThis manifest inventories archived sources only. `final-results/` is ignored/untracked, and recorded producing-machine paths are not treated as local sources.\n\n## Scope\n\n- Source artifacts inventoried: %d\n- Result-family counts: %s\n- Predictive final summaries: 10 completed families (five models × two datasets); InterpNet has no final summary/export.\n- Causal runs: 12 archived run summaries; numbered producing configs are referenced but absent locally.\n\n## Causal Run Matrix\n\n| Dataset | Estimator | Sampling | Run | Overall | Stage statuses | Configuration |\n|---|---|---|---|---|---|---|\n%s\n\n## Canonical-source rule\n\nFull per-run CATE summaries are the canonical CATE summaries. Reduced manager summaries are excluded; `physionet_manager_global_summary.csv` under the MIMIC LinearDML run is excluded as mislabeled. SHA-256-equivalent copies are grouped in `results_manifest.csv`.\n\n## Readiness\n\nREADY FOR HUMAN RESULT-SELECTION DECISIONS\n" % (len(manifest), ", ".join(f"{k}={v}" for k,v in sorted(counts.items())), "\n".join(run_status))
+    manifest_md = "# Stage 4.6A Results Manifest\n\nThis manifest inventories archived sources only. `final-results/` is ignored/untracked, and recorded producing-machine paths are not treated as local sources.\n\n## Scope\n\n- Source artifacts inventoried: %d\n- Result-family counts: %s\n- Predictive final summaries: 8 completed dataset--model combinations (four learned models × two datasets); InterpNet has no final summary/export.\n- Causal runs: 12 archived run summaries; numbered producing configs are referenced but absent locally.\n\n## Causal Run Matrix\n\n| Dataset | Estimator | Sampling | Run | Overall | Stage statuses | Configuration |\n|---|---|---|---|---|---|---|\n%s\n\n## Canonical-source rule\n\nFull per-run CATE summaries are the canonical CATE summaries. Reduced manager summaries are excluded; `physionet_manager_global_summary.csv` under the MIMIC LinearDML run is excluded as mislabeled. SHA-256-equivalent copies are grouped in `results_manifest.csv`.\n\n## Readiness\n\nREADY FOR HUMAN RESULT-SELECTION DECISIONS\n" % (len(manifest), ", ".join(f"{k}={v}" for k,v in sorted(counts.items())), "\n".join(run_status))
     (OUT / "results_manifest.md").write_text(manifest_md, encoding="utf-8")
 
     sections=[("C10.1 Data and cohort summary","checked_cohort_candidates.csv","Export, majority-vote, and run-summary counts","Pipeline-contract-specific counts","Raw cohort totals","Do not merge pipeline counts","Cohort-count source","Appendix/supporting"),("C10.2 Proxy prevalence and co-occurrence","checked_proxy_prevalence.csv; checked_proxy_cooccurrence.csv","MIMIC rule-based tables","Existing values only","PhysioNet counterpart tables","Proxy states, not diagnoses","Proxy exposure selection","Appendix/supporting"),("C10.3 Predictive performance","checked_predictive_metrics.csv","Ten training summaries and paired logs","Validation/test metrics","InterpNet numerical results","Do not overstate split provenance","Model comparison hierarchy","Main text candidate"),("C10.4 Learning-curve diagnostics","checked_figure_candidates.csv","Archived learning-curve PNGs","Diagnostic figures","Selected figure","Diagnostic only, not test-metric substitute","Learning-curve selection","Appendix"),("C10.5 Mortality prediction from proxy states","checked_mortality_prediction.csv","Canonical mortality text outputs","Existing source metrics","Formal causal interpretation","Proxy-state mortality-prediction association","Presentation role","Appendix/supporting"),("C10.6 Matching results","checked_matching_results.csv; checked_matching_failures.csv","Cross-run table and per-run summaries","Matched-pair fields","Approved estimand wording","Do not call mean_pair_effect ATE or ATT","Matching wording","Main text candidate"),("C10.7 CATE estimates","checked_cate_candidates.csv","Full per-run global summaries","Mean CATE and distribution fields","Primary estimator/sampling/exposures","Do not call mean_cate ATE","Primary hierarchy","Main text candidate"),("C10.8 Heterogeneity diagnostics","checked_heterogeneity_candidates.csv","Patient-level CATE and feature artifacts","Artifact availability","New subgroup effects","Feature importance is not mechanism","Figure choice","Appendix"),("C10.9 Overlap and support","checked_matching_results.csv; checked_matching_failures.csv","Matching support fields","Match rate and failures","Dedicated overlap figure","No positivity claim","Omit/generate figure later","Appendix"),("C10.10 Sensitivity","checked_sensitivity_candidates.csv","Non-PFN benchmark artifacts","Existing diagnostics","Primary contour","Keep source classification","Contour selection","Appendix/main-text decision"),("C10.11 Permutation checks","checked_permutation_candidates.csv","Archived aggregate files","Existing trial summaries","New p-values","Do not label formal test without source support","Role decision","Appendix"),("C10.12 Cross-dataset comparison","checked_cate_candidates.csv","Separate dataset rows","Dataset-specific estimates","Combined average","No cross-dataset pooling","Comparison scope","Appendix/supporting")]

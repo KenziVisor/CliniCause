@@ -8,7 +8,6 @@ This thesis addresses the integration problem of turning irregular ICU measureme
 
 - Dataset-specific preprocessing produces causal and split-aware predictive data contracts; raw-data, processed-artifact, and split provenance are incomplete.
 - Deterministic source-code rules construct project-specific clinically inspired proxy states; these are not verified diagnoses or complete clinical definitions.
-- STraTS, GRU, GRU-D, TCN, and SAnD predict multi-label proxy states from irregular ICU records.
 - Prediction exports are normalized into probability/binary forms and may be aggregated by deterministic majority vote; voting is not clinical consensus.
 - Dataset-specific, project-authored DAGs are encoded in source code and used to select observed adjustment variables; prompts are design provenance only.
 - Matching produces descriptive empirical-support summaries; CausalForestDML is the primary model-estimated CATE estimator; LinearDML is secondary; CausalPFN is exploratory.
@@ -21,7 +20,7 @@ This thesis addresses the integration problem of turning irregular ICU measureme
 | Integrated pipeline design | Chapters 1, 3--9, 11 | An evidence-tracked retrospective workflow links preprocessing, proxy states, prediction, aggregation, graph-guided adjustment, estimation, and diagnostics. | A clinically validated end-to-end system. | supported |
 | Common proxy-state interface | Chapters 3--7, 11 | Shared rule-derived proxy-state identifiers connect prediction and downstream analysis. | The interface establishes biological latent states or diagnoses. | supported with qualification |
 | Cross-dataset application | Chapters 1, 9--11 | The workflow was applied separately to PhysioNet 2012 and MIMIC-III. | The results are pooled, transportable, or construct-equivalent across datasets. | supported with qualification |
-| Predictive comparison | Chapter 10, Section 2; Chapter 11 SRQ-3 | Five included model families completed the archived proxy-label task, with dataset-specific leaders. | A universally superior architecture or clinical prediction validation. | supported with qualification |
+| Predictive comparison | Chapter 10, Section 2; Chapter 11 SRQ-3 | Four learned models completed the archived proxy-label task, with dataset-specific leaders. | A universally superior architecture or clinical prediction validation. | supported with qualification |
 | Transparent proxy construction | Chapters 5 and 11 | Deterministic rules make proxy construction inspectable and traceable to source code. | Exact thresholds form validated phenotypes or formal diagnoses. | supported with qualification |
 | DAG-guided multi-estimator analysis | Chapters 7, 9--11 | Project graphs operationalize exposure-specific observed adjustment and support comparative estimator analysis under stated assumptions. | The DAG is validated or estimator use proves identification. | supported with qualification |
 | Estimator agreement/disagreement analysis | Chapter 10, Sections 5--6; Chapter 11 SRQ-6 | Directional comparisons expose both broad agreement and substantive disagreement. | Agreement proves estimator correctness or causal effects. | supported with qualification |

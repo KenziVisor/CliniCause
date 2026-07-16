@@ -69,7 +69,6 @@ Full administrative inventory: stage_4_10C_administrative_inputs_required.md.
 
 ## 25.10 Abbreviations and notation
 
-Included abbreviations are ICU, EHR, DAG, STraTS, GRU, GRU-D, TCN, SAnD, DML, CATE, HTE, AUROC, AUPRC, minRP, SOFA, ARDS, and an explicitly unresolved-name CausalPFN entry. ATE, ATT, OVB, RV, and AKI were excluded.
 
 Included notation is directly verified in Chapters 3 and 7: i, n_i, t_ij, v_ij, x_ij, mathcal V, mathcal O_i, L-rule, predicted p, predicted L, A_i, Y_i, W_i, X_i, and Y_i(a). Unused planning-only symbols were excluded.
 

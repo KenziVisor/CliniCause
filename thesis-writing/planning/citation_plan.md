@@ -15,7 +15,6 @@ Use `thesis-writing/literature/metadata/catalog.csv` and `thesis-writing/literat
 | `cho2014gru` | core | C2.2, C6.2 | GRU recurrent baseline. | Original GRU reference. | none | Does not address irregular ICU preprocessing directly. |
 | `che2018grud` | core | C2.2, C6.2 | GRU-D missingness-aware baseline. | Primary GRU-D citation. | `lipton_kale_wetzel_2016_missingness_rnns` | Use for model, not all missingness claims. |
 | `bai2018tcn` | core | C2.2, C6.2 | TCN sequence baseline. | Canonical TCN reference. | none | Generic sequence modeling, not ICU-specific. |
-| `song2018sand` | core | C2.2, C6.2 | SAnD attention baseline. | Clinical time-series attention model citation. | none | Dense/interpolated representation differs from STraTS path. |
 | `shukla2019interpolation` | core | C2.2, C6.2 | InterpNet method. | Canonical InterpNet citation. | `shukla_marlin_2018_irregular_clinical_timeseries` optional | Final InterpNet result missing; use for implemented method/future work only unless results recovered. |
 | `shukla_marlin_2018_irregular_clinical_timeseries` | optional | C2.2 appendix | Earlier InterpNet background. | Optional workshop lineage. | `shukla2019interpolation` | Do not replace canonical 2019 source. |
 | `banda_2018_electronic_phenotyping` | core | C2.3, C5 | Rule-based and ML EHR phenotyping context. | Broad electronic phenotyping survey. | `essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping` | Does not validate this thesis' labels. |

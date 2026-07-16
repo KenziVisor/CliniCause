@@ -164,7 +164,7 @@ The four repaired rows are a subset of the supported limitation/future-work rows
 | Main RQ | An evidence-tracked workflow links irregular measurements, proxy construction/prediction, aggregation, project DAGs, and adjusted analyses across both datasets, conditional on clinical and causal assumptions. | Summary, contribution synthesis, limitations, and closing perspective. | Adequate | Retain. |
 | SRQ-1 | Separate causal and split-aware predictive contracts are bridged through normalized identifiers and explicit export schemas; producing lineage is incomplete. | Separate contracts and inspectable identifier/cohort/export boundaries in the contribution section; provenance gap in limitations. | Adequate | Retain. |
 | SRQ-2 | Deterministic proxy states serve as labels, voter inputs, and exposures, but clinical validity remains unresolved. | Shared-interface contribution plus rule-derived, non-verified construct limitation and clinical-validation priority. | Adequate | Retain. |
-| SRQ-3 | Five model families completed the archived task; the leading family differed by dataset without statistical or clinical superiority. | Explicit five-family and dataset-leader paragraph with boundaries. | Adequate | Retain. |
+| SRQ-3 | four learned models completed the archived task; the leading family differed by dataset without statistical or clinical superiority. | Explicit four-model and dataset-leader paragraph with boundaries. | Adequate | Retain. |
 | SRQ-4 | Prediction outputs are normalized and may be aggregated deterministically; aggregation is not clinical consensus and can preserve error. | Workflow/shared-interface synthesis and error-propagation limitation; exact schema/tie mechanics are omitted. | Partial | Acceptable concise synthesis; no expansion needed. |
 | SRQ-5 | Project-specified DAGs yield exposure-specific observed adjustment sets conditional on unresolved graph, timing, and identification assumptions. | Project-authored DAG workflow and explicit graph/temporal/unmeasured-confounding limitations; individual sets are omitted. | Partial | Acceptable concise synthesis; no result catalogue needed. |
 | SRQ-6 | Primary, secondary, exploratory, matching, and diagnostic analyses show bounded directional triangulation with PhysioNet shock as the key exception. | Explicit primary forest pattern, 19/19 DML comparison, 18/19 all-three comparison, shock exception, matching role, and PFN boundary. | Adequate | Retain. |
@@ -174,7 +174,6 @@ No misleading RQ answer or material omission remains. The two partial entries ar
 
 ## 13.7 Contribution consistency
 
-Chapter 12 preserves the Introduction's hierarchy: integrated workflow first, shared proxy/data-contract interfaces next, empirical predictive and estimator evaluation after them, and evidence infrastructure as traceability support. It claims no invention of STraTS, GRU, GRU-D, TCN, SAnD, weak supervision, proxy phenotyping, DAG methods, matching, DML, causal forests, HTE estimation, sensitivity methods, or permutation testing.
 
 The audit CSV records 27 claims as `ALREADY_ESTABLISHED` and 26 as `NOT_APPLICABLE`; it records zero `NEW_UNSUPPORTED_CLAIM` rows. Evidence infrastructure is described as improving numerical traceability, not proving clean-checkout reproduction. Hierarchy status is either `CONSISTENT` or `NOT_APPLICABLE`; no `DRIFTED` row exists.
 
@@ -186,7 +185,6 @@ Every numerical or count expression in Chapter 12 is represented in the audit CS
 | --- | --- | --- |
 | `C12.1` | Chapter 12 comment-only section ID. | Non-rendered identifier; no result meaning. |
 | `PhysioNet 2012`; two named datasets | Dataset designation and scope in Introduction lines 19 and 30-32; Chapter 10 throughout. | Correct; not a result aggregate. |
-| Five named predictive families | Chapter 10 lines 26-60, Table `tab:results-predictive-performance`; `checked_predictive_metrics.csv`, test/`PRIMARY_MAIN_TEXT` rows. | Exactly STraTS, GRU, GRU-D, TCN, and SAnD. |
 | Four archived test metrics per dataset, implicit in the leader statement | Chapter 10 lines 29-31 and Table `tab:results-predictive-performance`; checked columns `loss`, `auroc`, `auprc`, `minrp`. | Programmatic comparison gives STraTS as MIMIC-III leader and GRU-D as PhysioNet leader for all four. |
 | All nine MIMIC-III primary summaries positive | Chapter 10 lines 65-91 and Table `tab:results-forest-mimic`; `checked_cate_candidates.csv`, MIMIC/original/CausalForestDML. | 9/9 positive. |
 | Nine of ten PhysioNet primary summaries positive; shock negative | Chapter 10 lines 103-130 and Table `tab:results-forest-physionet`; checked PhysioNet/original/CausalForestDML rows. | 9/10 positive; shock is `-0.013849200594340203`. |

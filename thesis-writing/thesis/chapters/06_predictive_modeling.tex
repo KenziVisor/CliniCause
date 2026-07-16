@@ -39,8 +39,6 @@ The GRU-D backend uses a model-specific irregular sequence representation contai
 
 The TCN baseline uses the same dense hourly value, observation-mask, and elapsed-time representation as the GRU baseline, but processes the sequence with temporal convolutional residual blocks \cite{bai2018tcn}.  The implementation permutes the dense grid into channel-first form, applies a temporal convolutional network, takes the last temporal embedding, and concatenates it with the static-feature embedding before projection to proxy-label logits.
 
-The SAnD backend also consumes the dense hourly representation.  It applies a one-dimensional input embedding, learned positional encoding, masked attention blocks constrained by a local attention window, and dense interpolation over a fixed number of reference positions before combining the resulting time-series representation with static covariates \cite{song2018sand}.  In this repository, SAnD is therefore an attention-based dense-grid comparator rather than an irregular-token model.
-
 \begingroup
 \small
 \setlength{\tabcolsep}{4pt}
@@ -61,7 +59,6 @@ STraTS & Irregular observation tokens built from time, value, and variable embed
 GRU & Dense hourly grid with value, observation-mask, and elapsed-time channels; unobserved values are mean-filled before normalization. & Learned demographic embedding is concatenated with the final recurrent state; pretraining is not supported by the current guard. & \cite{cho2014gru}.  Implementation confirmed; archived GRU prediction CSVs present; export provenance incomplete. \\
 GRU-D & Irregular sequence of value, mask, elapsed-time, and sequence-length tensors; learned decays and masks enter the recurrent update. & Learned demographic embedding is concatenated with the final valid recurrent state; pretraining is not supported by the current guard. & \cite{che2018grud}.  Implementation confirmed; archived GRU-D prediction CSVs present; export provenance incomplete. \\
 TCN & Dense hourly grid with value, observation-mask, and elapsed-time channels processed by temporal convolutional residual blocks. & Learned demographic embedding is concatenated with the last convolutional embedding; pretraining is not supported by the current guard. & \cite{bai2018tcn}.  Implementation confirmed; archived TCN prediction CSVs present; export provenance incomplete. \\
-SAnD & Dense hourly grid with input embedding, positional encoding, masked attention, and dense interpolation; mask/delta channels come from the loader. & Learned demographic embedding is concatenated after dense interpolation; pretraining is not supported by the current guard. & \cite{song2018sand}.  Implementation confirmed; archived SAnD prediction CSVs present; export provenance incomplete. \\
 \end{longtable}
 \endgroup
 

@@ -1,6 +1,6 @@
 # Stage 4.6B-R Results Manifest
 
-The package inventories 1,369 archived result artifacts, 16 optional PNGs, three generated checked result figures, and one contextual seminar presentation. All have repository-relative paths and SHA-256 entries in `results_checksums.sha256`.
+The package inventories 1,353 archived result artifacts, 16 optional PNGs, three generated checked result figures, and one contextual seminar presentation. All have repository-relative paths and SHA-256 entries in `results_checksums.sha256`.
 
 ## Author decision freeze
 
@@ -8,7 +8,8 @@ The package inventories 1,369 archived result artifacts, 16 optional PNGs, three
 
 ## Predictive scope
 
-The thesis predictive comparison contains exactly STraTS, GRU, GRU-D, TCN, and SAnD. **InterpNet is not part of the thesis pipeline and is excluded from the thesis.** Historical audit/literature records are not source-packet instructions.
+The thesis predictive comparison contains exactly four learned models: STraTS, GRU, GRU-D, and TCN. The final aggregate contains their four predicted-label sources plus one Rule-Based Trees source.
+
 
 ## Direction agreement
 

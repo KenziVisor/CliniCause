@@ -64,7 +64,6 @@ It matches Chapters 3 and 11. **Consistency: pass.**
 
 | Chapter 1 statement | Value | Source and boundary |
 | --- | ---: | --- |
-| Predictive comparison | Five families: STraTS, GRU, GRU-D, TCN, SAnD | Chapter 10; no universal-superiority claim. |
 | Predictive leaders | STraTS in MIMIC-III; GRU-D in PhysioNet | Chapter 10; four archived metrics, dataset-specific only. |
 | Forest--Linear agreement | 19 of 19 original-cohort comparisons | Chapters 10--11; not causal confirmation or estimator equivalence. |
 | All-three agreement | 18 of 19 original-cohort comparisons | Chapters 10--11; CausalPFN remains exploratory. |

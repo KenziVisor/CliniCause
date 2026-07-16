@@ -256,7 +256,7 @@ The package inventories 1,369 archived result artifacts plus the 16 optional PNG
 
 ## Predictive scope
 
-The thesis predictive comparison contains exactly STraTS, GRU, GRU-D, TCN, and SAnD. **InterpNet is not part of the thesis pipeline and is excluded from the thesis.** Historical audit/literature records are not source-packet instructions.
+The thesis predictive comparison contains exactly four learned models: STraTS, GRU, GRU-D, and TCN. The final aggregate combines their four predicted-label sources with one Rule-Based Trees source. **InterpNet is not part of the thesis pipeline and is excluded from the thesis.** Historical audit/literature records are not source-packet instructions.
 
 ## Direction agreement
 
@@ -295,7 +295,7 @@ BLOCKED: ALL THREE AUTHOR-SELECTED MAIN NUMERICAL FIGURES HAVE SOURCE-VALUE OR S
 
 ## InterpNet removal
 
-- Removed every InterpNet occurrence from thesis `.tex` files and removed it from the predictive model/experiment tables. The thesis predictive comparison now has exactly STraTS, GRU, GRU-D, TCN, and SAnD.
+- Removed every InterpNet occurrence from thesis `.tex` files and removed it from the predictive model/experiment tables. The thesis predictive comparison has four learned models: STraTS, GRU, GRU-D, and TCN.
 
 ## Figure audit
 

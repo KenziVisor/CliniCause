@@ -29,7 +29,6 @@ How can LLM-assisted design-time knowledge elicitation be combined with determin
 | secondary methodological contribution | Clinically inspired, deterministic rule-derived proxy labels used as prediction targets and, after prediction/aggregation, structured causal-analysis variables. | Rule, prediction, and aggregation implementations/artifacts exist; validation and diagnosis language require [ADVISOR CHECK]. |
 | secondary methodological contribution | Adjustment-set selection from LLM-informed, project-encoded DAGs for proxy-state exposure/outcome analyses. | Implemented in graph/matching/CATE code; graph approval and causal assumptions require [ADVISOR CHECK]. |
 | engineering/reproducibility contribution | Parent router plus nested causal/STraTS workflows, manifests/resolved configs for local router runs, and stage-wise outputs. | Implemented; final external run configs and archive manifest missing. |
-| empirical contribution | Archived predictive summaries for STraTS, GRU, GRU-D, TCN, and SAnD across PhysioNet/MIMIC. | Result artifacts exist; archive copy provenance partial. |
 | empirical contribution | Twelve causal run families across two datasets, three estimators, and original/downsampled conditions. | Run summaries/logs support execution; primary analysis role unresolved. |
 | supporting analysis | Matching, sensitivity, benchmark, and permutation diagnostics for non-PFN causal runs. | Diagnostic artifacts exist; selected rows need per-treatment validation. |
 | future work | Dedicated overlap plots, recovered numbered configs, results manifest/checksums, clinical validation/chart review, InterpNet final results, stronger target-trial definition. | [NEEDS RESULT], [NEEDS EVIDENCE] for missing configs, [ADVISOR CHECK]. |
@@ -39,7 +38,7 @@ How can LLM-assisted design-time knowledge elicitation be combined with determin
 Currently supported:
 
 - The repository implements preprocessing, proxy-state construction, proxy-state prediction, majority voting, DAG generation, matching, CATE estimation, sensitivity analysis, permutation checks, and routing/orchestration components.
-- The repository audit inventories ten final predictive supervised summaries, twelve causal run folders, rule/proxy tag artifacts, DAG images, learning curves, sensitivity contours, and cross-run CSVs.
+- The repository audit inventories eight final predictive supervised summaries for STraTS, GRU, GRU-D, and TCN, twelve causal run folders, rule/proxy tag artifacts, DAG images, learning curves, sensitivity contours, and cross-run CSVs.
 - The literature corpus contains citation keys for implemented sequence models, datasets, causal foundations, DML/causal forests, programmatic weak supervision, LLM clinical knowledge, LLM-generated causal-graph priors, overlap, and sensitivity analysis.
 - The prompt-document archive supports a substantive design-method claim for LLM-assisted proxy-state and DAG elicitation; accepted executable behavior is defined by tagger and graph source code. Final runs were reported by the user as ChatGPT 5.4 with extended reasoning, but exact system/run metadata remain unresolved.
 - The example thesis demonstrates practical LaTeX patterns only.

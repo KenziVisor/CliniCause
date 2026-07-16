@@ -24,7 +24,7 @@ No rendered title change is recommended: the current title materially aligns wit
 | --- | --- | --- | --- | --- | --- |
 | ABS-01 | ICU records are irregular and missingness-aware representation matters. | Ch. 1, Motivation, lines 3--18. | No | Motivation only; not a causal finding. | ``Irregular ICU records...'' | States the same methodological motivation. |
 | ABS-02 | The objective is an evidence-tracked framework connecting preprocessing, proxy states, prediction, and DAG-guided adjusted analysis. | Ch. 1, Thesis Gap and Objective, lines 26--38; Ch. 12, lines 9--16. | No | Proxy states are rule-derived analytical constructs. | ``constructs and evaluates...'' | Uses a faithful Hebrew equivalent for evidence-tracked workflow. |
-| ABS-03 | The workflow is evaluated separately in PhysioNet 2012 and MIMIC-III and compares five predictive families. | Ch. 1, lines 19--21 and 65; Ch. 10, predictive-results section. | ``five'' | No pooling and no construct-equivalence claim. | ``evaluated separately...'' | Same datasets, separate analysis, and five-family scope. |
+| ABS-03 | The workflow is evaluated separately in PhysioNet 2012 and MIMIC-III and compares four learned prediction models. | Ch. 1, lines 19--21 and 65; Ch. 10, predictive-results section. | ``four'' | No pooling and no construct-equivalence claim. | ``evaluated separately...'' | Same datasets, separate analysis, and four-model scope. |
 | ABS-04 | Primary forest summaries: all nine MIMIC-III positive; nine of ten PhysioNet positive; shock negative. | Ch. 11, lines 52--55; Ch. 12, Main Findings. | 9/9, 9/10 | Mean model-estimated CATEs under project assumptions; not clinical or causal proof. | ``primary CausalForestDML summaries...'' | Keeps the exact counts and negative shock exception. |
 | ABS-05 | Directional agreement: CausalForestDML/LinearDML 19/19; all three estimators 18/19. | Ch. 10, LinearDML/CausalPFN comparison; Ch. 12, Main Findings. | 19/19, 18/19 | Agreement does not establish correctness, equal uncertainty, or identification; CausalPFN exploratory. | ``directional comparison...'' | Retains both limits. |
 | ABS-06 | Matching is descriptive; cross-dataset results are not pooled; causal/clinical/deployment claims are excluded. | Ch. 1, lines 34--38 and 65; Ch. 11, lines 52--79 and 117--176; Ch. 12, limitations. | No | State the boundaries directly. | ``Matching is descriptive...'' | Same hierarchy and limitations. |
@@ -52,7 +52,6 @@ No rendered title change is recommended: the current title materially aligns wit
 
 ## 4. Abbreviation and notation set
 
-The final reader-facing list will include only items found in the body.  Included abbreviations are ICU, EHR, DAG, STraTS, GRU, GRU-D, TCN, SAnD, DML, CATE, HTE, AUROC, AUPRC, minRP, SOFA, ARDS, and CausalPFN (as an unresolved-name entry rather than an unsupported expansion).  ATE, ATT, OVB, RV, and AKI are excluded: they are absent, restricted, or not needed for reader comprehension in the final body.
 
 Included notation is verified in Chapter 3 and, for the analysis quantities, Chapter 7: \(i\), \(n_i\), \(t_{ij}\), \(v_{ij}\), \(x_{ij}\), \(\mathcal{V}\), \(\mathcal{O}_i\), \(L^{rule}_{ik}\), \(\hat p^{(m)}_{ik}\), \(\hat L^{(m)}_{ik}\), \(A_i\), \(Y_i\), \(W_i\), \(X_i\), and \(Y_i(a)\).  Proposed planning symbols not used in the body (including \(S_i\), \(L^{vote}_{ik}\), \(\tau(x)\), \(\bar{\hat\tau}\), and \(\bar\Delta_{match}\)) are excluded.
 
@@ -95,4 +94,3 @@ Included notation is verified in Chapter 3 and, for the analysis quantities, Cha
 | Existing Chapter 10 figures | EXISTING_REGISTERED | Not newly referenced in an appendix. |
 | `mimic_all_run_stability.png`, `physionet_all_run_stability.png`, `mortality_prediction_true_auroc_auprc.png`, `permutation_null_check.png`, `sensitivity_intervals.png`, `shock_rule_tree.png` | NOT_REQUIRED | Supporting candidates are not inserted; no duplicate appendix display. |
 | `cross_model_direction_counts.png`, both non-downsampled CATE rankings, `mortality_prediction_metrics.png`, `sensitivity_intervals_trimmed.png`, `causal_dag_overview.png`, `correlation_vs_causation.png` | EXCLUDED | Remain excluded under their figure-register dispositions. |
-

@@ -33,8 +33,7 @@
 | --- | --- | --- |
 | Repository map completed | PASS WITH LIMITATIONS | `repository_map.md` covers parent router, nested repos, final results, thesis/literature directories, obsolete areas, and portability risks. |
 | Data pipeline documented | PASS WITH LIMITATIONS | Preprocessing code and missing raw/processed data are mapped; exact final processed pickles are external. |
-| All implemented models documented | PASS WITH LIMITATIONS | STraTS, GRU, GRU-D, TCN, SAnD, InterpNet implementation status recorded; InterpNet final output missing. |
-| All executed experiments identified | PASS WITH LIMITATIONS | Ten predictive archived runs and twelve causal run families inventoried; archive copy provenance incomplete for STraTS. |
+| All executed experiments identified | PASS WITH LIMITATIONS | Eight predictive archived runs and twelve causal run families inventoried; archive copy provenance incomplete for STraTS. |
 | All available results inventoried | PASS WITH LIMITATIONS | Main result families, cross-run tables, proxy tables, logs, diagnostics, binary support artifacts listed. |
 | Proxy-state definitions documented | PASS WITH LIMITATIONS | Rule/predicted/majority-vote distinctions and terminology documented; full clinical review remains. |
 | Causal estimands and estimators documented | PASS WITH LIMITATIONS | CATE, matching, forest, linear, PFN, downsampling, and estimand wording risks documented. |
@@ -48,7 +47,6 @@
 | Area | Coverage | Gaps |
 | --- | --- | --- |
 | Datasets | PhysioNet 2012 and MIMIC-III covered across predictive, proxy, and causal outputs. | Raw data and final processed pickle artifacts are external/missing locally. |
-| Predictive models | STraTS, GRU, GRU-D, TCN, SAnD have archived summaries and exports for both datasets. | InterpNet implemented but final output missing. |
 | Proxy-state methods | Rule-based, predicted, and majority-vote proxy states distinguished. | Exact voter input directories for majority vote are absolute and not archived. |
 | Causal estimators | CausalForest, LinearDML, and CausalPFN covered for both datasets and both sampling conditions. | Primary estimator not selected; PFN lacks downstream diagnostics. |
 | Sampling conditions | Original/no-downsample and downsampled runs inventoried. | Numbered config CSVs proving exact `DOWN_SAMPLE` values are missing. |
@@ -201,7 +199,7 @@ Resolved in Stage 2:
 - Functional repository map completed.
 - Final archive result families mapped.
 - Twelve causal run families inventoried.
-- Ten predictive archived runs inventoried.
+- Eight predictive archived runs inventoried.
 - Missing InterpNet output documented.
 - PFN diagnostic skips classified as intentional.
 - Matching duplicates and failures documented.

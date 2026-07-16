@@ -46,8 +46,6 @@ The repository also contains thesis-writing resources, a curated literature corp
 
 ## Predictive-Model Areas
 
-- `STraTS/src/main.py`: main predictive-model CLI for STraTS, iSTraTS, GRU, TCN, SAND, GRUD, and InterpNet. Source exposes model, pretraining, checkpoint, split, output, and prediction-export arguments.
-- `STraTS/src/modeling_strats.py`, `modeling_gru.py`, `modeling_tcn.py`, `modeling_sand.py`, `modeling_grud.py`, `modeling_interpnet.py`: model implementations named by `STraTS/src/main.py`.
 - `STraTS/src/dataset.py`, `dataset_pretrain.py`, `evaluator.py`, `evaluator_pretrain.py`, `models.py`, `learning_curves.py`, `utils.py`: training/evaluation support modules.
 - `STraTS/run_main.sh`, `run_main_rest.sh`, `run_main_mimic.sh`, `run_full_main.sh`, and `run_strats_job.sbatch`: orchestration scripts for training and prediction export. Outputs are documented as `STraTS/outputs/...`, but no tracked `STraTS/outputs/` directory was found.
 

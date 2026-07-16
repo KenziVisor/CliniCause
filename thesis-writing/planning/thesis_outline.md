@@ -157,12 +157,10 @@ Readiness statuses used: `READY FOR METHODS DRAFT`, `READY WITH QUALIFICATIONS`,
 
 | field | plan |
 | --- | --- |
-| Purpose | Synthesize STraTS, GRU, GRU-D, TCN, SAnD, InterpNet, and missingness. |
 | Key questions | Why compare irregular and dense sequence models? |
 | Planned claims | Models differ in how they encode irregular sampling, masks, deltas, interpolation, attention, or temporal convolutions. |
 | Evidence class | Literature and implementation. |
 | Primary repository sources | `STraTS/src/dataset.py`; `STraTS/src/models.py`; `STraTS/src/modeling_*.py`. |
-| Primary literature themes or citation keys | `tipirneni2022strats`, `cho2014gru`, `che2018grud`, `bai2018tcn`, `song2018sand`, `shukla2019interpolation`, `lipton_kale_wetzel_2016_missingness_rnns`, `sun_2026_review_irregular_medical_timeseries`. |
 | Candidate figures | None. |
 | Candidate tables | T-MODEL-01 architecture comparison. |
 | Dependencies | InterpNet final results missing; include as implemented/method background only. |
@@ -422,7 +420,6 @@ Readiness statuses used: `READY FOR METHODS DRAFT`, `READY WITH QUALIFICATIONS`,
 | Planned claims | Supervised backends predict all proxy labels using a shared multi-label BCE head and evaluate per-target AUROC/AUPRC/minRP averaged over non-degenerate targets. |
 | Evidence class | Implementation-confirmed. |
 | Primary repository sources | `STraTS/src/models.py`; `STraTS/src/dataset.py`; `STraTS/src/evaluator.py`; `STraTS/src/modeling_*.py`. |
-| Primary literature themes or citation keys | `tipirneni2022strats`, `cho2014gru`, `che2018grud`, `bai2018tcn`, `song2018sand`, `shukla2019interpolation`. |
 | Candidate figures | None. |
 | Candidate tables | T-MODEL-01; T-PRED-METRICS-01. |
 | Dependencies | InterpNet result missing. |
@@ -569,7 +566,6 @@ Readiness statuses used: `READY FOR METHODS DRAFT`, `READY WITH QUALIFICATIONS`,
 | --- | --- |
 | Purpose | Define datasets, models, train fraction, run index, metrics, and missing InterpNet status. |
 | Key questions | Which runs are final candidates? |
-| Planned claims | Ten supervised predictive summaries exist for STraTS/GRU/GRU-D/TCN/SAnD across both datasets; InterpNet final results are missing. |
 | Evidence class | Result artifacts with provenance caveat. |
 | Primary repository sources | `experiment_inventory.csv`; `final-results/strats-outputs/**/training_summary.txt`. |
 | Primary literature themes or citation keys | Model citations. |

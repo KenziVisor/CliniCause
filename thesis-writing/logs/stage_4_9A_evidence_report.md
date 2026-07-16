@@ -38,11 +38,10 @@ The table records every source cited in Chapter 2. “A/I/M/D” abbreviates abs
 | `harutyunyan_2019_mimiciii_benchmark` | core | `papers/dataset_mimiciii_benchmark_harutyunyan_et_al_2019.pdf`; present | A/I/M, benchmark tasks and preprocessing, discussion | A reproducible benchmark view of MIMIC-III and task-specific extraction | Benchmark is one view, not the database or this thesis's exact pipeline | MIMIC-III and benchmark research |
 | `sun_2026_review_irregular_medical_timeseries` | core | `papers/review_irregular_medical_timeseries_sun_et_al_2026.pdf`; present | A/I, taxonomy, missingness/irregularity sections, limitations | Irregular-series representation choices and observation-process concerns | Review used for taxonomy, not local performance or universal ranking | Critical-care EHR time series; representation challenges |
 | `lipton_kale_wetzel_2016_missingness_rnns` | core | `papers/model_missingness_rnn_lipton_et_al_2016.pdf`; present | A/I/M, missingness experiments, discussion | Missingness patterns can be predictive and require explicit handling | Does not show that a local model handles missingness correctly | Critical-care EHR time series |
-| `cho2014gru` | core | `papers/model_gru_cho_et_al_2014.pdf`; present | I/M, encoder--decoder and gated-unit formulation | Reset/update gates and recurrent hidden-state role | General sequence paper, not an ICU irregularity solution | Recurrent baselines; five-family table |
-| `che2018grud` | core | `papers/model_grud_che_et_al_2018.pdf`; present | A/I/M, decay equations, clinical experiments, discussion | Masks, elapsed time, and learned input/hidden-state decay | Predictive missingness handling does not remove causal measurement bias | Recurrent baselines; five-family synthesis/table |
-| `bai2018tcn` | core | `papers/model_tcn_bai_et_al_2018.pdf`; present | A/I/M, dilation/residual architecture, evaluation discussion | Causal dilated convolution, residual blocks, receptive field | General sequence comparison; local ICU input contract remains separate | TCN; five-family table |
-| `song2018sand` | core | `papers/model_sand_song_et_al_2018.pdf`; present | A/I/M, masked attention and positional encoding, experiments | Dense clinical self-attention and positional encoding | Dense prepared sequence is not STraTS's sparse-event representation | SAnD; five-family table |
-| `tipirneni2022strats` | core | `papers/model_strats_tipirneni_reddy_2022.pdf`; present | A/I/M, triplet embeddings, pretraining, experiments/limitations | Sparse time--variable--value triplets, attention, self-supervised forecasting | Published method is distinguished from the local supervised multi-label adaptation | STraTS; five-family table |
+| `cho2014gru` | core | `papers/model_gru_cho_et_al_2014.pdf`; present | I/M, encoder--decoder and gated-unit formulation | Reset/update gates and recurrent hidden-state role | General sequence paper, not an ICU irregularity solution | Recurrent baselines; four-model table |
+| `che2018grud` | core | `papers/model_grud_che_et_al_2018.pdf`; present | A/I/M, decay equations, clinical experiments, discussion | Masks, elapsed time, and learned input/hidden-state decay | Predictive missingness handling does not remove causal measurement bias | Recurrent baselines; four-model synthesis/table |
+| `bai2018tcn` | core | `papers/model_tcn_bai_et_al_2018.pdf`; present | A/I/M, dilation/residual architecture, evaluation discussion | Causal dilated convolution, residual blocks, receptive field | General sequence comparison; local ICU input contract remains separate | TCN; four-model table |
+| `tipirneni2022strats` | core | `papers/model_strats_tipirneni_reddy_2022.pdf`; present | A/I/M, triplet embeddings, pretraining, experiments/limitations | Sparse time--variable--value triplets, attention, self-supervised forecasting | Published method is distinguished from the local supervised multi-label adaptation | STraTS; four-model table |
 | `banda_2018_electronic_phenotyping` | core | `papers/phenotyping_ehr_banda_et_al_2018.pdf`; present | A/I, rule/model taxonomy, validation discussion | Electronic-phenotyping sources and evolution from rules to learned methods | Does not validate the project's rule-derived proxy states | Electronic phenotyping |
 | `essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping` | core | `papers/phenotyping_respiratory_failure_essay_et_al_2020.pdf`; present | A/I/M, rule definition, validation/discussion | Example of transparent rule-based respiratory-failure cohort phenotyping | Example only; not imported as the local proxy definition | Electronic phenotyping; clinical definitions |
 | `ratner_et_al_2020_snorkel` | core | `papers/phenotyping_weak_supervision_snorkel_ratner_et_al_2020.pdf`; downloaded | A/I/M, label model, applications, limitations | Programmatic labeling functions and learned source-dependency/accuracy aggregation | Project majority voting is explicitly not claimed to implement Snorkel | Weak supervision and label aggregation |
@@ -96,9 +95,7 @@ Chapter 2 has exactly four top-level sections and 22 subsections. `detex | wc -w
 | GRU | `cho2014gru` | reset/update-gated recurrent state | depends on the supplied prepared sequence | general recurrent baseline | ordinary GRU does not inherently resolve elapsed time or absence |
 | GRU-D | `che2018grud` | recurrent state with learned decay | masks and elapsed-time features make missingness explicit | missingness-aware recurrent baseline | decay is structured, may be site-specific, and is not a causal correction |
 | TCN | `bai2018tcn` | causal dilated convolution and residual blocks | operates on a defined regular sequence representation | convolutional baseline | canonical paper is not ICU-specific; binning/masks/aggregation remain local choices |
-| SAnD | `song2018sand` | masked self-attention and positional encoding | operates on a dense prepared clinical sequence | dense attention baseline | attention does not specify the input representation and is not equivalent to sparse-event STraTS |
 
-`tab:background-model-families` has exactly five data rows: STraTS, GRU, GRU-D, TCN, and SAnD. It contains no unsupported family, performance result, universal ranking, or assertion that a local implementation is identical to the publication.
 
 ## 25.8 Proxy and weak-supervision background
 
@@ -167,7 +164,6 @@ No technical description, superiority claim, or invented citation was added. Its
 | `silva2012physionet` | 1 | primary dataset | PhysioNet 2012 challenge/data role | present |
 | `singer_2016_sepsis3` | 1 | clinical consensus | sepsis conceptual definition | present |
 | `smit_2023_causal_inference_icu_scoping_review` | 1 | review | ICU observational-causal workflow/limitations | present |
-| `song2018sand` | 2 | primary method | SAnD attention/position encoding | present |
 | `sun_2026_review_irregular_medical_timeseries` | 2 | review | irregular-series taxonomy and limitations | present |
 | `taylor_et_al_2001_isth_dic` | 1 | clinical definition | DIC score reference point | downloaded |
 | `tipirneni2022strats` | 2 | primary method | STraTS triplets/attention/pretraining | present |
@@ -181,7 +177,6 @@ Totals: 34 unique keys, 36 citation commands, and 41 key uses. Every key exists 
 The thesis-specific design statements in Chapter 2 are:
 
 1. The study uses PhysioNet 2012 and MIMIC-III as separate methodological settings, not as a pooled population.
-2. The predictive comparison contains exactly STraTS, GRU, GRU-D, TCN, and SAnD.
 3. Published model forms are precedents; local preprocessing, targets, heads, training, and exports are defined later.
 4. Project rules produce analytical proxy states; model outputs are predicted proxy labels; deterministic voting aggregates them.
 5. Project-specified, dataset-specific DAGs guide observed-variable adjustment.

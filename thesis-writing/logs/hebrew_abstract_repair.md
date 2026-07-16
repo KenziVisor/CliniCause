@@ -147,7 +147,6 @@ The assisting-tool description is supported with the qualifications present in t
 
 ### Additional Hebrew--English claim mismatch
 
-The approved Hebrew body names six predictive families by adding `Interpolation-Prediction Networks`. The checked abstract-equivalence record and thesis describe five evaluated families: STraTS, GRU, GRU-D, TCN, and SAnD. The archived causal input is more specific than the approved wording: one rule-derived source plus predicted-label sources from GRU, GRU-D, STraTS, and TCN; SAnD is not one of the archived final voters. The approved Hebrew text also omits the English abstract's primary/secondary/exploratory estimator hierarchy. Therefore claim equivalence is not established even apart from the incorrect result counts.
 
 ## Baseline RTL, font, and overflow diagnosis
 

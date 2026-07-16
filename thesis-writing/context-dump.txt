@@ -169,7 +169,6 @@ The same idea was expanded beyond STraTS to other models:
 - GRU-D
 - TCN
 - InterpNet
-- SAND
 
 These models should also support latent vector prediction and produce comparable
 training/evaluation outputs.
@@ -187,7 +186,6 @@ Possible voters:
 - TCN.
 - GRU.
 - GRU-D.
-- Possibly SAND / InterpNet.
 
 The majority vote should align patients by ID, not just assume identical row
 order.
@@ -587,7 +585,6 @@ Compact Summary
   Rule-based clinical thresholds, later model-predicted tags.
 
 - Time-series models:
-  STraTS, GRU, GRU-D, TCN, InterpNet, SAND.
 
 - Causal graph:
   Domain-informed DAG with metadata, observed variables, latents, and outcome.

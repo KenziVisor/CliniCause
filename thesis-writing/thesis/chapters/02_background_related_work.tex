@@ -59,7 +59,7 @@ The purpose of using both sources is methodological portability, not population 
 
 Predictive models for irregular clinical time series differ first in what they consider an input.  One family regularizes observations onto a sequence of time bins and supplies imputed values, masks, or time gaps.  Another works directly with observed events, representing measurement identity, value, and time without filling every unobserved cell.  Within these representations, temporal dependence can be modeled by recurrent state updates, temporal convolution, or attention.  These choices encode distinct assumptions about which temporal relationships should be easy to learn and how the observation process should enter the model \cite{sun_2026_review_irregular_medical_timeseries}.
 
-No representation removes the need to define the task and preprocessing contract.  Dense sequences require a bin width, aggregation rule, and treatment of missing cells.  Sparse events require a variable vocabulary, continuous or discrete encodings of time and value, and a policy for very long event streams.  Positional or temporal encodings provide order information to attention mechanisms, while masks can prevent padded or future positions from entering a computation.  Self-supervised pretraining can exploit unlabeled records, but its utility depends on the pretext task and the relation between pretraining and supervised populations.  The five families reviewed below are the predictive families compared by the thesis; their published forms are conceptual precedents rather than proof that every local adaptation is identical.
+No representation removes the need to define the task and preprocessing contract.  Dense sequences require a bin width, aggregation rule, and treatment of missing cells.  Sparse events require a variable vocabulary, continuous or discrete encodings of time and value, and a policy for very long event streams.  Positional or temporal encodings provide order information to attention mechanisms, while masks can prevent padded or future positions from entering a computation.  Self-supervised pretraining can exploit unlabeled records, but its utility depends on the pretext task and the relation between pretraining and supervised populations.  The four learned models reviewed below are the predictive families compared by the thesis; their published forms are conceptual precedents rather than proof that every local adaptation is identical.
 
 \subsection{Recurrent baselines: GRU and GRU-D}
 
@@ -71,10 +71,6 @@ GRU-D modifies recurrent modeling for multivariate series with missing values.  
 
 Temporal convolutional networks apply one-dimensional convolution in temporal order.  Causal convolution prevents future positions from contributing to an earlier output, dilation expands the receptive field without requiring a kernel at every lag, and residual blocks stabilize deeper models.  Because convolutions for many positions can be computed in parallel, a TCN offers a different computational and inductive bias from a recurrent state update \cite{bai2018tcn}.  The canonical TCN study is a general sequence-modeling comparison rather than an ICU-specific method paper.  In an irregular ICU setting, the model still requires an appropriate regular sequence representation, so resampling, aggregation, masks, and time features remain part of its effective design.
 
-\subsection{Attention-based dense modeling: SAnD}
-
-SAnD applies masked self-attention to clinical time series so that a representation at a position can combine information from other permitted positions without recurrent traversal.  Positional encoding supplies temporal order, and attention provides direct paths for modeling long-range relationships \cite{song2018sand}.  Its clinical formulation uses a dense or regularly represented sequence, making preprocessing part of the model interface.  It therefore differs from a sparse-event transformer even though both use attention: attention is a temporal mechanism, not a complete specification of the input representation.
-
 \subsection{Sparse-event transformer modeling: STraTS}
 
 STraTS is designed for sparse and irregular multivariate clinical series.  It treats an observed measurement as a triplet of time, variable, and value; continuous embeddings of time and value are combined with a variable embedding, and transformer-style attention contextualizes the observed events.  This avoids constructing a fully imputed variable-by-time matrix and preserves fine-grained observation times.  The method also introduces a self-supervised forecasting objective for pretraining representations before supervised prediction \cite{tipirneni2022strats}.
@@ -83,7 +79,7 @@ This design is well matched to sparse event streams, but it does not make prepro
 
 \subsection{Relationship among the five included families}
 
-The comparison in Table~\ref{tab:background-model-families} is best understood as a comparison of inductive biases rather than a ladder of sophistication.  GRU supplies a general recurrent baseline; GRU-D makes missingness and elapsed time explicit within recurrence; TCN emphasizes multiscale local-to-long-range temporal filters; SAnD applies attention to a dense sequence; and STraTS applies attention to observed event triplets with a pretraining option.  Explicit missingness handling is central to GRU-D, implicit in the absence and timing of STraTS events, and otherwise dependent on the prepared inputs.  Likewise, pretraining is a defined part of STraTS but not an assumed property of every family.
+The comparison in Table~\ref{tab:background-model-families} is best understood as a comparison of inductive biases rather than a ladder of sophistication.  GRU supplies a general recurrent baseline; GRU-D makes missingness and elapsed time explicit within recurrence; TCN emphasizes multiscale local-to-long-range temporal filters; and STraTS applies attention to observed event triplets with a pretraining option.  Explicit missingness handling is central to GRU-D, implicit in the absence and timing of STraTS events, and otherwise dependent on the prepared inputs.  Likewise, pretraining is a defined part of STraTS but not an assumed property of every model.
 
 \begin{landscape}
 \begin{table}[p]
@@ -100,7 +96,6 @@ STraTS & Transformer-style contextualization and attention pooling. & Sparse obs
 GRU & Gated recurrent hidden-state updates. & Requires a prepared sequence; irregular time and missingness are not inherently resolved by the ordinary recurrent unit. & General recurrent baseline. & \cite{cho2014gru} \\
 GRU-D & Recurrent updates with trainable input and hidden-state decay. & Uses masks and elapsed-time features to model missingness explicitly. & Missingness-aware recurrent baseline. & \cite{che2018grud} \\
 TCN & Dilated temporally ordered convolutions with residual blocks. & Operates on a regular sequence representation whose binning, masks, and aggregation must be defined. & Convolutional sequence baseline. & \cite{bai2018tcn} \\
-SAnD & Masked self-attention with positional encoding. & Operates on a dense clinical sequence; its input is not the same raw sparse-event representation as STraTS. & Dense attention-based baseline. & \cite{song2018sand} \\
 \bottomrule
 \end{tabular}
 \end{table}

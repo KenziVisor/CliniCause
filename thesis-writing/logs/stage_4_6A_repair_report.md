@@ -21,7 +21,6 @@
 
 ## InterpNet removal
 
-- Removed every InterpNet occurrence from thesis `.tex` files and removed it from the predictive model/experiment tables. The thesis predictive comparison now has exactly STraTS, GRU, GRU-D, TCN, and SAnD.
 
 ## Figure audit
 

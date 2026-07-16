@@ -24,7 +24,7 @@ Created `stage_4_10A_conclusion_evidence_brief.md` before drafting.  It bounds t
 
 ## 6. Supported contribution set
 
-The chapter includes only these supported contributions: transparent integration of the processing-to-analysis workflow; a shared proxy-state interface; separate causal and split-aware predictive contracts; cross-dataset application without pooling; a five-family predictive comparison; project-authored graph-guided multi-estimator analysis; descriptive matching and available diagnostic qualification; and evidence/provenance tracking.  It does not claim invention of the underlying models, weak supervision, DAGs, matching, DML, causal forests, or sensitivity methods.
+The chapter includes only these supported contributions: transparent integration of the processing-to-analysis workflow; a shared proxy-state interface; separate causal and split-aware predictive contracts; cross-dataset application without pooling; a four-model predictive comparison; project-authored graph-guided multi-estimator analysis; descriptive matching and available diagnostic qualification; and evidence/provenance tracking.  It does not claim invention of the underlying models, weak supervision, DAGs, matching, DML, causal forests, or sensitivity methods.
 
 ## 7. Supported findings used
 

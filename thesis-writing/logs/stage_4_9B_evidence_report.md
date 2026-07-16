@@ -76,7 +76,6 @@ The shared themes are irregular sampling, informative measurement, proxy states,
 
 ### Chapter 2 versus Chapter 6
 
-For STraTS, GRU, GRU-D, TCN, and SAnD, Chapter 2 contains canonical architecture, representation assumptions, irregularity handling, primary citation, inductive-bias comparison, and limitations.  Chapter 6 contains local input and target contracts, adaptations, training, checkpoint/export behavior, and provenance limits.  No model paper is used to claim local equivalence or performance; no Chapter 2 result was found.  No repair needed.
 
 ### Chapter 2 versus Chapter 7
 
@@ -116,7 +115,6 @@ Chapters 1, 2, 5, 7, and 11 were checked.  **NO FORMAL LLM-ASSISTED-DESIGN LITER
 
 ## 24.12 InterpNet
 
-The before-and-after thesis-wide `.tex` scan returned zero matches.  The reader-facing comparison set is exactly STraTS, GRU, GRU-D, TCN, and SAnD.  Historical InterpNet references remain in literature metadata, planning/history, and source code as reintroduction risks; none of those records was modified.
 
 ## 24.13 Reader-facing placeholders
 

@@ -32,7 +32,6 @@ This file lists repository entry-point scripts only. Internal model, dataset, ev
 
 ## `run_main_rest.sh`
 
-- Purpose: PhysioNet baseline workflow for TCN, GRUD, GRU, SAND, and InterpNet training plus checkpoint-based prediction export.
 - Inputs: `data/processed/physionet_2012.pkl`, `data/latent_tags.csv`, and existing or newly created baseline checkpoints for `TRAIN_FRAC=0.5`, `RUN_ID=1o10`.
 - Outputs: Baseline output directories under `outputs/physionet_2012/` and per-model prediction CSVs under `outputs/`.
 - Example: `bash run_main_rest.sh`

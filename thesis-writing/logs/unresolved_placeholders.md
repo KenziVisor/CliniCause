@@ -270,7 +270,7 @@ The thesis-wide gates below remain open and are intentionally retained in their 
 
 ## Stage 4.9A Update
 
-Stage 4.9A replaced the four generic Chapter 2 drafting placeholders, the generic validation placeholder, and the generic citation placeholder with a completed Background and Related Work chapter.  Chapter 2 now contains exactly four top-level sections, two synthesis tables, a five-family predictive-model review, proxy-phenotyping and weak-supervision background, and an identification-before-estimation causal synthesis.  No generic `\StagePlaceholder` remains in `chapters/02_background_related_work.tex`.
+Stage 4.9A replaced the four generic Chapter 2 drafting placeholders, the generic validation placeholder, and the generic citation placeholder with a completed Background and Related Work chapter.  Chapter 2 now contains exactly four top-level sections, two synthesis tables, a four-model predictive-model review, proxy-phenotyping and weak-supervision background, and an identification-before-estimation causal synthesis.  No generic `\StagePlaceholder` remains in `chapters/02_background_related_work.tex`.
 
 ### Resolved During Stage 4.9A
 

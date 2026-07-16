@@ -98,7 +98,6 @@ The cited missing-PDF entries `vincent_et_al_1996_sofa` and `ranieri_et_al_2012_
 
 ## 24.10 Terminology audit
 
-Required spelling/capitalization is consistent for MIMIC-III, PhysioNet 2012, STraTS, GRU, GRU-D, TCN, SAnD, CausalForestDML, LinearDML, CausalPFN, DAG, DML, CATE, AUROC, AUPRC, and minRP. Proxy-state, rule-derived-label, predicted-proxy, aggregation, exposure, outcome, adjustment-variable, effect-modifier, project-specified DAG, matching-contrast, mean-model-estimated-CATE, observational-analysis, exploratory-estimator, evidence-provenance, and clean-checkout-reproducibility distinctions are retained.
 
 Repairs standardized `CausalForestDML` where two method passages used a spaced variant; replaced stale “planned,” “frozen stage,” and “checked packet” wording with prespecified/validated scholarly language; and removed the unused `StagePlaceholder` macro and every reader-facing placeholder invocation. `LAT_*` remains only as stable implementation vocabulary. The exact required InterpNet scan returns zero.
 
@@ -116,7 +115,7 @@ The required repository-process scan has one benign lexical match: “evidence r
 
 `stage_5_1_abstract_equivalence.csv` contains 20 component/formal checks. The English abstract has 347 tokens and the Hebrew abstract 302 under the same source-text tokenizer; both are below 500. Neither contains a citation or footnote.
 
-Objective, datasets, workflow, five model families, proxy boundary, DAG boundary, 9/9, 9/10, negative shock, 19/19, 18/19, exploratory CausalPFN, descriptive matching, no pooling, contribution, causal limits, clinical/deployment limits, reproducibility boundary, and future needs are semantically equivalent. Neither language adds a claim or strengthens causal/clinical meaning. Render inspection confirms intact Hebrew right-to-left flow and readable embedded MIMIC-III, PhysioNet 2012, CausalForestDML, LinearDML, CausalPFN, and checkout terms. No abstract repair was required.
+Objective, datasets, workflow, four learned models, proxy boundary, DAG boundary, 9/9, 9/10, negative shock, 19/19, 18/19, exploratory CausalPFN, descriptive matching, no pooling, contribution, causal limits, clinical/deployment limits, reproducibility boundary, and future needs are semantically equivalent. Neither language adds a claim or strengthens causal/clinical meaning. Render inspection confirms intact Hebrew right-to-left flow and readable embedded MIMIC-III, PhysioNet 2012, CausalForestDML, LinearDML, CausalPFN, and checkout terms. No abstract repair was required.
 
 ## 24.13 Front matter
 

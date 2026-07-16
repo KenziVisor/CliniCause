@@ -64,12 +64,10 @@ Treat the following as authoritative for this task:
      equivalent to the two DML estimators.
 
 4. Predictive-model evidence:
-   - Five evaluated predictive families:
-     STraTS, GRU, GRU-D, TCN, and SAnD.
-   - The archived final five-source aggregate contains:
-     one rule-derived source, plus predicted-label sources from
-     GRU, GRU-D, STraTS, and TCN.
-   - SAnD was evaluated but was not one of the final aggregate voters.
+   - Four learned prediction models were evaluated: STraTS, GRU, GRU-D,
+     and TCN.
+   - The archived final aggregate contains five sources: one Rule-Based Trees
+     source plus predicted-label sources from GRU, GRU-D, STraTS, and TCN.
    - Do not mention Interpolation-Prediction Networks in either abstract.
 
 5. LLM role:
@@ -136,7 +134,6 @@ Do not add citations, footnotes, references, or additional numerical claims.
 
 Irregularly sampled intensive care unit records contain measurements collected at different times and frequencies, with missingness patterns that may reflect both the patient’s condition and the clinical process. This thesis develops and evaluates a computational framework that combines design-time knowledge elicitation assisted by a large language model, deterministic construction of clinically inspired proxy states, prediction of those states from irregular medical time series, and directed-acyclic-graph-guided observational analyses of in-hospital mortality. The objective is to examine whether these stages can be integrated into a transparent and traceable analytical workflow, rather than to validate a clinical decision system or recommend treatment.
 
-The framework was evaluated separately on the PhysioNet 2012 and MIMIC-III cohorts. During the design stage, a large language model was used to assist in proposing dataset-specific proxy-state ontologies, decision-rule families, missingness considerations, and causal graphs. Proposals selected for the project were subsequently encoded as deterministic source-code rules and graph structures. Five time-series model families—STraTS, GRU, GRU-D, TCN, and SAnD—were evaluated for predicting rule-derived proxy labels. The aggregate used in the archived causal analyses combined one rule-derived source with predicted labels from GRU, GRU-D, STraTS, and TCN. The language model was not used as a runtime estimator. The proxy states are not chart-adjudicated diagnoses, and the causal graphs were neither learned from patient data nor clinically validated.
 
 For the primary original-cohort CausalForestDML analyses, the mean model-estimated effect was positive for all nine proxy states examined in MIMIC-III. In PhysioNet, nine of ten estimates were positive, while the estimate for shock was negative. CausalForestDML and LinearDML agreed in direction in all 19 dataset–proxy-state comparisons. All three estimators agreed in 18 of 19 comparisons; CausalPFN was retained as an exploratory estimator because its available methodological provenance and diagnostic support were more limited. Matching analyses provided descriptive comparisons between matched records and were not interpreted as evidence of an intervention effect. Results were reported separately for the two datasets and were not pooled.
 
@@ -158,7 +155,6 @@ Do not add citations, footnotes, references, or additional numerical claims.
 
 רשומות רפואיות מיחידות טיפול נמרץ כוללות מדידות רבות הנאספות בזמנים לא אחידים ובתדירות המשתנה בין מטופלים ומשתנים. זמינותן החלקית של המדידות ודפוסי החסר עשויים לשקף הן את מצבו של המטופל והן את תהליך הטיפול. עבודה זו בוחנת מסגרת חישובית העוקבת במפורש אחר מקורות הראיות ומשלבת הפקת ידע קליני וסיבתי בסיוע מודל שפה גדול, הגדרה דטרמיניסטית של מצבי־פרוקסי, חיזוים מתוך סדרות זמן רפואיות לא־סדירות וניתוחים מתוקננים של תמותה באשפוז בהנחיית גרפים סיבתיים. מטרת העבודה היא לבחון את השילוב בין שלבי התהליך ואת המעברים ביניהם, ולא לספק תיקוף קליני, המלצת טיפול או מערכת המוכנה להטמעה.
 
-המסגרת נבחנה בנפרד על נתוני PhysioNet 2012 ועל נתוני MIMIC-III. בשלב התכנון שימש מודל שפה גדול ככלי מסייע להצעת אונטולוגיות של מצבי־פרוקסי, משפחות של כללי החלטה, התייחסויות לדפוסי חסר וגרפים סיבתיים המותאמים לכל מאגר. ההצעות שנבחרו במסגרת הפרויקט קודדו לאחר מכן ככללים וכגרפים דטרמיניסטיים. חמש משפחות של מודלים לסדרות זמן — STraTS, ‏GRU, ‏GRU-D, ‏TCN ו־SAnD — אומנו לחזות את התוויות שהפיקו כללי ההחלטה. האיגוד ששימש בניתוחים הסיבתיים הסופיים כלל מקור אחד המבוסס על הכללים וארבעה מקורות של תוויות חזויות, שהופקו באמצעות GRU, ‏GRU-D, ‏STraTS ו־TCN. מודל השפה לא השתתף כאומד בזמן הריצה. מצבי־הפרוקסי אינם אבחנות שאומתו בבדיקת תיקים רפואיים, והגרפים הסיבתיים לא נלמדו מנתוני המטופלים ולא עברו תיקוף קליני.
 
 באומדני CausalForestDML הראשיים על העוקבות המקוריות התקבל אומדן ממוצע חיובי בכל תשעת מצבי־הפרוקסי שנבחנו ב־MIMIC-III. ב־PhysioNet התקבל אומדן חיובי בתשעה מתוך עשרת המצבים, ואילו אומדן ההלם היה שלילי. CausalForestDML ו־LinearDML הסכימו בכיוון בכל 19 ההשוואות בין מאגר למצב־פרוקסי. שלושת האומדים הסכימו בכיוון ב־18 מתוך 19 ההשוואות; CausalPFN נשמר כאומד חקרני בלבד בשל מגבלות בתיעוד המקור המתודולוגי ובתמיכה האבחונית הזמינה עבורו. ניתוחי ההתאמה שימשו כתמיכה תיאורית באמצעות השוואת תוצאות בזוגות מותאמים, ולא כהוכחה להשפעת התערבות. תוצאות שני המאגרים דווחו בנפרד ולא אוגמו.
 
@@ -205,7 +201,6 @@ Hebrew layout requirements
    - GRU
    - GRU-D
    - TCN
-   - SAnD
    - CausalForestDML
    - LinearDML
    - CausalPFN

@@ -106,7 +106,6 @@
 | GRU | Gated Recurrent Unit |
 | GRU-D | Gated Recurrent Unit with Decay |
 | TCN | Temporal Convolutional Network |
-| SAnD | Simply Attend and Diagnose |
 | DML | Double/Debiased Machine Learning |
 | CATE | Conditional Average Treatment Effect |
 | HTE | Heterogeneous Treatment Effect |

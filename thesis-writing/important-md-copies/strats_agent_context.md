@@ -146,7 +146,6 @@ Important behavior:
 
 - `strats`, `istrats`
   Irregular triplets: `values`, normalized `times` in `[-1, 1]`, `varis`, `obs_mask`, `demo`, `labels`.
-- `gru`, `tcn`, `sand`
   Hourly dense tensor with concatenated `values`, observation mask, and delta-since-last-observation, plus `demo`.
 - `grud`
   Irregular dense tensors: `x_t`, `m_t`, `delta_t`, `seq_len`, `demo`, `labels`.

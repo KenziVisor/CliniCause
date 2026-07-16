@@ -61,7 +61,6 @@ Baseline result: success; `main.pdf` was created at `thesis-writing/thesis/main.
 
 ## 7. Predictive and Causal Experiment Matrices
 
-- Predictive: STraTS, GRU, GRU-D, TCN, and SAnD have archived training-summary/export families for both datasets.  STraTS pretraining support is archived.  InterpNet implementation/wrappers exist but final result artifacts are absent.  Split and checkpoint/export provenance remains incomplete.
 - Causal: all twelve dataset--estimator--sampling combinations are represented by a run summary.  Non-PFN runs record all seven stages as successful; PFN run summaries record successful graph through CATE stages and intentional skips for saved-CATE analysis and permutations.  Matching and CATE schemas are present; run-summary config paths are absolute and locally missing.
 - Original and outcome-downsampled conditions are separate empirical populations.  Downsampling is outcome-class sampling, not exposure balancing; no primary condition was selected.
 

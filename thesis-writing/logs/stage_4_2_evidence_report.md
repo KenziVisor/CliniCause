@@ -33,7 +33,6 @@ pdfinfo main.pdf
 - Audit: `repository_map.md`, `evidence_inventory.md`, `experiment_inventory.csv`, `claim_evidence_ledger.csv`, `terminology_map.md`, `unresolved_questions.md`.
 - Literature: `literature/README.md`, `metadata/catalog.csv`, `metadata/references.bib`.
 - STraTS data loaders: `STraTS/src/dataset_pretrain.py`, `STraTS/src/dataset.py`.
-- STraTS models: `STraTS/src/models.py`, `modeling_strats.py`, `modeling_gru.py`, `modeling_grud.py`, `modeling_tcn.py`, `modeling_sand.py`, `modeling_interpnet.py`.
 - STraTS evaluators and curves: `evaluator_pretrain.py`, `evaluator.py`, `learning_curves.py`.
 - STraTS wrappers and metadata: `STraTS/SCRIPTS.md`, `STraTS/requirements.txt`, `run_main.sh`, `run_main_rest.sh`, `run_main_mimic.sh`, `run_full_main.sh`, `run_strats_job.sbatch`, `STraTS/AGENTS.md`.
 - Parent router: `router.py`, root `SCRIPTS.md`.
@@ -49,7 +48,6 @@ pdfinfo main.pdf
 | GRU | `modeling_gru.py` | dense hourly value/mask/delta grid | mean-fill, mask channels, elapsed-time channels | learned demographic embedding | not supported by pretraining guard | shared binary head | `cho2014gru` | IMPLEMENTATION-CONFIRMED | wrappers/logs and archived CSVs present | RESULT-ARTIFACT-PRESENT for CSVs | export provenance incomplete |
 | GRU-D | `modeling_grud.py` | value, mask, delta tensors with sequence length | learned decays and masks in recurrent gates | learned demographic embedding | not supported by pretraining guard | shared binary head | `che2018grud` | IMPLEMENTATION-CONFIRMED | wrappers/logs and archived CSVs present | RESULT-ARTIFACT-PRESENT for CSVs | export provenance incomplete |
 | TCN | `modeling_tcn.py` | dense hourly value/mask/delta grid | mask/delta channels on dense grid | learned demographic embedding | not supported by pretraining guard | shared binary head | `bai2018tcn` | IMPLEMENTATION-CONFIRMED | wrappers/logs and archived CSVs present | RESULT-ARTIFACT-PRESENT for CSVs | export provenance incomplete |
-| SAnD | `modeling_sand.py` | dense hourly grid with input embedding, positional encoding, attention, dense interpolation | mask/delta channels from loader and local attention mask | learned demographic embedding | not supported by pretraining guard | shared binary head | `song2018sand` | IMPLEMENTATION-CONFIRMED | wrappers/logs and archived CSVs present | RESULT-ARTIFACT-PRESENT for CSVs | export provenance incomplete |
 | InterpNet | `modeling_interpnet.py` | irregular times, values, masks, holdout masks | single-channel and cross-channel interpolation plus auxiliary reconstruction loss | learned demographic embedding | not supported by pretraining guard | shared binary head plus auxiliary loss in training | `shukla2019interpolation` | IMPLEMENTATION-CONFIRMED | wrapper entries present | no approved final export/training artifact found | must not be included in final numerical comparison until recovered |
 
 ## 15.5 Pretraining Contract
@@ -87,7 +85,7 @@ pdfinfo main.pdf
 - Ignored or overwritten state dictionary: no ignored constructed state dictionary was found in the active code; stale local documentation still suggests a likely warm-start issue, but current `main.py` passes the merged state dictionary to `load_state_dict`.
 - Supported model types: the pretraining guard permits only `strats` and `istrats`.
 - Wrapper assumptions: wrappers configure pretraining and fine-tuning/export flows, but `run_full_main.sh` contains checkpoint/export patterns that differ from the archived export logs and from the baseline export wrappers.
-- Artifact evidence: pretraining checkpoint/metadata artifacts and supervised checkpoints are present in the final archive for STraTS; archived prediction CSVs are present for five models per dataset, but export logs do not fully map each CSV to the intended supervised checkpoint.
+- Artifact evidence: pretraining checkpoint/metadata artifacts and supervised checkpoints are present in the final archive for STraTS; archived prediction CSVs are present for four learned models per dataset, but export logs do not fully map each CSV to the intended supervised checkpoint.
 - Conclusion: source-level warm-start loading is verified for compatible overlapping tensors, but successful pretrained initialization of every final exported prediction remains PROVENANCE-INCOMPLETE.
 
 ## 15.8 Export Contract
@@ -98,7 +96,6 @@ pdfinfo main.pdf
 - Probability columns: one `<target>_prob` column per target.
 - Binary columns: one target-named binary column per target.
 - Threshold: probabilities are thresholded at `>= 0.5`.
-- Output naming: final archive contains five PhysioNet and five MIMIC prediction CSVs for STraTS, GRU, GRU-D, TCN, and SAnD.
 - Normalization/splitting scripts: `split_predicted_latent_tags.py` separates probability and binary halves; `router.py` can collect and normalize STraTS prediction CSVs by dropping probabilities and enforcing latent ordering.
 - Downstream voter requirements: voter CSVs must contain `ts_id` plus binary-only proxy columns with consistent latent columns across voters.
 - Provenance limitations: final processed-pickle hashes, split-generation seed or identifier lists, checkpoint-to-export mapping, and archive-copy provenance remain incomplete.
@@ -109,7 +106,6 @@ pdfinfo main.pdf
 - `cho2014gru`: GRU recurrent baseline.
 - `che2018grud`: GRU-D decay and missingness-aware recurrent baseline.
 - `bai2018tcn`: TCN temporal convolution baseline.
-- `song2018sand`: SAnD attention-based clinical time-series baseline.
 - `shukla2019interpolation`: InterpNet interpolation-prediction baseline.
 
 ## 15.10 Placeholders

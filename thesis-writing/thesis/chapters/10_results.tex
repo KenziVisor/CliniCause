@@ -26,7 +26,7 @@ PhysioNet 2012 & Causal-analysis model rows & Original & 7,993 & Primary \\
 \section{Predictive Performance}
 \label{sec:results:predictive-performance}
 
-The checked archive contains ten completed dataset--model test combinations spanning STraTS, GRU, GRU-D, TCN, and SAnD (Table~\ref{tab:results-predictive-performance}).  Every predictive metric compares model output with deterministic rule-derived proxy-label targets produced by the source-encoded decision trees.  On MIMIC-III, STraTS had the smallest archived test loss and the highest archived test AUROC, AUPRC, and minRP.  On PhysioNet, GRU-D led the same four archived metrics.  Thus the leading family differed by dataset, although within each dataset the leader did not depend on which of these four metrics was used.  Rankings among the remaining models did vary by metric; the table therefore does not support a universal model ordering or a claim of statistical superiority.
+The checked archive contains eight completed dataset--model test combinations spanning the four learned models STraTS, GRU, GRU-D, and TCN (Table~\ref{tab:results-predictive-performance}).  Every predictive metric compares model output with deterministic rule-derived proxy-label targets produced by the source-encoded decision trees.  On MIMIC-III, STraTS had the smallest archived test loss and the highest archived test AUROC, AUPRC, and minRP.  On PhysioNet, GRU-D led the same four archived metrics.  Thus the leading model differed by dataset, although within each dataset the leader did not depend on which of these four metrics was used.  Rankings among the remaining models did vary by metric; the table therefore does not support a universal model ordering or a claim of statistical superiority.
 
 The numerical rows are test summaries and not clinical-validation values.  Their summary and paired log values agreed within the validated tolerance, but the archived train/validation/test split manifest and checkpoint-to-export lineage remain incomplete.  No confidence intervals or between-model significance tests were available in the validated sources.  Strong agreement with a rule-derived target demonstrates learnability of that target, not validity of the clinical construct or correctness of the LLM-assisted rule design.
 
@@ -34,7 +34,7 @@ The numerical rows are test summaries and not clinical-validation values.  Their
 \small
 \setlength{\tabcolsep}{5pt}
 \begin{longtable}{@{}llrrrr@{}}
-\caption{Archived predictive test performance for the five included model families.  AUROC, AUPRC, and minRP are macro-averaged across non-degenerate rule-derived proxy-label targets on the archived test split.}
+\caption{Archived predictive test performance for the four learned models.  AUROC, AUPRC, and minRP are macro-averaged across non-degenerate rule-derived proxy-label targets on the archived test split.}
 \label{tab:results-predictive-performance}\\
 \toprule
 Dataset & Model & Test loss & Test AUROC & Test AUPRC & Test minRP \\
@@ -48,13 +48,11 @@ MIMIC-III & STraTS & 0.348 & 0.905 & 0.869 & 0.795 \\
 MIMIC-III & GRU & 0.386 & 0.881 & 0.840 & 0.770 \\
 MIMIC-III & GRU-D & 0.404 & 0.884 & 0.841 & 0.773 \\
 MIMIC-III & TCN & 0.414 & 0.867 & 0.823 & 0.758 \\
-MIMIC-III & SAnD & 0.409 & 0.880 & 0.836 & 0.767 \\
 \addlinespace
 PhysioNet 2012 & STraTS & 0.341 & 0.915 & 0.877 & 0.818 \\
 PhysioNet 2012 & GRU & 0.397 & 0.915 & 0.897 & 0.831 \\
 PhysioNet 2012 & GRU-D & 0.331 & 0.918 & 0.905 & 0.835 \\
 PhysioNet 2012 & TCN & 0.477 & 0.899 & 0.875 & 0.811 \\
-PhysioNet 2012 & SAnD & 0.436 & 0.914 & 0.886 & 0.820 \\
 \bottomrule
 \end{longtable}
 \endgroup
