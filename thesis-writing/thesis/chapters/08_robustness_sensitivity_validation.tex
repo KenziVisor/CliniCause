@@ -34,6 +34,41 @@ Causal, downsampled & Same datasets and estimators after outcome-class sampling 
 \end{tabular}
 \end{table}
 
+\section{Executed Settings and Provenance Status}
+\label{sec:experimental-design:executed-settings-provenance}
+
+Table~\ref{tab:executed-settings-provenance} separates what the checked archive supports from what only current source defines and what remains unresolved.  \emph{Artifact-supported} denotes a checked summary, export, run summary, or diagnostic record; \emph{log-supported} denotes an argument recorded in archived logs without a complete immutable producing manifest; \emph{source-defined} denotes implemented behavior that must not be mistaken for a recovered historical setting.  \emph{Unresolved} and \emph{not applicable} retain their literal meanings.  This classification is necessary because a current default, a historical path, and an archived output answer different reproducibility questions.
+
+\begingroup
+\small
+\singlespacing
+\sloppy
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.19\textwidth}L{0.42\textwidth}L{0.30\textwidth}@{}}
+\caption{Compact specification of executed or execution-supported settings and unresolved lineage.}
+\label{tab:executed-settings-provenance}\\
+\toprule
+Analysis component & Confirmed or execution-supported settings & Unresolved provenance or interpretation boundary \\
+\midrule
+\endfirsthead
+\toprule
+Analysis component & Confirmed or execution-supported settings & Unresolved provenance or interpretation boundary \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+Prediction scope and artifacts & \emph{Artifact-supported}: PhysioNet 2012 and MIMIC-III crossed with STraTS, GRU, GRU-D, and TCN; all eight dataset--model combinations have checked training summaries and prediction exports.  The task is multi-label prediction of dataset-specific rule-derived proxy labels. & \emph{Unresolved}: processed-pickle hashes, split identifiers, producing source revision, and archive-copy direction.  Artifact availability does not establish an independently auditable out-of-sample membership. \\
+Archived predictive run settings & \emph{Artifact-supported}: checked training summaries identify run \texttt{1o10}, training fraction 0.5, validation and test evaluation, and checkpoint selection by AUPRC plus AUROC for each of the eight learned combinations.  \emph{Log-supported}: archived argument records give seed 2023 and \texttt{predict\_split=all}. & \emph{Unresolved}: the seed is not a split manifest; the raw shell command, immutable producing configuration, and checkpoint-to-export mapping are absent.  \texttt{all} is the recorded export argument, not proof of a particular split membership. \\
+Prediction export contract & \emph{Artifact-supported}: each checked export has unique \texttt{ts\_id} rows, one \texttt{<label>\_prob} field and one binary \texttt{<label>} field per active target, valid probability ranges, and binary values.  \emph{Source-defined}: the binary export threshold is 0.5. & \emph{Unresolved}: archived exports are hashable, as are candidate best checkpoints, but no immutable record proves which checkpoint produced each export. \\
+STraTS pretraining & \emph{Source-defined}: STraTS alone has a separate self-supervised pretraining path before supervised fine-tuning; GRU, GRU-D, and TCN do not use that path.  Archived STraTS training and checkpoint artifacts exist. & \emph{Unresolved}: pretraining-checkpoint, supervised-checkpoint, and final-export lineage is incomplete; source support does not prove the exact pretraining state used historically. \\
+Causal run matrix and hierarchy & \emph{Artifact-supported}: two datasets, CausalForestDML, LinearDML, and CausalPFN, and original/outcome-downsampled conditions yield twelve archived run families with stage records.  Original cohorts are primary; outcome-downsampled populations are separate robustness analyses.  CausalForestDML is primary, LinearDML secondary, and CausalPFN exploratory. & \emph{Unresolved}: numbered final causal configuration files and processed-input hashes are missing.  Recorded historical paths are not portable configurations, and current unnumbered configs are only candidates. \\
+Exposure, aggregation, and support & \emph{Artifact-supported}: every archived final run records the same five-source mixed aggregate---one rule-derived table plus binary predictions from STraTS, GRU, GRU-D, and TCN.  \emph{Source-defined}: analysis is exposure specific; graph/column checks govern exposure admission, while matching supplies descriptive support and pair-availability diagnostics before CATE interpretation. & \emph{Unresolved}: voter bytes and hashes are not co-archived per run, and matching does not establish positivity, balance, exchangeability, or a common estimand across sampling conditions. \\
+Sensitivity evidence & \emph{Artifact-supported}: CausalForestDML and LinearDML records distinguish fitting-time availability, saved-training direct values, later artifact analysis, labelled fallback reconstruction, benchmark status, partial rows, and failures.  \emph{Not applicable}: the archived CausalPFN branch has no equivalent EconML saved-analysis family. & \emph{Unresolved}: evidence classes are not numerically interchangeable; incomplete or failed rows cannot be promoted to effects or sensitivity magnitudes, and producing environment lineage remains partial. \\
+Permutation checks & \emph{Artifact-supported}: validated CausalForestDML and LinearDML records contain 10 trials with seed 42 for both treatment-column and outcome permutations in each archived dataset--exposure--sampling combination.  Treatment permutations alter the analyzed proxy column; outcome permutations alter mortality in a copied outcome object.  \emph{Not applicable}: CausalPFN permutations were intentionally skipped. & These checks diagnose behavior under disruption; they are not randomization tests or identification proof.  Temporary trial artifacts were removed after aggregation, so only checked aggregate records remain. \\
+Producing lineage & \emph{Artifact-supported}: causal run summaries retain stage argv arrays, statuses, return codes, and limited interpreter paths; predictive logs retain argument records and limited device fields; result and reproducibility packages retain hashes and schemas. & \emph{Unresolved}: missing processed-pickle hashes and split manifests; incomplete predictive producing commands and checkpoint mapping; missing numbered causal configs; incomplete source, package, hardware, and archive-copy lineage.  Requirements are intended dependencies, not producing-environment proof. \\
+\end{longtable}
+\endgroup
+
 \section{Overlap and Empirical Support}
 \label{sec:robustness-sensitivity-validation-design:overlap-support-diagnostics}
 

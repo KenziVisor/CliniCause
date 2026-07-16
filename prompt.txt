@@ -1,1133 +1,763 @@
-Stage: Complete SAnD Clearance and Quality-Preserving Thesis Compression
+Stage: Narrow Scientific Repair After Thesis Compression
 
 Model/reasoning level:
-Use the strongest available reasoning mode. This task requires repository-wide consistency checking, scientific editing, LaTeX restructuring, and rendered-PDF validation.
+Use the strongest available reasoning mode. This is a narrow post-review repair of a substantially completed thesis-compression stage.
 
 Repository:
 KenziVisor/CliniCause
 
-Expected starting point:
-The expected HEAD is:
+Current expected HEAD:
+26b639cf3da6551e0e2aee388c8b2bfd7368d238
+commit message: aaai authors kit
 
+Thesis-compression baseline:
+ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3
+commit message: thesis compression
+
+Reviewed parent thesis state:
 d77fada7b63c2b0b37746302fcda1c6351fa3e9b
 commit message: SAnD removal
-
-The latest commit is authoritative for the decision that SAnD is outside the final thesis scope.
-
-Do not assume the work is complete merely because that commit exists. Inspect its diff, inspect the current worktree, and verify that every active thesis-facing reference has been handled consistently.
 
 Do not commit or push.
 
 ======================================================================
-1. OBJECTIVES
+1. CONTEXT AND SCOPE
 ======================================================================
 
-Perform two connected tasks, in this order:
+The current HEAD contains one commit after the thesis-compression commit. That later commit adds the AAAI 2027 author kit under:
 
-1. Complete the repository and thesis-facing clearance of SAnD.
-2. Reduce unnecessary thesis length through a quality-preserving compression pass.
+thesis-writing/paper-aaai/AuthorKit27/
 
-The SAnD task is a focused consistency repair and should be completed first. The larger task is the thesis compression pass.
+It is unrelated to the thesis manuscript repair.
 
-The author’s priority is thesis quality, not an arbitrary page count.
+Continue from the current HEAD. Do not reset, detach, revert, rewrite, or remove the AAAI commit.
 
-The thesis is currently approximately 133 physical PDF pages. A result near 100–110 pages would be welcome if it follows naturally from removing repetition, audit-level detail, oversized tables, and structural duplication. However:
+Treat:
 
-- 103 pages is not a mandatory target;
-- do not weaken the thesis to reach a number;
-- do not remove scientifically necessary material;
-- do not narrow the research scope merely to save pages;
-- do not force chapters into predetermined page budgets;
-- do not delete useful qualifications when they are needed locally;
-- do not substitute terseness for clarity.
+- `26b639cf` as the repository baseline;
+- `ddbf52b4` as the current thesis-manuscript baseline;
+- `d77fada7` as the useful pre-compression reference for material that may need to be restored.
 
-The governing principle is:
+The AAAI author kit is protected and outside this task.
 
-> Produce the strongest, clearest, most coherent thesis that can be justified by the available evidence. Reduce length only where material is repetitive, misplaced, excessively operational, or more detailed than the scientific argument requires.
+Do not:
 
-This is a compression and restructuring pass, not a scope-reduction exercise.
+- edit anything under `thesis-writing/paper-aaai/`;
+- apply AAAI formatting requirements to the thesis;
+- interpret AAAI prohibitions on `setspace`, margins, page size, fonts, or XeLaTeX as thesis requirements;
+- include the AAAI templates in the thesis build;
+- search the AAAI kit as if it were active thesis prose;
+- modify the conference-paper work.
+
+The active thesis remains:
+
+thesis-writing/thesis/main.tex
+
+with its chapters, front matter, appendix, bibliography, and generated `main.pdf`.
 
 ======================================================================
-2. BASELINE AND REPOSITORY VERIFICATION
+2. REVIEW DECISION
 ======================================================================
 
-Before editing, run and record at least:
+The thesis-compression commit is broadly successful.
+
+Preserve its principal improvements:
+
+- complete active SAnD clearance;
+- four-model predictive scope:
+  STraTS, GRU, GRU-D, and TCN;
+- five-source aggregate:
+  four predicted-label sources plus one rule-derived source;
+- merged experimental and validation chapter;
+- removal of duplicative contribution, audit, research-question, limitation, and status tables;
+- preservation of all checked numerical Results;
+- existing approximately 1.5-spaced body prose;
+- improved total length and narrative flow.
+
+Do not reopen the full compression stage.
+
+A narrow repair is required in three areas:
+
+1. restore sufficient operational detail for the proxy-state definitions;
+2. restore a compact executed-configuration and provenance specification;
+3. resolve the inactive Chapter 9 compatibility stub.
+
+The author prioritizes scientific completeness over a particular page count.
+
+The current 94-page PDF is not a target that must be preserved. It is acceptable and expected for the repair to add several pages. Do not cut other strong material merely to compensate for restored content.
+
+A final length around 99–105 pages may arise naturally, but no page number is mandatory.
+
+======================================================================
+3. BASELINE VERIFICATION
+======================================================================
+
+Before editing, run and record:
 
 git status --short
 git branch --show-current
 git log -10 --oneline
-git show --stat --oneline d77fada7b63c2b0b37746302fcda1c6351fa3e9b
-git diff --stat d77fada7b63c2b0b37746302fcda1c6351fa3e9b^..d77fada7b63c2b0b37746302fcda1c6351fa3e9b
+git show --stat --oneline 26b639cf3da6551e0e2aee388c8b2bfd7368d238
+git diff --stat ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3..26b639cf3da6551e0e2aee388c8b2bfd7368d238
+git show --stat --oneline ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3
+git diff --stat d77fada7b63c2b0b37746302fcda1c6351fa3e9b..ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3
 
-Read all applicable `AGENTS.md`, repository instructions, thesis build instructions, current evidence reports, and local documentation before editing.
+Confirm that the commit after `ddbf52b4` changes only the AAAI author-kit area and does not change active thesis source.
+
+Read all applicable `AGENTS.md` and thesis-local instructions.
 
 Record:
 
-- branch and HEAD;
+- current HEAD;
+- current thesis baseline;
 - pre-existing dirty files;
 - nested-repository state;
-- current thesis source path;
-- current PDF path and page count;
-- build command;
-- files changed by the SAnD-removal commit;
-- any surviving active SAnD references;
-- protected material.
+- current PDF page count;
+- existing build command;
+- existing body-spacing configuration;
+- protected paths;
+- exact files expected to change in this repair.
 
-Do not reset, clean, normalize, stage, or overwrite pre-existing unrelated work.
-
-A material mismatch between the expected HEAD and the actual repository state must be reported before substantive editing.
+Do not reset, clean, normalize, stage, or overwrite unrelated work.
 
 ======================================================================
-3. AUTHORITATIVE SCIENTIFIC SCOPE
+4. PROTECTED MATERIAL
 ======================================================================
 
-Treat the following as authoritative.
-
-Predictive comparison:
-
-- Four learned prediction models belong to the final thesis:
-  - STraTS
-  - GRU
-  - GRU-D
-  - TCN
-
-Final aggregate:
-
-- The archived final aggregate contains five sources:
-  - one rule-derived source;
-  - predicted binary labels from STraTS;
-  - predicted binary labels from GRU;
-  - predicted binary labels from GRU-D;
-  - predicted binary labels from TCN.
-
-The aggregate is:
-
-- deterministic;
-- mixed-source;
-- based on four learned predictions plus one rule-derived source;
-- not clinical consensus;
-- not a Snorkel generative label model;
-- not prediction-only.
-
-SAnD:
-
-- is outside the final thesis scope;
-- is not one of the four reported learned prediction models;
-- is not a final voter;
-- must not appear as an evaluated final model, included family, result row, contribution, abbreviation, thesis method, thesis comparison, active evidence item, or future thesis table candidate.
-
-Do not replace SAnD with InterpNet.
-
-InterpNet may remain relevant only where historically or methodologically required by an authoritative retained source, but it must not be introduced as an evaluated final model. Do not manufacture a new missing-model narrative merely to fill the space left by SAnD.
-
-======================================================================
-4. TASK A — COMPLETE SAnD CLEARANCE
-======================================================================
-
-Complete this task before the general compression pass.
-
-4.1 Inspect the previous removal
-
-Inspect the complete diff of commit `d77fada7`. Determine:
-
-- which SAnD references were removed;
-- which files were deleted or modified;
-- which references remain intentionally historical;
-- which references remain accidentally active;
-- whether any deleted records left broken numbering, prose, headings, citations, table schemas, or cross-references.
-
-Do not mechanically repeat the previous edit. Audit its consequences.
-
-4.2 Search comprehensively
-
-Search case-insensitively for at least:
-
-SAnD
-SAND
-sand
-Attend and Diagnose
-song2018sand
-model_sand
-pred_*_sand
-five predictive
-five model
-five families
-five included families
-five learned
-10 predictive
-ten predictive
-five evaluated
-
-Search:
-
-- all thesis `.tex` files;
-- front matter;
-- abstracts;
-- keywords;
-- abbreviations;
-- notation;
-- chapter text;
-- tables;
-- captions;
-- figure descriptions;
-- appendices;
-- bibliography source;
-- generated auxiliary lists where appropriate;
-- active planning files;
-- active evidence and claim matrices;
-- active results manifests;
-- checked predictive-result tables;
-- reproducibility and release records;
-- current validation ledgers;
-- thesis-facing Markdown and CSV files;
-- scripts that generate thesis tables or figures.
-
-Also inspect semantically related language that may no longer contain the literal string `SAnD` but still encodes the old count or model set.
-
-4.3 Required Chapter 2 repair
-
-Section 2.2.5 is currently titled:
-
-“Relationship among the five included families”
-
-Change it to reflect the four final models, for example:
-
-“Relationship among the four included model families”
-
-or a clearer equivalent.
-
-Review the section itself, its opening sentence, Table 2.2, surrounding transitions, and all references to it. Ensure that it describes exactly:
-
-- STraTS;
-- GRU;
-- GRU-D;
-- TCN.
-
-The comparison should remain a comparison of inductive biases, not a sophistication ranking.
-
-Update:
-
-- the table of contents;
-- table captions;
-- prose introducing the family count;
-- any chapter summaries;
-- any later cross-references.
-
-4.4 Thesis-wide consistency
-
-The final rendered thesis must consistently report:
-
-- four learned prediction models;
-- five aggregate sources;
-- four predicted voters plus one rule-derived source.
-
-Check especially:
-
-- Hebrew abstract;
-- English abstract;
-- keywords if applicable;
-- Introduction;
-- research questions and contributions;
-- Background §2.2;
-- model-family table;
-- predictive-method chapter;
-- proxy aggregation description;
-- experimental-design chapter;
-- predictive Results table;
-- Discussion;
-- Conclusions;
-- appendix;
-- list of abbreviations;
-- list of tables;
-- all numerical descriptions of model counts.
-
-4.5 Bibliography and literature handling
-
-If the SAnD paper is no longer cited anywhere in the final thesis:
-
-- remove its active BibTeX entry from the thesis bibliography if that bibliography is intended to contain cited works only;
-- remove its active literature-corpus catalog/checksum entry only if the previous commit establishes that complete removal is the intended repository policy;
-- do not leave a dangling citation key or missing PDF reference;
-- do not delete unrelated literature;
-- do not rewrite historical Git history.
-
-If a protected historical audit record must preserve that SAnD once existed, retain it only when its archival role is explicit and it is not treated as active thesis evidence. Do not silently falsify history. Active records and thesis-facing summaries, however, must represent the corrected four-model scope.
-
-4.6 Results and evidence integrity
-
-Ensure that active checked predictive-result files and thesis tables contain only the four approved learned models.
-
-Do not:
-
-- recompute metrics;
-- replace SAnD with another model;
-- change values for the retained four models;
-- alter result rankings;
-- infer missing results;
-- claim that SAnD failed or underperformed;
-- retain stale “ten runs” or “five families” counts;
-- delete raw historical artifacts unless the prior commit and repository policy explicitly authorize their removal.
-
-If a raw archive still contains SAnD artifacts for historical reasons, it must not be cited or admitted as final thesis evidence. Record that distinction.
-
-4.7 SAnD completion criterion
-
-Task A is complete only when:
-
-- no active thesis prose contains SAnD;
-- no active thesis table or figure contains SAnD;
-- no active predictive result includes SAnD;
-- no active claim/evidence record treats SAnD as part of the thesis;
-- no stale five-model or five-family language remains;
-- §2.2.5 and Table 2.2 correctly reflect four models;
-- the PDF compiles with correct numbering and references;
-- any surviving occurrence is explicitly classified as protected historical material and cannot be mistaken for current scientific scope.
-
-Document every surviving occurrence and why it remains.
-
-======================================================================
-5. TASK B — QUALITY-PRESERVING COMPRESSION
-======================================================================
-
-After the SAnD clearance is complete, perform a thesis-wide compression and restructuring pass.
-
-Do not begin by deleting sections. First build a compression map.
-
-For every chapter and substantial subsection, classify content as:
-
-- essential scientific argument;
-- necessary methodological detail;
-- necessary result or interpretation;
-- necessary local qualification;
-- repeated explanation;
-- repository/audit-level implementation detail;
-- evidence-management detail better kept outside the main narrative;
-- table content that could be consolidated;
-- transitional material that can be shortened;
-- candidate for relocation to a technical supplement;
-- candidate for removal with no loss of meaning.
-
-The main goal is to reduce documentary scope while preserving scientific scope.
-
-======================================================================
-6. WHAT MUST REMAIN IN THE THESIS
-======================================================================
-
-Preserve the complete scientific chain:
-
-- motivation for irregular ICU time-series analysis;
-- both datasets;
-- dataset-specific preprocessing and data-contract distinction;
-- LLM-assisted design-time knowledge elicitation;
-- deterministic proxy-state construction;
-- conservative proxy-state terminology;
-- distinction among rule-derived, predicted, and aggregated labels;
-- four-model predictive comparison:
-  STraTS, GRU, GRU-D, and TCN;
-- five-source final aggregate:
-  four predictions plus one rule-derived source;
-- dataset-specific DAGs;
-- adjustment assumptions;
-- matching as descriptive support;
-- CausalForestDML as primary;
-- LinearDML as secondary;
-- CausalPFN as exploratory;
-- overlap/support limitations;
-- sensitivity analysis;
-- permutation checks;
-- original versus downsampled populations;
-- complete checked Results;
-- cross-dataset interpretation without pooling;
-- principal limitations;
-- contribution and future-work conclusions.
-
-Preserve the central contribution:
-
-> An integrated, inspectable, evidence-tracked workflow connecting LLM-assisted design proposals to deterministic source-encoded rules and graphs, then tracing proxy constructs through irregular-time-series prediction, aggregation, and observational causal analysis.
-
-Do not narrow the thesis to only prediction, only causal inference, only LLM elicitation, or only software integration.
-
-======================================================================
-7. PRIORITY COMPRESSION AREAS
-======================================================================
-
-Use the following diagnosis as guidance, not as a mechanical deletion quota.
-
-----------------------------------------------------------------------
-7.1 Do not target Background merely because it appears long
-----------------------------------------------------------------------
-
-The Background chapter is important and covers several necessary traditions:
-
-- ICU data and irregular sampling;
-- four irregular-time-series model families;
-- proxy phenotyping;
-- weak supervision;
-- LLM-assisted elicitation;
-- DAG reasoning;
-- DML;
-- causal forests;
-- overlap;
-- sensitivity.
-
-Do not reduce it indiscriminately.
-
-Compress it by:
-
-- eliminating repeated general cautions already stated elsewhere;
-- reducing long transitions;
-- keeping the strongest primary citation for each concept;
-- avoiding implementation detail that belongs in Methods;
-- consolidating closely related paragraphs;
-- ensuring each subsection directly supports a later thesis component.
-
-A moderate reduction is appropriate only where clarity is preserved.
-
-----------------------------------------------------------------------
-7.2 Chapters 8 and 9 have structural overlap
-----------------------------------------------------------------------
-
-Current organization separates:
-
-- robustness, sensitivity, permutation, and validation design;
-- experimental matrices;
-- computational environment;
-- result-selection and reproducibility policy.
-
-Inspect whether Chapters 8 and 9 should be merged into a single chapter such as:
-
-“Experimental and Validation Design”
-
-A good merged structure may include:
-
-1. populations and experiment families;
-2. predictive experiment design;
-3. causal experiment design;
-4. overlap and support diagnostics;
-5. sensitivity and permutation checks;
-6. result-admission and reproducibility boundaries.
-
-Merge only when it improves the scientific narrative and reduces repetition.
-
-Remove or relocate:
-
-- repeated artifact-status explanations;
-- configuration-contract details;
-- operational field inventories;
-- duplicate provenance boundaries;
-- repository-level validation mechanics that do not help interpret the method.
-
-Do not remove:
-
-- the distinction between original and downsampled cohorts;
-- estimator hierarchy;
-- diagnostic purpose and interpretation;
-- result-admission logic needed to understand Chapter 10;
-- reproducibility qualifications that materially bound the evidence.
-
-----------------------------------------------------------------------
-7.3 Chapter 5 mixes scientific method with audit history
-----------------------------------------------------------------------
-
-Retain:
-
-- rationale for proxy states;
-- terminology;
-- LLM-assisted design protocol;
-- bounded authority of the LLM;
-- transition from proposals to deterministic rules;
-- concise definitions of PhysioNet and MIMIC proxy families;
-- distinction among rule-derived, predicted, and aggregated labels;
-- main construct-validity limitations.
-
-Compress or relocate:
-
-- exhaustive prompt inventories;
-- repeated source-path descriptions;
-- full artifact-provenance matrices;
-- extensive version-history discussion;
-- duplicated “not clinical validation” language;
-- line-by-line traceability detail;
-- operational descriptions of every generated file;
-- complete rule clauses when a concise clinically meaningful summary is sufficient.
-
-Do not obscure active rule behavior. A reader must still understand what each proxy means and how it is generated.
-
-Where detailed rule tables are too large for the main text:
-
-- create or use a technical supplement;
-- preserve a concise main-text summary;
-- add a precise reference to the supplement;
-- keep enough detail in the thesis to make the method scientifically understandable.
-
-----------------------------------------------------------------------
-7.4 Reduce repeated cautionary language
-----------------------------------------------------------------------
-
-The thesis correctly emphasizes boundaries such as:
-
-- proxy state is not diagnosis;
-- rule-derived label is not clinical ground truth;
-- prediction is not clinical validation;
-- DAG is not learned truth;
-- matching is not CATE;
-- estimator agreement is not causal validity;
-- numerical traceability is not clean-checkout reproducibility;
-- the framework is not deployment ready.
-
-Retain these distinctions, but organize them hierarchically.
-
-Recommended placement:
-
-- Introduction:
-  one concise global boundary paragraph.
-- Methods:
-  local qualifications only where they affect the specific method.
-- Results:
-  short reminders only where a result could otherwise be seriously misread.
-- Discussion:
-  authoritative complete limitations treatment.
-- Conclusion:
-  concise synthesis rather than another full limitations chapter.
-
-Avoid repeating the same multi-sentence disclaimer in every chapter.
-
-A qualification may be shortened or replaced with a cross-reference when:
-
-- the complete statement already appears in an authoritative location;
-- the local reader cannot reasonably misinterpret the claim without it;
-- the cross-reference remains clear.
-
-Do not remove a local caution when its absence would materially strengthen a claim.
-
-----------------------------------------------------------------------
-7.5 Consolidate conceptual and audit-style tables
-----------------------------------------------------------------------
-
-The thesis has many tables, including several that describe process, evidence status, assumptions, provenance, and experiment design rather than results.
-
-Review every table against this test:
-
-> Does the table materially help a thesis reader understand the scientific method, result, or interpretation better than concise prose or a smaller table would?
-
-Potential consolidation:
-
-- contribution hierarchy and study-boundary material;
-- prompt-provenance and design-to-source traceability tables;
-- proxy source-type tables;
-- DAG node-family and adjustment-logic tables;
-- causal assumptions and estimator-limit tables;
-- overlap, sensitivity, and permutation design tables;
-- prediction and causal experiment matrices;
-- reproducibility-status and result-admission tables;
-- research-question answer and limitation summary tables.
-
-Possible actions:
-
-- merge two related tables;
-- remove columns that repeat prose;
-- replace repeated status columns with a short note;
-- move exhaustive matrices to a supplement;
-- convert a simple table into compact prose;
-- keep one authoritative summary table instead of several overlapping ones.
-
-Do not compress the checked numerical Results tables merely for page savings. Results readability has priority.
-
-----------------------------------------------------------------------
-7.6 Introduction
-----------------------------------------------------------------------
-
-The Introduction currently performs many functions:
-
-- motivation;
-- integration gap;
-- objective;
-- LLM design role;
-- pipeline description;
-- research questions;
-- contribution hierarchy;
-- empirical preview;
-- boundaries;
-- organization.
-
-Retain all necessary functions but eliminate duplication.
-
-Possible improvements:
-
-- shorten repeated descriptions of the complete pipeline;
-- state the objective once in definitive form;
-- shorten the explanation of “evidence-tracked” after defining it;
-- reduce overlap between prose contributions and the contribution table;
-- keep the research questions but shorten surrounding commentary;
-- use a concise empirical orientation rather than a second Results summary;
-- shorten the thesis-organization section, especially after any chapter merge.
-
-Do not weaken the integration contribution or delete the research questions.
-
-----------------------------------------------------------------------
-7.7 Discussion
-----------------------------------------------------------------------
-
-The Discussion should interpret, not reproduce, the Results and Introduction.
-
-Review:
-
-- the main research-question answer;
-- seven secondary-question answers;
-- relationship to prior work;
-- clinical meaning;
-- limitations;
-- summary tables.
-
-Compress by:
-
-- synthesizing related secondary questions;
-- referring to Results tables rather than repeating their contents;
-- avoiding another description of every pipeline stage;
-- combining overlapping limitations;
-- retaining the most important causal, construct-validity, support, external-validity, LLM, reproducibility, and ethical limitations;
-- consolidating or removing a summary table if it merely duplicates the prose.
-
-The Discussion must remain intellectually substantial. Do not turn it into a short recap.
-
-----------------------------------------------------------------------
-7.8 Conclusions
-----------------------------------------------------------------------
-
-The Conclusions should provide:
-
-- study summary;
-- main contributions;
-- strongest findings;
-- decisive limitations;
-- prioritized future work;
-- closing perspective.
-
-Remove repeated full-method descriptions and repeated limitation inventories already handled in the Discussion.
-
-Do not introduce new claims.
-
-----------------------------------------------------------------------
-7.9 Appendices and technical supplement
-----------------------------------------------------------------------
-
-The main thesis need not contain every repository-audit and evidence-management detail.
-
-Candidate supplemental material includes:
-
-- complete prompt inventory;
-- full prompt-to-source mappings;
-- exhaustive proxy-rule clauses;
-- full DAG node and edge inventories;
-- treatment-specific adjustment-set details;
-- run manifests;
-- configuration field tables;
-- checksums;
-- complete result-admission ledgers;
-- artifact-status matrices;
-- environment inventories;
-- extended provenance gaps;
-- line-level source mappings.
-
-Do not merely move 25 pages into the existing appendix and leave the PDF unchanged.
-
-Prefer a clearly identified external technical supplement or repository evidence package when permitted by the current thesis workflow. The main thesis should:
-
-- summarize what the supplemental material establishes;
-- cite or reference its stable location;
-- retain enough explanation to stand on its own scientifically.
-
-Do not move required institutional content, core methods, key assumptions, or primary results outside the thesis.
-
-======================================================================
-8. EDITING RULES
-======================================================================
-
-8.1 Scientific integrity
-
-Do not change:
-
-- retained numerical results;
-- signs or rankings;
-- dataset counts;
-- estimator hierarchy;
-- result-selection status;
-- causal wording strength;
-- proxy definitions without evidence;
-- citations merely to make a paragraph shorter;
-- figure data;
-- table values;
-- checked-result source files, except removing already-authorized stale SAnD rows where required.
-
-Do not add unsupported claims.
-
-8.2 Compression quality
-
-Prefer:
-
-- synthesis over deletion;
-- one definitive explanation over repeated partial explanations;
-- concise prose over status-heavy tables;
-- cross-references over repetition;
-- scientific narrative over repository narration;
-- method concepts over file-path inventories;
-- clear topic sentences;
-- shorter transitions;
-- direct language;
-- active voice where appropriate.
-
-Avoid:
-
-- telegraphic prose;
-- unexplained acronyms;
-- dense walls of text;
-- excessive parenthetical qualifications;
-- paragraphs containing several unrelated limitations;
-- hiding important assumptions in appendices;
-- cosmetic edits that do not improve meaning or length;
-- reducing font size, margins, spacing, or figure readability to lower page count.
-
-Page reduction must come from editorial improvement, not typographic compression.
-
-8.3 No arbitrary quota
-
-Do not force every chapter to meet a proposed page allocation.
-
-Do not stop at 103 pages merely because that number is reached.
-
-Do not continue cutting strong material merely because the PDF remains above 103 pages.
-
-At completion, report:
-
-- initial physical PDF pages;
-- final physical PDF pages;
-- numbered body pages if practical;
-- pages saved;
-- where savings came from;
-- which recommended cuts were rejected because they would damage quality.
-
-A final PDF of 108, 112, or another defensible length is acceptable when the retained material is necessary and well written.
-
-======================================================================
-8.4 LINE SPACING AND VERTICAL RHYTHM
-======================================================================
-
-The ordinary narrative text of the thesis should use approximately 1.5 line spacing, in accordance with the institutional formatting instructions.
-
-This is not an instruction to blindly add a global `\onehalfspacing`, `\setstretch{1.5}`, or equivalent command.
-
-Before changing anything, inspect the existing LaTeX configuration and determine the effective current spacing.
-
-Inspect at least:
-
-- the document class;
-- template and style files;
-- `setspace` or equivalent packages;
-- `\onehalfspacing`, `\doublespacing`, `\singlespacing`, and `\setstretch`;
-- `\baselinestretch`;
-- locally scoped spacing environments;
-- chapter and front-matter definitions;
-- table, caption, bibliography, list, quotation, and footnote formatting;
-- any language-specific Hebrew or English environments that affect baseline spacing.
-
-Determine whether ordinary body prose is already rendered at approximately 1.5 line spacing.
-
-If body spacing is already approximately 1.5:
-
-- preserve the existing implementation;
-- do not add a duplicate spacing package;
-- do not stack another spacing command on top of it;
-- do not change it merely to make the configuration look more explicit;
-- record how the existing template achieves the required spacing.
-
-If ordinary body prose is not approximately 1.5:
-
-- make the smallest safe change that brings ordinary narrative prose to approximately 1.5 spacing;
-- prefer the existing template’s mechanism over introducing a competing global mechanism;
-- scope the change carefully;
-- verify both English and Hebrew narrative text;
-- ensure that chapter openings, paragraphs, headings, equations, tables, and floats remain visually coherent.
-
-The approximately 1.5-spacing requirement applies primarily to normal thesis prose. It must not be applied indiscriminately to every LaTeX environment.
-
-Use context-appropriate spacing for elements such as:
-
-- title and approval pages;
-- compact author and institutional metadata;
-- table of contents;
-- list of figures;
-- list of tables;
-- abbreviation and notation lists;
-- tables and tabular cells;
-- figure and table captions;
-- footnotes and endnotes;
-- bibliography entries;
-- code listings;
-- algorithms;
-- displayed equations and aligned equation groups;
-- long quotations;
-- itemized and enumerated lists;
-- source-path or artifact listings;
-- other dense technical material where 1.5 spacing would reduce readability or create excessive vertical expansion.
-
-These elements may remain single-spaced or use the template’s established compact spacing when that is academically conventional and visually appropriate.
-
-Do not assume that “1.5 spacing” means multiplying all vertical dimensions by 1.5. Line spacing, paragraph spacing, heading spacing, float spacing, table row height, equation spacing, and list spacing are separate typographic concerns.
-
-Do not:
-
-- add blank vertical space manually between ordinary paragraphs;
-- use repeated `\\`, `\vspace`, or empty lines to imitate line spacing;
-- increase table row spacing globally without inspecting every table;
-- enlarge spacing in captions, bibliography, or contents solely because body text is 1.5-spaced;
-- tighten body spacing to reduce the page count;
-- reduce font size, margins, or baseline spacing as part of the compression exercise;
-- alter Hebrew line spacing differently from equivalent English prose without a documented typographic reason;
-- introduce inconsistent spacing between chapters through ad hoc local commands.
-
-Paragraph separation should follow the existing thesis/template convention. Do not combine enlarged paragraph gaps with 1.5 line spacing unless the template already requires both and the rendered result is appropriate.
-
-Spacing decisions must support readability, hierarchy, and professional appearance. The compression task must reduce pages through editorial improvement, consolidation, and relocation—not through tighter line spacing.
-
-Required spacing validation:
-
-1. Identify the source command or template rule controlling ordinary body spacing.
-2. State whether it was already approximately 1.5 before editing.
-3. If no spacing change was needed, leave the configuration unchanged.
-4. If a change was required, document the exact scope and rationale.
-5. Inspect representative pages containing:
-   - ordinary English prose;
-   - ordinary Hebrew prose;
-   - chapter openings;
-   - dense prose;
-   - tables;
-   - captions;
-   - equations;
-   - lists;
-   - bibliography;
-   - contents and front matter.
-6. Confirm that ordinary prose is approximately 1.5-spaced while compact environments remain contextually formatted.
-7. Confirm that no spacing change was used as an artificial page-count reduction technique.
-
-======================================================================
-9. PROTECTED MATERIAL
-======================================================================
-
-Before editing, create hashes or equivalent snapshots for:
-
-- checked numerical result CSVs;
-- result manifests;
-- figure source data;
-- figure image files;
-- literature PDFs;
-- active research code;
+Protect and verify unchanged:
+
+- all checked numerical result CSVs;
+- result manifests and checksums;
+- result tables and their values;
+- result figures and figure data;
 - DAG artifacts;
-- proxy-rule source;
-- prior committed evidence reports;
-- title-page metadata;
-- abstracts’ numerical claims;
-- table values;
-- citation keys;
-- labels and cross-references.
+- active research code;
+- raw and processed data;
+- literature PDFs;
+- abstracts;
+- title and administrative metadata;
+- institutional forms;
+- estimator hierarchy;
+- model rankings;
+- signs, counts, sample sizes, percentages, and effect estimates;
+- citation keys except where an actual citation repair is required;
+- the AAAI author-kit commit and all files under `thesis-writing/paper-aaai/`;
+- all unrelated pre-existing dirty files.
 
-Also snapshot the thesis’s:
+The repair must not change:
 
-- integers;
-- decimals;
-- percentages;
-- sample sizes;
-- model and estimator names;
-- dataset names;
-- proxy-state names;
+- the four learned prediction models;
+- the five-source aggregate lineage;
+- the SAnD-clearance result;
+- primary CausalForestDML status;
+- secondary LinearDML status;
+- exploratory CausalPFN status;
+- original versus downsampled population hierarchy;
+- any checked numerical result.
+
+Create an appropriate protected-content snapshot before editing and compare it after editing.
+
+======================================================================
+5. TASK A — RESTORE OPERATIONAL PROXY DEFINITIONS
+======================================================================
+
+This is the highest-priority repair.
+
+The compressed Chapter 5 currently names and broadly summarizes the proxy families, but it no longer gives enough operational information for a thesis reader to determine what each downstream prediction target and causal exposure represents.
+
+The proxy definitions are scientifically central because they define:
+
+- the supervised prediction targets;
+- the predicted voter columns;
+- the mixed-source aggregate;
+- the proxy-state exposures used by matching and effect estimation;
+- the interpretation of every proxy-specific result.
+
+A reader must not be required to inspect Python source or a Git repository merely to understand the operational meaning of each `LAT_*` variable.
+
+----------------------------------------------------------------------
+5.1 Sources of authority
+----------------------------------------------------------------------
+
+Inspect and reconcile:
+
+- the current compressed Chapter 5 at `ddbf52b4`;
+- the pre-compression Chapter 5 at `d77fada7`;
+- the active PhysioNet tagger;
+- the active MIMIC tagger;
+- the existing proxy-rule citation matrix;
+- existing evidence reports describing rule behavior;
+- current bibliography entries.
+
+Use this hierarchy:
+
+1. active tagger source defines implemented behavior;
+2. validated source/schema evidence supports the reported implementation;
+3. the pre-compression chapter provides an already reviewed presentation baseline;
+4. prompt records explain design provenance but do not override active code;
+5. clinical literature provides bounded conceptual grounding, not automatic validation.
+
+Do not invent or simplify a threshold in a way that changes rule meaning.
+
+----------------------------------------------------------------------
+5.2 Required main-text content
+----------------------------------------------------------------------
+
+Restore two compact but operational tables in Chapter 5:
+
+1. PhysioNet proxy-state definitions;
+2. MIMIC-III proxy-state definitions.
+
+Every active proxy state must have its own row.
+
+PhysioNet must cover all eleven active states.
+
+MIMIC-III must cover all ten active states.
+
+Each row should communicate, as applicable:
+
+- exact `LAT_*` identifier;
+- construct represented;
+- principal input measurements or helper flags;
+- temporal or aggregation basis;
+- main threshold or score logic;
+- important sufficient conditions;
+- important missingness or input-mode behavior;
+- principal clinical/construct-validity boundary.
+
+The tables need not reproduce every source-code branch verbatim, but they must be operationally informative.
+
+For example, it is not sufficient to say only:
+
+“Shock combines hemodynamic and perfusion evidence.”
+
+The table should communicate the principal implemented evidence and decision form, such as the relevant pressure, lactate, heart-rate, urine, acid-base, vasopressor, or support conditions and whether the rule uses a score, conjunction, or sufficient critical marker.
+
+Likewise, it is not sufficient to say only:
+
+“Renal dysfunction combines renal measurements.”
+
+The table should communicate the relevant creatinine, change-from-baseline, BUN, urine, electrolyte, dialysis, or sufficient-condition logic implemented for that dataset.
+
+----------------------------------------------------------------------
+5.3 Balance detail and readability
+----------------------------------------------------------------------
+
+Do not blindly restore the former tables unchanged.
+
+The old tables may be used as source material, but edit them for thesis readability.
+
+Preferred structure for each table:
+
+- Proxy state;
+- Operational evidence;
+- Decision form;
+- Principal boundary.
+
+A fifth column may be used only when it materially improves clarity.
+
+Keep globally shared behavior in surrounding prose instead of repeating it in every row, including:
+
+- non-missing numeric comparisons;
+- general interpretation of negative labels;
+- broad score-versus-sufficient-condition pattern;
+- active-code authority;
+- lack of chart-adjudicated validation.
+
+Retain row-specific details when they differ materially.
+
+Use landscape `longtable` only if needed. Tables may use conventional compact spacing locally; do not force 1.5 spacing inside large tables.
+
+Do not:
+
+- use unreadably small text;
+- shrink the page margins;
+- abbreviate thresholds beyond recognition;
+- remove clinically important conditions merely to keep a table on one page;
+- restore verbose provenance columns;
+- restore prompt-file paths in every row;
+- turn the tables back into repository-audit matrices.
+
+----------------------------------------------------------------------
+5.4 Main-text independence and supplement boundary
+----------------------------------------------------------------------
+
+The main thesis should stand on its own scientifically.
+
+The technical evidence package may retain:
+
+- exact clause-by-clause source mappings;
+- hashes;
+- prompt-to-code lineage;
+- full source paths;
+- detailed citation-status matrices;
+- superseded versions.
+
+The main thesis must retain:
+
+- enough operational information to understand each construct;
+- the active number and identity of states;
+- the major thresholds and score/sufficient-condition form;
+- dataset-specific differences;
+- missingness and input-mode implications;
+- construct-validity limitations.
+
+Keep a concise reference to the repository evidence package for exhaustive clauses, but do not use that reference as a substitute for the operational definitions.
+
+----------------------------------------------------------------------
+5.5 Preserve the successful compression
+----------------------------------------------------------------------
+
+Do not restore:
+
+- the full prompt inventory table;
+- the prompt-to-source traceability matrix;
+- the proxy-source-type table if prose already explains it;
+- repeated artifact-path inventories;
+- repeated version-history narrative;
+- repeated full disclaimers;
+- inactive or superseded rules;
+- SAnD content.
+
+Preserve the compressed chapter’s clearer structure and the existing section on predicted and aggregated proxy labels.
+
+======================================================================
+6. TASK B — ADD A COMPACT EXECUTED-CONFIGURATION SPECIFICATION
+======================================================================
+
+The merged “Experimental and Validation Design” chapter is structurally sound, but it now needs a compact specification of the executed settings required to interpret or attempt reproduction of the reported experiments.
+
+Do not restore the old audit-heavy Chapters 8 and 9.
+
+Add one concise subsection, for example:
+
+“Executed Settings and Provenance Status”
+
+or:
+
+“Confirmed Experimental Settings and Unresolved Lineage”
+
+Place it where it best connects the experiment-family description to result admission.
+
+----------------------------------------------------------------------
+6.1 Required content
+----------------------------------------------------------------------
+
+Create one compact table with approximately these columns:
+
+- Analysis component;
+- Confirmed or execution-supported settings;
+- Unresolved provenance or interpretation boundary.
+
+Cover, where supported by current evidence:
+
+Prediction:
+
+- PhysioNet 2012 and MIMIC-III;
+- STraTS, GRU, GRU-D, and TCN;
+- multi-label prediction of rule-derived proxy labels;
+- archived dataset–model combinations;
+- prediction threshold of 0.5;
+- exported probability and binary fields;
+- exported split setting where verified;
+- seed, run identifier, and training fraction where directly supported by archived logs or checked evidence;
+- checkpoint-selection metric;
+- STraTS pretraining distinction.
+
+Causal analysis:
+
+- two datasets;
+- CausalForestDML, LinearDML, and CausalPFN;
+- original and outcome-downsampled conditions;
+- twelve archived run families;
+- original cohorts as primary;
+- outcome-downsampled populations as robustness analyses;
+- five-source mixed aggregate;
+- estimator hierarchy;
+- exposure-specific analysis;
+- matching and diagnostic roles.
+
+Permutation and sensitivity:
+
+- ten permutation trials where verified;
+- seed 42 where verified;
+- treatment-versus-outcome permutation distinction;
+- CausalPFN diagnostic limitations;
+- sensitivity evidence-status distinctions.
+
+Provenance gaps:
+
+- missing processed-pickle hashes;
+- missing split manifests or identifiers;
+- incomplete checkpoint-to-export mapping;
+- missing numbered final causal configurations;
+- incomplete producing commands or archive-copy records;
+- incomplete source/environment lineage.
+
+Only include a setting as “confirmed” when current checked evidence supports it.
+
+Classify uncertain settings explicitly as:
+
+- source-defined;
+- log-supported;
+- artifact-supported;
+- unresolved;
+- not applicable.
+
+Do not infer historical execution merely from current defaults.
+
+----------------------------------------------------------------------
+6.2 Keep it compact
+----------------------------------------------------------------------
+
+The subsection should add approximately one or two pages, not recreate the previous four experiment/reproducibility tables.
+
+Do not restore:
+
+- full environment-field inventories;
+- hardware wish lists;
+- ten-item admission checklists;
+- repeated source-status columns;
+- full artifact path matrices;
+- operational configuration precedence unless needed to interpret a reported setting.
+
+The purpose is to make the experiment sufficiently specified, not to reproduce the audit package.
+
+======================================================================
+7. TASK C — RESOLVE THE INACTIVE CHAPTER 9 STUB
+======================================================================
+
+The file:
+
+thesis-writing/thesis/chapters/09_experimental_design.tex
+
+currently contains only an inactive compatibility comment and is no longer included by `main.tex`.
+
+Search the repository for:
+
+- direct references to this path;
+- scripts that expect it;
+- validation tools that inspect it;
+- planning files that rely on its existence;
+- local instructions requiring chapter placeholders.
+
+If no active dependency requires the path:
+
+- delete the file.
+
+If an active dependency requires it:
+
+- retain it;
+- expand the comment to identify the exact dependency;
+- state that active content is in `08_robustness_sensitivity_validation.tex`;
+- ensure it cannot accidentally define duplicate labels or be included in the build.
+
+Do not re-enable the old chapter.
+
+Do not split the merged chapter again.
+
+======================================================================
+8. LINE SPACING AND TYPOGRAPHY
+======================================================================
+
+The thesis already uses:
+
+\usepackage{setspace}
+\onehalfspacing
+
+This provides approximately 1.5 spacing for ordinary body prose.
+
+Preserve this configuration unchanged unless direct rendered evidence shows it is not functioning.
+
+Do not:
+
+- add another spacing package or command;
+- stack `\setstretch{1.5}` on top of `\onehalfspacing`;
+- tighten line spacing to offset the restored pages;
+- reduce margins;
+- reduce body font size;
+- shrink figures;
+- globally change table row spacing;
+- apply AAAI formatting rules to the thesis.
+
+Use context-appropriate compact spacing for:
+
+- long tables;
+- captions;
+- bibliography;
+- contents and lists;
 - equations;
-- figure filenames;
-- table labels;
-- citation keys.
+- title material;
+- footnotes;
+- dense technical entries.
 
-After editing, compare the protected baseline.
-
-Expected changes:
-
-- SAnD-related active content;
-- model-count wording from five to four where required;
-- chapter/section structure and numbering;
-- prose compression;
-- approved table consolidation;
-- references to relocated supplemental material;
-- resulting PDF pagination.
-
-Unexpected changes to retained scientific numbers, models, estimators, captions, figure data, or result tables are blocking.
+The page increase must reflect restored scientific content, not typographic manipulation.
 
 ======================================================================
-10. ALLOWED FILES
+9. ALLOWED EDITS
 ======================================================================
 
-Edits may be made to:
+Expected thesis edits are limited primarily to:
 
-- thesis `.tex` source files;
-- thesis bibliography source where needed for SAnD clearance;
-- thesis build/index files required by chapter merging or renumbering;
-- active thesis-facing tables generated from source text;
-- active claim/evidence records that must reflect the corrected four-model scope;
-- current release and validation ledgers;
-- an existing canonical technical-supplement file or directory;
-- one new supplement index only if no canonical supplement location exists and the new file has a durable role;
-- one stage evidence report under the established logs directory.
+- `thesis-writing/thesis/chapters/05_proxy_state_construction.tex`;
+- `thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex`;
+- `thesis-writing/thesis/chapters/09_experimental_design.tex`, only for deletion or clarified compatibility handling;
+- `thesis-writing/thesis/main.pdf`;
+- LaTeX auxiliary/index effects generated by a clean build;
+- one narrow repair evidence report in the established logs directory.
 
-Do not create unnecessary Markdown files.
+Edit `main.tex` only if required by deletion or integration, and do not change its spacing, margins, fonts, language setup, front matter, or chapter order.
 
-Before creating any file:
+Do not create multiple overlapping reports.
 
-1. inspect the target folder;
-2. search for an existing file with the same role;
-3. update the canonical file when possible;
-4. create a new file only if the content has a distinct durable purpose.
+Do not modify `prompt.txt` except when the local workflow explicitly uses it as Codex’s current instruction file.
 
 ======================================================================
-11. FORBIDDEN CHANGES
+10. FORBIDDEN EDITS
 ======================================================================
 
 Do not modify:
 
-- research implementation code, except no code change should be needed;
-- raw data;
-- processed data;
-- retained model outputs;
-- retained causal outputs;
-- checked values for STraTS, GRU, GRU-D, or TCN;
-- retained figures or their plotted values;
-- institutional forms;
-- author/supervisor identity;
-- official titles without explicit authority;
-- ethics or governance facts;
-- Git history;
-- prior commits;
+- `thesis-writing/paper-aaai/`;
+- active research code;
+- model outputs;
+- causal outputs;
+- checked result CSVs;
+- result manifests;
+- raw or processed data;
+- figures or figure source values;
+- DAG definitions or artifacts;
+- abstracts;
+- title pages;
+- institutional metadata;
+- bibliography entries unless a directly necessary citation repair is identified;
+- unrelated planning or audit history;
 - unrelated dirty files.
 
 Do not run:
 
-- model training;
 - preprocessing;
+- model training;
+- prediction;
+- matching;
 - causal estimation;
-- result regeneration;
+- sensitivity regeneration;
+- permutation regeneration;
 - new experiments.
 
-LaTeX/document build and static validation are authorized.
+Static inspection and thesis build/validation are authorized.
 
 ======================================================================
-12. REQUIRED VALIDATION
+11. REQUIRED VALIDATION
 ======================================================================
 
-12.1 Static SAnD checks
+11.1 Scientific validation
 
-Run exhaustive searches and provide a classified occurrence ledger.
+Verify that Chapter 5 contains:
 
-The active thesis source and rendered PDF should contain zero SAnD references.
+- all eleven PhysioNet proxy states;
+- all ten MIMIC proxy states;
+- no extra or obsolete states;
+- exact active identifiers;
+- operationally meaningful evidence and decision logic;
+- important sufficient conditions;
+- dataset-specific distinctions;
+- correct missingness/input-mode qualifications;
+- no statement upgrading a proxy to a diagnosis;
+- no SAnD content.
 
-Also verify zero stale language for:
+Compare the restored descriptions against active tagger source.
 
-- five evaluated predictive models;
-- five predictive families;
-- ten final predictive runs;
-- SAnD as a non-voting evaluated model;
-- SAnD bibliography citation;
-- SAnD abbreviation;
-- SAnD result row.
+Create a row-level validation ledger:
 
-Verify exact current language for:
+- proxy identifier;
+- source function or rule;
+- thesis row;
+- main thresholds/conditions checked;
+- status;
+- discrepancy, if any.
 
-- four learned models;
-- four predicted sources;
-- one rule-derived source;
-- five aggregate sources.
+Any unresolved rule discrepancy is blocking.
 
-12.2 LaTeX build
+11.2 Experimental-setting validation
 
-Perform a clean thesis build using the repository’s documented process.
+For every setting placed in the compact configuration table, record its evidence class and source.
+
+Verify that:
+
+- a current default is not presented as a historical producing value;
+- an archived path is not presented as a portable command;
+- requirements are not presented as producing-environment proof;
+- original and downsampled populations remain distinct;
+- estimator hierarchy remains correct;
+- the permutation count and seed are reported only where verified;
+- prediction threshold and export schema remain correct;
+- the five-source aggregate remains exact.
+
+11.3 Protected-content comparison
+
+Confirm:
+
+- zero checked-result value changes;
+- zero result-figure changes;
+- zero abstract changes;
+- zero title/admin changes;
+- zero research-code changes;
+- zero AAAI author-kit changes;
+- zero SAnD reintroduction;
+- zero changes to the four-model scope;
+- zero changes to estimator hierarchy.
+
+Explain all citation, label, reference, and numeric-token changes.
+
+11.4 LaTeX build
+
+Run a clean build using the existing documented process:
+
+latexmk -C
+latexmk -xelatex main.tex
+
+from the thesis directory.
 
 Check:
 
-- successful compilation;
-- no undefined citations;
-- no undefined references;
-- no multiply defined labels;
-- no missing files;
-- no stale table-of-contents entries;
-- no stale list-of-table entries;
-- correct chapter numbering after any merge;
-- correct table and figure numbering;
-- correct bibliography;
-- correct Hebrew and English abstracts;
-- correct PDF metadata if affected.
+- build exit status;
+- XeLaTeX and Biber completion;
+- undefined citations;
+- undefined references;
+- multiply defined labels;
+- missing files;
+- missing characters;
+- table overflow;
+- overfull/underfull warnings;
+- bibliography errors;
+- PDF syntax.
 
-Do not accept a build merely because a PDF was produced.
+Run:
 
-12.3 PDF content checks
+qpdf --check main.pdf
 
-Extract or inspect PDF text and confirm:
+or the established equivalent.
 
-- SAnD is absent;
-- four-model wording is consistent;
-- §2.2.5 has the corrected title;
-- Table 2.2 has four rows;
-- abstracts agree with each other;
-- contribution and conclusion sections agree;
-- final aggregate lineage is stated correctly;
-- chapter transitions remain coherent;
-- references to merged or relocated sections resolve.
+11.5 PDF and visual inspection
 
-12.4 Visual inspection
+Record:
 
-Inspect every rendered PDF page at adequate resolution.
+- starting page count;
+- final page count;
+- pages added;
+- where the added pages occur.
 
-Pay particular attention to:
+Render and inspect the complete PDF because pagination will change.
 
-- title page;
-- Hebrew abstract;
-- English abstract;
+At minimum, inspect individually at adequate resolution:
+
 - contents;
-- list of tables;
-- Section 2.2 and Table 2.2;
-- consolidated tables;
-- chapter boundaries after merging;
-- large proxy-rule tables;
-- DAG pages;
-- Results tables and figures;
-- Discussion tables;
+- List of Tables;
+- all Chapter 5 pages;
+- both restored proxy-definition tables;
+- Chapter 8;
+- the compact configuration table;
+- chapter transitions;
+- Results opening;
 - bibliography;
-- appendix or supplement references.
+- final covers.
 
 Check:
 
+- table readability;
+- repeated longtable headers;
 - clipping;
 - overlap;
-- orphaned headings;
-- widows/orphans where severe;
-- blank or nearly blank pages caused by restructuring;
-- table readability;
-- figure readability;
-- broken RTL text;
-- broken references;
+- broken identifiers;
+- detached headings;
 - excessive whitespace;
-- headings detached from content.
+- blank or nearly blank pages;
+- RTL integrity;
+- line-spacing consistency;
+- correct table numbering;
+- correct page references.
 
-Do not shrink text below a professionally readable size to save pages.
-
-12.5 Protected-content comparison
-
-Report:
-
-- number of protected files changed;
-- all retained numerical-token differences;
-- citation-key additions/removals;
-- label/reference changes;
-- figure changes;
-- table-value changes.
-
-Only expected and justified changes may remain.
+The restored tables may be compactly spaced, but ordinary English and Hebrew prose must remain approximately 1.5-spaced.
 
 ======================================================================
-13. REQUIRED DELIVERABLES
+12. REQUIRED DELIVERABLES
 ======================================================================
 
 Produce:
 
-1. Revised thesis source.
-2. Rebuilt `main.pdf`.
-3. A concise SAnD-clearance occurrence ledger.
-4. A compression map showing, for each chapter:
-   - original role;
-   - identified redundancy;
-   - action taken;
-   - material retained;
-   - material consolidated;
-   - material relocated;
-   - material removed;
-   - justification.
-5. A table-consolidation ledger:
-   - old table;
-   - action;
-   - destination;
-   - scientific information preserved.
-6. A protected-content comparison.
-7. A visual-review ledger covering every PDF page.
-8. A stage evidence report in the established thesis logs directory.
+1. revised Chapter 5;
+2. revised merged experimental/validation chapter;
+3. resolved Chapter 9 stub;
+4. rebuilt `main.pdf`;
+5. one narrow evidence report, for example:
 
-Do not create multiple narrative reports with overlapping purposes. Combine ledgers into the stage evidence report or established canonical validation files where practical.
+thesis-writing/logs/thesis_compression_scientific_repair_report.md
 
-======================================================================
-14. EVIDENCE REPORT STRUCTURE
-======================================================================
+Do not create redundant Markdown or CSV files when the evidence can be included in the single report.
 
-The final report must include:
+The report should contain:
 
-# Stage: SAnD Clearance and Thesis Compression
+# Thesis Compression Scientific Repair
 
 ## Baseline
-- branch;
-- starting HEAD;
-- worktree status;
-- current PDF page count;
-- protected paths;
-- prior SAnD-removal commit inspected.
+- current HEAD;
+- thesis baseline commit;
+- unrelated AAAI commit classification;
+- worktree state;
+- protected scope;
+- initial PDF page count;
+- spacing status.
 
-## SAnD clearance
-- files searched;
-- occurrences found;
-- occurrences removed;
-- stale count language repaired;
-- bibliography action;
-- surviving historical references and justification;
-- confirmation that active thesis scope contains four models.
+## Review findings addressed
+- insufficient proxy operational detail;
+- insufficient compact executed-setting specification;
+- inactive Chapter 9 stub.
 
-## Compression diagnosis
-- chapter-by-chapter findings;
-- repeated concepts;
-- audit-level material;
-- overlapping tables;
-- structural overlap;
-- supplement candidates.
+## Proxy-definition repair
+- source hierarchy;
+- table design;
+- all 21 proxy rows;
+- row-level source validation;
+- important details restored;
+- audit detail deliberately not restored.
 
-## Changes made
-- files changed;
-- chapter merges or renames;
-- sections shortened;
-- tables consolidated;
-- material relocated;
-- material removed;
-- material deliberately retained despite length.
+## Experimental-setting repair
+- confirmed settings;
+- evidence classes;
+- unresolved provenance;
+- material deliberately kept in external evidence package.
+
+## Stub resolution
+- dependency search;
+- deletion or retention decision;
+- justification.
 
 ## Scientific preservation
-- scope retained;
-- claims retained;
-- numerical results retained;
-- estimator hierarchy retained;
-- qualifications retained;
-- any proposed compression rejected to protect quality.
+- results unchanged;
+- figures unchanged;
+- abstracts unchanged;
+- model and estimator scope unchanged;
+- SAnD remains absent;
+- five-source lineage unchanged;
+- 1.5 body spacing preserved.
 
 ## Validation
-- static search results;
-- build result;
-- citation/reference result;
-- PDF page count;
-- page-level visual review;
-- protected-content comparison;
-- Hebrew/English consistency;
-- SAnD zero-occurrence result.
+- clean build;
+- references and citations;
+- PDF check;
+- page count;
+- visual review;
+- protected comparison.
 
 ## Length outcome
-- starting physical pages;
-- final physical pages;
-- net reduction;
-- main sources of reduction;
-- explanation if the thesis remains materially above 103 pages.
+- starting pages;
+- final pages;
+- pages restored;
+- why the added material is scientifically necessary;
+- confirmation that no compensating cuts or spacing manipulation were used.
 
 ## Unresolved issues
-- scientific;
-- administrative;
-- layout;
-- supplement;
-- provenance.
 
 ## Readiness decision
 
@@ -1135,32 +765,31 @@ Use exactly one:
 
 READY FOR AUTHOR REVIEW
 
-READY FOR AUTHOR REVIEW WITH NON-BLOCKING LENGTH CONSIDERATIONS
+READY FOR AUTHOR REVIEW WITH NON-BLOCKING PRESENTATION NOTES
 
-BLOCKED FOR SCIENTIFIC CONTENT — <reason>
+BLOCKED FOR PROXY-DEFINITION ACCURACY — <reason>
 
 BLOCKED FOR DOCUMENT INTEGRITY — <reason>
 
-BLOCKED FOR SAnD CLEARANCE — <reason>
+BLOCKED FOR SCIENTIFIC CONSISTENCY — <reason>
 
 ======================================================================
-15. FINAL DECISION RULE
+13. FINAL SUCCESS CRITERIA
 ======================================================================
 
-The task is successful when the thesis is:
+The repair is successful when:
 
-- scientifically complete;
-- materially less repetitive;
-- more coherent;
-- easier to read;
-- free of active SAnD content;
-- internally consistent about the four learned models;
-- internally consistent about the five-source mixed aggregate;
-- visually professional;
-- fully compiled and cross-referenced;
-- shorter because unnecessary documentary detail was removed or relocated;
-- not weakened to satisfy an arbitrary page target.
-
-The final page count is evidence about the outcome, not the definition of success.
+- the thesis remains concise and coherent;
+- the successful compression is preserved;
+- each proxy exposure is operationally understandable from the thesis itself;
+- Chapter 5 no longer depends on source-code access for core construct meaning;
+- the experimental chapter contains a compact but adequate specification of confirmed settings and unresolved provenance;
+- the inactive Chapter 9 file is cleanly resolved;
+- all checked Results remain unchanged;
+- active SAnD clearance remains complete;
+- ordinary body prose remains approximately 1.5-spaced;
+- no AAAI author-kit file or rule affects the thesis;
+- the PDF builds cleanly and is visually professional;
+- the final page count is determined by scientific quality rather than an arbitrary target.
 
 Do not commit or push.
