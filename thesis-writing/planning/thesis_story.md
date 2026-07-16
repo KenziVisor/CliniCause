@@ -2,21 +2,21 @@
 
 ## A. One-Paragraph Thesis Statement
 
-This thesis should be framed as an evidence-driven methodological framework for causal analysis of irregular ICU time series: raw PhysioNet 2012 and MIMIC-III measurement events are transformed into patient/stay-level data contracts, clinically inspired rule-based proxy states are generated and then predicted from irregular time-series models, prediction outputs are aggregated into majority-vote proxy states, and selected proxy states are analyzed as exposure variables for in-hospital mortality using project-specified DAGs, DAG-guided adjustment logic, matching baselines, and heterogeneous-effect estimators. The proxy-state ontology and DAG design have LLM-assisted prompt-provenance artifacts, but the source code and run artifacts define the implemented pipeline. The contribution is the construction and evaluation of this linked prediction-to-causal-analysis pipeline, not proof of validated diagnoses, clinical treatment recommendations, or unconditional causal effects.
+This thesis presents CliniCause as an evidence-driven, LLM-guided methodological framework for irregular ICU time series. At design time, LLM-assisted clinical and causal knowledge elicitation informed candidate proxy-state ontologies, deterministic threshold rules, missingness reasoning, and dataset-specific DAG proposals. Accepted designs were encoded in source code; the resulting rule-derived proxy labels supervise deep time-series models, whose binary proxy-state predictions are normalized. In all twelve archived final causal runs, a deterministic vote then combines the rule-derived table with GRU, GRU-D, STraTS, and TCN predicted-label tables before selected aggregate columns enter DAG-guided analyses of in-hospital mortality using matching baselines and heterogeneous-effect estimators. The substantive contribution is this linked design-to-supervision-to-prediction-to-causal-analysis framework. It is not proof of validated diagnoses, autonomous causal discovery, clinical treatment recommendations, or unconditional causal effects.
 
 ## B. Main Research Question
 
-How can irregular ICU time-series data be converted into clinically interpretable proxy-state representations and used, under explicit causal assumptions, to support DAG-guided adjusted effect estimation for in-hospital mortality?
+How can LLM-assisted design-time knowledge elicitation be combined with deterministic weak supervision and deep prediction to construct clinically interpretable proxy-state representations from irregular ICU time series and support DAG-guided adjusted effect estimation for in-hospital mortality under explicit causal assumptions?
 
 ## C. Secondary Research Questions
 
 | id | question | answerability |
 | --- | --- | --- |
 | SRQ-1 | Which data contracts are needed to connect PhysioNet 2012, MIMIC-III, STraTS, and the causal-analysis pipeline? | READY WITH QUALIFICATIONS; raw data and processed pickles are external. |
-| SRQ-2 | Can rule-based proxy states be constructed consistently enough to serve as prediction labels and causal-pipeline inputs? | READY WITH QUALIFICATIONS; clinical validity remains [ADVISOR CHECK]. |
+| SRQ-2 | How were LLM-assisted proxy-state and DAG proposals translated into deterministic rule-derived labels and project-encoded graphs? | READY WITH QUALIFICATIONS; archived prompts and source support the design/implementation account, while exact settings, output-to-code decisions, and clinical review remain [PROVENANCE UNCLEAR] / [ADVISOR CHECK]. |
 | SRQ-3 | How do STraTS and implemented sequence baselines perform on multi-label proxy-state prediction? | BLOCKED BY PROVENANCE for final numeric claims; summaries exist but archive manifest is missing. |
-| SRQ-4 | How are predicted proxy states normalized or aggregated before downstream analysis? | READY WITH QUALIFICATIONS; voter input provenance is [PROVENANCE UNCLEAR]. |
-| SRQ-5 | What adjustment sets are selected by the dataset-specific DAGs for proxy-state exposure analyses? | READY FOR METHODS DRAFT; exact treatment-specific results need selected artifact validation. |
+| SRQ-4 | How are predictions of rule-derived proxy states normalized and algorithmically aggregated before downstream analysis? | READY WITH QUALIFICATIONS; the five voter filenames are known, but external voter bytes, hashes, and checkpoint lineage remain [PROVENANCE UNCLEAR], and majority vote is not clinical consensus. |
+| SRQ-5 | What adjustment sets are selected by the LLM-informed, project-encoded dataset-specific DAGs for proxy-state exposure analyses? | READY FOR METHODS DRAFT; graph validity remains assumption-bound and exact treatment-specific results need selected artifact validation. |
 | SRQ-6 | What matching, CATE, sensitivity, and permutation evidence exists for selected proxy-state exposures? | BLOCKED BY RESULTS/ADVISOR DECISION for main result narrative; result artifacts exist but primary estimator/sampling choices are unresolved. |
 | SRQ-7 | What limitations follow from proxy labels, intervention definition, overlap, measurement error, and unmeasured confounding? | READY WITH QUALIFICATIONS; advisor wording required for clinical interpretation. |
 
@@ -24,9 +24,10 @@ How can irregular ICU time-series data be converted into clinically interpretabl
 
 | class | proposed contribution | evidence status |
 | --- | --- | --- |
-| primary contribution | End-to-end research framework linking irregular ICU preprocessing, proxy-state construction/prediction, DAG-guided adjustment, and effect-estimation diagnostics. | Implementation-confirmed; final archive execution partially confirmed; full provenance [PROVENANCE UNCLEAR]. |
-| secondary methodological contribution | Clinically inspired proxy-state layer used as both prediction target and structured causal-analysis variable. | Rule implementation and artifacts exist; validation and diagnosis language require [ADVISOR CHECK]. |
-| secondary methodological contribution | DAG-guided observed adjustment-set selection for proxy-state exposure/outcome analyses. | Implemented in matching/CATE code; causal assumptions require [ADVISOR CHECK]. |
+| primary contribution | End-to-end LLM-guided research framework linking design-time clinical/causal knowledge elicitation, irregular ICU preprocessing, deterministic proxy-state supervision, deep prediction, aggregation, DAG-guided adjustment, and effect-estimation diagnostics. | Design and implementation are supported; final archive execution is partially confirmed; prompt-to-code and full run provenance remain [PROVENANCE UNCLEAR]. |
+| secondary methodological contribution | A substantive design-time LLM-assisted elicitation layer for proposing proxy-state ontology/rules, missingness handling, and dataset-specific causal structures. | Prompt artifacts and encoded source exist; exact run settings, acceptance decisions, and human/clinical review require additional evidence. |
+| secondary methodological contribution | Clinically inspired, deterministic rule-derived proxy labels used as prediction targets and, after prediction/aggregation, structured causal-analysis variables. | Rule, prediction, and aggregation implementations/artifacts exist; validation and diagnosis language require [ADVISOR CHECK]. |
+| secondary methodological contribution | Adjustment-set selection from LLM-informed, project-encoded DAGs for proxy-state exposure/outcome analyses. | Implemented in graph/matching/CATE code; graph approval and causal assumptions require [ADVISOR CHECK]. |
 | engineering/reproducibility contribution | Parent router plus nested causal/STraTS workflows, manifests/resolved configs for local router runs, and stage-wise outputs. | Implemented; final external run configs and archive manifest missing. |
 | empirical contribution | Archived predictive summaries for STraTS, GRU, GRU-D, TCN, and SAnD across PhysioNet/MIMIC. | Result artifacts exist; archive copy provenance partial. |
 | empirical contribution | Twelve causal run families across two datasets, three estimators, and original/downsampled conditions. | Run summaries/logs support execution; primary analysis role unresolved. |
@@ -38,9 +39,9 @@ How can irregular ICU time-series data be converted into clinically interpretabl
 Currently supported:
 
 - The repository implements preprocessing, proxy-state construction, proxy-state prediction, majority voting, DAG generation, matching, CATE estimation, sensitivity analysis, permutation checks, and routing/orchestration components.
-- The Stage 2 audit inventories ten final predictive supervised summaries, twelve causal run folders, rule/proxy tag artifacts, DAG images, learning curves, sensitivity contours, and cross-run CSVs.
-- The literature corpus contains validated citation keys for implemented sequence models, datasets, causal foundations, DML/causal forests, weak supervision, overlap, and sensitivity analysis.
-- The prompt-document archive supports a design-provenance claim for LLM-assisted proxy-state and DAG elicitation, with final runs reported by the user as ChatGPT 5.4 with extended reasoning.
+- The repository audit inventories ten final predictive supervised summaries, twelve causal run folders, rule/proxy tag artifacts, DAG images, learning curves, sensitivity contours, and cross-run CSVs.
+- The literature corpus contains citation keys for implemented sequence models, datasets, causal foundations, DML/causal forests, programmatic weak supervision, LLM clinical knowledge, LLM-generated causal-graph priors, overlap, and sensitivity analysis.
+- The prompt-document archive supports a substantive design-method claim for LLM-assisted proxy-state and DAG elicitation; accepted executable behavior is defined by tagger and graph source code. Final runs were reported by the user as ChatGPT 5.4 with extended reasoning, but exact system/run metadata remain unresolved.
 - The example thesis demonstrates practical LaTeX patterns only.
 
 Not currently supported without caveats:
@@ -49,7 +50,8 @@ Not currently supported without caveats:
 - Exact final causal run configuration claims, because numbered config CSVs referenced by `run_summary.json` are missing locally.
 - Out-of-sample claims for exported predicted proxy states without verified export commands for each archived CSV.
 - Any claim that proxy states are verified diagnoses or validated phenotypes.
-- Any claim that LLM prompt outputs are clinical validation, source-code execution, learned causal discovery, or the authoritative implemented DAG.
+- Exact prompt/model/version settings, complete conversational turns, proposal-to-code acceptance decisions, or human/clinical approval unless separately documented.
+- Any claim that LLM prompt outputs are clinical validation, source-code execution, learned causal discovery, or by themselves the authoritative implemented DAG.
 - Any claim that `mean_cate` or `mean_pair_effect` is a formal ATE/ATT without advisor-approved estimand wording.
 - Any claim that CausalPFN has sensitivity/permutation diagnostics in this pipeline.
 
@@ -64,18 +66,13 @@ Not currently supported without caveats:
 | ATE | Not a direct artifact name. | Use "mean estimated CATE" or "matched-pair outcome difference" until estimand is approved. |
 | validation | Could imply clinical validation. | Specify "schema validation", "diagnostic validation", "prediction evaluation", or [ADVISOR CHECK]. |
 | majority vote | Could imply clinical consensus. | Describe as algorithmic aggregation of voter CSVs. |
-| LLM-assisted design | Could imply autonomous discovery or validation. | Describe prompt outputs as candidate design provenance; source code is implementation authority. |
+| LLM-assisted design | Could imply autonomous discovery, runtime execution, or validation. | Describe a substantive design-time elicitation method that informed candidate ontology, rules, missingness choices, and DAG proposals; identify accepted source-code artifacts separately and preserve validation limits. |
 
-## G. Candidate Thesis Titles
+## G. Approved Thesis Titles
 
-| candidate | assessment |
+| language | title |
 | --- | --- |
-| A DAG-Guided Framework for Proxy-State Effect Estimation in Irregular ICU Time Series | Safest; emphasizes framework, proxy states, and assumptions. |
-| Clinically Inspired Proxy States for Prediction and Causal Analysis of Irregular ICU Time Series | Accurate; foregrounds the proxy layer. |
-| From Irregular ICU Measurements to DAG-Guided Heterogeneous Effect Estimates | Strong engineering/methods framing; less explicit about proxy labels. |
-| Proxy-State Prediction and Assumption-Guided Causal Analysis in Critical-Care Time Series | Good balance; "causal analysis" is safer than "causal discovery". |
-| Building an Evidence-Tracked Pipeline for Causal Analysis of Irregular Clinical Time Series | Very conservative; emphasizes reproducibility. |
+| English | **CliniCause: An LLM-Guided Framework for Deep Proxy-State Prediction and Causal Effect Estimation in Multivariate Irregular ICU Time Series** |
+| Hebrew | **CliniCause: מסגרת מונחית מודל שפה גדול לחיזוי מצבי פרוקסי בלמידה עמוקה ולאמידת השפעות סיבתיות בסדרות זמן רב־משתניות ולא־סדירות מטיפול נמרץ** |
 
-Recommended working title: **A DAG-Guided Framework for Proxy-State Effect Estimation in Irregular ICU Time Series**.
-
-Why: it avoids diagnosis, deployment, and treatment-recommendation language; it names the DAG and proxy-state layers; and it leaves result strength conditional on evidence and assumptions.
+Use these strings consistently in administrative metadata, title pages, abstracts, and planning records. In the body, qualify “causal effect estimation” through the explicit observational assumptions and proxy-exposure limitations documented above.

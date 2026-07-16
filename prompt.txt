@@ -1,430 +1,955 @@
-# Stage 5.5A — High-Resolution PDF Visual Verification and Warning Localization
+# Codex Task: Integrate the New LLM Literature and Correct the Thesis Methodological Framing
 
-## Model
+Use maximum available reasoning. Work carefully and evidence-first. This is a combined literature-ingestion and thesis-methodology correction stage.
 
-GPT-5.6 Terra
+## Authoritative clarification
 
-## Reasoning
+Treat the following as an explicit author-supplied project fact:
 
-Extra High
+1. A large language model was used during the design stage to construct the proxy-variable ontology, propose the dataset-specific causal DAGs, and construct the decision-tree rules used to operationalize the proxy states.
+2. The accepted designs were subsequently encoded as deterministic project source code.
+3. The deterministic decision-tree implementations generated the rule-derived proxy labels.
+4. Deep learning models were trained to predict those proxy labels from multivariate irregular ICU time series.
+5. Predicted proxy-state labels, after the implemented normalization or aggregation stages, were used by the downstream causal-analysis workflow.
+6. The LLM was a design-time component, not a runtime estimator in the executed preprocessing, prediction, or causal-effect pipeline.
 
-## Task identity
+This clarification resolves the previous ambiguity about whether the LLM had a substantive methodological role. It does **not** establish that:
 
-Implement:
+* the LLM is a clinically validated medical expert;
+* the proxy states are validated diagnoses or ground-truth latent variables;
+* the decision-tree rules received chart-adjudicated validation;
+* the DAGs are clinically validated;
+* the DAGs were discovered from patient-level data;
+* the LLM proved causal identification;
+* every LLM proposal was implemented unchanged;
+* the causal estimates are clinically actionable treatment effects.
 
-```text
-Stage 5.5A — High-Resolution PDF Visual Verification and Warning Localization
-```
+Prefer wording such as:
 
-This is a narrow verification and, only where necessary, layout-repair stage.
+> LLM-assisted clinical and causal knowledge elicitation
 
-It is not a writing stage, scientific-review stage, results stage, citation stage, or research-execution stage.
+> LLM-guided proxy-state, decision-rule, and DAG construction
 
-The expected repository head is:
+> LLM-generated design proposals subsequently selected and encoded in deterministic project source code
 
-```text
-8367195905fca00a4d6611cdaee242086132c834 step 5.5
-```
+Do not use unqualified wording such as:
 
-Its expected immediate parent is:
+> the LLM served as a validated medical domain expert
 
-```text
-3e29da1d8c6b91ddc00d44b9637218ed0047e6a6 step 5.4
-```
+> the LLM discovered the true causal graph
 
-Stage 5.5 reported:
-
-```text
-READY FOR FINAL RELEASE PREPARATION WITH EXTERNAL SUBMISSION INPUTS PENDING
-```
-
-This stage determines whether the document is ready for the author's first-draft human review.
-
-Do not begin human-input insertion, supervisor-review revisions, or final-release preparation.
+> AI-validated clinical states
 
 ---
 
-# 1. Objective
+# Part 0 — Repository and baseline verification
 
-Independently verify the rendered 109-page thesis at adequate resolution and localize every significant LaTeX layout warning.
+Before editing:
 
-The stage must answer:
-
-1. Does any text visibly extend beyond the configured margins?
-2. Does any table contain clipped, overlapping, or unreadably compressed text?
-3. Does any caption separate incorrectly from its table or figure?
-4. Does any heading appear stranded, clipped, or badly positioned?
-5. Does any figure exceed its intended area or have an incorrect caption association?
-6. Does any Hebrew or mixed Hebrew/Latin text display incorrectly?
-7. Does any page contain an unintended blank region or blank page?
-8. Which exact source locations caused the 48 overfull-box warnings?
-9. Are the largest warnings, especially the reported maximum near 267.4 pt, genuinely invisible/benign or visibly defective?
-10. Is the thesis ready for the author's first complete content review?
-
----
-
-# 2. No-research-execution boundary
-
-Do not run or import:
-
-```text
-router.py
-fix_preprocessor.py
-causal-irregular-time-series/
-STraTS/
-tests/
-notebooks
-data loaders
-preprocessing
-training
-prediction
-matching
-CATE estimation
-sensitivity analysis
-permutation analysis
-figure generators
-```
-
-Permitted commands are limited to document/static inspection tools:
-
-```text
-git
-sha256sum
-rg
-grep
-sed
-awk
-latexmk
-pdfinfo
-pdftotext
-pdftoppm
-mutool
-qpdf --check
-```
-
-A temporary parser may inspect `.tex`, `.log`, `.aux`, `.toc`, `.lof`, `.lot`, and extracted PDF text only. It must use standard-library functionality and must not import project packages.
-
----
-
-# 3. Repository verification
-
-Run:
+1. Locate the repository root and read all applicable `AGENTS.md`, `README.md`, workflow, and thesis instructions.
+2. Run and record:
 
 ```bash
-git status --short
+pwd
 git branch --show-current
-git log -10 --oneline
-git show --stat --oneline 83671959
-git diff --stat 3e29da1..83671959
+git log -5 --oneline
+git status --short
 ```
 
-Confirm:
+3. Record all pre-existing modified, untracked, and ignored files.
+4. Do not reset, clean, normalize, stage, commit, or push any pre-existing work.
+5. Inspect the current thesis entry point and chapter structure under:
 
-* the expected head and parent;
-* no Stage 5.5 thesis `.tex` file changed;
-* Stage 5.5 added only its validation ledgers and rebuilt PDF, apart from the pre-existing user-controlled `prompt.txt` update;
-* all five figures remained unchanged;
-* checked results, reproducibility records, literature, research code, and prior-stage logs remained unchanged.
+```text
+thesis-writing/thesis/
+```
 
-Record the complete initial worktree.
+6. Inspect the canonical literature structure:
 
-Do not reset, clean, checkout, normalize, stage, amend, commit, push, fetch, or modify `prompt.txt`.
+```text
+thesis-writing/literature/
+├── papers/
+├── optional/
+├── new/
+└── metadata/
+    ├── references.bib
+    ├── catalog.csv
+    └── checksums.sha256
+```
 
----
+7. Inspect these existing provenance and planning files before making changes:
 
-# 4. Protected baseline
+```text
+thesis-writing/audit/llm_prompt_provenance_audit.md
+thesis-writing/literature/llm_methodology_candidate_additions.md
+thesis-writing/literature/README.md
+thesis-writing/audit/claim_evidence_ledger.csv
+thesis-writing/planning/citation_plan.md
+thesis-writing/planning/chapter_evidence_map.md
+thesis-writing/planning/thesis_story.md
+thesis-writing/planning/terminology_and_notation.md
+thesis-writing/audit/terminology_map.md
+thesis-writing/reproducibility/provenance_gaps.csv
+```
 
-Hash and protect:
+Historical stage reports under `thesis-writing/logs/stage_*` are protected historical records. Read them when useful, but do not retroactively rewrite them.
+
+Create hashes or another reliable protected baseline for:
 
 ```text
 thesis-writing/results/
-thesis-writing/reproducibility/
-thesis-writing/literature/
 thesis-writing/thesis/figures/
-thesis-writing/audit/
-thesis-writing/planning/
-thesis-writing/logs/stage_5_1_*
-thesis-writing/logs/stage_5_2_*
-thesis-writing/logs/stage_5_3_*
-thesis-writing/logs/stage_5_4_*
-thesis-writing/logs/stage_5_5_*
 causal-irregular-time-series/
 STraTS/
 ```
 
-Also hash all thesis `.tex` files before inspection.
-
-No scientific source may change unless a concrete rendered layout defect is found and the repair is strictly typographic.
+No research code, result CSV, checked number, estimator output, or result figure may change in this task.
 
 ---
 
-# 5. Clean build
+# Part 1 — Inspect and ingest the four PDFs
 
-From `thesis-writing/thesis/`, run:
+## 1.1 Inspect every file in `literature/new`
 
-```bash
-latexmk -C
-latexmk -xelatex main.tex
-test -f main.pdf
-pdfinfo main.pdf
-qpdf --check main.pdf
-```
+List every file and record:
 
-Expected baseline:
+* current filename;
+* file type;
+* size;
+* SHA-256;
+* PDF page count;
+* title;
+* authors;
+* publication year;
+* venue;
+* DOI, arXiv identifier, or other stable identifier;
+* whether the file is a publisher version, accepted manuscript, arXiv version, or another legitimate copy.
 
-```text
-109 A4 pages
-48 overfull boxes
-1,157 underfull boxes
-0 unresolved citations
-0 unresolved references
-0 duplicate labels
-0 Biber errors
-0 missing glyphs
-0 bidi errors
-0 fatal errors
-```
+Use PDF text extraction and metadata inspection. Read at least the title page, abstract, introduction, methodology summary, limitations, and conclusion of each paper. Do not identify a paper solely from its filename.
 
-Do not install missing tools.
+The four expected subjects are:
 
----
+1. **Large Language Models Encode Clinical Knowledge**
+2. **Large Language Models are Effective Priors for Causal Graph Discovery**
+3. **Data Programming: Creating Large Training Sets, Quickly**
+4. **Snorkel: Rapid Training Data Creation with Weak Supervision**
 
-# 6. Localize every overfull warning
+These titles are expectations, not permission to assume identity. Verify the exact title, authors, version, year, venue, DOI, and publication type from the PDFs and authoritative metadata.
 
-Create:
+If any PDF is not one of these papers, is corrupt, is incomplete, or cannot be identified reliably, report the discrepancy rather than inventing metadata.
 
-```text
-thesis-writing/logs/stage_5_5A_overfull_localization.csv
-```
+## 1.2 Check for duplicates before moving anything
 
-Use one row per overfull warning.
-
-Required columns:
+Search all of the following for an existing version of each paper:
 
 ```text
-warning_id
-source_file
-source_line_start
-source_line_end
-overflow_pt
-content_context
-pdf_page
-visible_margin_intrusion
-visible_clipping
-visible_overlap
-root_cause
-classification
-repair_required
-repair_applied
-post_repair_result
-notes
+thesis-writing/literature/papers/
+thesis-writing/literature/optional/
+thesis-writing/literature/metadata/references.bib
+thesis-writing/literature/metadata/catalog.csv
+thesis-writing/thesis/
 ```
 
-Classifications:
+Check duplicates using:
+
+* exact or normalized title;
+* DOI;
+* arXiv/eprint identifier;
+* authors and year;
+* SHA-256;
+* existing citation keys;
+* existing PDF paths.
+
+The Snorkel paper may already exist in the corpus and may already be cited with a key similar to `ratner_et_al_2020_snorkel`. Do not create a second citation or PDF merely because the newly downloaded filename differs.
+
+When a duplicate exists:
+
+1. Preserve the existing citation key unless it is objectively incorrect.
+2. Compare the existing and new PDFs.
+3. Keep one canonical, valid copy.
+4. Prefer a final publisher or accepted version over a preprint when legally available and bibliographically appropriate.
+5. Do not replace an existing canonical PDF unless the new copy is demonstrably preferable.
+6. Record the duplicate decision.
+7. Remove the redundant file from `new` only after confirming that the retained canonical file is valid and correctly represented in the metadata.
+
+The final number of newly added corpus entries may therefore be fewer than four.
+
+## 1.3 Classify and rename the papers
+
+These are intended as core, must-have papers because they support the thesis methodology. Place each nonduplicate canonical PDF under:
 
 ```text
-MATERIAL_DEFECT
-MINOR_DEFECT
-VISUALLY_BENIGN
-FALSE_OR_INTERNAL_BOX_DIAGNOSTIC
-UNRESOLVED
+thesis-writing/literature/papers/
+```
+
+Do not place them in `optional/` unless inspection reveals that a PDF is not actually one of the requested core papers.
+
+Use short, informative, lowercase filenames consistent with the existing corpus convention. Suitable patterns include:
+
+```text
+llm_clinical_knowledge_<first-author>_et_al_<year>.pdf
+llm_causal_graph_priors_<first-author>_et_al_<year>.pdf
+weak_supervision_data_programming_<first-author>_et_al_<year>.pdf
+weak_supervision_snorkel_<first-author>_et_al_<year>.pdf
+```
+
+Derive the exact year and author component from the verified bibliographic record. Preserve each original opaque filename in the `original_filename` column of `catalog.csv`.
+
+Do not prepend arbitrary sequence numbers unless the current canonical corpus requires them.
+
+## 1.4 Update `references.bib`
+
+For every genuinely new paper, add one complete and accurate BibTeX entry to:
+
+```text
+thesis-writing/literature/metadata/references.bib
 ```
 
 Requirements:
 
-* identify the source file and source line range for all 48 warnings;
-* identify the corresponding physical PDF page;
-* inspect every warning above 5 pt at 300 DPI or greater;
-* inspect the largest warning separately;
-* do not classify a warning as benign merely because it appeared in a longtable;
-* state why it is invisible when classified as benign.
+* use a stable and informative citation key;
+* transcribe the exact title and author list;
+* use the correct entry type;
+* include year, venue, volume, issue, pages, DOI, URL, arXiv/eprint, and publisher fields where applicable;
+* include the canonical local PDF path in the existing `file` convention;
+* mark it as `core`;
+* do not invent a DOI or venue;
+* do not create duplicate entries for different versions of the same paper;
+* preserve an existing citation key if the paper is already used by the thesis.
 
-Any warning that cannot be connected to a source location and PDF page remains `UNRESOLVED`.
+Run a duplicate check for:
+
+* citation keys;
+* DOI values;
+* normalized titles;
+* local file paths.
+
+## 1.5 Update `catalog.csv`
+
+Add or update exactly one row per canonical paper using the existing schema:
+
+```text
+citation_key,title,authors,year,venue,doi,url,source_pdf_url,accessed_at,tier,topic,role_in_thesis,reason_optional,original_filename,pdf_path,pdf_status,sha256,notes
+```
+
+Use topics and roles that accurately distinguish the papers. Suggested topic classes are:
+
+```text
+LLM clinical knowledge
+LLM-assisted causal graph construction
+programmatic labeling and weak supervision
+```
+
+Suggested thesis roles:
+
+* evidence that medical LLMs can encode and express substantial clinical knowledge, while retaining important reliability and validation limitations;
+* methodological precedent for using LLM semantic knowledge as a prior or elicitation mechanism in causal-graph construction;
+* foundational reference for expressing domain heuristics as programmatic labeling functions;
+* weak-supervision reference for combining noisy labeling sources and training downstream discriminative models.
+
+For Snorkel, explicitly note that CliniCause does **not** implement the Snorkel generative label model if that remains true. The citation provides methodological context, not an exact implementation description.
+
+## 1.6 Regenerate checksums and corpus documentation
+
+Regenerate:
+
+```text
+thesis-writing/literature/metadata/checksums.sha256
+```
+
+Use the repository’s existing checksum procedure if one exists. Ensure stable sorting and correct relative paths.
+
+Update:
+
+```text
+thesis-writing/literature/README.md
+```
+
+Required changes:
+
+* update core, optional, valid-PDF, and missing-PDF counts from the actual post-edit corpus;
+* add the new LLM methodology topic coverage;
+* remove or correct the statement that no implemented LLM component exists or that LLM literature is intentionally out of scope;
+* describe the LLM as a design-time method used for proxy ontology, decision-rule, and DAG construction;
+* retain the distinction between design provenance, executable source code, and clinical validation;
+* keep the warning that proxy states are not verified diagnoses or formally established latent variables.
+
+Update:
+
+```text
+thesis-writing/literature/llm_methodology_candidate_additions.md
+```
+
+Convert the relevant citation gaps from “candidate” or “unresolved” to their actual post-ingestion status. Record the final citation keys. Do not delete the file if it still serves as a useful decision record.
+
+## 1.7 Remove `new`
+
+At the end of the literature-ingestion phase:
+
+```text
+thesis-writing/literature/new/
+```
+
+must contain no files.
+
+After verifying that every input PDF has either:
+
+* been moved into its canonical location, or
+* been safely removed as a confirmed duplicate,
+
+delete the empty `new` directory.
+
+Do not delete the directory before completing the metadata, checksum, and duplicate checks.
 
 ---
 
-# 7. High-resolution review of all pages
+# Part 2 — Build a thesis-wide LLM claim audit
 
-Render every page individually at no less than 200 DPI.
+Before changing thesis prose, search the full repository for relevant wording:
 
-A contact sheet may be created for navigation, but it is not sufficient evidence.
+```bash
+rg -n -i \
+"LLM|large language model|domain expert|clinician-authored|clinician authored|expert-authored|project-specified|proxy state|proxy variable|latent variable|decision tree|labeling function|weak supervision|data programming|Snorkel|causal graph|DAG|causal discovery|clinical validation|subordinate|out of scope|no implemented LLM|candidate clinical|candidate causal" \
+thesis-writing
+```
 
-Inspect every individual page.
+Classify each hit as one of:
 
-For pages containing:
-
-* tables;
-* longtables;
-* figures;
-* Hebrew;
-* equations;
-* long identifiers;
-* bibliography entries;
-* an overfull warning above 5 pt;
-
-inspect at 300 DPI or greater.
+1. correct and retained;
+2. correct but requires a citation;
+3. obsolete because it understates the LLM role;
+4. unsafe because it overstates clinical or causal validity;
+5. historical record that must remain unchanged;
+6. implementation or artifact documentation requiring clarification.
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_5A_full_resolution_pdf_review.csv
+thesis-writing/logs/llm_methodology_integration_claim_audit.csv
 ```
 
-Use one row per physical page.
-
-Required columns:
+Suggested columns:
 
 ```text
-physical_page
-printed_page
-chapter_or_region
-dpi_reviewed
-page_specific_content
-clipping
-overlap
-left_margin_intrusion
-right_margin_intrusion
-top_margin_intrusion
-bottom_margin_intrusion
-table_readability
-caption_attachment
-figure_layout
-heading_layout
-paragraph_spacing
-rtl_ltr_quality
-unintended_blank_page
-warning_ids_on_page
-required_action
-page_specific_notes
+path,line_or_section,current_claim,classification,required_action,evidence_source,citation_key,final_status
 ```
 
-Do not populate the ledger with identical boilerplate.
+The audit must specifically locate and correct active statements that:
 
-Every row must contain a page-specific description sufficient to show that the actual page was reviewed.
+* say LLM literature is outside the thesis scope;
+* say no implemented LLM component or role was found;
+* describe the LLM contribution as merely incidental or subordinate;
+* attribute the proxy-state definitions, DAGs, or decision trees solely to clinicians when no such sole authorship is supported;
+* imply that the DAGs were data-discovered;
+* imply that proxy labels are clinical ground truth;
+* imply that deep models generated authoritative labels rather than predicted rule-derived labels.
+
+Do not rewrite historical stage reports merely because they reflect the knowledge available when they were created.
 
 ---
 
-# 8. Permitted repairs
+# Part 3 — Correct the thesis content
 
-Make no source change unless a visible defect is confirmed.
+Inspect every thesis source file, not only files containing the string `LLM`. The correction must be coherent across the complete narrative.
 
-Permitted repairs are limited to:
+## 3.1 Title and terminology
 
-* local line breaks;
-* `\allowbreak`;
-* scoped table-column widths;
-* scoped `\tabcolsep`;
-* scoped `\arraystretch`;
-* local font sizing inside one table;
-* nonbreaking spaces;
-* safe URL or identifier breaking;
-* local caption or float-placement correction;
-* local Hebrew/Latin direction formatting.
+Verify that the current title macros use the approved titles:
 
-Do not change:
+**English**
 
-* prose meaning;
-* scientific claims;
-* numbers;
-* signs;
-* rounding;
-* citations;
-* labels;
+```text
+CliniCause: An LLM-Guided Framework for Deep Proxy-State Prediction and Causal Effect Estimation in Multivariate Irregular ICU Time Series
+```
+
+**Hebrew**
+
+```text
+CliniCause: מסגרת מונחית מודל שפה גדול לחיזוי מצבי פרוקסי בלמידה עמוקה ולאמידת השפעות סיבתיות בסדרות זמן רב־משתניות ולא־סדירות מטיפול נמרץ
+```
+
+Do not change them if they already match exactly.
+
+Use these terms consistently:
+
+* `LLM-assisted` or `LLM-guided` for design;
+* `rule-derived proxy label` for labels generated by deterministic trees;
+* `predicted proxy label` for deep-model output;
+* `aggregated predicted proxy label` where majority voting is applied;
+* `project-encoded DAG` or `LLM-assisted, project-specified DAG`;
+* `proxy state`, not verified diagnosis or ground-truth latent state.
+
+Repository identifiers such as `LAT_*` may remain when discussing code.
+
+## 3.2 English and Hebrew abstracts
+
+Update both abstracts so that they are factually equivalent.
+
+They must briefly state this sequence:
+
+1. an LLM-assisted elicitation protocol was used to construct the proxy-state ontology, decision-rule families, and dataset-specific DAG designs;
+2. the selected designs were encoded as deterministic source code;
+3. the decision-tree rules generated rule-derived proxy labels;
+4. deep irregular-time-series models were trained to predict these proxy labels;
+5. predicted or aggregated proxy-state representations were used in DAG-guided causal-effect analyses;
+6. the results remain conditional on proxy validity, graph correctness, measured confounding, support, and model assumptions.
+
+The abstracts must not:
+
+* describe the LLM as clinically validated;
+* claim data-driven causal discovery;
+* claim the labels are diagnoses;
+* claim causal identification was proved;
+* add citations or footnotes;
+* exceed the institutional abstract-length limit.
+
+Preserve all checked numerical results exactly unless the best solution is to omit a number. Do not alter a result value.
+
+## 3.3 Introduction
+
+Update `01_introduction.tex` and related introductory material.
+
+Required changes:
+
+* make LLM-assisted knowledge construction an explicit stage of the framework rather than a subordinate aside;
+* revise the objective so it reflects LLM-assisted construction, deep proxy-state prediction, and causal-effect estimation;
+* revise the main research question if needed;
+* revise the secondary research questions so at least one question addresses construction and traceability of LLM-assisted proxy definitions, decision trees, and DAGs;
+* clarify that deep models learn to predict the labels produced by the deterministic rules;
+* revise the contribution hierarchy and contribution table to include the LLM-guided design layer;
+* preserve the distinction between prediction and causal estimation;
+* preserve all clinical and causal limitations.
+
+A defensible contribution formulation is:
+
+> An evidence-tracked framework that combines LLM-assisted clinical and causal knowledge elicitation, deterministic proxy-label construction, deep prediction of proxy states from irregular ICU time series, and DAG-guided causal-effect estimation.
+
+Do not claim that the thesis empirically compares LLMs, evaluates prompt quality, validates LLM medical expertise, or measures the causal correctness of LLM-generated graphs unless such experiments actually exist.
+
+## 3.4 Background and related work
+
+Add a focused subsection to `02_background_related_work.tex`, positioned where it best connects proxy phenotyping, weak supervision, and causal diagrams.
+
+A suitable heading is:
+
+```latex
+\subsection{LLM-Assisted Clinical and Causal Knowledge Elicitation}
+```
+
+Use the four papers narrowly and accurately.
+
+### Clinical knowledge paper
+
+Use it to support the proposition that advanced LLMs can encode and express substantial medical knowledge and can produce medically relevant reasoning or answers under evaluation.
+
+Also state that this does not establish:
+
+* reliability for a particular clinical design task;
+* correctness of every generated rule;
+* suitability as an autonomous medical expert;
+* clinical validation of CliniCause outputs.
+
+### Causal-graph-prior paper
+
+Use it to support the methodological precedent that LLM semantic knowledge can provide priors, candidate relations, or orientation information for causal-graph construction.
+
+State that:
+
+* this does not validate the CliniCause DAGs;
+* the local graphs were not learned from patient-level data;
+* the implemented graph remains a project-specified assumption encoded in source code;
+* formal adjustment validity depends on the correctness and completeness of those assumptions.
+
+### Data Programming
+
+Use it as the foundational reference for expressing domain knowledge and heuristics as programmatic labeling functions that can produce scalable training labels.
+
+Explain that the CliniCause decision-tree rules play a conceptually related role by generating deterministic proxy labels from observed variables.
+
+Do not imply that CliniCause reproduces every element of the Data Programming framework.
+
+### Snorkel
+
+Use it to explain weak supervision and the general transition from imperfect rule-based sources to downstream discriminative models.
+
+Preserve or strengthen the existing distinction:
+
+* Snorkel learns a generative label model that estimates source accuracy and dependence;
+* CliniCause uses its own deterministic rule construction and implemented aggregation workflow;
+* deterministic majority voting is not the Snorkel generative label model;
+* citing Snorkel provides conceptual context, not implementation equivalence.
+
+Revise the closing positioning subsection so the thesis explicitly includes LLM-assisted knowledge elicitation among the methodological components being integrated.
+
+## 3.5 Study design and pipeline description
+
+Inspect `03_problem_definition_study_design.tex`, workflow tables, and any conceptual pipeline diagram.
+
+The study design should distinguish two layers:
+
+### Design-time knowledge-construction layer
+
+```text
+dataset description and clinical sources
+→ structured LLM elicitation protocol
+→ proposed proxy ontology, decision rules, missingness considerations, and DAG
+→ project selection and encoding into source code
+```
+
+Do not invent undocumented human or clinician review. When review status is unclear, say that the proposals were selected or encoded by the project and that formal clinical-review provenance remains incomplete.
+
+### Executed analytical layer
+
+```text
+raw ICU data
+→ preprocessing
+→ deterministic decision-tree labeling
+→ deep multi-label prediction
+→ prediction normalization and aggregation
+→ DAG-guided matching and effect estimation
+→ sensitivity and permutation diagnostics
+```
+
+The LLM should not be shown as executing patient-level inference during the analytical run unless repository evidence proves that it did.
+
+Update any workflow figure or table that incorrectly begins with rule-based labeling while omitting the design-time origin of the rules and DAGs. Protect all numerical result figures. Do not edit result plots for this conceptual correction.
+
+## 3.6 Proxy-state construction chapter
+
+Make `05_proxy_state_construction.tex` the authoritative methodological explanation of the LLM role.
+
+It should document:
+
+* the generic and dataset-specific prompt artifacts;
+* that the protocol requested dataset audit, ontology construction, proxy-state definitions, binary decision trees, missingness reasoning, and DAG construction;
+* the final PhysioNet and MIMIC prompt runs;
+* the distinction between old and final prompt versions;
+* the user-reported model/version and date, with the existing provenance qualification;
+* which outputs align with the active proxy-state schemas;
+* how proposed rules were translated or encoded into active tagging scripts;
+* that the active source code is authoritative for the implemented rules;
+* that the prompt PDFs are design-provenance artifacts rather than execution logs;
+* that the resulting labels are deterministic rule-derived proxies;
+* that no chart-adjudicated clinical validation is established.
+
+Add or update a traceability table with columns similar to:
+
+```text
+Design element
+LLM provenance artifact
+Implemented source file
+Generated artifact
+Validation status
+Principal limitation
+```
+
+Cover at least:
+
+* PhysioNet proxy ontology;
+* MIMIC proxy ontology;
+* PhysioNet decision rules;
+* MIMIC decision rules;
+* PhysioNet DAG;
+* MIMIC DAG.
+
+Do not state that every implemented line can be traced verbatim to the LLM output when the current audit says traceability is only partial.
+
+## 3.7 Predictive-modeling chapter
+
+Inspect the predictive-model chapter and make the supervision chain explicit:
+
+```text
+LLM-assisted decision-rule design
+→ deterministic rule-derived proxy labels
+→ deep-model training targets
+→ predicted proxy probabilities and binary labels
+```
+
+State clearly:
+
+* the deep models do not discover clinically verified states;
+* they predict the labels produced by the project rules;
+* AUROC, AUPRC, and related metrics measure performance against rule-derived targets;
+* strong performance demonstrates learnability or reproducibility of those labels, not clinical construct validity;
+* model predictions can reproduce both useful structure and systematic rule error;
+* the output probabilities and thresholded labels are distinct artifacts;
+* majority voting across model predictions is algorithmic aggregation, not expert consensus.
+
+Avoid calling this process “ground-truth label generation.”
+
+Use “deep proxy-state prediction” or “prediction of rule-derived proxy labels.”
+
+## 3.8 Causal methodology chapter
+
+Update `07_causal_methodology.tex` and related causal-method text.
+
+Required clarification:
+
+* the DAG design was produced through an LLM-assisted clinical and causal elicitation process;
+* the resulting graphs were encoded as project source code;
+* the graphs were not learned from the patient data;
+* the LLM does not select adjustment variables dynamically during estimator execution;
+* the active graph scripts and confounder-selection code determine the implemented adjustment workflow;
+* backdoor adjustment remains valid only if the graph and measurement assumptions are adequate;
+* an LLM-generated or LLM-assisted graph is not intrinsically more correct than a manually proposed graph;
+* predicted proxy labels introduce exposure-measurement error into the causal stage;
+* error can propagate from rule design through prediction and aggregation into effect estimation.
+
+Verify from source code and run artifacts whether the downstream causal analyses used direct rule labels, individual model predictions, majority-vote labels, or different inputs in different experiments. State the exact verified lineage. Do not generalize one lineage to all results when the evidence differs.
+
+## 3.9 Results chapter
+
+Do not change any numerical result, table value, plot value, estimator result, ranking, sample size, or effect direction.
+
+Only make terminology-level corrections needed to explain that:
+
+* predictive metrics use rule-derived proxy labels as targets;
+* the reported models predict proxy states defined through the LLM-assisted, source-encoded rule system;
+* causal estimates are based on the verified proxy-label artifact lineage;
+* the results do not constitute an evaluation of the LLM itself;
+* there is no LLM ablation, clinician comparison, prompt-sensitivity experiment, or graph-correctness experiment unless such evidence exists.
+
+Do not add an “LLM performance” result section.
+
+## 3.10 Discussion and limitations
+
+Expand `11_discussion.tex` with a dedicated discussion of the LLM-assisted design layer.
+
+Discuss potential advantages conservatively:
+
+* structured elicitation of domain concepts;
+* scalable generation of candidate proxy definitions and rules;
+* explicit prompt artifacts that improve design provenance;
+* ability to create parallel dataset-specific proposals;
+* conversion of unstructured domain reasoning into inspectable source-coded artifacts.
+
+Add explicit limitations:
+
+* hallucination and unsupported clinical assertions;
+* sensitivity to prompt wording, supplied context, model version, and model updates;
+* incomplete reproducibility of hosted-model behavior;
+* unknown or incompletely documented decoding and system settings;
+* possible dependence on hidden training data;
+* anchoring and confirmation bias during project selection;
+* incomplete prompt-output-to-code traceability;
+* lack of documented clinician-panel adjudication;
+* lack of chart-level proxy validation;
+* lack of comparison against clinician-only rule and DAG construction;
+* lack of alternative-LLM replication;
+* lack of prompt perturbation or model-version sensitivity analysis;
+* possible propagation of design error into labels, predictions, adjustment sets, and causal estimates.
+
+Explicitly state:
+
+> Predictive agreement with LLM-assisted rule-derived labels validates neither the clinical construct nor the LLM-generated design.
+
+> Sensitivity and permutation diagnostics do not validate the proxy ontology or DAG.
+
+## 3.11 Conclusions and future work
+
+Update `12_conclusions_future_work.tex` so the conclusion reflects the corrected framework:
+
+```text
+LLM-assisted domain-knowledge construction
++ deterministic proxy labeling
++ deep proxy-state prediction
++ DAG-guided causal-effect estimation
+```
+
+Do not end with a claim that an LLM can replace a clinician or causal expert.
+
+Add concrete future-work items:
+
+* blinded clinician review of proxy definitions and graph edges;
+* chart-adjudicated proxy-state validation;
+* inter-reviewer agreement;
+* comparison of LLM-assisted, clinician-only, and hybrid designs;
+* prompt and model-version sensitivity studies;
+* replication with multiple LLM families;
+* rule ablation and threshold sensitivity;
+* formal label-noise modeling;
+* DAG edge-by-edge review and alternative-graph analysis;
+* prospective or external-dataset validation;
+* evaluation of measurement error in downstream causal estimates.
+
+## 3.12 Current planning, terminology, and evidence files
+
+Update current canonical files when they contain now-obsolete statements:
+
+```text
+thesis-writing/audit/llm_prompt_provenance_audit.md
+thesis-writing/audit/claim_evidence_ledger.csv
+thesis-writing/planning/citation_plan.md
+thesis-writing/planning/chapter_evidence_map.md
+thesis-writing/planning/thesis_story.md
+thesis-writing/planning/terminology_and_notation.md
+thesis-writing/audit/terminology_map.md
+thesis-writing/reproducibility/provenance_gaps.csv
+```
+
+The updated LLM audit should retain all evidence boundaries but change the role from merely incidental provenance to a substantive design-time methodology supported by the newly added literature.
+
+Do not rewrite unresolved facts as resolved. In particular, preserve uncertainty about:
+
+* exact hosted-model metadata that is only user reported;
+* decoding or system settings;
+* exact human-review chain;
+* clinical adjudication;
+* complete line-by-line correspondence between LLM outputs and implementation.
+
+Do not modify past stage reports to make them appear as though the new literature or clarification existed at the time.
+
+---
+
+# Part 4 — Citation policy
+
+Use the new references only for claims they actually support.
+
+The literature may support:
+
+* demonstrated medical-knowledge capabilities of evaluated LLMs;
+* the use of LLM knowledge as a prior or proposal mechanism for causal graphs;
+* programmatic construction of training labels from domain heuristics;
+* weak-supervision workflows that train discriminative models from imperfect labeling sources.
+
+The literature does not establish:
+
+* correctness of the CliniCause rules;
+* clinical validity of the CliniCause proxy states;
+* correctness of the CliniCause DAGs;
+* correctness of CliniCause causal estimates;
+* that ChatGPT 5.4 produced medically reliable outputs in this project;
+* that the local process implements the exact algorithms from Data Programming or Snorkel.
+
+Do not add citations to the abstracts.
+
+Do not cite all four papers as an undifferentiated group. Place each citation beside the precise claim it supports.
+
+Ensure that:
+
+* every added citation key exists;
+* every new BibTeX entry is cited where appropriate;
+* no duplicate keys exist;
+* no uncited entry was added without a documented corpus reason;
+* the bibliography builds without warnings or unresolved references.
+
+---
+
+# Part 5 — Protected scope
+
+Allowed edits include:
+
+```text
+thesis-writing/literature/papers/
+thesis-writing/literature/new/
+thesis-writing/literature/metadata/
+thesis-writing/literature/README.md
+thesis-writing/literature/llm_methodology_candidate_additions.md
+thesis-writing/thesis/
+current canonical planning, audit, terminology, and provenance files directly affected by the corrected LLM role
+new evidence-report files under thesis-writing/logs/
+```
+
+Forbidden edits include:
+
+```text
+causal-irregular-time-series/
+STraTS/
+thesis-writing/results/
+checked result CSVs
+model artifacts
+result figures
+historical stage evidence reports
+unrelated thesis content
+```
+
+Do not alter:
+
+* numerical results;
+* equations unrelated to the methodological correction;
 * table values;
-* table row order;
-* figure files;
-* figure captions;
-* figure placement;
-* estimator terminology;
-* evidence status;
-* causal or clinical strength.
-
-Do not apply global `\sloppy`, global `\emergencystretch`, smaller margins, reduced line spacing, or global font-size suppression.
+* figure data;
+* estimator descriptions unrelated to provenance;
+* institutional names or author metadata;
+* ethics or governance claims without authoritative evidence.
 
 ---
 
-# 9. Allowed files
+# Part 6 — Validation
 
-You may create:
+## 6.1 Literature validation
+
+Verify:
+
+* every retained PDF opens successfully;
+* every retained PDF is genuinely a PDF;
+* title-page metadata matches `catalog.csv` and BibTeX;
+* citation keys are unique;
+* normalized titles are unique;
+* DOI values are unique;
+* canonical PDF paths are unique;
+* every `file` path in the new BibTeX entries exists;
+* every `pdf_path` marked `present` exists;
+* every SHA-256 value matches the file;
+* corpus counts in `README.md` match the actual catalog;
+* `checksums.sha256` verifies successfully;
+* there are no files under `literature/new`;
+* the `literature/new` directory no longer exists.
+
+Run any existing literature-integrity scripts before inventing new ones.
+
+## 6.2 Thesis claim validation
+
+Search again for obsolete or unsafe language, including:
 
 ```text
-thesis-writing/logs/stage_5_5A_overfull_localization.csv
-thesis-writing/logs/stage_5_5A_full_resolution_pdf_review.csv
-thesis-writing/logs/stage_5_5A_evidence_report.md
+no implemented LLM
+LLM literature is out of scope
+LLM role is subordinate
+clinician-authored DAG
+clinically validated proxy
+ground-truth latent
+LLM-discovered causal graph
+AI-validated
+LLM domain expert
 ```
 
-You may regenerate:
+Every remaining occurrence must be either:
 
-```text
-thesis-writing/thesis/main.pdf
+* historically quoted;
+* explicitly qualified;
+* located in a protected historical report;
+* documented in the claim-audit CSV.
+
+Check that the method chain is consistent across:
+
+* title;
+* both abstracts;
+* introduction;
+* related work;
+* study design;
+* proxy-state construction;
+* predictive modeling;
+* causal methodology;
+* results interpretation;
+* discussion;
+* conclusions;
+* current audit and planning files.
+
+## 6.3 Numerical and artifact protection
+
+Confirm that no protected research artifact changed.
+
+Inspect the thesis diff specifically for changed:
+
+* result values;
+* percentages;
+* sample sizes;
+* effect estimates;
+* confidence intervals;
+* metric values;
+* table rows;
+* figure filenames or contents.
+
+Any unexplained numerical change is blocking.
+
+## 6.4 LaTeX and PDF validation
+
+Use the repository’s canonical clean-build command.
+
+At minimum:
+
+```bash
+git diff --check
 ```
 
-You may edit a thesis `.tex` file only when a concrete material or minor rendered defect is documented before the edit.
+Then perform the full LaTeX/Biber build and verify:
 
-Do not edit any prior-stage log.
+* successful PDF generation;
+* no undefined citations;
+* no undefined references;
+* no missing bibliography entries;
+* no missing files;
+* no broken Hebrew text;
+* correct English and Hebrew titles;
+* equivalent abstract claims;
+* correct bibliography rendering;
+* no material new overfull or underfull defects.
+
+Because the new text may shift pagination, render and inspect the complete PDF page by page, not only a contact sheet. Pay particular attention to:
+
+* English title page;
+* English abstract;
+* Hebrew abstract;
+* introduction contribution table;
+* new related-work subsection;
+* proxy-state traceability table;
+* causal-method chapter;
+* discussion limitations;
+* conclusions;
+* bibliography;
+* Hebrew cover.
+
+Record every material visual problem and repair only problems introduced by this task.
 
 ---
 
-# 10. Post-repair validation
-
-After any repair:
-
-* rebuild cleanly;
-* repeat the affected page rendering at 300 DPI;
-* inspect adjacent pages;
-* confirm no numerical token changed;
-* confirm no citation key changed;
-* confirm no label changed;
-* confirm no table value changed;
-* confirm no figure or caption changed;
-* recalculate all protected hashes.
-
-The final PDF must still contain 109 pages unless a documented layout correction legitimately changes pagination. Any pagination change requires complete reinspection of all subsequent pages.
-
----
-
-# 11. Evidence report
+# Part 7 — Required reports
 
 Create:
 
 ```text
-thesis-writing/logs/stage_5_5A_evidence_report.md
+thesis-writing/logs/llm_literature_ingestion_report.md
+thesis-writing/logs/llm_methodology_integration_claim_audit.csv
+thesis-writing/logs/llm_methodology_integration_evidence_report.md
 ```
+
+## Literature-ingestion report
 
 Include:
 
-1. verified head and parent;
-2. exact commands executed;
-3. confirmation that no research code was executed;
-4. build results;
-5. all 48 overfull warnings localized;
-6. largest overflow location and disposition;
-7. pages reviewed at 200 DPI;
-8. pages reviewed at 300 DPI or greater;
-9. material defects found;
-10. minor defects found;
-11. repairs made;
-12. source files changed;
-13. numerical, citation, label, table-value, figure, and caption comparison;
-14. protected-hash result;
-15. final PDF page count and SHA-256;
-16. readiness decision.
+* original files found in `new`;
+* identified paper for each file;
+* bibliographic verification source;
+* original and final filenames;
+* duplicate decisions;
+* final citation keys;
+* final PDF paths;
+* SHA-256 values;
+* catalog-count changes;
+* confirmation that `new` was deleted.
 
-Use exactly one final status:
+## Evidence report
+
+Include:
+
+1. repository baseline;
+2. pre-existing dirty state;
+3. authoritative author clarification used;
+4. papers inspected and their methodological roles;
+5. all files changed;
+6. thesis sections changed;
+7. old claims corrected;
+8. claims deliberately retained;
+9. citations added and exact supporting role;
+10. duplicate-resolution decisions;
+11. protected-artifact comparison;
+12. literature validation results;
+13. LaTeX build results;
+14. PDF page-review result;
+15. unresolved provenance, clinical-validation, or reproducibility gaps;
+16. final readiness decision.
+
+Use one exact final state:
 
 ```text
-READY FOR AUTHOR FIRST-DRAFT REVIEW
-BLOCKED BEFORE AUTHOR FIRST-DRAFT REVIEW
+READY FOR AUTHOR REVIEW OF LLM METHODOLOGY INTEGRATION
 ```
 
-Use `READY FOR AUTHOR FIRST-DRAFT REVIEW` only if:
+or:
 
-* every physical page was individually reviewed at adequate resolution;
-* all 48 overfull warnings were localized;
-* the largest warning was conclusively explained or repaired;
-* no material visual defect remains;
-* no scientific content changed;
-* no protected evidence changed;
-* the clean build passes.
+```text
+BLOCKED BEFORE AUTHOR REVIEW OF LLM METHODOLOGY INTEGRATION — <specific reason>
+```
 
 Do not commit or push.

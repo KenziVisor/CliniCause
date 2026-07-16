@@ -1,29 +1,29 @@
 \chapter{Clinical Proxy-State Construction}
 \label{chap:clinical-proxy-state-construction}
 
-This chapter describes how the repository transforms heterogeneous, irregular ICU measurements into a smaller set of interpretable binary constructs.  The constructs provide supervised targets for the proxy-state prediction task introduced in Chapter~\ref{chap:problem-definition-study-design} and structured proxy-state exposures for later observational analyses.  Their interpretability comes from explicit source-code rules and from stable \texttt{LAT\_*} column names, not from chart-adjudicated clinical reference labels.  They should therefore be read as proxy states: useful analytical representations whose value depends on construct validity, source-variable availability, measurement quality, missingness, and later clinical review.
+This chapter describes how an LLM-assisted design protocol and deterministic project source transform heterogeneous, irregular ICU measurements into a smaller set of interpretable binary constructs.  The protocol elicited proposed proxy ontologies, decision rules, missingness considerations, and DAGs; project-selected designs were subsequently encoded as tagger and graph source files.  The deterministic taggers generate supervised targets for the proxy-state prediction task introduced in Chapter~\ref{chap:problem-definition-study-design}, and predicted or aggregated proxy labels become structured exposures for later observational analyses.  Their interpretability comes from inspectable source-code rules and stable \texttt{LAT\_*} column names, not from chart-adjudicated clinical reference labels.  They should therefore be read as proxy states: useful analytical representations whose value depends on construct validity, source-variable availability, measurement quality, missingness, and later clinical review.
 
-The chapter is limited to methods and construct definition.  It documents the active rule implementations for PhysioNet 2012 and MIMIC-III, describes available validation artifacts without reporting their numerical contents, and explains how rule-derived labels differ from model-predicted and majority-vote proxy states.  Predictive-model architecture and training mechanics are presented in Chapter~\ref{chap:predictive-modeling-proxy-states}; final numerical results are reported in Chapter~\ref{chap:results}.
+The chapter is limited to methods and construct definition.  It documents the design-provenance artifacts and active rule implementations for PhysioNet 2012 and MIMIC-III, describes available validation artifacts without reporting their numerical contents, and explains how rule-derived proxy labels differ from predicted and aggregated predicted proxy labels.  Predictive-model architecture and training mechanics are presented in Chapter~\ref{chap:predictive-modeling-proxy-states}; final numerical results are reported in Chapter~\ref{chap:results}.
 
 \section{Rationale and Terminology}
 \label{sec:clinical-proxy-state-construction:rationale-terminology}
 % Section ID: C5.1.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-Electronic health-record phenotyping often uses structured measurements, codes, and rules to construct clinically meaningful variables when direct expert labels are unavailable \cite{banda_2018_electronic_phenotyping}.  This thesis uses the same conservative framing.  A \emph{proxy state} is a binary construct intended to summarize evidence for a clinically meaningful condition or physiologic state from the available data.  A \emph{proxy phenotype} is the same family of construct, with emphasis on phenotype-like grouping rather than direct measurement.  A \emph{clinically inspired proxy label} is a weak label based on clinical measurements, thresholds, or rule clauses rather than a chart-adjudicated endpoint.  A \emph{rule-based proxy state} is assigned by deterministic source-code rules.  A \emph{predicted proxy state} is produced by a supervised time-series model trained to estimate rule-derived labels.  A \emph{majority-vote proxy state} is the deterministic aggregation of binary voter files.  A \emph{binary proxy-state tag} is the realized 0/1 value for one \texttt{ts\_id} and one proxy-state column.
+Electronic health-record phenotyping often uses structured measurements, codes, and rules to construct clinically meaningful variables when direct expert labels are unavailable \cite{banda_2018_electronic_phenotyping}.  This thesis uses the same conservative framing.  A \emph{proxy state} is a binary construct intended to summarize evidence for a clinically meaningful condition or physiologic state from the available data.  A \emph{proxy phenotype} is the same family of construct, with emphasis on phenotype-like grouping rather than direct measurement.  A \emph{clinically inspired proxy label} is a weak label based on clinical measurements, thresholds, or rule clauses rather than a chart-adjudicated endpoint.  A \emph{rule-derived proxy label} is assigned by deterministic source-code rules.  A \emph{predicted proxy label} is produced by a supervised time-series model trained to estimate rule-derived labels.  An \emph{aggregated predicted proxy-label representation} is an algorithmic aggregate used downstream; in the archived final causal runs, its deterministic vote combines one rule-derived source with four aligned binary model-prediction sources.  A \emph{binary proxy-state tag} is the realized 0/1 value for one \texttt{ts\_id} and one proxy-state column.
 
 The repository historically uses the names \texttt{latent}, \texttt{latent variable}, \texttt{latent tag}, and \texttt{LAT\_*}.  Those names are stable implementation vocabulary.  The thesis retains the \texttt{LAT\_*} column names when identifying artifacts, configuration fields, prediction targets, and downstream exposure variables, but uses ``proxy state'' in explanatory prose.  This avoids implying that the implementation has discovered or validated a hidden biologic state.
 
-The proxy-state layer serves four methodological roles.  First, it compresses multivariate measurements into interpretable, patient- or stay-level constructs.  Second, it supplies weak or rule-derived supervised targets for multi-label prediction.  Third, it establishes a consistent variable interface for downstream mortality, matching, and CATE scripts.  Fourth, it preserves a transparent mapping from each \texttt{LAT\_*} column back to measurement families and rule clauses.
+The proxy-state layer serves four methodological roles.  First, it converts selected LLM-assisted design proposals into source-coded, patient- or stay-level analytical constructs.  Second, it supplies rule-derived supervised targets for multi-label prediction.  Third, it establishes a consistent variable interface for downstream aggregation, mortality, matching, and CATE scripts.  Fourth, it preserves a transparent mapping from each \texttt{LAT\_*} column back to measurement families and rule clauses.
 
 The limitations are equally central.  No chart-adjudicated reference labels or clinician-reviewed gold-standard labels were found in the inspected archive.  Thresholds approximate clinical ideas but are not equivalent to complete formal clinical definitions.  Missing measurements can prevent rule clauses from firing; a negative tag therefore does not prove absence of the condition, and a positive tag does not establish a clinical diagnosis.  Source-variable availability differs between PhysioNet and MIMIC-III, so similarly named cross-dataset states are not automatically identical constructs.  Weak-supervision literature supports the broad idea that noisy labeling sources and aggregation can be useful, but this project does not implement the Snorkel generative label model \cite{ratner_et_al_2020_snorkel}.
 
-\subsection{LLM-Assisted Ontology and Rule Elicitation}
+\subsection{LLM-Assisted Proxy-State, Decision-Rule, and DAG Construction}
 \label{subsec:clinical-proxy-state-construction:llm-assisted-elicitation}
 
-The proxy-state ontology and dataset-specific DAGs also have prompt-provenance artifacts under \texttt{thesis-writing/prompts-and-documents/}.  Those artifacts document an LLM-assisted elicitation process used to propose candidate latent/proxy clinical states, rule families, missingness and measurement-process considerations, and DAG structures for PhysioNet 2012 and MIMIC-III.  The final dataset prompts instantiate a generic prompt template with only the dataset name and official dataset-description URL changed.  The exported prompt runs are documented, based on user-supplied project metadata, as ChatGPT 5.4 with extended reasoning; the PDF exports themselves record browser-export metadata but do not independently encode the model-version field.
+The proxy-state ontology, decision rules, and dataset-specific DAGs have prompt-provenance artifacts under \texttt{thesis-writing/prompts-and-documents/}.  Those artifacts document a substantive design-time LLM-assisted elicitation process that requested a dataset audit, clinical and causal ontology, proxy-state definitions, binary decision-tree proposals, missingness and measurement-process reasoning, and a DAG for PhysioNet 2012 and MIMIC-III.  The final dataset prompts instantiate a generic prompt template with only the dataset name and official dataset-description URL changed.  The final PhysioNet and MIMIC prompt runs were exported on 2026-05-01.  Project-supplied metadata identifies the model as ChatGPT 5.4 with extended reasoning, but the PDF metadata does not independently encode that model/version field; the exact system instructions, decoding settings, browsing or research mode, follow-up interactions, and export procedure remain incompletely documented.
 
-This prompt layer is treated as design provenance rather than clinical validation or source-code authority.  The LLM did not learn labels or graphs from patient-level records in this repository, did not execute the preprocessing, prediction, majority-vote, or causal-estimation pipeline, and did not produce chart-adjudicated reference labels.  The implemented rule-derived proxy states are defined by the active tagger source files, and the implemented DAG artifacts are defined by the active graph scripts.  The prompt outputs are therefore useful for explaining how candidate constructs were elicited and refined, but any final thesis claim about implemented behavior must trace to source code, configuration, and run artifacts.
+The LLM-generated outputs were design proposals subsequently selected and encoded by the project, not clinical validation or source-code authority.  The LLM did not learn labels or graphs from patient-level records in this repository, did not execute preprocessing, deterministic labeling, prediction, majority voting, adjustment selection, or causal estimation, and did not produce chart-adjudicated reference labels.  The implemented rule-derived proxy labels are defined by the active tagger source files, and the implemented DAG artifacts are defined by the active graph scripts.  The prompt outputs explain the design history, whereas any claim about implemented behavior must trace to source code, configuration, and run artifacts.
 
 \begin{table}[htbp]
 \centering
@@ -34,14 +34,42 @@ This prompt layer is treated as design provenance rather than clinical validatio
 \toprule
 Artifact & Dataset & Role & Version status & Thesis relation \\
 \midrule
-Generic prompt template & Generic & Template for staged ontology, rule, missingness, and DAG elicitation. & Final template & Prompt-engineering provenance only. \\
-PhysioNet prompt and run export & PhysioNet & Dataset-specific prompt and exported ChatGPT run. & Final run & Candidate design proposal; not implementation authority. \\
-MIMIC prompt and run export & MIMIC-III & Dataset-specific prompt and exported ChatGPT run. & Final run & Candidate design proposal; not implementation authority. \\
+Generic prompt template & Generic & Template for staged ontology, rule, missingness, and DAG elicitation. & Final template & Design-time elicitation protocol; not execution or validation. \\
+PhysioNet prompt and run export & PhysioNet & Dataset-specific prompt and exported ChatGPT run. & Final run & Design proposals subsequently selected and source-encoded; not implementation authority. \\
+MIMIC prompt and run export & MIMIC-III & Dataset-specific prompt and exported ChatGPT run. & Final run & Design proposals subsequently selected and source-encoded; not implementation authority. \\
 Earlier prompt-result exports & Both & Earlier prompt outputs. & Superseded & Historical design trace only. \\
-Manager-summary documents & Project & Management summaries of proxy/DAG and clinical CATE review concepts. & Review documents & Human/project review context; not source execution. \\
+Manager-summary documents & Project & Management summaries of proxy/DAG and clinical CATE review concepts. & Project documents & Do not establish a complete human or clinical review chain. \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+Earlier prompt-result exports dated 2026-04-29 are superseded design records rather than the final prompt runs.  At schema level, the final PhysioNet output proposes the same eleven active \texttt{LAT\_*} states as the active PhysioNet tagger, and the final MIMIC output proposes the same ten active states as the active MIMIC tagger.  Both outputs discuss measurement and missingness processes that also appear in the graph layer.  This alignment is high level: the implemented source contains more precise clauses and graph structure, and complete line-by-line correspondence between every LLM output and the active implementation has not been established.
+
+\begingroup
+\scriptsize
+\sloppy
+\setlength{\tabcolsep}{1.5pt}
+\begin{longtable}{@{}p{0.12\textwidth}p{0.14\textwidth}p{0.18\textwidth}p{0.18\textwidth}p{0.14\textwidth}p{0.15\textwidth}@{}}
+\caption{Traceability from LLM-assisted design artifacts to implemented proxy and DAG artifacts.}
+\label{tab:llm-design-implementation-traceability}\\
+\toprule
+Design element & LLM provenance artifact & Implemented source file & Generated artifact & Validation status & Principal limitation \\
+\midrule
+\endfirsthead
+\toprule
+Design element & LLM provenance artifact & Implemented source file & Generated artifact & Validation status & Principal limitation \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+PhysioNet proxy ontology & \nolinkurl{physionet-prompt.txt}; \nolinkurl{physionet-prompt-running.pdf} & \nolinkurl{tagging_latent_variables_physionet.py} & \nolinkurl{physionet-latent-tags.csv} & Eleven-state schema alignment; deterministic output present. & No chart adjudication; construct validity and line-level traceability incomplete. \\
+MIMIC proxy ontology & \nolinkurl{mimic-prompt.txt}; \nolinkurl{mimic-prompt-running.pdf} & \nolinkurl{tagging_latent_variables_mimiciii.py} & \nolinkurl{latent_tags.csv} & Ten-state schema alignment; deterministic output and descriptive summaries present. & No chart adjudication; input-mode and construct validity remain unresolved. \\
+PhysioNet decision rules & PhysioNet final prompt and run export & \nolinkurl{tagging_latent_variables_physionet.py} & PhysioNet proxy-label table and decision-tree artifacts & Active source clauses documented in this chapter. & Source is more precise than prompt narrative; no formal clinical-rule adjudication. \\
+MIMIC decision rules & MIMIC final prompt and run export & \nolinkurl{tagging_latent_variables_mimiciii.py} & MIMIC proxy-label, merged-feature, and decision-tree artifacts & Active source clauses and diagnostic summaries documented. & No proof every proposal was implemented unchanged; no formal clinical-rule adjudication. \\
+PhysioNet DAG & PhysioNet final prompt and run export & \nolinkurl{physionet2012_causal_graph.py} & \nolinkurl{physionet_causal_graph.pkl}; \nolinkurl{physionet_causal_dag.png} & Active source reproduces the archived graph artifact. & No clinical edge validation or complete selection-decision record. \\
+MIMIC DAG & MIMIC final prompt and run export & \nolinkurl{mimiciii_causal_graph.py} & \nolinkurl{mimic_causal_graph.pkl}; \nolinkurl{mimic_causal_dag.png} & Active source reproduces the archived graph artifact. & No clinical edge validation or complete selection-decision record. \\
+\end{longtable}
+\endgroup
 
 \begin{table}[htbp]
 \centering
@@ -52,9 +80,9 @@ Manager-summary documents & Project & Management summaries of proxy/DAG and clin
 \toprule
 Source type & Generation mechanism & Interpretation boundary & Primary evidence \\
 \midrule
-Rule-derived proxy state & Deterministic clinical rules applied to summary features or helper flags. & Transparent weak label; not a verified diagnosis or formal score unless the full score is implemented. & Active tagger source and rule artifacts. \\
-Predicted proxy state & Time-series model probability thresholded at 0.5 for each target column. & Model estimate of a rule-derived proxy label; not a direct clinical measurement. & STraTS export source and prediction CSV schema. \\
-Majority-vote proxy state & Deterministic vote across binary voter CSVs aligned on shared \texttt{ts\_id}. & Aggregated binary proxy; not clinical consensus and not a probabilistic label model. & Majority-vote source and causal run summaries. \\
+Rule-derived proxy label & Deterministic clinical rules applied to summary features or helper flags. & Transparent weak label; not a verified diagnosis or formal score unless the full score is implemented. & Active tagger source and rule artifacts. \\
+Predicted proxy label & Time-series model probability thresholded at 0.5 for each target column. & Model estimate of a rule-derived proxy label; not a direct clinical measurement. & STraTS export source and prediction CSV schema. \\
+Aggregated predicted proxy-label representation & Deterministic vote across one rule-derived CSV and four aligned binary model-prediction CSVs in the archived final causal runs. & Mixed-source aggregated binary proxy; not clinical consensus and not a probabilistic label model. & Majority-vote logs, source, and causal run summaries. \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -181,28 +209,28 @@ Exact clinical-source support remains incomplete for the MIMIC chronic-burden, m
 
 The MIMIC output directory contains a binary tag CSV, a merged feature table, prevalence and co-occurrence summaries, mortality-association summaries, a JSON validation summary, and a decision-tree pickle.  The tag CSV, \texttt{latent\_tags.csv}, is keyed by \texttt{ts\_id}.  The merged feature table retains the summary features used by the rules together with the resulting tags, making it a diagnostic trace of the construction process.  The prevalence table describes how often each proxy label fires; those values are descriptive properties of the labels, not clinical validation.  The mortality-by-tag table reports unadjusted mortality association by proxy value, and its risk ratios are not causal estimates.  The co-occurrence table reports pairwise association among proxy states.  The JSON validation summary stores available-latent metadata, prevalence records, mortality-association records, sanity checks, and interpretation notes.  None of these files is a substitute for expert chart-review validation.
 
-\section{Predicted and Majority-Vote Proxy States}
+\section{Predicted and Aggregated Proxy Labels}
 \label{sec:clinical-proxy-state-construction:predicted-majority-vote-proxy-states}
 % Section ID: C5.4.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-The same \texttt{LAT\_*} column names can appear in three different source types.  A rule-derived proxy state is generated by the PhysioNet or MIMIC tagger rules above.  A predicted proxy state is exported by a supervised time-series model described in Chapter~\ref{chap:predictive-modeling-proxy-states}.  A majority-vote proxy state is generated by aligning several binary voter files and applying a deterministic voting rule.  These source types share an interface but not a generation mechanism.
+The same \texttt{LAT\_*} column names can appear in three different source types.  A rule-derived proxy label is generated by the PhysioNet or MIMIC tagger rules above.  A predicted proxy label is exported by a supervised time-series model described in Chapter~\ref{chap:predictive-modeling-proxy-states}.  An aggregated predicted proxy-label representation is generated by aligning binary voter files and applying a deterministic majority-vote rule.  These source types share an interface but not a generation mechanism.  Across all twelve archived final causal runs, the vote logs enumerate exactly five sources: the dataset's deterministic rule-derived proxy-label table and thresholded predicted-label tables from GRU, GRU-D, STraTS, and TCN.  SAnD is not listed as a voter.  The logs verify the filenames and downstream handoff, but the external voter files, their hashes, and their checkpoint-to-export mappings are not retained within the run folders.
 
 Prediction exports contain \texttt{ts\_id}, one probability column named \texttt{<label>\_prob} per proxy target, and one thresholded binary column named exactly as the target label.  The STraTS export code thresholds probabilities at 0.5.  Downstream voting does not consume probability columns as votes.  The helper \texttt{split\_predicted\_latent\_tags.py} separates the probability half and binary-tag half of a combined prediction CSV, while the parent router can also drop \texttt{\_prob} columns and write a binary-only voter table in configured \texttt{LAT\_*} order.  Export provenance remains incomplete, so this chapter does not claim that every archived prediction CSV is out-of-sample or tied to a verified checkpoint manifest.
 
 The active majority-vote script discovers non-hidden \texttt{.csv} files in the input voter directory, sorts them by path string, and treats the first file as the reference column-order file.  Every voter file must contain \texttt{ts\_id}, have no duplicate normalized identifiers, and contain at least one non-identifier column.  All non-\texttt{ts\_id} columns are treated as latent columns; nonbinary values, including unsplit probability columns, cause validation failure.  Later voters must have exactly the same latent-column set as the reference, although they are reordered to the reference order before voting.  Rows are aligned on the intersection of \texttt{ts\_id} values shared by all voters, and the output order follows the reference file restricted to that shared intersection.
 
-For record \(i\), proxy state \(k\), and \(M\) aligned voter files, the implemented rule is
+For record \(i\), proxy state \(k\), and \(M\) aligned voter files, write \(L_{ik}^{(m)}\) for the binary value from voter \(m\).  The implemented rule is
 \[
-\widetilde{Z}_{ik}
+\widetilde{L}_{ik}
 =
 \mathbb{I}
 \left(
-\sum_{m=1}^{M} Z_{ik}^{(m)}
+\sum_{m=1}^{M} L_{ik}^{(m)}
 \geq
 \left\lceil \frac{M}{2}\right\rceil
 \right).
 \]
-This is equivalent to the source expression \texttt{2 * ones\_count >= n\_voters}; therefore an even-voter tie is mapped to 1.  The output schema is \texttt{ts\_id} followed by the reference latent columns.  The causal orchestrator writes this table under the run's \texttt{majority\_vote/} directory and then passes it to mortality prediction, matching, CATE estimation, sensitivity analysis, and permutation stages.
+This is equivalent to the source expression \texttt{2 * ones\_count >= n\_voters}; therefore an even-voter tie is mapped to 1.  The output schema is \texttt{ts\_id} followed by the reference latent columns.  The causal orchestrator writes this mixed-source aggregated proxy-label table under the run's \texttt{majority\_vote/} directory and then passes it to mortality prediction, matching, CATE estimation, sensitivity analysis, and permutation stages.
 
-Majority voting aggregates binary model or rule outputs; it does not establish clinical truth, remove shared model bias, guarantee independence among voters, or prove ensemble superiority.  It can amplify correlated errors when voters are trained on related data or share the same rule-derived targets.  Its interpretation depends on identical construct definitions, aligned identifiers, binary-only inputs, and the exact voter set supplied to each run.  The available run summaries confirm the majority-vote stage and record absolute voter input directories, but they do not archive a per-run voter manifest listing every source file and hash.
+Majority voting is an algorithmic aggregation of a binary rule-derived source and binary model-prediction sources, not expert consensus.  It does not establish clinical truth, remove shared model bias, guarantee independence among voters, or prove ensemble superiority.  It can amplify correlated errors because the predicted voters were trained against the same rule-derived targets and the rule source itself participates in the vote.  Its interpretation depends on identical construct definitions, aligned identifiers, binary-only inputs, and the exact voter set supplied to each run.  The archived logs enumerate that voter set, but the external source files and hashes are not archived with each run.

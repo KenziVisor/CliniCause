@@ -15,6 +15,7 @@ Abbreviation & Meaning in this thesis \\
 ICU & Intensive Care Unit. \\
 EHR & Electronic Health Record. \\
 DAG & Directed Acyclic Graph. \\
+LLM & Large Language Model; used in this thesis for design-time knowledge elicitation, not runtime patient-level inference. \\
 STraTS & Self-Supervised Transformer for Sparse and Irregularly Sampled Multivariate Clinical Time Series. \\
 GRU & Gated Recurrent Unit. \\
 GRU-D & Gated Recurrent Unit with Decay. \\
@@ -56,6 +57,7 @@ Symbol & Meaning in this thesis \\
 \(L^{rule}_{ik}\) & Rule-derived binary proxy label for record \(i\) and proxy state \(k\). \\
 \(\hat p^{(m)}_{ik}\) & Probability for proxy state \(k\) exported by model \(m\) for record \(i\). \\
 \(\hat L^{(m)}_{ik}\) & Binary predicted proxy label corresponding to \(\hat p^{(m)}_{ik}\). \\
+\(\widetilde L_{ik}\) & Aggregated predicted proxy-label representation; in the archived final causal runs, deterministic voting combined one rule-derived source with four aligned binary model-prediction sources. \\
 \(A_i\) & Selected binary proxy-state exposure for record \(i\). \\
 \(Y_i\) & In-hospital mortality outcome for record \(i\). \\
 \(W_i\) & Observed adjustment variables selected from the project-specified DAG and available columns. \\

@@ -1,6 +1,6 @@
 # Citation Plan
 
-Use `thesis-writing/literature/metadata/catalog.csv` and `thesis-writing/literature/metadata/references.bib` as source of truth. Do not edit bibliography files in Stage 3.
+Use `thesis-writing/literature/metadata/catalog.csv` and `thesis-writing/literature/metadata/references.bib` as the bibliographic source of truth. Integrate only keys present there, and keep local-PDF availability distinct from citation eligibility.
 
 ## By Conceptual Role
 
@@ -20,7 +20,10 @@ Use `thesis-writing/literature/metadata/catalog.csv` and `thesis-writing/literat
 | `shukla_marlin_2018_irregular_clinical_timeseries` | optional | C2.2 appendix | Earlier InterpNet background. | Optional workshop lineage. | `shukla2019interpolation` | Do not replace canonical 2019 source. |
 | `banda_2018_electronic_phenotyping` | core | C2.3, C5 | Rule-based and ML EHR phenotyping context. | Broad electronic phenotyping survey. | `essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping` | Does not validate this thesis' labels. |
 | `essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping` | core | C2.3, C5 | Rule-based respiratory-failure phenotyping example. | Concrete clinical rule-based phenotype source. | `banda_2018_electronic_phenotyping` | Respiratory failure only. |
-| `ratner_et_al_2020_snorkel` | core | C2.3, C5.4 | Weak supervision and label aggregation. | Supports noisy label/source aggregation and majority-vote framing. | none | The thesis does not implement Snorkel label model. |
+| `singhal_et_al_2023_llm_clinical_knowledge` | core | C2.3, C3, C5, C11 | Clinical-knowledge capabilities and limitations of large language models. | Supports the rationale and risk framing for LLM-assisted clinical knowledge elicitation. | none | Does not validate this thesis's rules, proxy states, prompts, or clinical conclusions. |
+| `darvariu_et_al_2024_llm_causal_graph_priors` | core | C2.3, C2.4, C3, C7, C11 | LLM-generated causal-graph priors as design proposals. | Direct methodological precedent for using LLM output to inform causal-graph design. | `pearl_1995_causal_diagrams` for causal-graph foundations | Preprint/under-review source; does not establish that the project DAG is true, learned from data, identified, or clinically approved. |
+| `ratner_et_al_2016_data_programming` | core | C2.3, C3, C5 | Programmatic construction of noisy supervision sources. | Supports framing deterministic proxy rules as programmatic weak-supervision sources. | `ratner_et_al_2020_snorkel` | Conceptual context only; this thesis does not estimate source accuracies or implement the paper's generative label model. |
+| `ratner_et_al_2020_snorkel` | core | C2.3, C3, C5.4 | Weak supervision and downstream training from programmatically generated labels. | Supports the supervision-chain context from rule-derived labels to discriminative prediction. | `ratner_et_al_2016_data_programming` | The thesis implements deterministic rule labels and majority vote, not a Snorkel label model; algorithmic voting is not clinical consensus. |
 | `singer_2016_sepsis3` | core | C2.3, C5 | Sepsis/shock/organ dysfunction clinical grounding. | Clinical consensus source. | `vincent_et_al_1996_sofa` | Proxy labels are approximations, not formal Sepsis-3 diagnoses. |
 | `kdigo_2012_acute_kidney_injury` | core | C2.3, C5 | Renal dysfunction/AKI proxy grounding. | Clinical guideline for creatinine/urine concepts. | none | Do not claim KDIGO validation was fully implemented. |
 | `taylor_et_al_2001_isth_dic` | core | C2.3, C5 | Coagulation/heme dysfunction grounding. | ISTH DIC criteria source. | `vincent_et_al_1996_sofa` | Proxy rules may be partial. |
@@ -54,8 +57,9 @@ Use `thesis-writing/literature/metadata/catalog.csv` and `thesis-writing/literat
 | CIT-GAP-001 | Primary CausalPFN citation if PFN remains in main methods/results. | [NEEDS CITATION] |
 | CIT-GAP-002 | BGU/faculty current LaTeX/title-page source beyond local PDF and example. | [ADVISOR CHECK] |
 | CIT-GAP-003 | Clinical references for any proxy-state rule not covered by current corpus. | [NEEDS CITATION] during proxy-definition table construction |
-| CIT-GAP-004 | Prompt-engineering, transparent AI-assisted-research reporting, or exact ChatGPT 5.4 extended-reasoning documentation if LLM-assisted elicitation is framed as a formal methodology rather than project provenance. | [NEEDS CITATION] |
+| CIT-GAP-004 | Literature context for substantive LLM-assisted clinical-knowledge and causal-graph elicitation. | RESOLVED by `singhal_et_al_2023_llm_clinical_knowledge` and `darvariu_et_al_2024_llm_causal_graph_priors`; retain their stated limitations. |
+| CIT-GAP-005 | Exact product/model/version, system settings, reasoning mode, run date, export procedure, and output-to-code acceptance record for the archived ChatGPT sessions. | [NEEDS EVIDENCE]; this is project provenance, not a gap that a general literature citation can resolve. |
 
 ## Out of Scope
 
-LLM model training or runtime inference remains out of scope for the implemented pipeline. LLM-assisted prompt elicitation is now in scope only as design provenance, with citation needs tracked separately and no claim that the pipeline contains an executed LLM component.
+Training an LLM or invoking one inside the executable prediction/causal runtime remains out of scope. LLM-assisted clinical and causal knowledge elicitation is in scope as a substantive design-time method: it informed candidate proxy-state definitions, deterministic threshold rules, missingness reasoning, and DAG proposals that were subsequently encoded in source. This distinction does not authorize claims of autonomous discovery, clinical validation, or an LLM-executed production pipeline.

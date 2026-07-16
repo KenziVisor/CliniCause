@@ -1,7 +1,7 @@
 \chapter{Results}
 \label{chap:results}
 
-This chapter reports only results admitted through the validated result-source tables and prespecified evidence hierarchy.  Original-cohort analyses are primary: CausalForestDML is the primary causal-model estimator, LinearDML is the secondary comparator, and CausalPFN is exploratory.  All prespecified dataset-specific proxy-state exposures are retained; none was selected according to its observed result.  Detailed robustness outputs are summarized selectively, and outcome-downsampled analyses are treated only as a robustness perspective.  Every model-estimated contrast remains conditional on the causal assumptions and proxy-exposure interpretation in Chapter~\ref{chap:causal-graph-effect-estimation-methodology}.
+This chapter reports only results admitted through the validated result-source tables and prespecified evidence hierarchy.  Original-cohort analyses are primary: CausalForestDML is the primary causal-model estimator, LinearDML is the secondary comparator, and CausalPFN is exploratory.  All prespecified dataset-specific proxy-state exposures are retained; none was selected according to its observed result.  In all twelve archived causal runs, the implemented majority-vote stage combines one rule-derived proxy-label source with predicted-label sources from GRU, GRU-D, STraTS, and TCN, and passes the resulting aggregate downstream.  Detailed robustness outputs are summarized selectively, and outcome-downsampled analyses are treated only as a robustness perspective.  Every model-estimated contrast remains conditional on the causal assumptions and proxy-exposure interpretation in Chapter~\ref{chap:causal-graph-effect-estimation-methodology}.
 
 \section{Analysis-Population Counts}
 \label{sec:results:analysis-population-counts}
@@ -26,15 +26,15 @@ PhysioNet 2012 & Causal-analysis model rows & Original & 7,993 & Primary \\
 \section{Predictive Performance}
 \label{sec:results:predictive-performance}
 
-The checked archive contains ten completed dataset--model test combinations spanning STraTS, GRU, GRU-D, TCN, and SAnD (Table~\ref{tab:results-predictive-performance}).  On MIMIC-III, STraTS had the smallest archived test loss and the highest archived test AUROC, AUPRC, and minRP.  On PhysioNet, GRU-D led the same four archived metrics.  Thus the leading family differed by dataset, although within each dataset the leader did not depend on which of these four metrics was used.  Rankings among the remaining models did vary by metric; the table therefore does not support a universal model ordering or a claim of statistical superiority.
+The checked archive contains ten completed dataset--model test combinations spanning STraTS, GRU, GRU-D, TCN, and SAnD (Table~\ref{tab:results-predictive-performance}).  Every predictive metric compares model output with deterministic rule-derived proxy-label targets produced by the source-encoded decision trees.  On MIMIC-III, STraTS had the smallest archived test loss and the highest archived test AUROC, AUPRC, and minRP.  On PhysioNet, GRU-D led the same four archived metrics.  Thus the leading family differed by dataset, although within each dataset the leader did not depend on which of these four metrics was used.  Rankings among the remaining models did vary by metric; the table therefore does not support a universal model ordering or a claim of statistical superiority.
 
-The numerical rows are test summaries and not validation values.  Their summary and paired log values agreed within the validated tolerance, but the archived train/validation/test split manifest and checkpoint-to-export lineage remain incomplete.  No confidence intervals or between-model significance tests were available in the validated sources.
+The numerical rows are test summaries and not clinical-validation values.  Their summary and paired log values agreed within the validated tolerance, but the archived train/validation/test split manifest and checkpoint-to-export lineage remain incomplete.  No confidence intervals or between-model significance tests were available in the validated sources.  Strong agreement with a rule-derived target demonstrates learnability of that target, not validity of the clinical construct or correctness of the LLM-assisted rule design.
 
 \begingroup
 \small
 \setlength{\tabcolsep}{5pt}
 \begin{longtable}{@{}llrrrr@{}}
-\caption{Archived predictive test performance for the five included model families.  AUROC, AUPRC, and minRP are macro-averaged across non-degenerate proxy-label targets on the archived test split.}
+\caption{Archived predictive test performance for the five included model families.  AUROC, AUPRC, and minRP are macro-averaged across non-degenerate rule-derived proxy-label targets on the archived test split.}
 \label{tab:results-predictive-performance}\\
 \toprule
 Dataset & Model & Test loss & Test AUROC & Test AUPRC & Test minRP \\
@@ -62,7 +62,9 @@ PhysioNet 2012 & SAnD & 0.436 & 0.914 & 0.886 & 0.820 \\
 \section{Primary CausalForestDML Results}
 \label{sec:results:primary-causal-forest}
 
-Tables~\ref{tab:results-forest-mimic} and~\ref{tab:results-forest-physionet} report every prespecified original-cohort proxy-state exposure.  The reported quantity is the \emph{mean model-estimated CATE over the analyzed sample}, on the model outcome scale.  It is neither a risk ratio nor an unqualified population-average causal effect.  Exposure prevalence is the proportion of analyzed records carrying the corresponding binary proxy-state tag.  The adjustment-set codes refer to the observed variables archived for each exposure; identifiability with the available nodes remained unresolved for every validated row.
+Tables~\ref{tab:results-forest-mimic} and~\ref{tab:results-forest-physionet} report every prespecified original-cohort majority-vote proxy-state exposure from that mixed rule-and-prediction lineage.  The reported quantity is the \emph{mean model-estimated CATE over the analyzed sample}, on the model outcome scale.  It is neither a risk ratio nor an unqualified population-average causal effect.  Exposure prevalence is the proportion of analyzed records carrying the corresponding binary aggregated proxy-state tag.  The adjustment-set codes refer to the observed variables archived for each exposure; identifiability with the available nodes remained unresolved for every validated row.
+
+These results do not evaluate the LLM itself.  The study contains no LLM ablation, clinician comparison, prompt-sensitivity experiment, alternative-LLM replication, or graph-correctness experiment.  The numerical analyses therefore cannot establish that LLM assistance improved the rules or DAGs, nor can they separate design error from rule, prediction, aggregation, or estimator error.
 
 For MIMIC-III, all nine archived means were positive.  The largest mean was for \nolinkurl{LAT_CARDIAC_STRAIN} (0.220), followed by \nolinkurl{LAT_INFLAMMATION_SEPSIS} (0.161).  The smallest were for \nolinkurl{LAT_METABOLIC_DERANGEMENT} (0.020) and \nolinkurl{LAT_SHOCK} (0.021).  Figure~\ref{fig:results-mimic-forest-ranking} displays this source-exact ordering.  It is descriptive and does not establish clinical importance or statistical significance.
 

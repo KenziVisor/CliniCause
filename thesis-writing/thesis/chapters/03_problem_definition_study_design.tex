@@ -18,16 +18,38 @@ The event representation is intentionally irregular.  Observations occur at nonu
 
 The primary patient- or stay-level outcome used by the downstream causal repository is \texttt{in\_hospital\_mortality}.  In the causal processed artifact, this outcome is stored in \texttt{oc}, the outcome table keyed by \texttt{ts\_id}.  The third object in that processed artifact, \texttt{ts\_ids}, is the sorted collection of normalized identifiers represented in \texttt{ts}.  Later predictive processing uses a distinct split-aware artifact and must not be conflated with this causal contract.
 
+\section{Design-Time Knowledge Construction and Executed Analysis}
+\label{sec:problem-definition-study-design:design-time-executed-layers}
+
+The framework distinguishes a design-time knowledge-construction layer from the patient-level analytical layer.  At design time, dataset descriptions and clinical sources were supplied to a structured LLM-assisted elicitation protocol.  The protocol requested a dataset audit, proxy-state ontology, binary decision-rule families, missingness and measurement-process reasoning, and a dataset-specific DAG.  The resulting proposals were project-selected and encoded in deterministic tagger and graph source files.  Available evidence does not establish that every proposal was implemented unchanged, a complete line-by-line prompt-output-to-code mapping, or a formal clinician-review chain.
+
+The analytical layer begins only after those designs have been encoded.  It preprocesses raw ICU data, applies deterministic decision-tree rules to generate rule-derived proxy labels, trains deep irregular-time-series models to predict those labels, normalizes predicted outputs, and forms the archived final aggregate from one rule-derived source and four predicted-label sources before DAG-guided matching, effect estimation, sensitivity analysis, and permutation diagnostics.  No LLM is invoked for patient-level preprocessing, label generation, prediction, adjustment selection, or effect estimation during this executed layer.
+
+\begin{table}[htbp]
+\centering
+\caption{Separation of design-time knowledge construction from executed patient-level analysis.}
+\label{tab:study-design-layers}
+\small
+\begin{tabular}{@{}p{0.18\textwidth}p{0.48\textwidth}p{0.24\textwidth}@{}}
+\toprule
+Layer & Sequence & Evidence boundary \\
+\midrule
+Design time & Dataset description and clinical sources $\rightarrow$ structured LLM elicitation $\rightarrow$ proposed ontology, rules, missingness considerations, and DAG $\rightarrow$ project selection and source-code encoding. & Prompts document proposals; active source defines implementation; formal clinical review remains incomplete. \\
+Executed analysis & Raw data $\rightarrow$ preprocessing $\rightarrow$ deterministic rule-derived labels $\rightarrow$ deep prediction $\rightarrow$ prediction normalization and mixed-source aggregation $\rightarrow$ DAG-guided estimation and diagnostics. & No runtime LLM call; every downstream inference remains conditional on proxy, graph, support, and model assumptions. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Prediction Task}
 \label{sec:problem-definition-study-design:prediction-task}
 % Section ID: C3.2.
 % Evidence map: see thesis-writing/planning/chapter_evidence_map.md.
 
-The prediction task is a multi-label proxy-state prediction problem over irregular ICU time series.  For each study unit \(i\) and proxy state \(k\), let \(L^{rule}_{ik}\in\{0,1\}\) denote a rule-derived proxy label.  These labels are clinically inspired analytical constructs generated from observed data and deterministic source-code rules.  They are weak clinical labels or proxy phenotypes, not chart-adjudicated diagnoses, manually verified clinical states, or validated phenotypes unless separate validation evidence is supplied in a later chapter.
+The prediction task is a multi-label proxy-state prediction problem over irregular ICU time series.  For each study unit \(i\) and proxy state \(k\), let \(L^{rule}_{ik}\in\{0,1\}\) denote a rule-derived proxy label.  These labels are clinically inspired analytical constructs generated from observed data by the deterministic source-code rules selected and encoded after LLM-assisted design elicitation.  They are weak clinical labels or proxy phenotypes, not chart-adjudicated diagnoses, manually verified clinical states, or validated phenotypes unless separate validation evidence is supplied in a later chapter.
 
 The supervised predictive workflow estimates a vector of proxy-state labels from the observed time-series representation.  Its target matrix is loaded from a latent-label CSV keyed by \texttt{ts\_id}; the supervised proxy-label targets are not taken from the mortality column in \texttt{oc}.  For model \(m\), the exported prediction object may contain probabilities \(\hat p^{(m)}_{ik}\) and corresponding binary predicted labels \(\hat L^{(m)}_{ik}\).  These outputs are model estimates of rule-derived proxy labels rather than direct measurements of patient physiology.
 
-At the level of study design, five analytical tasks are distinguished.  First, rule-based proxy-state construction derives binary proxy labels from observed clinical measurements.  Second, multi-label proxy-state prediction estimates those rule-derived labels from irregular time-series inputs.  Third, proxy-label aggregation may combine binary outputs from several voter sources into a single proxy-state table.  Fourth, mortality prediction or association analysis evaluates whether proxy-state representations contain prognostic information about \texttt{in\_hospital\_mortality}.  Fifth, observational causal-effect estimation treats selected proxy-state indicators as modeled exposures and estimates adjusted contrasts under explicit assumptions.  Detailed proxy rules, model architectures, estimator algorithms, and numerical results are intentionally deferred to later chapters.
+Within the executed layer, five analytical tasks are distinguished.  First, deterministic proxy-state construction derives binary rule-derived proxy labels from observed clinical measurements.  Second, multi-label proxy-state prediction estimates those rule-derived labels from irregular time-series inputs.  Third, the archived final causal runs aggregate one rule-derived table with four aligned binary model-prediction tables into a majority-vote proxy-label table.  Fourth, mortality prediction or association analysis evaluates whether proxy-state representations contain prognostic information about \texttt{in\_hospital\_mortality}.  Fifth, observational causal-effect estimation treats selected columns from that mixed rule-and-prediction aggregate as modeled exposures and estimates adjusted contrasts under explicit assumptions.  Detailed proxy rules, model architectures, estimator algorithms, and numerical results are intentionally deferred to later chapters.
 
 \section{Causal Question, Exposures, Outcome, Estimands, Assumptions}
 \label{sec:problem-definition-study-design:causal-question-exposures-outcome-estimands-assumptions}
@@ -40,4 +62,4 @@ Let \(A_i\in\{0,1\}\) denote a selected proxy-state exposure, \(Y_i\) denote the
 
 Accordingly, later estimates should be interpreted as adjusted effect estimates under project assumptions, not as unconditional clinical effects.  The existence of a DAG, matching script, or CATE estimator does not prove identification.  Proxy states may be useful for structured analysis while still carrying label noise, temporal ambiguity, and intervention-definition limitations.
 
-The main research question is how irregular ICU time-series data can be converted into clinically interpretable proxy-state representations and used, under explicit causal assumptions, to support DAG-guided adjusted effect estimation for in-hospital mortality.  The seven secondary questions stated in Chapter~\ref{chap:introduction} cover data contracts, rule-derived proxy construction, five-family predictive performance, prediction normalization and aggregation, DAG-selected adjustment sets, matching and model-estimated CATE evidence with available diagnostics, and the limitations that bound those findings.  These are study questions and design commitments; their answers are reported in Chapters~\ref{chap:results} and~\ref{chap:discussion}.
+The main research question is how LLM-assisted clinical and causal knowledge elicitation, deterministic proxy-label construction, and deep modeling of irregular ICU time series can be integrated into an evidence-tracked framework for DAG-guided adjusted effect estimation of in-hospital mortality.  The seven secondary questions stated in Chapter~\ref{chap:introduction} cover data contracts; selection, encoding, and traceability of LLM-assisted proxy and DAG proposals; five-family predictive performance; prediction normalization and aggregation; DAG-selected adjustment sets; matching and model-estimated CATE evidence with available diagnostics; and the limitations that bound those findings.  These are study questions and design commitments; their answers are reported in Chapters~\ref{chap:results} and~\ref{chap:discussion}.
