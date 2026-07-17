@@ -1,5 +1,7 @@
 import importlib.util
+import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -115,6 +117,42 @@ class RouterParsingTests(unittest.TestCase):
         self.assertIn("500000", command)
         self.assertIn("--tmp-dir", command)
 
+    def test_build_preprocessing_command_normalizes_relative_raw_path_before_child_cwd_changes(self):
+        original_cwd = Path.cwd()
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            caller_cwd = temp_root / "caller"
+            caller_cwd.mkdir()
+            raw_dir = caller_cwd / "raw"
+            raw_dir.mkdir()
+            thesis_repo_root = temp_root / "thesis"
+            thesis_repo_root.mkdir()
+            context = SimpleNamespace(
+                args=SimpleNamespace(
+                    python_executable="python",
+                    physionet_raw_data_path="raw",
+                    preprocess_chunksize=500000,
+                    tmp_dir=None,
+                ),
+                thesis_repo_root=thesis_repo_root,
+                datasets={
+                    "physionet": SimpleNamespace(
+                        resolved_config_csv=temp_root / "config.csv",
+                        thesis_processed_pkl=temp_root / "out.pkl",
+                    )
+                },
+            )
+
+            try:
+                os.chdir(caller_cwd)
+                command = router.build_preprocessing_command("physionet", context)
+            finally:
+                os.chdir(original_cwd)
+
+            raw_path_arg = command[command.index("--raw-data-path") + 1]
+            self.assertEqual(raw_path_arg, str(raw_dir.resolve()))
+            self.assertTrue(Path(raw_path_arg).is_absolute())
+
     def test_should_validate_existing_strats_inputs_when_prepare_runs_before_run_strats(self):
         context = SimpleNamespace(args=SimpleNamespace(
             stages=["preprocessing", "tagging", "trees", "prepare-strats", "run-strats"],
@@ -131,13 +169,13 @@ class RouterParsingTests(unittest.TestCase):
         ))
         self.assertTrue(router.should_validate_existing_strats_inputs(context))
 
-    def test_should_validate_existing_strats_inputs_skips_dry_run(self):
+    def test_should_validate_existing_strats_inputs_remains_read_only_in_dry_run(self):
         context = SimpleNamespace(args=SimpleNamespace(
             stages=["run-strats"],
             dry_run=True,
             validate_only=False,
         ))
-        self.assertFalse(router.should_validate_existing_strats_inputs(context))
+        self.assertTrue(router.should_validate_existing_strats_inputs(context))
 
 
 if __name__ == "__main__":
