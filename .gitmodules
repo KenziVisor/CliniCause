@@ -1,0 +1,9 @@
+[submodule "causal-irregular-time-series"]
+	path = causal-irregular-time-series
+	url = https://github.com/KenziVisor/causal-irregular-time-series.git
+	branch = main
+
+[submodule "STraTS"]
+	path = STraTS
+	url = https://github.com/KenziVisor/STraTS.git
+	branch = main
