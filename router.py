@@ -39,10 +39,10 @@ STAGE_ORDER = [
 ]
 SUPPORTED_STAGES = set(STAGE_ORDER) | {"all"}
 DATASETS = ("physionet", "mimic")
-MODELS = ("strats", "gru", "grud", "tcn", "sand")
+MODELS = ("strats", "gru", "grud", "tcn")
 RUN_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 ID_TEXT_RE = re.compile(r"(?:0|[1-9][0-9]*)(?:[.]0+)?\Z")
-ROUTER_PRODUCER_VERSION = "clinicause-router-static-contract-v3"
+ROUTER_PRODUCER_VERSION = "clinicause-router-static-contract-v4"
 SENSITIVE_OPTIONS = {
     "--token",
     "--api-key",
@@ -2350,7 +2350,7 @@ def derive_strats_dataset_seed(base_seed: int, dataset: str) -> int:
 
 
 def derive_strats_model_seed(base_seed: int, dataset: str, model: str) -> int:
-    offsets = {"strats": 1, "gru": 3, "grud": 4, "tcn": 5, "sand": 6}
+    offsets = {"strats": 1, "gru": 3, "grud": 4, "tcn": 5}
     return (derive_strats_dataset_seed(base_seed, dataset) + offsets[model]) % (2**31 - 1)
 
 
@@ -2386,7 +2386,7 @@ def _expected_strats_scientific_config(
             6
             if model == "tcn" and dataset == "physionet"
             else 4
-            if model in {"tcn", "sand"}
+            if model == "tcn"
             else 2
         ),
         "num_heads": 16 if model == "strats" else 4,
