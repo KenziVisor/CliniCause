@@ -143,9 +143,10 @@ nonlinear heterogeneous-effect estimation under their stated assumptions
 the clinical analysis tables on which they operate.  CliniCause contributes
 reusable tables with exposure, outcome, covariate, cohort, DAG, adjustment, and
 provenance interfaces, then compares multiple estimators on every prespecified
-exposure across both datasets.  CausalPFN is retained as an empirically evaluated
-complementary estimator; method-level positioning awaits an approved
-bibliographic entry and citation key.
+exposure across both datasets.  CausalPFN amortizes causal-effect estimation in
+a prior-data-fitted, in-context model trained on simulated data-generating
+processes under stated assumptions \cite{balazadeh2025causalpfn}.  CliniCause
+uses it as a complementary estimator from a distinct modeling paradigm.
 
 LLMs have shown substantial medical question-answering capability alongside
 clinically important reliability gaps \cite{singhal_et_al_2023_llm_clinical_knowledge},
@@ -176,33 +177,17 @@ the construction path, and Table~\ref{tab:resources} describes the resulting
 resources.
 
 \begin{figure*}[t]
-  \noindent\fbox{\parbox[c][1.15in][c]{0.96\textwidth}{\centering
-    \textit{Figure 1 layout placeholder---final paper-native vector figure to
-    replace this box.}}}
-  % P3 FIGURE 1 PRODUCTION SPECIFICATION (two-column, paper-native vector):
-  % Use three visually distinct bands. (1) DESIGN TIME: dataset descriptions +
-  % structured LLM proposals for proxy ontologies, rule families, missingness,
-  % and dataset-specific DAGs -> project/human selection -> deterministic tagger
-  % and graph source. The LLM branch must join at source design, never at patient
-  % rows. (2) CONSTRUCTION/RUNTIME: raw irregular MIMIC-III and PhysioNet 2012
-  % records -> separate dataset-specific preprocessing/canonical IDs ->
-  % deterministic rule labels -> four parallel predictive models (STraTS, GRU,
-  % GRU-D, TCN) -> probability/binary export normalization -> five-source proxy
-  % aggregation -> outcome + observed covariates + DAG/adjustment metadata. Put a
-  % prominent central box around the two reusable estimator-ready causal-analysis
-  % datasets. (3) DOWNSTREAM CHARACTERIZATION: CausalForestDML, LinearDML,
-  % CausalPFN, matching, and robustness diagnostics. Mark compact validation gates
-  % at schema/cohort handoffs and provenance/output boundaries. Distinguish the
-  % two datasets by lanes without suggesting pooled semantics. Use grayscale-safe
-  % shapes/line styles, direct labels, >=9 pt embedded fonts, and no screenshots.
-  % Gate: TODO-HUMAN G-HUM-01 for the final visual; do not add a test-pass label
-  % unless TODO-RUNTIME G-RUN-01 is resolved.
+  \centering
+  \includegraphics[width=0.99\textwidth]{figures/figure1_pipeline.pdf}
   \caption{CliniCause resource construction.  Dataset-specific preprocessing and
   deterministic proxy rules transform irregular ICU records; four time-series
-  models add normalized predictive annotations, and the aligned proxy layer is
-  packaged with outcomes, observed covariates, and inspectable DAG metadata.
-  Validation gates protect cohort, schema, and provenance integrity before the
-  estimator-ready datasets are used for observational analysis.}
+  models add normalized predictive annotations, and deterministic five-source
+  aggregation packages the aligned proxy layer with outcomes, observed
+  covariates, and inspectable DAG metadata.  The design-time LLM proposes
+  candidates only; deterministic selected source governs runtime. Validation
+  gates protect schema, cohort, prediction-export, aggregation, and provenance
+  handoffs before dataset-specific estimator-ready resources are used for
+  observational analysis.}
   \label{fig:pipeline}
 \end{figure*}
 
@@ -396,7 +381,7 @@ estimates \cite{chernozhukov2018dml,wager2018causalforest,athey2019grf,
 oprescu_et_al_2019_econml}.  LinearDML is the main structured comparator: it
 retains the DML adjustment framework and nuisance-model family while using a
 linear final effect model, providing triangulation across final-stage model
-forms.  CausalPFN supplies a distinct complementary modeling perspective and is
+forms.  CausalPFN \cite{balazadeh2025causalpfn} supplies a distinct complementary modeling perspective and is
 evaluated over the same prespecified dataset--exposure comparisons to test
 whether the principal directional patterns are specific to the two DML
 estimators.  It is treated as complementary because the archived pipeline

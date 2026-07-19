@@ -19,16 +19,16 @@ thesis-writing/literature/
 
 Core papers are directly used to support the implemented pipeline, clinical proxy definitions, datasets, estimators, sensitivity workflow, weak supervision, or software tooling. Optional papers are retained because they are useful background, but they are not the primary citation for the implemented method.
 
-- Core catalog entries: 38
+- Core catalog entries: 39
 - Optional catalog entries: 5
-- Catalog entries with valid local PDFs: 41
+- Catalog entries with valid local PDFs: 42
 - Missing PDFs: 2
 
 See `metadata/catalog.csv` for the complete source-of-truth metadata and `metadata/references.bib` for citations.
 
 ## Topic Summary
 
-The core corpus covers irregular clinical time-series models, datasets and benchmarks, clinical proxy phenotyping, causal identification and DAGs, DML and causal forests, overlap and sensitivity analysis, programmatic labeling and weak supervision, LLM clinical knowledge, LLM-assisted causal-graph construction, and software tooling.
+The core corpus covers irregular clinical time-series models, datasets and benchmarks, clinical proxy phenotyping, causal identification and DAGs, DML and causal forests, causal foundation models and prior-data-fitted causal estimation, overlap and sensitivity analysis, programmatic labeling and weak supervision, LLM clinical knowledge, LLM-assisted causal-graph construction, and software tooling.
 
 Clinical tags in this project should be described as derived proxy states, proxy phenotypes, clinically inspired proxy labels, or weak clinical labels. They are not verified diagnoses and should not be described as formal latent variables unless a separate validation argument is made.
 

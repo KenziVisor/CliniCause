@@ -1,0 +1,131 @@
+\documentclass[letterpaper,10pt]{article}
+\usepackage[margin=0.72in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{url}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\renewcommand{\arraystretch}{1.08}
+
+\title{Technical Appendix for Anonymous Review}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\small
+
+\section{Resource and Construction Details}
+
+CliniCause provides two dataset-specific, estimator-ready causal-analysis
+resources: MIMIC-III (26,845 analysis records) and PhysioNet 2012 (7,993).
+The analysis unit is a source time-series record or ICU stay, rather than a
+unique person.  At each source boundary, accepted identifiers are normalized to
+the canonical \texttt{ts\_id} key; long irregular events retain minute,
+variable, and value, while a record-level table carries in-hospital mortality
+and available covariates.  The two resources share an interface but are never
+pooled: their variable vocabularies, proxy ontologies, measurement processes,
+and DAG assumptions remain source specific.
+
+\begin{table}[H]
+\centering\small
+\caption{Admitted original-cohort exposure sets and source-specific semantics.}
+\label{tab:supp-resources}
+\begin{tabular}{p{0.19\linewidth}p{0.35\linewidth}p{0.37\linewidth}}
+\toprule
+Resource & Admitted exposures & Source-specific proxy boundary\\
+\midrule
+MIMIC-III & Cardiac strain; inflammation/sepsis; hepatic/coagulation dysfunction; renal dysfunction; global severity; metabolic derangement; neurologic dysfunction; respiratory failure; shock. & Hepatic and coagulation evidence are represented by a combined proxy.  Chronic-burden fields are retained as baseline constructs rather than admitted exposures.\\
+PhysioNet 2012 & Cardiac injury/strain; coagulation/hematologic dysfunction; global severity; hepatic dysfunction; inflammation/sepsis burden; metabolic derangement; neurologic dysfunction; renal dysfunction; respiratory failure; shock. & Hepatic and coagulation/hematologic evidence are represented separately.  Chronic baseline constructs remain outside the admitted exposure set.\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At design time, structured LLM proposals covered proxy ontologies, rule
+families, missingness considerations, and dataset-specific DAGs.  Project
+selection encoded chosen proposals as deterministic proxy-rule and DAG source
+artifacts.  The LLM did not receive runtime patient rows and was not a
+patient-level estimator.  At construction time, each source is preprocessed in
+its own lane; deterministic rule labels and four temporal models (STraTS, GRU,
+GRU-D, and TCN) produce aligned annotation exports.  Each export is normalized
+to probability and binary fields; one deterministic rule source and four model
+sources are then combined by a fixed deterministic aggregation.  The final
+resource joins the aggregate exposure layer to outcome, observed covariates,
+DAG/adjustment metadata, and provenance records.
+
+Validation is layered: schema handoffs check required columns, order, value
+ranges, binary/probability consistency, and expected output sets; cohort
+handoffs reject conflicting IDs, missing/extra records, and silent shrinkage;
+prediction exports and aggregation enforce complete aligned voters; and
+provenance artifacts bind available hashes, manifests, configurations, and
+receipts.  Archived-result evidence establishes checked aggregate outputs, but
+the exact historical producing revisions, configurations, and
+checkpoint-to-export lineage remain incomplete.  Current repaired contracts are
+documented separately and are not claimed to have produced the archived results.
+
+\section{Complete Predictive Evaluation}
+
+The predictive task is multi-label estimation of each dataset's deterministic
+proxy vector.  Test loss is sample-mean multi-label binary cross-entropy.
+AUROC, AUPRC, and minRP are calculated per target then macro-averaged after
+excluding target columns with a single observed evaluation class; minRP is the
+maximum over thresholds of the smaller of precision and recall.  The table
+reports selected archived held-out point metrics.  It does not supply repeated
+run uncertainty, significance testing, split-ID lineage, or a verified
+checkpoint-to-export mapping.
+
+\input{generated/predictive_table.tex}
+
+\section{Complete Original-Cohort Estimator Matrix}
+
+\input{generated/original_estimator_table.tex}
+
+\section{Outcome-Downsampling Comparison}
+
+All mortality-positive records are retained while mortality-negative records are
+sampled under the implemented configuration.  This produces a different
+analyzed population and outcome prevalence; therefore, the table uses direction
+as a robustness comparison and does not treat downsampled magnitudes as
+transportable estimates for the original populations.  The generator verifies
+all 57 matched original/downsampled estimator rows and exactly two sign changes.
+
+\input{generated/downsampling_table.tex}
+
+\section{Matching Availability and Support}
+
+Matching is a descriptive, support-oriented, greedy one-to-one comparison over
+the archived binary matching representation.  Successful rows report the
+descriptive matched-pair outcome difference.  A failure indicates that no usable
+binary matching columns remained after preprocessing; it is not an effect of
+zero.
+
+\input{generated/matching_table.tex}
+
+\section{Sensitivity and Permutation Coverage}
+
+\input{generated/diagnostic_coverage_table.tex}
+
+\section{Provenance and Reproducibility Boundaries}
+
+Checked archived artifacts support the resource counts, selected predictive
+metrics, original and downsampled estimator summaries, matching availability,
+and the recorded diagnostic status classes.  They do not establish an exact
+historical clean-checkout rerun.  The known gaps include producing source
+revisions, numbered causal configurations, predictive split IDs,
+checkpoint-to-export linkage, raw/processed-data manifests, producing
+environment/hardware capture, and CausalPFN package/version alignment.
+
+Current source inspection documents stricter runtime validation gates for
+schemas, canonical identifiers, voters, and artifact reuse.  Those current
+contracts must be tested and release-validated separately; this appendix makes
+no current test-pass claim.  Any eventual anonymous package must keep
+source-data access restricted to authorized MIMIC-III and PhysioNet users,
+include only licensing-permitted derived artifacts, and undergo a final identity
+and metadata audit.  No patient-level values are included in this appendix.
+
+\end{document}

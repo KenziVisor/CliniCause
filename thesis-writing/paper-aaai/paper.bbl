@@ -1,4 +1,4 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{19}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Athey, Tibshirani, and Wager(2019)}]{athey2019grf}
@@ -73,6 +73,18 @@ Lipton, Z.~C.; Kale, D.~C.; and Wetzel, R. 2016.
   J., eds., \emph{Proceedings of the 1st Machine Learning for Healthcare
   Conference}, volume~56 of \emph{Proceedings of Machine Learning Research},
   253--270. Northeastern University, Boston, MA, USA: PMLR.
+
+\bibitem[{Meresht et~al.(2025)Meresht, Kamkari, Thomas, Ma, Li, Cresswell, and
+  Krishnan}]{balazadeh2025causalpfn}
+Meresht, V.~B.; Kamkari, H.; Thomas, V.; Ma, J.; Li, B.; Cresswell, J.~C.; and
+  Krishnan, R.~G. 2025.
+\newblock {CausalPFN}: Amortized Causal Effect Estimation via In-Context
+  Learning.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~38.
+\newblock The local PDF is arXiv v2 (27 October 2025). The final NeurIPS
+  proceedings record uses the author name Vahid Balazadeh Meresht, orders
+  Junwei Ma before Bingru Li, and expands the local PDF's Benson Li name.
 
 \bibitem[{Oprescu et~al.(2019)Oprescu, Syrgkanis, Battocchi, Hei, and
   Lewis}]{oprescu_et_al_2019_econml}

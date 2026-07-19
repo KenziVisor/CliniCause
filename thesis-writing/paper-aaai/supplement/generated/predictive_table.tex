@@ -1,0 +1,13 @@
+\begin{table}[H] \centering \small
+\caption{Complete selected archived held-out predictive results. Loss is minimized; the other metrics are maximized. Degenerate target columns are excluded from macro AUROC, AUPRC, and minRP.}\label{tab:supp-predictive}
+\begin{tabular}{llrrrr} \toprule Dataset & Model & Loss & AUROC & AUPRC & minRP\\ \midrule
+MIMIC-III & STRATS & 0.348136 & 0.905411 & 0.869417 & 0.795399\\
+ & GRU & 0.385757 & 0.881119 & 0.839559 & 0.770421\\
+ & GRU-D & 0.404448 & 0.884277 & 0.841273 & 0.772533\\
+ & TCN & 0.414456 & 0.866914 & 0.822642 & 0.757798\\
+PhysioNet 2012 & STRATS & 0.340692 & 0.914761 & 0.877456 & 0.818228\\
+ & GRU & 0.396819 & 0.914616 & 0.897493 & 0.831044\\
+ & GRU-D & 0.330593 & 0.918478 & 0.905105 & 0.834958\\
+ & TCN & 0.476513 & 0.899103 & 0.875091 & 0.811184\\
+\bottomrule \end{tabular}
+\end{table}

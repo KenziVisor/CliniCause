@@ -47,13 +47,13 @@ Use `thesis-writing/literature/metadata/catalog.csv` and `thesis-writing/literat
 | `robins_hernan_brumback_2000_msm` | optional | C2.4 future work | Longitudinal causal-inference background. | Important for time-varying treatment-confounder feedback. | `hernan_robins_2016_target_trial` | The current implementation is not an MSM/IPTW workflow. |
 | `sharma_kiciman_2020_dowhy` | core | C8.3, reproducibility/future refuters | Software workflow of modeling, identification, estimation, refutation. | Supports refutation workflow language. | `pearl_1995_causal_diagrams` | DoWhy is not necessarily the active estimator in final code. |
 | `oprescu_et_al_2019_econml` | core | C7, C8 | EconML software citation. | Software library context. | DML/forest primary method papers | Separate software citation from mathematical method citation. |
-| `[NEEDS CITATION]` CausalPFN | gap | C7, C9, C10 | If CausalPFN remains in main thesis, cite primary method/source. | Current corpus lacks an identified CausalPFN primary citation. | none | Do not make PFN central until citation is resolved. |
+| `balazadeh2025causalpfn` | core | C2.4, C7, C9, C10, C11 | CausalPFN as a prior-data-fitted/in-context causal-effect estimator and method-level comparator. | Verified NeurIPS 2025 primary method source. | none | Does not validate local proxy definitions, observational assumptions, local numerical effects, or diagnostic parity with DML; local 18/19 evidence remains checked project output. |
 
 ## Citation Gaps
 
 | gap_id | gap | status |
 | --- | --- | --- |
-| CIT-GAP-001 | Primary CausalPFN citation if PFN remains in main methods/results. | [NEEDS CITATION] |
+| CIT-GAP-001 | Primary CausalPFN citation if PFN remains in main methods/results. | RESOLVED by `balazadeh2025causalpfn`; project-specific provenance and diagnostic gaps remain open. |
 | CIT-GAP-002 | BGU/faculty current LaTeX/title-page source beyond local PDF and example. | [ADVISOR CHECK] |
 | CIT-GAP-003 | Clinical references for any proxy-state rule not covered by current corpus. | [NEEDS CITATION] during proxy-definition table construction |
 | CIT-GAP-004 | Literature context for substantive LLM-assisted clinical-knowledge and causal-graph elicitation. | RESOLVED by `singhal_et_al_2023_llm_clinical_knowledge` and `darvariu_et_al_2024_llm_causal_graph_priors`; retain their stated limitations. |

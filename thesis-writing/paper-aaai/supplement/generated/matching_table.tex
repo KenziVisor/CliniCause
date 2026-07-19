@@ -1,0 +1,26 @@
+\begin{longtable}{@{}p{0.78in}p{1.10in}p{0.44in}p{0.48in}p{0.54in}p{0.48in}p{1.02in}@{}}
+\caption{Original-cohort matching availability. Failures are retained as failures, not zero effects.}\label{tab:supp-matching}\\
+\toprule Dataset & Exposure & Status & Pairs & Match rate & Final distance & Result / reason\\
+\midrule \endfirsthead
+\toprule Dataset & Exposure & Status & Pairs & Match rate & Final distance & Result / reason\\
+\midrule \endhead
+MIMIC-III & Cardiac strain & success & 4769 & 1.000 & 0 & +0.344726\\
+MIMIC-III & Global severity & success & 7537 & 0.390 & 1 & +0.074831\\
+MIMIC-III & Hepatic/coag. dysfunction & success & 6478 & 1.000 & 0 & +0.133374\\
+MIMIC-III & Inflammation/sepsis & failure & -- & -- & -- & No binary matching columns after preprocessing\\
+MIMIC-III & Metabolic derangement & success & 5061 & 0.506 & 0 & +0.036949\\
+MIMIC-III & Neurologic dysfunction & success & 6275 & 0.539 & 0 & +0.026932\\
+MIMIC-III & Renal dysfunction & success & 8915 & 0.915 & 0 & +0.133595\\
+MIMIC-III & Respiratory failure & success & 10998 & 0.694 & 2 & +0.105656\\
+MIMIC-III & Shock & success & 10380 & 0.717 & 1 & +0.038632\\
+PhysioNet 2012 & Cardiac injury/strain & success & 2840 & 1.000 & 0 & +0.133803\\
+PhysioNet 2012 & Coag./heme dysfunction & success & 1763 & 0.558 & 0 & +0.001702\\
+PhysioNet 2012 & Global severity & success & 1782 & 0.287 & 1 & +0.095398\\
+PhysioNet 2012 & Hepatic dysfunction & success & 1133 & 1.000 & 0 & +0.136805\\
+PhysioNet 2012 & Inflammation/sepsis burden & failure & -- & -- & -- & No binary matching columns after preprocessing\\
+PhysioNet 2012 & Metabolic derangement & success & 3378 & 0.757 & 2 & +0.073416\\
+PhysioNet 2012 & Neurologic dysfunction & failure & -- & -- & -- & No binary matching columns after preprocessing\\
+PhysioNet 2012 & Renal dysfunction & success & 1841 & 1.000 & 0 & +0.154264\\
+PhysioNet 2012 & Respiratory failure & failure & -- & -- & -- & No binary matching columns after preprocessing\\
+PhysioNet 2012 & Shock & success & 2433 & 0.438 & 1 & +0.010275\\
+\bottomrule \end{longtable}
