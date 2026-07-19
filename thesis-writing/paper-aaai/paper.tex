@@ -249,31 +249,114 @@ consistency, provenance, and analytical reuse of the constructed resources;
 clinical construct validity and causal identification remain separate scientific
 questions.
 
-\section{Evaluation}
+\section{Empirical Evaluation}
+% P4 claim locations: C02, C05, C08, C14--C16, C19, C28, C39, and C41--C55
+% in paper_evidence_map.md. Numerical findings remain reserved for Section 5.
 
-\subsection{Experimental Setup}
-% Function: specify datasets, archived selection rule, metrics, sampling
-% conditions, and analysis denominators.
-% Evidence: results_source_packet.md; results_decision_register.md; checked CSVs;
-% claims C02/C03/C05/C08/C09/C25.
-% Qualification: one selected archived predictive run per model/dataset; do not
-% imply repeated-run uncertainty or statistical superiority.
-% TODO-EVIDENCE G-EVD-02 applies to exact production lineage.
-\plannedcontent{Planned content: checked archive, selection rule, metrics, sampling conditions, and qualifications.}
+\subsection{Prediction Tasks and Metrics}
 
-\subsection{Predictive Results}
+We evaluate a separate multi-label prediction task for each dataset, using its
+deterministic proxy-state vector as the target and STraTS, GRU, GRU-D, and TCN as
+the learned models.  The comparison uses the selected archived held-out test
+output for every model--dataset combination.  Target sets follow the respective
+dataset schemas, and neither targets nor scores are pooled across datasets.
+Because the archive does not establish repeated-run uncertainty, these runs
+characterize the learnability and reproducibility of the rule-derived constructs
+rather than statistical superiority or clinical-label validity.
+
+We report binary cross-entropy test loss, macro AUROC, macro area under the
+precision--recall curve (AUPRC), and macro minRP.  For a target, minRP is the
+maximum across decision thresholds of the smaller of precision and recall.
+AUROC, AUPRC, and minRP are first computed per proxy target and then averaged;
+targets containing a single observed class on the evaluated split are excluded
+from these macro summaries.  The loss is the sample-mean multi-label binary
+cross-entropy recorded by the archived evaluator.  Scores are reported as
+archived point metrics, without unarchived confidence intervals or significance
+tests.
+
+\subsection{Effect Estimators and Cross-Estimator Evaluation}
+
+For causal-analysis characterization, each admitted aggregated proxy state is
+analyzed separately as a binary exposure, with in-hospital mortality as the
+binary outcome and exposure-specific observed adjustment variables selected
+through the project DAG.  We retain every prespecified non-chronic exposure,
+without result-based selection, and run the analysis separately for MIMIC-III
+and PhysioNet 2012.  The original, non-downsampled populations define the
+primary analyses; estimates are not numerically pooled across datasets.
+
+CausalForestDML is the primary nonlinear heterogeneous-effect estimator.  It
+uses double-machine-learning adjustment with flexible nuisance models and a
+causal-forest final stage to produce record-level fitted conditional-effect
+estimates \cite{chernozhukov2018dml,wager2018causalforest,athey2019grf,
+oprescu_et_al_2019_econml}.  LinearDML is the main structured comparator: it
+retains the DML adjustment framework and nuisance-model family while using a
+linear final effect model, providing triangulation across final-stage model
+forms.  CausalPFN supplies a distinct complementary modeling perspective and is
+evaluated over the same prespecified dataset--exposure comparisons to test
+whether the principal directional patterns are specific to the two DML
+estimators.  It is treated as complementary because the archived pipeline
+contains less complete estimator-specific sensitivity and permutation support
+for it than for the DML estimators.
+
+For each dataset--exposure analysis, Results summarize the fitted conditional
+estimates by their mean over the analyzed sample, termed the \emph{mean
+model-estimated CATE over the analyzed sample}.  This sample mean is not a risk
+ratio, odds ratio, or unqualified population ATE.  Cross-estimator evaluation
+compares the sign of this quantity for CausalForestDML versus LinearDML and then
+across all three estimators over all prespecified pairs; disagreement cases are
+retained explicitly.  Directional agreement is a concise robustness summary
+across model forms, but it neither requires equal magnitudes nor proves causal
+identification.
+
+\subsection{Matching and Robustness Diagnostics}
+
+Matching provides a descriptive support-oriented comparison.  Binary adjustment
+variables are retained, other usable numeric adjustment variables are
+median-binarized, and exposed records are greedily paired one-to-one with
+available unexposed records by Hamming distance.  The matcher begins with exact
+binary matches and progressively increases the allowed distance to its
+configured maximum or until its pair-count and match-rate criteria are met.  We
+report the mean within-pair mortality contrast as a \emph{descriptive
+matched-pair outcome difference}, together with pair availability, final
+distance, and sufficient-pair warnings.  If preprocessing leaves no usable
+binary matching representation, the comparison fails explicitly rather than
+being assigned a zero effect.
+
+For the DML analyses, sensitivity evidence retains its archived provenance:
+estimator-native saved output, later recomputation or labeled reconstruction,
+partial coverage, and unavailable or failed diagnostics are not treated as
+interchangeable.  Treatment permutation disrupts the analyzed proxy-exposure
+column, whereas outcome permutation disrupts mortality while preserving the
+remaining run structure.  These are disruption-based sanity checks, not
+automatically formal randomization tests or identification proofs.  Equivalent
+sensitivity and permutation stages were not archived for CausalPFN, reflecting
+a difference in the available diagnostic package rather than its role in the
+cross-estimator comparison.
+
+Outcome-downsampled analyses retain all mortality-positive records and sample
+mortality-negative records according to the implemented configuration.  This
+changes both the analysis population and mortality prevalence, so it is a
+robustness test under a major class-balance perturbation rather than a co-primary
+analysis; its magnitudes are not directly interchangeable with original-population
+estimates.  Applying this complete sequence to both ICU resources evaluates
+workflow portability under heterogeneous data contracts: the analytical
+sequence is shared, while definitions and results remain dataset specific and
+cross-dataset evidence is compared without pooling.  Section 5 reports the
+resulting predictive, estimator-agreement, matching, and robustness findings.
+
+\section{Results}
+% P5 placeholder section. No numerical Results prose was written in P4.
+
+\subsection{Predictive Characterization}
 % Function: show the compact four-model, two-dataset archived comparison.
 % Evidence: checked_predictive_metrics.csv, selection PRIMARY_MAIN_TEXT;
-% claims C06/C07 and the protected numerical baseline. The resource summary is
-% now Table 1; assign the future predictive-results table the next table number.
+% claims C06/C07 and the protected numerical baseline.
 
 \plannedcontent{Planned content: archived predictive comparison in a future results table.}
 
-\subsection{Causal Results}
-% Function: present cross-estimator direction, the PhysioNet-shock exception,
-% and outcome-downsampling direction checks.
-% Evidence: checked_cate_candidates.csv; claims C09--C13.
-% Locked summaries: DML 19/19; all three 18/19; original/downsampled 55/57.
+\subsection{Effect Patterns and Estimator Agreement}
+% Function: present cross-estimator direction and the retained disagreement.
+% Evidence: checked_cate_candidates.csv; claims C09--C12.
 % Required qualification: model-estimated observational proxy effects, not
 % randomized effects, clinical recommendations, or intervention guarantees.
 
@@ -295,7 +378,13 @@ questions.
   \label{tab:causal}
 \end{table*}
 
-\plannedcontent{Planned content: checked central pattern, named exceptions, and bounded robustness interpretation.}
+\plannedcontent{Planned content: checked central pattern, named exceptions, and bounded estimator interpretation.}
+
+\subsection{Robustness and Cross-Dataset Findings}
+% Function: report matching, sensitivity, permutation, and outcome-downsampling
+% results under the hierarchy defined in Section 4.
+% Evidence: checked matching/sensitivity/permutation/CATE files; claims C13--C16.
+\plannedcontent{Planned content: checked robustness findings and cross-dataset synthesis.}
 
 \section{Discussion and Limitations}
 % Function: interpret resource reuse and within-design triangulation while

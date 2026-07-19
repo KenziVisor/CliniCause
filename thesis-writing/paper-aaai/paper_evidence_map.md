@@ -1,6 +1,6 @@
 # CliniCause AAAI-27 paper evidence map
 
-Status: P0/P0A/P2 baseline plus P3 manuscript claim activation, 2026-07-19
+Status: P0/P0A/P2 baseline plus P3--P4 manuscript claim activation, 2026-07-19
 
 Scope: evidence control for the AAAI-27 manuscript; this file is not manuscript prose.
 Canonical plan: `clinicause_aaai27_paper_operational_plan.md`.
@@ -33,6 +33,20 @@ The baseline is intentionally descriptive. The current root and nested revisions
 | STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
 | Causal repository revision | `379ed9b75107b52007957ba5908e507b719c9247` |
 | Runtime-validation attempt | `python` unavailable; `python3 -m pytest` unavailable because the `pytest` module is not installed. No current test-pass claim is made. |
+
+### P4 stage baseline
+
+| Item | P4 value |
+|---|---|
+| Current HEAD before work | `14337a293eee03a24216c299c312ad5c7d61b3a7` (`AAAI P3`) |
+| Branch | `main` |
+| Last two commits inspected | `14337a2` (`AAAI P3`): prompt plus tracked LaTeX auxiliaries; `a851e38` (`docs: record P3 commit evidence`): P3 report only |
+| Accepted P3 content commit | `60504040c86721782e6fdf8a29971c8b1e0ab9e4` (`paper: draft dataset construction and validation`) |
+| Worktree before P4 | Modified `prompt.txt` only; pre-existing user work, protected and non-overlapping |
+| Manuscript changes after P3 content commit | None. Later commits changed the P3 report, `prompt.txt`, and tracked build auxiliaries, but not `paper.tex`, `paper_evidence_map.md`, or `paper_build_report.md` |
+| STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
+| Causal repository revision | `379ed9b75107b52007957ba5908e507b719c9247` |
+| Repository policy | User explicitly deferred cleanup; tracked auxiliaries are preserved and may be regenerated, never deleted |
 
 ### Evidence-packet hashes
 
@@ -232,6 +246,32 @@ P3 uses the status vocabulary requested for manuscript drafting: **SUPPORTED**, 
 ### P3 citation keys activated
 
 `johnson2016mimiciii`, `silva2012physionet`, `tipirneni2022strats`, `cho2014gru`, `bai2018tcn`, and `che2018grud` are present in `literature/metadata/references.bib` and are used only for dataset or model-family attribution in Sections 3.1 and 3.3. No CausalPFN citation or unsupported method-attribution claim was added.
+
+### P4 manuscript claim register
+
+P4 uses the same drafting statuses as P3: **SUPPORTED**, **SUPPORTED WITH QUALIFICATION**, **GATED**, and **EXCLUDED**. Numerical findings remain reserved for Section 5.
+
+| Claim ID | Manuscript claim/function | Exact manuscript location | Highest-authority source | Status | Required qualification / TODO |
+|---|---|---|---|---|---|
+| C41 | Each dataset has a separate multi-label task whose target is its deterministic proxy-state vector; STraTS, GRU, GRU-D, and TCN are evaluated without cross-dataset pooling | Sec. 4.1, paragraph 1 | `checked_predictive_metrics.csv`; thesis Chs. 3, 6, and 8 | SUPPORTED | Dataset-specific target schemas; proxy targets are not clinical labels |
+| C42 | The comparison uses selected archived held-out test outputs for all eight model--dataset combinations | Sec. 4.1, paragraph 1 | `checked_predictive_metrics.csv` rows selected `PRIMARY_MAIN_TEXT`; `results_source_packet.md` | SUPPORTED WITH QUALIFICATION | One selected archived run per combination; split/checkpoint lineage remains `TODO-EVIDENCE G-EVD-02` |
+| C43 | Prediction characterizes learnability and reproducibility of rule-derived constructs, without statistical-superiority or clinical-validity claims | Sec. 4.1, paragraph 1 | Thesis Ch. 6 evaluator interpretation; checked archive | SUPPORTED WITH QUALIFICATION | No repeated-run uncertainty, significance tests, or chart-adjudicated target validation |
+| C44 | Reported metrics are test binary-cross-entropy loss, macro AUROC, macro AUPRC, and macro minRP; minRP is the maximum across thresholds of `min(precision, recall)` | Sec. 4.1, paragraph 2 | `STraTS/src/evaluator.py`; thesis Ch. 6; checked metric schema | SUPPORTED | Loss is sample-mean evaluator loss; do not invent uncertainty |
+| C45 | AUROC, AUPRC, and minRP are averaged over non-degenerate targets; single-class targets are skipped | Sec. 4.1, paragraph 2 | `STraTS/src/evaluator.py`; thesis Ch. 6 | SUPPORTED | Degenerate-target rule applies to macro discrimination summaries, not as an asserted loss exclusion |
+| C46 | Each admitted binary aggregate exposure is analyzed separately against in-hospital mortality using observed exposure-specific DAG-selected adjustment variables; all prespecified exposures are retained | Sec. 4.2, paragraph 1 | `results_decision_register.md`; thesis Chs. 7--8; checked CATE rows | SUPPORTED WITH QUALIFICATION | Project DAG is assumed, not learned/validated; no result-based exposure selection |
+| C47 | Original, non-downsampled populations are primary and dataset analyses are separate and unpooled | Sec. 4.2, paragraph 1; Sec. 4.3, paragraph 3 | `results_decision_register.md`; `results_source_packet.md` | SUPPORTED | Cross-dataset comparison is workflow/interface level |
+| C48 | CausalForestDML is the primary nonlinear DML estimator, with flexible nuisance models, a causal-forest final stage, and record-level fitted conditional-effect outputs | Sec. 4.2, paragraph 2 | Thesis Ch. 7; active `cate_estimation.py`; approved DML/forest/EconML references | SUPPORTED WITH QUALIFICATION | Method interpretation is assumption-bound; current code is not claimed as historical producer |
+| C49 | LinearDML is the structured comparator, preserving the DML/nuisance framework while using a linear final effect model | Sec. 4.2, paragraph 2 | Thesis Ch. 7; active `cate_estimation.py`; approved DML/EconML references | SUPPORTED WITH QUALIFICATION | Cross-model-form triangulation, not an unbiased fallback claim |
+| C50 | CausalPFN is a meaningful complementary estimator evaluated on the same prespecified pairs to test whether directions are DML-specific | Sec. 4.2, paragraph 2 | Checked CATE experiment matrix; `results_decision_register.md`; canonical plan | SUPPORTED WITH QUALIFICATION | No architecture, training-corpus, theory, novelty, or primary-source claim; `TODO-EVIDENCE G-EVD-01` remains |
+| C51 | Results report the sample mean of record-level fitted conditional estimates as the mean model-estimated CATE over the analyzed sample | Sec. 4.2, paragraph 3 | Checked CATE schema; thesis Chs. 7 and 10; `results_decision_register.md` | SUPPORTED WITH QUALIFICATION | Not a risk/odds ratio or unqualified population ATE |
+| C52 | Directional triangulation compares CausalForestDML with LinearDML and then all three estimators across every prespecified pair, retaining disagreements | Sec. 4.2, paragraph 3 | Checked CATE matrix; `results_decision_register.md` | SUPPORTED WITH QUALIFICATION | Agreement neither requires equal magnitude nor proves identification; P4 states no agreement count |
+| C53 | Matching uses a median-binarized/binary representation, progressive greedy one-to-one Hamming matching, descriptive pair differences, support warnings, and explicit failure when no representation remains | Sec. 4.3, paragraph 1 | `checked_matching_results.csv`; `checked_matching_failures.csv`; thesis Chs. 7--8; active matching source | SUPPORTED WITH QUALIFICATION | Descriptive matched-pair outcome difference, not an independent causal effect or positivity proof |
+| C54 | DML sensitivity evidence preserves native/recomputed/reconstructed/partial/unavailable status; treatment and outcome permutations are disruption checks rather than formal randomization tests; PFN lacks an equivalent archived package | Sec. 4.3, paragraph 2 | Checked sensitivity/permutation tables; thesis Ch. 8 | SUPPORTED WITH QUALIFICATION | Do not imply uniform exposure coverage or diagnostic parity |
+| C55 | Downsampling retains outcome-positive records and samples outcome-negative records, changes population/prevalence, and is robustness-only; the shared sequence tests portability while definitions/results remain dataset specific and unpooled | Sec. 4.3, paragraph 3 | Thesis Chs. 7--8; active downsampling source; `results_decision_register.md` | SUPPORTED WITH QUALIFICATION | Magnitudes are not directly interchangeable with original-population estimates |
+
+### P4 citation keys activated
+
+`chernozhukov2018dml`, `wager2018causalforest`, `athey2019grf`, and `oprescu_et_al_2019_econml` are present in `literature/metadata/references.bib` and support only the DML, causal-forest, and implementation-family descriptions in Section 4.2. No CausalPFN citation or unsupported CausalPFN architecture/theory claim was added.
 
 ## 6. Current validation-contract evidence
 

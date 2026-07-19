@@ -1,5 +1,10 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Athey, Tibshirani, and Wager(2019)}]{athey2019grf}
+Athey, S.; Tibshirani, J.; and Wager, S. 2019.
+\newblock Generalized Random Forests.
+\newblock \emph{The Annals of Statistics}, 47(2): 1148--1178.
 
 \bibitem[{Bai, Kolter, and Koltun(2018)}]{bai2018tcn}
 Bai, S.; Kolter, J.~Z.; and Koltun, V. 2018.
@@ -12,6 +17,14 @@ Che, Z.; Purushotham, S.; Cho, K.; Sontag, D.; and Liu, Y. 2018.
 \newblock Recurrent Neural Networks for Multivariate Time Series with Missing
   Values.
 \newblock \emph{Scientific Reports}, 8: 6085.
+
+\bibitem[{Chernozhukov et~al.(2018)Chernozhukov, Chetverikov, Demirer, Duflo,
+  Hansen, Newey, and Robins}]{chernozhukov2018dml}
+Chernozhukov, V.; Chetverikov, D.; Demirer, M.; Duflo, E.; Hansen, C.; Newey,
+  W.; and Robins, J. 2018.
+\newblock Double/Debiased Machine Learning for Treatment and Structural
+  Parameters.
+\newblock \emph{The Econometrics Journal}, 21(1): C1--C68.
 
 \bibitem[{Cho et~al.(2014)Cho, van Merrienboer, Gulcehre, Bahdanau, Bougares,
   Schwenk, and Bengio}]{cho2014gru}
@@ -30,6 +43,13 @@ Johnson, A. E.~W.; Pollard, T.~J.; Shen, L.; wei H.~Lehman, L.; Feng, M.;
 \newblock {MIMIC-III}, a freely accessible critical care database.
 \newblock \emph{Scientific Data}, 3: 160035.
 
+\bibitem[{Oprescu et~al.(2019)Oprescu, Syrgkanis, Battocchi, Hei, and
+  Lewis}]{oprescu_et_al_2019_econml}
+Oprescu, M.; Syrgkanis, V.; Battocchi, K.; Hei, M.; and Lewis, G. 2019.
+\newblock {EconML}: A Machine Learning Library for Estimating Heterogeneous
+  Treatment Effects.
+\newblock In \emph{NeurIPS 2019 Workshop on Causal Machine Learning}, 1--6.
+
 \bibitem[{Silva et~al.(2012)Silva, Moody, Scott, Celi, and
   Mark}]{silva2012physionet}
 Silva, I.; Moody, G.; Scott, D.~J.; Celi, L.~A.; and Mark, R.~G. 2012.
@@ -42,5 +62,12 @@ Tipirneni, S.; and Reddy, C.~K. 2022.
 \newblock Self-Supervised Transformer for Sparse and Irregularly Sampled
   Multivariate Clinical Time-Series.
 \newblock \emph{ACM Transactions on Knowledge Discovery from Data}.
+
+\bibitem[{Wager and Athey(2018)}]{wager2018causalforest}
+Wager, S.; and Athey, S. 2018.
+\newblock Estimation and Inference of Heterogeneous Treatment Effects using
+  Random Forests.
+\newblock \emph{Journal of the American Statistical Association}, 113(523):
+  1228--1242.
 
 \end{thebibliography}

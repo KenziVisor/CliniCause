@@ -179,3 +179,46 @@ Stage P3 replaced the Section 3 planning placeholders with the complete five-sub
 - The operational-plan SHA-256 remains `e70a485146631a3edf3f5358ec5e047e97db0967cd12a50a0388eed745f31b25`; Author Kit style/BST hashes remain the frozen values in the evidence map.
 - No thesis, checked-result, reproducibility, literature, bibliography, code, test, nested-repository, data, or Author Kit file was edited.
 - `python` is unavailable and `python3 -m pytest` cannot start because the `pytest` module is absent. The manuscript therefore describes inspected current validation contracts but makes no current test-pass claim and does not attribute repaired current code to archived production.
+
+---
+
+## P4 empirical-evaluation build update
+
+Date: 2026-07-19
+
+Stage P4 replaced the Evaluation placeholders with a complete `Empirical Evaluation` section covering prediction tasks and metrics, effect estimators and directional triangulation, and matching/robustness diagnostics. The pre-existing future-results placeholders now occupy a separate Section 5. No numerical Results prose or Abstract text was written, and Section 3 scientific prose was unchanged.
+
+### P4 build identity
+
+| Field | Result |
+|---|---|
+| Parent HEAD before P4 | `14337a293eee03a24216c299c312ad5c7d61b3a7` on `main` |
+| Accepted P3 content commit | `60504040c86721782e6fdf8a29971c8b1e0ab9e4` |
+| STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
+| Causal revision | `379ed9b75107b52007957ba5908e507b719c9247` |
+| Build command | `env TEXINPUTS=AuthorKit27: BSTINPUTS=AuthorKit27: BIBINPUTS=../literature/metadata: latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex` |
+| Build result | Success; `latexmk` exit code 0; BibTeX and cross-references resolved |
+| Output | `thesis-writing/paper-aaai/paper.pdf` |
+| PDF SHA-256 | `13b28f0396fcb91baa830f9aaa57c96da1d65e4cb10d1748b249e1150da1f228` |
+| Page count and size | 5 pages; `612 × 792 pt` US Letter |
+| Section 4 footprint | Approximately 0.86 physical page, from page-3 y=254.54 pt to page-4 y=144.39 pt |
+| Section 4 size | 8 substantive paragraphs; approximately 715 prose words (732 including headings) |
+| Fonts | Four embedded/subset Type 1 fonts; no Type 3 fonts |
+| Anonymity | Submission mode and anonymous author block intact |
+
+### P4 warnings and visual audit
+
+- No undefined citation/reference, multiply defined label, missing file, horizontal overfull box, or fatal warning remains.
+- The existing 33.21437 pt first-page overfull vertical-box diagnostic persists. Full-resolution inspection again found no clipping, overlap, gutter/margin breach, or readability defect.
+- Underfull horizontal-box diagnostics are confined to ordinary paragraph and compact-table justification.
+- All five pages were rendered at 144 dpi and inspected. The Section 3–4 transition, Section 4 headings, cross-column flow, separate Section 5 heading, placeholders, bibliography, margins, and gutter are visually sound. Remaining whitespace reflects intentionally unwritten stages and deferred P5 floats.
+
+### P4 protection and scientific boundaries
+
+- The operational-plan, AAAI style, and bibliography-style hashes remain unchanged.
+- No protected thesis, evidence, result, reproducibility, literature, bibliography, code, test, nested-repository, data, or run file was edited.
+- Pre-existing `prompt.txt` and tracked LaTeX auxiliaries were preserved; cleanup remains intentionally deferred by user decision.
+- CausalPFN is presented as a meaningful complementary estimator without an invented citation or unsupported architecture/theory claim.
+- No experiment, model run, test-pass claim, commit, or push occurred.
+
+READY FOR STAGE P5 — EMPIRICAL EVALUATION DRAFTED
