@@ -294,3 +294,62 @@ changed. No experiment/model run, stage, commit, push, reset, restore, revert,
 or clean operation occurred.
 
 READY FOR STAGE P6 — RESULTS DRAFTED AND NUMERICALLY MAPPED
+
+---
+
+## P6 Discussion, limitations, and conclusion build update
+
+Date: 2026-07-19
+
+Stage P6 replaced the Discussion and Conclusion planning boxes with five
+substantive Discussion paragraphs under four compact subsections and exactly one
+Conclusion paragraph. The draft centers resource reuse, workflow-level
+cross-dataset portability, prominent DML/CausalPFN triangulation, the design-time
+LLM boundary, future research, and one centralized limitations passage. No
+earlier scientific section, float, result table, citation, or bibliography entry
+was revised.
+
+### P6 build identity and content
+
+| Field | Result |
+|---|---|
+| Parent HEAD before P6 | `47f487c84a92f0a0b6a8271b370ff9d7afcace23` (`AAAI P5`) on `main` |
+| Canonical plan | Version 1.1 at `clinicause_aaai27_paper_operational_plan_v1.1.md`; SHA-256 `8df13e88892da8cd0d78df33e0b7a997983d95f99222de0eb9605426e905b1c1` |
+| Discussion structure | Resource Utility and Cross-Dataset Portability; Estimator Triangulation and CausalPFN; LLM-Assisted Design and Future Research; Limitations |
+| Paragraph/word count | 5 Discussion paragraphs / 561 prose words; 1 Conclusion paragraph / 79 prose words; 640 combined |
+| Measured footprint | Approximately 0.94 physical AAAI page by equivalent two-column occupancy, from page-5 y=536.22 pt through the page-6 Conclusion before References at y=259.55 pt |
+| New citations/results | None; accepted P5 mappings only |
+
+### P6 final build and visual audit
+
+| Field | Result |
+|---|---|
+| Build command | `env TEXINPUTS=AuthorKit27: BSTINPUTS=AuthorKit27: BIBINPUTS=../literature/metadata: latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex` |
+| Build result | Success; `latexmk` exit code 0; citations and references resolved |
+| Output | `thesis-writing/paper-aaai/paper.pdf` |
+| PDF SHA-256 | `3c1d90db329e51cce2c8b4d9b32d1c63ecb5bf7b7e0965ecd479eb894acb6c0c` |
+| Page count/size | 7 pages; 612 x 792 pt US Letter |
+| Technical-content boundary | Discussion and Conclusion end on page 6; page 7 contains only final reference continuation |
+| Layout/anonymity | Official AAAI two-column submission layout; anonymous block intact |
+| Fonts | All embedded/subset; Type 1 or CID TrueType; no Type 3 font |
+
+All seven pages were rendered and inspected. Table 2 and Figure 2 remain before
+Section 6, with no float crossing into Discussion. Discussion, Limitations,
+Conclusion, and References flow cleanly across pages 5--7 with no clipping,
+margin breach, gutter collision, or readability defect. The known 33.21437 pt
+first-page overfull vertical diagnostic persists without a visible defect;
+underfull diagnostics remain ordinary justification/column-fill warnings. No
+undefined citation/reference, duplicate label, missing file, horizontal
+overfull box, or fatal warning remains.
+
+The manuscript retains a viable path to the seven-page technical-content limit,
+although P7 will replace the Abstract/Introduction/Related Work placeholders and
+P9 must reassess global compression. P6 made no global compression or formatting
+change.
+
+No protected plan, prompt, thesis, result, reproducibility, literature,
+bibliography, code, test, data, run, Author Kit, figure, table, or earlier-stage
+report was edited. Repository cleanup remains deferred. No experiment, model
+run, test-pass claim, staging, commit, or push occurred.
+
+READY FOR STAGE P7 — INTERPRETATION AND CONCLUSION DRAFTED

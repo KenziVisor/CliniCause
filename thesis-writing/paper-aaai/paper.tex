@@ -454,21 +454,91 @@ semantics rather than claiming pooled clinical replication.
 
 \FloatBarrier
 \section{Discussion and Limitations}
-% Function: interpret resource reuse and within-design triangulation while
-% consolidating limitations: proxy validity, observational identification,
-% estimator disagreement, partial validation coverage, incomplete producing
-% lineage, current runtime status, and release status.
-% Evidence: thesis Chapter 11; claims C14--C25; evidence-map gate register.
-% TODO-RELEASE G-REL-01: do not render a public-availability statement until an
-% anonymous artifact, URL, license, and instructions exist.
-% TODO-HUMAN G-HUM-01/G-HUM-02: scientific/ethics/anonymity review.
-\plannedcontent{Planned content: bounded interpretation, explicit failure modes, provenance limits, and release state.}
+
+\subsection{Resource Utility and Cross-Dataset Portability}
+
+CliniCause contributes reusable analytical resources rather than only final
+effect tables.  Their explicit exposure, outcome, covariate, graph, cohort, and
+provenance interfaces let researchers compare alternative causal estimators and
+irregular-time-series representations without repeating every integration
+stage.  Deterministic construct definitions and artifact lineage also make it
+possible to refine or replace proxy states, substitute DAGs or adjustment sets,
+study cohort and support sensitivity, and audit how an analytical construct
+reaches an estimator-ready table.  This modularity turns the current analyses
+into starting points for follow-up evaluation rather than fixed endpoints.
+
+The shared construction and evaluation sequence operated across two
+heterogeneous ICU sources, while predictive leadership, effect magnitudes, and
+within-dataset rankings differed.  This combination locates portability at the
+workflow and interface level: common contracts can support dataset-specific
+variables, measurement processes, proxy ontologies, and graph assumptions.
+Similarly named states are therefore not assumed to be semantically identical,
+and the analyses remain separate and unpooled.  Preserving these distinctions is
+a design strength because it exposes contextual sensitivity instead of hiding it
+behind a pooled clinical-replication claim.
+
+\subsection{Estimator Triangulation and CausalPFN}
+
+Agreement between CausalForestDML and LinearDML in 19/19 comparisons supports
+robustness of the observed sign pattern to their different final-stage model
+forms within the implemented design.  CausalPFN is an important complementary
+result: it joined both DML estimators in 18/19 comparisons, showing promise for
+future evaluation on these resources from a distinct modeling perspective.
+PhysioNet shock, the sole three-estimator sign exception, is equally informative:
+it identifies a comparison for targeted analysis of its proxy definition,
+support, adjustment assumptions, and estimator behavior.  Directional agreement
+does not establish equal magnitudes or causal identification, and it should not
+replace uncertainty analysis.  CausalPFN's archived estimator-specific
+sensitivity and permutation package is also less complete than the DML package,
+motivating richer diagnostics rather than diminishing its broad concordance.
+
+\subsection{LLM-Assisted Design and Future Research}
+
+The LLM component illustrates a structured design-time aid for translating
+clinical and causal reasoning into inspectable proposals for proxy ontologies,
+rules, missingness, and DAGs.  Project selection and encoded source remain the
+authority, and deterministic patient-level execution is separated from this
+proposal layer; the LLM neither validates constructs nor estimates patient-level
+effects.  This separation enables focused next steps: clinician evaluation of
+proxy constructs, comparisons across experts and LLMs, an isolated design-layer
+ablation, alternative proxy ontologies, DAGs, and adjustment sets, stronger
+repeated-run uncertainty assessment, richer CausalPFN diagnostics, and external
+validation on additional datasets.  Such studies can test individual design
+choices while retaining the current resources as controlled interfaces.
+
+\subsection{Limitations}
+
+The principal limitations define a concrete validation agenda.  Proxy states are
+transparent analytical constructs, not chart-adjudicated phenotypes, although
+their deterministic definitions and lineage make them directly replaceable in
+clinician-led validation.  The DAGs encode project assumptions rather than
+proving intervention validity; observational estimates remain vulnerable to
+unmeasured confounding and unresolved identification assumptions, which should
+be probed through alternative graphs, adjustment sets, and stronger support
+analyses.  Repeated-run uncertainty and diagnostic coverage are incomplete for
+some archived comparisons, and CausalPFN has a smaller archived diagnostic
+envelope than the DML estimators, motivating repeated evaluation and
+estimator-specific diagnostics.  Exact historical producing revisions,
+configurations, and checkpoint-to-export lineage also remain incomplete, while
+current-runtime validation and anonymous-release readiness are separately gated;
+run-linked manifests and a verified package are needed before stronger
+reproducibility or availability claims.  Finally, restricted source-data access,
+the absence of external clinical validation, and the lack of an isolated LLM
+design ablation limit immediate generalization.  The resource's replaceable
+constructs and explicit interfaces make each of these limitations testable
+rather than implicit.
 
 \section{Conclusion}
-% Function: restate only the ratified resource-level contribution and checked
-% scope; introduce no new number, citation, or clinical implication.
-% Evidence: locked claims only. TODO-HUMAN G-HUM-01.
-\plannedcontent{Planned content: concise resource-level conclusion with no new claims.}
+
+CliniCause constructs reusable, estimator-ready causal-analysis resources from
+MIMIC-III and PhysioNet 2012.  Structural, cohort, provenance, and analytical
+validation support their reuse while preserving dataset-specific constructs and
+assumptions.  Broad directional agreement across the DML estimators and
+CausalPFN demonstrates the value of estimator triangulation within the
+implemented observational design.  By providing transparent analytical
+resources rather than only final effect tables, CliniCause establishes a
+foundation for testing new proxy definitions, temporal representations, graph
+assumptions, cohort choices, and causal estimators in irregular clinical data.
 
 % The approved repository bibliography is connected without copying or editing
 % it. No citation is rendered until its exact use is evidenced and drafted.

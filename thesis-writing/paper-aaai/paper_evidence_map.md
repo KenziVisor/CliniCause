@@ -1,9 +1,9 @@
 # CliniCause AAAI-27 paper evidence map
 
-Status: P0/P0A/P2 baseline plus P3--P5 manuscript claim activation, 2026-07-19
+Status: P0/P0A/P2 baseline plus P3--P6 manuscript claim activation, 2026-07-19
 
 Scope: evidence control for the AAAI-27 manuscript; this file is not manuscript prose.
-Canonical plan: `clinicause_aaai27_paper_operational_plan.md`.
+Canonical plan: `clinicause_aaai27_paper_operational_plan_v1.1.md`, Version 1.1.
 
 ## 1. Frozen repository baseline
 
@@ -62,6 +62,18 @@ The baseline is intentionally descriptive. The current root and nested revisions
 | P5 numerical authority | Checked result CSVs under `thesis-writing/results/`; prompt values were not used as evidence |
 | Figure 2 selection | Original sampling only; estimator-specific main-text selection statuses; exactly 19 combinations and three estimators required |
 
+### P6 stage baseline
+
+| Item | P6 value |
+|---|---|
+| Current HEAD before work | `47f487c84a92f0a0b6a8271b370ff9d7afcace23` (`AAAI P5`) |
+| Branch | `main` |
+| Last commits inspected | `47f487c` (`AAAI P5`), `b604d68` (`AAAI p4`), `14337a2` (`AAAI P3`), `a851e38` (`docs: record P3 commit evidence`), `6050404` (`paper: draft dataset construction and validation`), and `884ff8e` (`AAAI skeleton`) |
+| Accepted P5 commit | `47f487c84a92f0a0b6a8271b370ff9d7afcace23` |
+| Worktree before P6 | Modified `prompt.txt` and untracked Version 1.1 operational plan; both pre-existing, protected, and non-overlapping with permitted P6 edits |
+| Canonical plan | `thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md`; Version 1.1; SHA-256 `8df13e88892da8cd0d78df33e0b7a997983d95f99222de0eb9605426e905b1c1` |
+| Workflow followed | Revised consolidated P6--P10 sequence; P6 combines Discussion, Limitations, future-work priorities, and Conclusion |
+
 ### Evidence-packet hashes
 
 | File | SHA-256 |
@@ -74,7 +86,7 @@ The baseline is intentionally descriptive. The current root and nested revisions
 | `results/checked_cohort_candidates.csv` | `872c0516ad7fbd8c2ef7e1e7d88fdeb6bb362f1b57c8796cc68d7742df4277cb` |
 | `reproducibility/provenance_gaps.csv` | `4924691293d5a7c80a5c856b0dde19cd7edc90305ee15f76fcd5058a581b0f4e` |
 | `literature/metadata/references.bib` | `8ffcee89e8d3ff617d88725ca4625c55d84d53bc6aa5cffdda5525fe26b3fb0e` |
-| Canonical operational plan | `e70a485146631a3edf3f5358ec5e047e97db0967cd12a50a0388eed745f31b25` |
+| Canonical Version 1.1 operational plan | `8df13e88892da8cd0d78df33e0b7a997983d95f99222de0eb9605426e905b1c1` |
 
 ### Author-kit hashes
 
@@ -320,6 +332,31 @@ spellings are `mimic` and `physionet`; predictive-source spellings are
 
 No new citation key was activated in P5. No unsupported CausalPFN methodological citation or attribution was added.
 
+### P6 Discussion and Conclusion claim register
+
+P6 adds interpretation only from the frozen P5 findings, construction evidence,
+thesis Discussion/Conclusion, and existing gate register. It introduces no new
+numerical result or citation.
+
+| Claim ID | Manuscript claim/function | Exact manuscript location | Highest-authority source | Status | Required qualification / gate |
+|---|---|---|---|---|---|
+| C71 | The resources support comparison of alternative estimators and temporal representations without rebuilding every integration stage | Sec. 6.1, paragraph 1 | C35, C39--C40; thesis Ch. 11 resource/interface synthesis | SUPPORTED WITH QUALIFICATION | Interface-level reuse; no availability claim while `G-REL-01` is open |
+| C72 | Deterministic construct definitions and lineage support replacement of proxies, DAGs, and adjustment sets plus cohort/support and lineage audits | Sec. 6.1, paragraph 1 | C29--C38; thesis Ch. 11 data-contract, construct, and provenance discussions | SUPPORTED WITH QUALIFICATION | Replaceability is a resource-design property, not evidence that alternatives are clinically valid |
+| C73 | The shared sequence operated across both ICU sources while predictive leadership, magnitudes, and rankings remained dataset specific | Sec. 6.1, paragraph 2 | C57, C59, C61--C62, C70; checked P5 findings | SUPPORTED WITH QUALIFICATION | Workflow/interface portability only; no pooled clinical replication |
+| C74 | Dataset-specific variables, measurement processes, ontologies, and graph assumptions are deliberately preserved; similarly named states are not assumed equivalent | Sec. 6.1, paragraph 2 | C28, C34, C40; thesis Ch. 11 cross-dataset interpretation | SUPPORTED | Results stay separate and unpooled |
+| C75 | Complete DML sign agreement supports within-design robustness to different DML final-stage model forms | Sec. 6.2 | C63; `checked_cate_candidates.csv`; P5 numerical audit | SUPPORTED WITH QUALIFICATION | Direction only; not magnitude equality or identification |
+| C76 | CausalPFN's broad concordance makes it a prominent complementary estimator result | Sec. 6.2 | C64; `checked_cate_candidates.csv`; P5 numerical audit | SUPPORTED WITH QUALIFICATION | No architecture, theory, novelty, or citation claim; `G-EVD-01` remains |
+| C77 | PhysioNet shock is useful model/support-sensitivity evidence and motivates targeted proxy, support, adjustment, and estimator analysis | Sec. 6.2 | C65; checked CATE/matching records; thesis Ch. 11 | SUPPORTED WITH QUALIFICATION | Retain disagreement; do not resolve by voting or imply a clinical effect |
+| C78 | Directional agreement does not establish equal magnitudes or identification, and CausalPFN has a smaller archived estimator-specific diagnostic package | Sec. 6.2 | C51--C54, C63--C65, C69; sensitivity/permutation records | SUPPORTED | Agreement is bounded within the implemented observational design |
+| C79 | The LLM is a structured design-time proposal aid separated from deterministic patient-level execution and source authority | Sec. 6.3 | C29; `audit/llm_prompt_provenance_audit.md`; thesis Ch. 11 | SUPPORTED WITH QUALIFICATION | No construct-validation or patient-level effect-estimation claim; proposal-to-code lineage remains partial |
+| C80 | Clinician review, expert/LLM comparison, isolated design ablation, alternative ontologies/graphs, stronger uncertainty, richer CausalPFN diagnostics, and external validation are prioritized follow-up studies | Sec. 6.3 | Thesis Ch. 12 future work; provenance gaps `GAP-016`--`GAP-020`; P5 diagnostic boundaries | SUPPORTED AS FUTURE RESEARCH | Research agenda, not completed experiments |
+| C81 | Proxy, graph/identification, uncertainty/diagnostic, historical-lineage, runtime/release, access/external-validation, and LLM-ablation limitations remain centralized and actionable | Sec. 6.4 | C14--C20, C29--C40, C43, C54, C69; gate register; thesis Chs. 11--12; `provenance_gaps.csv` | SUPPORTED WITH QUALIFICATION | Current runtime and anonymous release remain separately gated; no stronger reproducibility/availability claim |
+| C82 | CliniCause constructs reusable estimator-ready resources spanning MIMIC-III and PhysioNet 2012, supported by structural, cohort, provenance, and analytical validation | Sec. 7 | C02, C26--C40, C56--C57 | SUPPORTED WITH QUALIFICATION | Validation scope excludes clinical construct validity and causal identification |
+| C83 | Broad DML/CausalPFN directional agreement demonstrates the value of triangulation and the resources enable tests of proxies, representations, graphs, cohorts, and estimators | Sec. 7 | C35, C63--C64, C71--C78 | SUPPORTED WITH QUALIFICATION | No new count, experiment, release claim, or clinical recommendation |
+
+No new citation key is activated in P6. The Conclusion contains no number,
+citation, public-release statement, new experiment, or clinical recommendation.
+
 ## 6. Current validation-contract evidence
 
 Static inspection found implementation and test cases for canonical identifier normalization, duplicate rejection, exact cohort equality (including allowed reordering and rejected missing/extra IDs), split integrity, prediction-schema and probability consistency, malformed prediction rejection, metadata/fingerprint validation, manifest and receipt handling, reuse checks, derived seeds, mutation detection, and dataset isolation. This supports a paper/checklist statement only in the form “the current code contains these validation contracts.”
@@ -372,6 +409,7 @@ It does **not** support either “the archived experiments ran this exact code�
 - P1: exact kit behavior and current official AAAI-27 constraints are recorded in `aaai_structure_notes.md`.
 - P2: protected facts, result families, claim locks, conflicts, and actionable gates are recorded here.
 - P5: all Results claims, Table 2 values, and the complete Figure 2 matrix are checked and linked through C56--C70 and the P5 numerical audit.
+- P6: all Discussion interpretations and the one-paragraph Conclusion are mapped through C71--C83; no new result, citation, release claim, or clinical recommendation was introduced.
 
 READY FOR STAGE P0A — PAPER BASELINE FROZEN
 
@@ -380,3 +418,5 @@ READY FOR STAGE P1 — AAAI GENRE AND FORMAT STUDIED
 READY FOR STAGE P2 — CLAIMS AND EVIDENCE LOCKED
 
 READY FOR STAGE P6 — RESULTS DRAFTED AND NUMERICALLY MAPPED
+
+READY FOR STAGE P7 — INTERPRETATION AND CONCLUSION DRAFTED
