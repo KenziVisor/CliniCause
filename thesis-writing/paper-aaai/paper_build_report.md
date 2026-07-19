@@ -140,3 +140,42 @@ READY FOR STAGE P1 — AAAI GENRE AND FORMAT STUDIED
 READY FOR STAGE P2 — CLAIMS AND EVIDENCE LOCKED
 
 READY FOR STAGE P3 — AAAI SKELETON COMPILES
+
+---
+
+## P3 dataset-construction draft build update
+
+Date: 2026-07-19
+
+Stage P3 replaced the Section 3 planning placeholders with the complete five-subsection resource-construction and validation draft, a reader-facing resource summary table, and a sized Figure 1 layout placeholder with a final-quality caption and implementable production specification. Introduction, Related Work, Evaluation, Discussion, Conclusion, the approved title, and the anonymous author block remain structurally unchanged apart from removing the obsolete predictive Table 1 placeholder and renumbering its planning reference.
+
+### P3 build identity
+
+| Field | Result |
+|---|---|
+| Parent HEAD before P3 | `884ff8e4d112ff732e43a6aea33ab9bddcf8ed5e` on `main` |
+| STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
+| Causal repository revision | `379ed9b75107b52007957ba5908e507b719c9247` |
+| Build command | `env TEXINPUTS=AuthorKit27: BSTINPUTS=AuthorKit27: BIBINPUTS=../literature/metadata: latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex` |
+| Build result | Success; `latexmk` exit code 0; BibTeX and cross-references resolved |
+| Output | `thesis-writing/paper-aaai/paper.pdf` |
+| PDF SHA-256 | `f37022cb5a45e54ba113b1eb3e84b8d6aa0534fa2bb627efe8e707b774952510` |
+| Page count and size | 4 pages; `612 x 792 pt` US Letter |
+| Section 3 footprint | Approximately 1.88 physical pages, measured from the Section 3 heading at page-1 y=350.95 pt to the Evaluation heading at page-3 y=253.98 pt |
+| Section 3 size | 12 substantive paragraphs; approximately 1,214 words including headings, captions, and table text after LaTeX stripping |
+| Fonts | Four embedded, subset Type 1 fonts; no Type 3 fonts |
+| Anonymity | Submission mode and rendered `Anonymous submission`; no author identity, affiliation, URL, or acknowledgment introduced |
+
+### P3 warnings and visual audit
+
+- No undefined citation, undefined reference, multiply-defined label, missing file, or fatal LaTeX warning remains.
+- One 33.21437 pt overfull vertical-box diagnostic occurs during first-page output. Full-resolution inspection shows no clipping, overlap, margin breach, gutter collision, or readability defect; it arises in the partially populated skeleton's first-page composition. It must be rechecked when the empty Abstract and remaining section placeholders are replaced.
+- Underfull horizontal-box diagnostics are limited to normal justification in the Section 3 opening and compact Table 1 cells. Table 1 remains readable at its permitted 9-point size.
+- Every PDF page was rendered and inspected. Figure 1 and Table 1 remain within the two-column text block; captions appear below both artifacts; Section 3 columns are balanced and readable. Pages 3--4 retain expected whitespace because later manuscript stages remain placeholders.
+- Figure 1 is deliberately a layout placeholder rather than a fabricated scientific figure. Its source comment specifies design-time, runtime, validation-gate, central-resource, and downstream-characterization bands.
+
+### P3 protection and runtime boundary
+
+- The operational-plan SHA-256 remains `e70a485146631a3edf3f5358ec5e047e97db0967cd12a50a0388eed745f31b25`; Author Kit style/BST hashes remain the frozen values in the evidence map.
+- No thesis, checked-result, reproducibility, literature, bibliography, code, test, nested-repository, data, or Author Kit file was edited.
+- `python` is unavailable and `python3 -m pytest` cannot start because the `pytest` module is absent. The manuscript therefore describes inspected current validation contracts but makes no current test-pass claim and does not attribute repaired current code to archived production.

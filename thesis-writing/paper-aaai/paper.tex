@@ -56,48 +56,198 @@
 % method-attribution, comparison, or theory statement is rendered.
 \plannedcontent{Planned content: compact gap-led synthesis using only verified bibliography entries.}
 
-\section{CliniCause Resource and Pipeline}
-% Function: orient the reader to the complete reusable object before component
-% details. Evidence: thesis Chapters 3--8 and evidence-map C01/C04/C17/C25.
+\section{Constructing the CliniCause Datasets}
+% P3 claim locations: C01--C05, C08, C17, C25--C40 in
+% paper_evidence_map.md. Archived-artifact facts and current implementation
+% contracts are intentionally distinguished below.
+
+CliniCause constructs two reusable, validated causal-analysis datasets from
+MIMIC-III and PhysioNet 2012.  Each resource connects irregular observations to
+explicit proxy-state exposures, in-hospital mortality, observed covariates, and
+inspectable graph metadata.  A shared construction workflow provides the same
+analytical interface while retaining the source-specific meanings of variables,
+proxy states, and adjustment assumptions.  Figure~\ref{fig:pipeline} summarizes
+the construction path, and Table~\ref{tab:resources} describes the resulting
+resources.
 
 \begin{figure*}[t]
-  \plannedwide{Figure 1 placeholder: end-to-end CliniCause resource and pipeline.}
-  % Intended source: thesis method chapters plus current repository interfaces.
-  % Intended width: two columns. Main-paper artifact.
-  % Regeneration: paper-native vector/redraw; no screenshots.
-  % Gate: TODO-HUMAN G-HUM-01 for final emphasis; TODO-RUNTIME G-RUN-01 for any
-  % statement that current tests pass.
-  \caption{Planned Figure 1: CliniCause resource and pipeline.}
+  \noindent\fbox{\parbox[c][1.15in][c]{0.96\textwidth}{\centering
+    \textit{Figure 1 layout placeholder---final paper-native vector figure to
+    replace this box.}}}
+  % P3 FIGURE 1 PRODUCTION SPECIFICATION (two-column, paper-native vector):
+  % Use three visually distinct bands. (1) DESIGN TIME: dataset descriptions +
+  % structured LLM proposals for proxy ontologies, rule families, missingness,
+  % and dataset-specific DAGs -> project/human selection -> deterministic tagger
+  % and graph source. The LLM branch must join at source design, never at patient
+  % rows. (2) CONSTRUCTION/RUNTIME: raw irregular MIMIC-III and PhysioNet 2012
+  % records -> separate dataset-specific preprocessing/canonical IDs ->
+  % deterministic rule labels -> four parallel predictive models (STraTS, GRU,
+  % GRU-D, TCN) -> probability/binary export normalization -> five-source proxy
+  % aggregation -> outcome + observed covariates + DAG/adjustment metadata. Put a
+  % prominent central box around the two reusable estimator-ready causal-analysis
+  % datasets. (3) DOWNSTREAM CHARACTERIZATION: CausalForestDML, LinearDML,
+  % CausalPFN, matching, and robustness diagnostics. Mark compact validation gates
+  % at schema/cohort handoffs and provenance/output boundaries. Distinguish the
+  % two datasets by lanes without suggesting pooled semantics. Use grayscale-safe
+  % shapes/line styles, direct labels, >=9 pt embedded fonts, and no screenshots.
+  % Gate: TODO-HUMAN G-HUM-01 for the final visual; do not add a test-pass label
+  % unless TODO-RUNTIME G-RUN-01 is resolved.
+  \caption{CliniCause resource construction.  Dataset-specific preprocessing and
+  deterministic proxy rules transform irregular ICU records; four time-series
+  models add normalized predictive annotations, and the aligned proxy layer is
+  packaged with outcomes, observed covariates, and inspectable DAG metadata.
+  Validation gates protect cohort, schema, and provenance integrity before the
+  estimator-ready datasets are used for observational analysis.}
   \label{fig:pipeline}
 \end{figure*}
 
-\subsection{Source Cohorts and Preprocessing}
-% Function: identify datasets, analysis unit, cohort flow, preprocessing, and
-% split boundary.
-% Evidence: thesis Chapters 3--4; checked_cohort_candidates.csv;
-% checked_predictive_exports.csv; claims C02/C03.
-% Locked values: 26,845 MIMIC-III and 7,993 PhysioNet majority-vote analysis
-% records. Always call them analysis records unless patient uniqueness is proven.
-% TODO-EVIDENCE G-EVD-02: exact split/checkpoint linkage remains incomplete.
-\plannedcontent{Planned content: cohort definitions, analysis units, preprocessing, and split boundaries.}
+\subsection{Source Cohorts and Analysis Units}
 
-\subsection{Proxy Construction}
-% Function: define the one-rule/four-predictive-source construction and proxy
-% label semantics without calling it a trained ensemble.
-% Evidence: thesis Chapters 5--6; checked proxy files; checked predictive files;
-% claims C04--C07.
-% Qualification: model-derived proxy constructs are not adjudicated diagnoses.
-\plannedcontent{Planned content: rule source, predictive sources, aggregation, and proxy semantics.}
+The two resources originate from heterogeneous critical-care sources used under
+their respective access conditions: MIMIC-III, a relational critical-care
+database, and the PhysioNet/Computing in Cardiology Challenge 2012 collection of
+ICU time-series records and mortality outcomes
+\cite{johnson2016mimiciii,silva2012physionet}.  An analysis unit is a source
+time-series record or ICU stay, not necessarily a unique person.  Source record,
+stay, and admission identifiers are normalized to a canonical \texttt{ts\_id}
+join key.  Irregular events retain elapsed time, variable identity, and measured
+value; a record-level table supplies in-hospital mortality and the observed
+baseline covariates available in that source.  Construction preserves two linked
+views: a long event representation for temporal processing and a record-level
+representation for causal analysis.  Predictive training uses an explicit
+split-aware form of the former, whereas the causal resource retains the complete
+admitted identifier collection; validation bridges these forms without treating
+them as interchangeable artifacts.
 
-\subsection{Causal Estimation and Validation}
-% Function: state the estimand and exposure/outcome/confounder roles, introduce
-% ForestDML, LinearDML, and CausalPFN, and distinguish each diagnostic.
-% Evidence: thesis Chapters 7--8; checked CATE, matching, sensitivity, and
-% permutation files; claims C08--C19.
-% TODO-EVIDENCE G-EVD-01: CausalPFN primary citation.
-% TODO-EVIDENCE G-EVD-02: producing revisions/configurations.
-% TODO-RUNTIME G-RUN-01: static current contract is inspected but not executed.
-\plannedcontent{Planned content: estimand, estimator roles, validation contract, and diagnostic boundaries.}
+The admitted primary causal-analysis populations contain 26,845 MIMIC-III
+analysis records and 7,993 PhysioNet 2012 analysis records.  Their covariate
+vocabularies, measurement processes, proxy ontologies, and DAGs remain dataset
+specific.  We therefore expose aligned resource interfaces but keep the two
+datasets and their empirical results separate rather than pooling records or
+assuming that similarly named constructs are equivalent.
+
+\begin{table*}[t]
+  \centering
+  \small
+  \begin{tabular}{@{}p{0.11\textwidth}p{0.10\textwidth}p{0.095\textwidth}p{0.12\textwidth}p{0.20\textwidth}p{0.22\textwidth}@{}}
+    \toprule
+    Dataset & Records & Exposures & Outcome & Predictive annotations & Causal-analysis estimators \\
+    \midrule
+    MIMIC-III & 26,845 & 9 & In-hospital mortality & 1 rule source + 4 models & CF-DML, LinearDML, CausalPFN \\
+    PhysioNet 2012 & 7,993 & 10 & In-hospital mortality & 1 rule source + 4 models & CF-DML, LinearDML, CausalPFN \\
+    \bottomrule
+  \end{tabular}
+  \caption{CliniCause resource summary for the primary, original-sampling
+  causal-analysis populations.  Counts refer to analysis records and admitted
+  non-chronic proxy-state exposures, not raw source-cohort sizes. CF-DML denotes
+  CausalForestDML.}
+  \label{tab:resources}
+\end{table*}
+
+\subsection{Proxy-State Design and Deterministic Construction}
+
+Proxy-state design begins before patient-level execution.  A structured
+design-time LLM protocol proposed dataset audits, proxy-state ontologies,
+binary-rule families, missingness considerations, and dataset-specific DAG
+structures.  Project-selected proposals were then encoded in deterministic
+tagger and graph source.  The encoded source, rather than prompt text, is the
+runtime implementation authority: the LLM neither processes patient records nor
+assigns exposures or estimates effects during construction.
+
+The resulting dataset-specific rules map available measurements and care-process
+indicators to canonical binary proxy-state fields.  They preserve meaningful
+source differences---for example, MIMIC-III combines hepatic and coagulation
+evidence whereas PhysioNet represents them separately.  A missing or unavailable
+numeric measurement contributes no positive rule evidence and is not treated as
+a normal observation; consequently, input availability remains part of the
+construct's provenance.  These explicit analytical constructs create a
+transparent interface from irregular records to prediction and downstream
+analysis, but they are not chart-adjudicated diagnoses.
+
+\subsection{Predictive Annotations from Irregular Time Series}
+
+For every resource, the predictive task is multi-label estimation of the
+dataset-specific rule-derived proxy vector.  Four learned architectures provide
+complementary representations: STraTS embeds sparse observation times, values,
+and variable identities; GRU and TCN process prepared temporal grids with value,
+observation-mask, and elapsed-time channels; and GRU-D models value and hidden
+state decay from missingness and time gaps
+\cite{tipirneni2022strats,cho2014gru,bai2018tcn,che2018grud}.  Static covariates
+are combined with each temporal representation.  The targets are proxy states,
+not mortality.
+
+Each normalized export pairs a probability field with a binary prediction for
+every proxy target; the implementation threshold is 0.5.  Binary-only exports
+then enter the proxy aggregation interface.  In the archived causal runs, this
+interface combines one deterministic rule-derived source with four aligned model
+sources---STraTS, GRU, GRU-D, and TCN---through a deterministic majority vote.
+The aggregate is an algorithmic multi-source proxy-state exposure layer, not a
+learned label model or expert consensus.  Predictive performance characterizes
+how reproducibly the models transport the rule constructs; it does not establish
+their clinical validity.
+
+\subsection{Causal-Analysis Schema and DAG Metadata}
+
+Each estimator-ready analysis row joins the canonical record identifier to the
+aggregated proxy-state fields, binary in-hospital mortality, and available
+source-specific covariates.  Resource metadata identifies the source dataset and
+sampling condition and links the table to graph, run, and artifact provenance.
+The primary analysis admits nine non-chronic MIMIC-III exposures and ten
+non-chronic PhysioNet exposures; chronic-burden fields remain available as
+baseline constructs rather than analyzed exposures.  The package thus separates
+the exposure layer from its outcome, adjustment variables, and provenance while
+keeping their record-level alignment explicit.
+
+For each exposure, a source-coded dataset-specific DAG records project assumptions
+and maps graph nodes to observed columns to produce an exposure-specific
+adjustment set.  The graphs are assumed structures rather than learned or
+clinically validated ground truth, but encoding them makes adjustment choices
+inspectable and replaceable.  Researchers can therefore apply alternative
+estimators, refine proxy definitions, substitute DAGs or adjustment sets, and
+probe identification assumptions without rebuilding the complete source-data
+integration pipeline.
+
+\subsection{Dataset Validation and Provenance}
+
+We define a \emph{validated causal-analysis dataset} through four complementary
+dimensions.  Structural validation checks the expected files, exact column order,
+canonical identifiers, binary/probability value contracts, and completeness of
+the output set.  Cohort validation requires identifier preservation and exact
+equality at required handoffs: duplicate or conflicting normalized identifiers,
+missing or extra records, and silent row shrinkage are rejected rather than
+resolved by an implicit intersection.  These contracts keep one analytical
+population aligned from deterministic labels through predictive annotations and
+estimator-ready assembly.  Malformed inputs also fail explicitly, including
+unexpected columns, nonbinary voter fields, out-of-range probabilities, and
+probability/binary inconsistencies; downstream execution requires the complete
+expected set of rule and model artifacts.
+
+Artifact and provenance validation binds outputs to metadata, upstream
+fingerprints or hashes, schemas, cohorts, configurations, and seeds where those
+records are supported.  Run-scoped, dataset-isolated paths prevent cross-source
+artifact reuse; manifests and stage receipts record planned and completed
+outputs; checkpoint, prediction, and voter sidecars bind model and input roles;
+and stale or mutation-mismatched artifacts fail reuse checks.  Deterministic
+transformations and stable derived seeds make repeatable behavior explicit rather
+than relying on ambient file order or process state.
+
+The evidence layers remain distinguishable.  The checked archive establishes
+schema-valid prediction exports, complete primary aggregate tables, result
+manifests and checksums, and successful archived analysis-stage records, while
+its exact producing revisions, configurations, and checkpoint-to-export links
+are incomplete.  The repaired current implementation adds stricter validation
+contracts supported by source and test cases, but it is not retroactively claimed
+as the historical producer; current test execution is also not asserted here.
+This separation allows reuse without erasing known provenance boundaries.
+
+Finally, analytical and empirical validation shows that both resources support
+the intended observational analysis interface: multi-model predictive
+characterization, three effect-estimation workflows, DAG-guided adjustment,
+matching, and robustness diagnostics were applied across the two heterogeneous
+ICU sources.  Validation establishes the structural integrity, cohort
+consistency, provenance, and analytical reuse of the constructed resources;
+clinical construct validity and causal identification remain separate scientific
+questions.
 
 \section{Evaluation}
 
@@ -114,18 +264,10 @@
 \subsection{Predictive Results}
 % Function: show the compact four-model, two-dataset archived comparison.
 % Evidence: checked_predictive_metrics.csv, selection PRIMARY_MAIN_TEXT;
-% claims C06/C07 and the protected numerical baseline.
+% claims C06/C07 and the protected numerical baseline. The resource summary is
+% now Table 1; assign the future predictive-results table the next table number.
 
-\begin{table*}[t]
-  \plannedwide{Table 1 placeholder: dataset scope and archived predictive test metrics.}
-  % Intended source: checked_cohort_candidates.csv and
-  % checked_predictive_metrics.csv. Two-column main-paper table.
-  % Required label: archived selected runs; no significance claim.
-  \caption{Planned Table 1: dataset scope and archived predictive results.}
-  \label{tab:predictive}
-\end{table*}
-
-\plannedcontent{Planned content: result-led comparison tied directly to Table 1.}
+\plannedcontent{Planned content: archived predictive comparison in a future results table.}
 
 \subsection{Causal Results}
 % Function: present cross-estimator direction, the PhysioNet-shock exception,

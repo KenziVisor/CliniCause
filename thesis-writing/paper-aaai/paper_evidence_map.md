@@ -1,6 +1,6 @@
 # CliniCause AAAI-27 paper evidence map
 
-Status: P0/P0A/P2 baseline, frozen 2026-07-19
+Status: P0/P0A/P2 baseline plus P3 manuscript claim activation, 2026-07-19
 
 Scope: evidence control for the AAAI-27 manuscript; this file is not manuscript prose.
 Canonical plan: `clinicause_aaai27_paper_operational_plan.md`.
@@ -22,6 +22,17 @@ Canonical plan: `clinicause_aaai27_paper_operational_plan.md`.
 | Runtime check | `pytest -q` could not start because `pytest` is not installed; no runtime pass is inferred |
 
 The baseline is intentionally descriptive. The current root and nested revisions must not be attributed retroactively as the revisions that produced the archived results.
+
+### P3 stage baseline
+
+| Item | P3 value |
+|---|---|
+| Task baseline / current HEAD before work | `884ff8e4d112ff732e43a6aea33ab9bddcf8ed5e` (`AAAI skeleton`) |
+| Branch | `main` |
+| Pre-existing dirty path | modified `prompt.txt` only; preserved and excluded from P3 edits/staging |
+| STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
+| Causal repository revision | `379ed9b75107b52007957ba5908e507b719c9247` |
+| Runtime-validation attempt | `python` unavailable; `python3 -m pytest` unavailable because the `pytest` module is not installed. No current test-pass claim is made. |
 
 ### Evidence-packet hashes
 
@@ -179,7 +190,7 @@ Statuses: **LOCKED** may be drafted with its qualification; **GATED** needs the 
 | C14 | DML sensitivity coverage is partial (8/9 and 7/10) | Limitation/robustness | Validation | `checked_sensitivity_candidates.csv` | Checked diagnostic | High | Distinguish failure/missing from skip; CausalPFN skipped | Supplement | None | LOCKED |
 | C15 | DML permutation diagnostics use 10 trials and seed 42 | Validation detail | Validation | `checked_permutation_candidates.csv` | Checked diagnostic | High | Limited trial count; CausalPFN skipped | Supplement | None | LOCKED |
 | C16 | Matching provides support diagnostics with recorded failures/insufficient-support flags | Validation detail | Validation | Matching checked files | Checked diagnostic | High | Do not turn diagnostic success into effect confirmation | Supplement | None | LOCKED |
-| C17 | Current routing code enforces canonical IDs, cohort equality, schema/probability validation, hashes, manifests, receipts, derived seeds, and dataset isolation | Current implementation | Validation | `router.py`; `test_router_contracts.py` | Static code/test inspection | Medium | Say “current contract implements/tests”; runtime not verified in this environment | Supplement/checklist | G-RUN-01 | GATED |
+| C17 | Current routing code enforces canonical IDs, cohort equality, schema/probability validation, hashes, manifests, receipts, derived seeds, and dataset isolation | Current implementation | Sec. 3.5 Dataset Validation and Provenance | `router.py`; `tests/test_router_contracts.py`; relevant STraTS source/tests | Static code/test inspection | Medium | Say “current contract implements/tests”; runtime not verified in this environment; never attribute it retroactively to archived production | Fig. 1/supplement | G-RUN-01 only for test-pass wording | SUPPORTED WITH QUALIFICATION |
 | C18 | Archived results are exactly reproducible from complete producing revisions/configurations | Reproducibility | Validation/checklist | Reproducibility CSVs | Explicitly incomplete | Low | Claim is prohibited until missing lineage is recovered | None | G-EVD-02 | GATED |
 | C19 | CausalPFN supplies a complementary third estimator family | Contribution/method | Intro/Causal Estimation | Checked results; thesis method text | Empirical + secondary description | Medium | Primary method citation is missing; avoid novelty/theory claims | Fig. 2 | G-EVD-01 | GATED |
 | C20 | Code/data/resources are publicly available at submission | Release claim | Discussion/checklist | No anonymized release artifact currently evidenced | None | Low | No URL, license, or release package may be invented | None | G-REL-01 | GATED |
@@ -188,6 +199,39 @@ Statuses: **LOCKED** may be drafted with its qualification; **GATED** needs the 
 | C23 | The main contribution is a validated reusable benchmark/resource rather than a new causal estimator | Positioning | Intro/Discussion | Repository/thesis/plan | Design judgment | Medium | Authors must ratify novelty framing | Fig. 1 | G-HUM-01 | HUMAN |
 | C24 | Predictive and causal stages used exact recorded splits/checkpoints from a fully linked manifest | Reproducibility | Evaluation/checklist | `predictive_run_lineage.csv`, `provenance_gaps.csv` | Incomplete | Low | Prohibited until split/checkpoint linkage is recovered | None | G-EVD-02 | GATED |
 | C25 | All checked numerical claims trace to manifest/checksum-controlled files | Evidence control | Checklist/supplement | results packet, manifest, checksums | Archived integrity record | High | Integrity of available files is not complete production lineage | None | None | LOCKED |
+
+### P3 manuscript claim register
+
+P3 uses the status vocabulary requested for manuscript drafting: **SUPPORTED**, **SUPPORTED WITH QUALIFICATION**, **GATED**, and **EXCLUDED**. Existing `LOCKED` claims remain supported under their recorded qualification; existing permanent-prohibition claims remain excluded from manuscript prose.
+
+| Claim ID | Manuscript claim/function | Exact manuscript location | Highest-authority source | Status | Required qualification / TODO |
+|---|---|---|---|---|---|
+| C26 | One analysis row represents a source time-series record or ICU stay, keyed by canonical `ts_id`, and is not assumed to be a unique person | Sec. 3.1, paragraph 1 | Thesis Ch. 3, `Units, Time Horizons, and Data Objects`; active preprocessing/data contracts | SUPPORTED | Preserve analysis-record wording; do not infer patient uniqueness |
+| C27 | Irregular events retain elapsed time, variable identity, and value; record-level data supply in-hospital mortality and available source-specific baseline covariates | Sec. 3.1, paragraph 1 | Thesis Chs. 3--4; active preprocessing contracts | SUPPORTED | No unverified raw cohort size or historical temporal-window claim |
+| C28 | The common interface preserves dataset-specific covariates, proxy ontologies, measurement processes, and DAGs; resources/results remain separate rather than pooled | Sec. 3 opening and Sec. 3.1, paragraph 2 | `results_decision_register.md`; thesis Chs. 4, 5, 7, and 11 | SUPPORTED | Portability is at the workflow/interface level, not construct equivalence |
+| C29 | A structured design-time LLM protocol proposed ontologies, rule families, missingness considerations, and DAGs; project-selected proposals were encoded in deterministic source, and no runtime patient-level LLM was used | Sec. 3.2, paragraph 1; Fig. 1 specification | Thesis Chs. 3 and 5; `audit/llm_prompt_provenance_audit.md`; active tagger/graph source | SUPPORTED WITH QUALIFICATION | Do not claim complete proposal-to-source mapping or formal clinical approval |
+| C30 | Dataset-specific deterministic rules emit canonical binary proxy fields; unavailable numeric measurements provide no positive rule evidence and are not treated as normal | Sec. 3.2, paragraph 2 | Active tagger source; thesis Ch. 5 | SUPPORTED WITH QUALIFICATION | Input availability affects the construct; proxy states are not adjudicated diagnoses |
+| C31 | The predictive layer uses STraTS, GRU, GRU-D, and TCN for multi-label proxy prediction and exports per-target probabilities plus binary fields at the implementation threshold of 0.5 | Sec. 3.3, paragraphs 1--2 | Active STraTS source/tests for architecture/export contract; `checked_predictive_exports.csv` for archived schema/value checks | SUPPORTED WITH QUALIFICATION | Threshold is implementation-supported; archived checkpoint/split-to-export linkage remains `TODO-EVIDENCE G-EVD-02` |
+| C32 | Archived causal runs form a deterministic aggregate from one rule-derived and four model-derived binary proxy sources | Sec. 3.3, paragraph 2; Table 1; Fig. 1 | Archived causal run summaries/logs summarized by `results_source_packet.md`; thesis Chs. 5 and 8 | SUPPORTED WITH QUALIFICATION | Algorithmic majority vote, not a learned ensemble, expert consensus, or clinical truth; voter byte/hash lineage incomplete (`TODO-EVIDENCE G-EVD-02`) |
+| C33 | The estimator-ready resource joins record ID, aggregated exposure fields, mortality, available covariates, dataset/sampling metadata, graph provenance, and exposure-specific adjustment metadata | Sec. 3.4, paragraph 1 | Thesis Chs. 3, 7, and 8; archived run summaries/checked CATE schema; current implementation | SUPPORTED WITH QUALIFICATION | These elements may reside across linked tables/metadata rather than one flat file; producing lineage remains partial |
+| C34 | Source-coded DAGs operationalize explicit project assumptions and make adjustment choices inspectable and replaceable | Sec. 3.4, paragraph 2 | Active graph/adjustment source; thesis Ch. 7 | SUPPORTED WITH QUALIFICATION | Graphs are assumed, not learned or clinically validated |
+| C35 | The resource interface permits alternative estimators, proxy definitions, DAGs, and adjustment sets without rebuilding raw-source integration | Sec. 3.4, paragraph 2 | Resource separation and active pipeline interfaces; thesis Ch. 11 | SUPPORTED WITH QUALIFICATION | Design-supported reuse claim; no public-release/access claim (`TODO-RELEASE G-REL-01`) |
+| C36 | Structural/cohort validation checks exact schemas, allowed values, complete artifact sets, canonical identifiers, duplicates, and exact cohort equality, rejecting missing/extra IDs and silent shrinkage | Sec. 3.5, paragraph 1; Fig. 1 | Current `router.py`, `tests/test_router_contracts.py`, STraTS split/identifier/artifact tests | SUPPORTED WITH QUALIFICATION | Current repaired contract only; `TODO-RUNTIME G-RUN-01` blocks test-pass wording and archived attribution |
+| C37 | Artifact/provenance validation uses run-scoped dataset paths, metadata sidecars, upstream fingerprints/hashes, manifests, receipts, configuration/cohort bindings, and stable derived seeds, with stale/mutated reuse rejection | Sec. 3.5, paragraph 2 | Current root/STraTS implementation and tests | SUPPORTED WITH QUALIFICATION | Current repaired contract only; `TODO-RUNTIME G-RUN-01` blocks test-pass wording |
+| C38 | Checked archived exports and aggregate tables have validated schemas/counts and result manifests/checksums, while exact producing revisions/configurations and checkpoint-to-export links remain incomplete | Sec. 3.5, paragraph 3 | `checked_predictive_exports.csv`; `checked_cohort_candidates.csv`; result manifest/checksums; reproducibility lineage/gaps | SUPPORTED WITH QUALIFICATION | `TODO-EVIDENCE G-EVD-02`; do not claim exact clean rerun |
+| C39 | Both resources were exercised through predictive characterization, three effect-estimation workflows, DAG-guided adjustment, matching, and robustness diagnostics | Sec. 3.5, paragraph 4; Table 1; Fig. 1 | Checked results manifest/source packet and causal run lineage | SUPPORTED WITH QUALIFICATION | Analytical execution validates resource reuse, not clinical constructs or causal identification |
+| C40 | “Validated causal-analysis datasets” means structural integrity, cohort consistency, provenance, and analytical reuse; clinical construct validity and causal identification are separate | Sec. 3 opening and Sec. 3.5, paragraphs 1--4 | C25, C36--C39; canonical operational plan terminology policy | SUPPORTED WITH QUALIFICATION | This definition bounds every normal later use of the phrase |
+
+### P3 Table 1 and Figure 1 evidence
+
+| Artifact | Inserted content | Authority and status |
+|---|---|---|
+| Table 1 | MIMIC-III: 26,845 records, 9 admitted exposures; PhysioNet 2012: 7,993 records, 10 admitted exposures; in-hospital mortality; one rule plus four models; CausalForestDML, LinearDML, CausalPFN | Counts: `checked_cohort_candidates.csv` and original-sampling rows in `checked_cate_candidates.csv` (SUPPORTED). Source/estimator sets: `results_source_packet.md` and checked run families (SUPPORTED WITH QUALIFICATION for lineage). |
+| Figure 1 | Sized layout placeholder, final-quality caption, and implementable specification separating design time, construction/runtime, validation gates, central reusable resources, and downstream characterization | Thesis Chs. 3--8; C29--C39. Final artwork remains `TODO-HUMAN G-HUM-01`; test-pass labeling remains `TODO-RUNTIME G-RUN-01`. |
+
+### P3 citation keys activated
+
+`johnson2016mimiciii`, `silva2012physionet`, `tipirneni2022strats`, `cho2014gru`, `bai2018tcn`, and `che2018grud` are present in `literature/metadata/references.bib` and are used only for dataset or model-family attribution in Sections 3.1 and 3.3. No CausalPFN citation or unsupported method-attribution claim was added.
 
 ## 6. Current validation-contract evidence
 
