@@ -1,6 +1,6 @@
 # CliniCause AAAI-27 paper evidence map
 
-Status: P0/P0A/P2 baseline plus P3--P8 manuscript/artifact activation, 2026-07-19
+Status: P0/P0A/P2 baseline plus P3--P9 audited manuscript activation, 2026-07-19
 
 Scope: evidence control for the AAAI-27 manuscript; this file is not manuscript prose.
 Canonical plan: `clinicause_aaai27_paper_operational_plan_v1.1.md`, Version 1.1.
@@ -502,3 +502,50 @@ READY FOR STAGE P6 — RESULTS DRAFTED AND NUMERICALLY MAPPED
 READY FOR STAGE P7 — INTERPRETATION AND CONCLUSION DRAFTED
 
 READY FOR STAGE P8 — COMPLETE MAIN-PAPER BODY DRAFTED
+
+## P9 global audit, compression, and abstract update
+
+P9 audited the complete manuscript against C01--C103, the accepted P5 numerical
+audit, the P8 artifact audit, the supplement, and the current gate register. No
+protected scientific number, denominator, estimator set, sampling condition, or
+artifact value changed. Figure 1 retains separate dataset lanes and a design-time
+LLM boundary; Table 1 retains both resource rows; Table 2 retains all 32 checked
+metric values; and Figure 2 retains all 57 original-cohort estimator values.
+
+The final Abstract is 182 LaTeX-stripped words, contains no citation, and was
+written only after the compressed body stabilized. Its sentence-level evidence
+mapping is:
+
+| Claim ID | Abstract function | Evidence | Status / boundary |
+|---|---|---|---|
+| C104 | Irregular ICU causal analysis requires explicit constructs, cohorts, adjustment assumptions, and provenance beyond prediction-ready sequences | C84--C86 | SUPPORTED; resource-design need, not a universal absence claim |
+| C105 | Two CliniCause resources contain 26,845/9 MIMIC-III and 7,993/10 PhysioNet analysis records/exposures | C02--C03, C08, C56, C94 | SUPPORTED; analysis records and admitted proxies, not raw cohorts or unique people |
+| C106 | Evidence-tracked construction combines deterministic rules, four model annotations, validation contracts, and design-time-only LLM proposals | C04--C05, C29--C40, C87--C91 | SUPPORTED WITH QUALIFICATION; no runtime patient-level LLM or clinical-validity claim |
+| C107 | STraTS and GRU-D lead all four archived point metrics in MIMIC-III and PhysioNet, respectively | C58--C60, C95 | SUPPORTED WITH QUALIFICATION; point metrics only, no significance or superiority claim |
+| C108 | DML agrees in 19/19 directions and CausalPFN joins in 18/19, with PhysioNet shock the exception | C63--C65, C96 | SUPPORTED WITH QUALIFICATION; direction only, not magnitude equality or identification |
+| C109 | CliniCause supports reusable inspection and estimator triangulation within an observational, proxy-based boundary | C40, C51--C54, C71--C83 | SUPPORTED WITH QUALIFICATION; no clinical-effect, treatment, deployment, or release claim |
+
+P9 narrowed three statements during the global audit: predictive outputs now
+characterize prediction/recovery of rule targets rather than their
+``reproducibility``; archived metric leadership no longer motivates an
+unqualified architecture-selection claim; and the Results no longer describes
+the fitted summaries as ``systematic mortality-related variation.'' Repeated
+causal, clinical, runtime, and release limitations were merged into the
+centralized Limitations subsection. The exact phrase ``mean model-estimated CATE
+over the analyzed sample`` and all directional-agreement qualifications remain.
+
+The title remains `CliniCause: Constructing Reusable Causal-Analysis Datasets
+from Irregular ICU Records`. It matches the resource-first contribution and does
+not imply validated causality, clinical deployment, public availability, or LLM
+primacy. Final human approval remains G-HUM-01.
+
+No consolidated author or supervisor feedback artifact was found. The thesis
+`stage_5_2_external_review_summary.md` explicitly records a pending independent
+artifact review and denies academic approval; the `stage_5_5*` CSVs are
+mechanical PDF inspections. They are not evidence of author or supervisor
+approval.
+
+Final P9 layout: technical content occupies pages 1--7; References begins on
+page 8 and page 8 contains references only; total length is 8 US-Letter pages.
+The Abstract, title, contribution hierarchy, scientific language, limitations,
+exact PDF, and release/ethics decisions therefore remain under the human gate.

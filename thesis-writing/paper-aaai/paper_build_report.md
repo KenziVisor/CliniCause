@@ -431,3 +431,45 @@ The main build command succeeded with the AAAI Author Kit. `paper.pdf` has 8 US-
 The repair replaces Figure 1 only. Its two runtime paths now remain distinct through their own normalized exports, five-source votes, outcome/covariate plus DAG/provenance packaging, and estimator-ready resources; they meet only at a panel explicitly labelled as a shared method interface with separate execution and results. The figure's source primary text is 10.0 pt, headings are 10.2 pt, and secondary labels are 9.3 pt, retaining approximately 9.5 pt, 9.7 pt, and 8.9 pt respectively at the final 0.99-text-width embedding. The Figure 1 caption was minimally clarified to say `per-dataset` aggregation and `separate dataset-specific` resources.
 
 The required main-paper command completed successfully with resolved citations and references, US-Letter anonymous AAAI formatting, no Type 3 font, and no horizontal overfull box. The repaired figure is visible without clipping or collision at standalone and embedded scales. The larger readable graphic changes the output to 9 pages: technical content and the beginning of references occupy page 8, with reference continuation on page 9. The Abstract remains empty. P9 should plan at least about one technical AAAI page of compression, plus Abstract space, before claiming a seven-page technical body; this estimate must be remeasured during P9 rather than addressed by formatting changes here.
+
+---
+
+## P9 audited-compression and Abstract build update
+
+Stage P9 audited the complete body, citations, protected values,
+current/archive wording, CausalPFN framing, and feedback state before scientific
+compression. The working title was retained and a 182-word, one-paragraph,
+citation-free Abstract was written only after the body and exact page
+architecture stabilized.
+
+The manuscript was compressed editorially: duplicated Introduction/Related Work
+framing, repeated validation explanations, method detail already present in the
+supplement, secondary diagnostic narration, repeated limitations, and verbose
+captions/transitions were shortened or merged. No document class, style, margin,
+font, line/column/caption spacing, bibliography font, page dimension, resize,
+negative spacing, manual page break, or new float-placement workaround was used.
+No protected number, Table 1 row, Table 2 cell, Figure 1 role boundary, or Figure
+2 value changed.
+
+| Field | Final P9 result |
+|---|---|
+| Baseline HEAD | `414b8a46c9533ff410fddc739bcc385318860881` (`AAAI P8 repair`) |
+| Canonical plan | Version 1.1, SHA-256 `8df13e88892da8cd0d78df33e0b7a997983d95f99222de0eb9605426e905b1c1` |
+| Build command | `env TEXINPUTS=AuthorKit27: BSTINPUTS=AuthorKit27: BIBINPUTS=../literature/metadata: latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex` |
+| Build | PASS; `latexmk` exit 0; citations and references resolved |
+| PDF | 8 pages, 612 x 792 pt US Letter, anonymous AAAI two-column layout |
+| Technical boundary | Conclusion ends on page 7; References begins on page 8; page 8 is references only |
+| Abstract | 182 words, one paragraph, no citations |
+| PDF SHA-256 | `ffa4be53aab2bcc3f606cc1a4409441e5f003307311df3eaa1bb78d1515efda2` |
+| Fonts | All embedded/subset Type 1 or CID TrueType; no Type 3 fonts |
+| PDF integrity | `qpdf --check` PASS |
+| Log | No undefined citation/reference, duplicate label, overfull box, or fatal warning; ordinary underfull justification warnings only |
+
+All eight pages were rendered at 120 dpi and visually inspected; the Abstract,
+both figures, both tables, captions, two-column flow, margins, gutter, and
+reference page show no clipping, overlap, collision, or readability defect.
+Figure 1 remains vector, readable, dataset separated, and design-time bounded;
+Figure 2 remains vector and visibly retains the PhysioNet-shock exception.
+
+No author/supervisor feedback or approval artifact was found. P9 therefore
+produces a human-review draft rather than scientific-content approval for P10.

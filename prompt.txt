@@ -1,38 +1,38 @@
-# CliniCause AAAI-27 — Narrow P8 Repair: Figure 1 Dataset Separation and Readability
+# CliniCause AAAI-27 — Stage P9: Whole-Paper Audit, Scientific Compression, and Abstract
 
 ## Model
 
 ```text
-Terra-high
+Sol-extra high
 ```
 
-This is a narrowly bounded technical graphics and LaTeX repair.
-
-Do not begin P9.
+This stage requires the complete manuscript, evidence map, literature corpus, supplement, artifact reports, page architecture, and accumulated scientific context.
 
 ---
 
-## Baseline
+## Canonical authority and baseline
 
-The current P8 commit is:
+Use exclusively:
 
 ```text
-0c1fd3c7b14d3694d7140efe9f4a72cb143df3ac
-AAAI P8
+thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md
 ```
 
-P8 is accepted except for the two Figure 1 defects defined below.
+Accepted commits:
 
-Preserve without reopening:
+```text
+P8 repair: 414b8a46c9533ff410fddc739bcc385318860881
+P8:        0c1fd3c7b14d3694d7140efe9f4a72cb143df3ac
+P7:        e7edfc3a7d74240c73afa7cf3d1fcfd1678ca4cb
+P5 numeric baseline:
+           47f487c84a92f0a0b6a8271b370ff9d7afcace23
+```
 
-* CausalPFN literature ingestion and citation;
-* Figure 2;
-* Tables 1 and 2;
-* supplement contents and generated tables;
-* code/data appendix;
-* Sections 1–7 scientific prose;
-* numerical audits;
-* all checked result sources.
+P3–P8 are scientifically accepted. Do not reopen experiments or numerical extraction unless the whole-paper audit finds a direct contradiction.
+
+Repository cleanup remains deferred.
+
+Do not stage, commit, push, reset, restore, or clean.
 
 ---
 
@@ -44,327 +44,374 @@ Run:
 git status --short
 git branch --show-current
 git rev-parse HEAD
-git log -5 --oneline --decorate
+git log -8 --oneline --decorate
+git show --stat --oneline HEAD
 git submodule status
 ```
 
-Read:
+Read completely:
 
 ```text
-thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md
-thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
 thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/evidence/P8_figure_table_value_checks.md
+thesis-writing/paper-aaai/paper_evidence_map.md
 thesis-writing/paper-aaai/paper_build_report.md
+thesis-writing/paper-aaai/aaai_structure_notes.md
+
+thesis-writing/paper-aaai/reports/P5_results_report.md
+thesis-writing/paper-aaai/reports/P6_discussion_conclusion_report.md
+thesis-writing/paper-aaai/reports/P7_introduction_related_work_report.md
 thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
+
+thesis-writing/paper-aaai/evidence/P8_figure_table_value_checks.md
+thesis-writing/paper-aaai/supplement/technical_appendix.tex
+thesis-writing/paper-aaai/code-data-appendix/README.md
+
+thesis-writing/logs/causalpfn_literature_ingestion_report.md
+thesis-writing/planning/causalpfn_thesis_integration_plan.md
+thesis-writing/literature/metadata/references.bib
 ```
 
-Preserve unrelated user work, including `prompt.txt`.
+Inspect any actual author or supervisor feedback found under `thesis-writing/`, especially files containing:
 
-Do not reset, restore, clean, stage, commit, or push.
+```text
+feedback
+review
+supervisor
+advisor
+comments
+revision requests
+```
+
+Do not infer approval from the absence of comments.
 
 ---
 
-# Exact defects
+# Objective
 
-## Defect 1 — Dataset lanes converge prematurely
+Produce an audited, compressed, abstract-complete AAAI manuscript suitable for human scientific review.
 
-The current graphic maintains separate MIMIC-III and PhysioNet lanes only through their temporal-model boxes. Both then point to one shared normalized-export box and one shared aggregation box before splitting again into two resources.
+Execute in this order:
 
-Even though the figure says “not pooled,” this topology can imply that outputs from both datasets are jointly normalized or aggregated.
+1. audit every material claim, number, citation, qualification, and contribution;
+2. resolve contradictions or retain explicit evidence gates;
+3. remove repetition and compress the technical body;
+4. preserve all central contributions and headline findings;
+5. integrate any evidenced author/supervisor feedback;
+6. finalize the working title and proposed keywords;
+7. write the Abstract last;
+8. rebuild and visually inspect the complete manuscript;
+9. prepare a concise human-review packet in the P9 report.
 
-The figure must instead preserve dataset separation through:
-
-```text
-source records
-→ preprocessing and canonical IDs
-→ deterministic rule labels
-→ four temporal-model annotations
-→ normalized probability/binary exports
-→ five-source aggregation
-→ outcome, covariates, DAG/adjustment, and provenance
-→ dataset-specific estimator-ready resource
-```
-
-Use two separate parallel paths:
-
-```text
-MIMIC-III export → MIMIC-III aggregation → MIMIC-III resource
-PhysioNet export → PhysioNet aggregation → PhysioNet resource
-```
-
-The two resources may converge visually only at the downstream-characterization stage, where the method family is shared but analyses remain separate.
-
-Do not draw any arrow that implies:
-
-* cross-dataset voting;
-* cross-dataset aggregation;
-* pooled records;
-* a shared causal-analysis table;
-* semantic equivalence of similarly named proxies.
-
-A compact shared label such as “same interface, separate execution” is acceptable.
-
-## Defect 2 — Text is too small
-
-The current script uses many labels between approximately 5.5 and 7.8 points. This is below the requested approximately 9-point final embedded size.
-
-Revise the figure so:
-
-* primary box text is at least approximately 9 points at final paper size;
-* stage headings are at least approximately 9 points;
-* secondary gate labels and the bounded LLM note are preferably at least 8.5 points and never below 8 points;
-* all text remains readable in the main PDF at normal viewing scale;
-* no text is clipped or overlaps arrows or boxes.
-
-Simplify wording rather than shrinking text.
-
-Examples of compact labels:
-
-```text
-Preprocess + IDs
-Rule labels
-4 model annotations
-Normalize exports
-5-source vote
-Outcome + covariates
-DAG + provenance
-```
-
-The caption can carry detail that does not fit legibly in the graphic.
+Do not perform submission packaging or final anonymity/compliance certification; those belong to P10.
 
 ---
 
-# Required figure structure
+# Frozen scientific hierarchy
 
-Retain three major bands.
+Preserve:
 
-## 1. Design time
+1. two reusable, validated causal-analysis datasets;
+2. the evidence-tracked construction and validation pipeline;
+3. empirical predictive and multi-estimator characterization;
+4. the design-time LLM proposal layer.
 
-```text
-Dataset descriptions
-→ structured LLM proposals
-→ project/human selection
-→ deterministic rule and DAG source
-```
+Do not promote the LLM, CausalPFN, prediction comparison, or any individual effect estimate above the resource contribution.
 
-State legibly:
+Preserve these headline facts exactly:
 
 ```text
-Design time only; no patient rows; not an estimator
+MIMIC-III: 26,845 records, 9 admitted exposures
+PhysioNet 2012: 7,993 records, 10 admitted exposures
+STraTS leads all four archived MIMIC-III predictive metrics
+GRU-D leads all four archived PhysioNet predictive metrics
+CausalForestDML–LinearDML direction agreement: 19/19
+All-three-estimator direction agreement: 18/19
+Sole all-three exception: PhysioNet shock
+Original/downsampled direction preservation: 55/57
+Matching: 15/19 successful; 14/15 agree with primary direction
 ```
 
-The deterministic source may feed both dataset-specific runtime lanes.
+Preserve the wording boundaries:
 
-## 2. Construction
-
-Create two visibly independent lanes:
-
-```text
-MIMIC-III lane
-PhysioNet 2012 lane
-```
-
-Each lane must independently contain:
-
-* irregular records;
-* preprocessing/canonical IDs;
-* rule labels;
-* four temporal-model annotations;
-* normalized exports;
-* five-source aggregation;
-* outcome/covariates;
-* DAG/adjustment and provenance;
-* estimator-ready causal-analysis resource.
-
-Repeated small boxes are preferable to a visually pooled shared box.
-
-Validation gates should remain visible but concise:
-
-* schema/ID;
-* prediction export;
-* voter/cohort alignment;
-* output/provenance.
-
-## 3. Downstream characterization
-
-Both finished resources may connect to one shared method-family panel containing:
-
-```text
-CausalForestDML
-LinearDML
-CausalPFN
-matching
-sensitivity/permutations
-outcome downsampling
-```
-
-Make clear that the method interface is shared while execution and results remain dataset specific.
+* archived point metrics, not statistical superiority;
+* mean model-estimated CATE over the analyzed sample;
+* directional agreement, not equal magnitudes or causal identification;
+* proxy states, not chart-adjudicated diagnoses;
+* observational analysis, not treatment recommendations;
+* design-time LLM aid, not runtime patient-level estimation;
+* release-neutral wording until the release gate is closed.
 
 ---
 
-# Design requirements
+# Whole-paper evidence audit
 
-The repaired figure must be:
+Audit every section against `paper_evidence_map.md`.
 
-* full-width vector PDF;
-* deterministic;
-* grayscale safe;
-* anonymous;
-* data free;
-* free of screenshots;
-* free of Type 3 fonts;
-* free of absolute paths or identifying metadata;
-* readable at its final embedded size;
-* free of clipped labels, arrows, or boxes.
+For each material statement verify:
 
-A modest height increase is allowed when required for readability, but first shorten labels and improve layout. Record any main-paper page-footprint change.
+* exact evidence source;
+* numerical denominator and scope;
+* citation support;
+* current-code versus archived-result wording;
+* dataset-specific versus pooled interpretation;
+* whether a qualification is still needed;
+* whether the same point is repeated elsewhere.
 
-Do not install packages.
+Verify all displayed artifacts:
 
----
+* Table 1 resource counts;
+* all 32 Table 2 values;
+* all 57 Figure 2 values;
+* Figure 1’s design-time/runtime separation;
+* supplement row counts and findings;
+* CausalPFN method citation and local-result separation.
 
-# Determinism and validation
+The CausalPFN primary citation is now:
 
-Generate Figure 1 twice using the same command and compare hashes.
-
-Recommended command:
-
-```bash
-MPLCONFIGDIR=/tmp/matplotlib-p8-repair \
-python3 thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
+```text
+balazadeh2025causalpfn
 ```
 
-Validate:
+Use it for external method description only. The local `18/19` finding remains supported by checked CliniCause results.
 
-* both runs produce the same SHA-256;
-* the PDF has no Type 3 fonts;
-* the two dataset lanes remain separate until completed resources;
-* every primary label is readable;
-* no label is below 8 points;
-* primary labels are approximately 9 points or larger;
-* no clipping or overlap appears;
-* the LLM remains design-time only;
-* no test-pass or public-release claim appears.
-
-Render the standalone figure and inspect it at:
-
-* full-page scale;
-* final embedded scale;
-* approximately 100% PDF viewing scale.
+Do not add new literature unless an existing rendered claim cannot be supported otherwise. Prefer deleting or narrowing an unsupported statement.
 
 ---
 
-# Manuscript integration
+# Scientific compression
 
-Update `paper.tex` only if the Figure 1 caption requires a small alignment correction.
+## Required page outcome
 
-The caption must retain:
+The final main PDF must satisfy:
 
-* dataset-specific processing;
-* deterministic proxy rules;
-* four predictive models;
-* per-dataset five-source aggregation;
-* separate estimator-ready resources;
-* design-time-only LLM role;
-* validation gates;
-* observational downstream use.
+```text
+Technical content: pages 1–7 only
+References: pages 8–9 only
+Total PDF: no more than 9 pages
+```
 
-Do not change any other scientific prose.
+The Abstract counts toward the technical-content limit.
 
-Do not write the Abstract.
+Current state:
 
-Do not alter Figure 2, Tables 1–2, the supplement, or CausalPFN metadata.
+* nine pages;
+* technical content and references begin on page 8;
+* Abstract is empty.
+
+Recover at least approximately one technical page plus the Abstract footprint.
+
+Measure the exact boundary after every major compression pass.
+
+## Compression order
+
+Compress in this order:
+
+1. repeated limitations and qualifications;
+2. repeated explanations of validation and reuse;
+3. duplicated Introduction/Related Work framing;
+4. method detail already available in the supplement;
+5. secondary diagnostic detail;
+6. low-priority LLM process detail;
+7. verbose captions, transitions, and roadmap language;
+8. redundant contribution/result restatements.
+
+Do not remove:
+
+* the resource definition;
+* the validation boundary;
+* Table 1;
+* Table 2;
+* Figure 1;
+* Figure 2;
+* CausalPFN’s `18/19` result;
+* the PhysioNet-shock exception;
+* centralized limitations;
+* the explicit contribution list.
+
+## Figure and table optimization
+
+Figure 1 may be vertically optimized only when all P8 repair guarantees remain true:
+
+* independent dataset lanes through completed resources;
+* no pooling implication;
+* primary text approximately 9 pt or larger at final size;
+* secondary text at least approximately 8 pt;
+* no clipping or overlap;
+* design-time-only LLM role.
+
+Shorten labels and reduce unnecessary whitespace before reducing size.
+
+Tables may be tightened through wording and column design, but do not use:
+
+* `\resizebox`;
+* unreadably small text;
+* negative spacing;
+* margin changes;
+* float-placement hacks.
+
+## Prohibited compression
+
+Do not change:
+
+* document class;
+* margins;
+* style file;
+* base font;
+* line spacing;
+* column spacing;
+* heading spacing;
+* caption spacing globally;
+* bibliography font;
+* page dimensions.
+
+Compression must be scientific and editorial.
+
+---
+
+# Abstract
+
+Write the Abstract only after the audited compressed body is stable.
+
+Target approximately:
+
+```text
+170–210 words
+one paragraph
+no citations
+```
+
+It must contain:
+
+1. the problem with reusable causal analysis from heterogeneous irregular ICU records;
+2. the CliniCause resource contribution;
+3. MIMIC-III and PhysioNet 2012 scope;
+4. the construction and validation approach;
+5. predictive characterization;
+6. `19/19` DML and `18/19` all-estimator agreement;
+7. a bounded conclusion about research reuse and estimator triangulation.
+
+Include counts only where they improve specificity.
+
+Do not include:
+
+* matching detail unless space permits and it materially strengthens the abstract;
+* a clinical recommendation;
+* significance language;
+* public-availability language;
+* causal-identification language;
+* detailed limitations;
+* unexplained acronyms or excessive model enumeration.
+
+The Abstract must present the contribution confidently while preserving the observational and proxy-based boundary.
+
+---
+
+# Title and keywords
+
+Review the current title:
+
+```text
+CliniCause: Constructing Reusable Causal-Analysis Datasets from Irregular ICU Records
+```
+
+Retain it unless the completed manuscript exposes a material mismatch.
+
+Do not replace it merely for stylistic variation.
+
+Record 4–6 proposed OpenReview keywords in the P9 report. Suitable concepts include:
+
+```text
+causal machine learning
+irregular clinical time series
+clinical data resources
+heterogeneous treatment effects
+weak supervision
+foundation models for causal inference
+```
+
+Choose only keywords accurately supported by the manuscript.
+
+---
+
+# Human feedback and approval gate
+
+Search for actual consolidated author or supervisor feedback.
+
+When found:
+
+* identify each actionable comment;
+* implement or explicitly decline it with scientific rationale;
+* record the resolution in the P9 report;
+* verify that no change breaks the claim/evidence map.
+
+When no feedback artifact exists:
+
+* complete the audit, compression, title review, and Abstract;
+* create a concise human-review section in the P9 report;
+* do not claim author or supervisor approval;
+* stop before P10.
+
+The human-review section must list the exact decisions requiring approval:
+
+1. title;
+2. contribution hierarchy;
+3. validation terminology;
+4. CausalPFN framing;
+5. causal and clinical language;
+6. LLM positioning;
+7. limitations;
+8. final Abstract;
+9. exact seven-page technical PDF;
+10. release commitment and ethics/governance language deferred to P10.
 
 ---
 
 # Allowed files
 
-Edit only:
+Primary P9 scope:
+
+```text
+thesis-writing/paper-aaai/paper.tex
+thesis-writing/paper-aaai/paper.pdf
+thesis-writing/paper-aaai/paper_build_report.md
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/reports/P9_global_audit_compression_abstract_report.md
+```
+
+Artifact optimization may also edit:
 
 ```text
 thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
 thesis-writing/paper-aaai/figures/figure1_pipeline.pdf
-thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/paper.pdf
-thesis-writing/paper-aaai/paper_build_report.md
-thesis-writing/paper-aaai/evidence/P8_figure_table_value_checks.md
-thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
 ```
 
-Compilation may regenerate already tracked main-paper auxiliary files.
+Edit supplement or code/data appendix files only to repair a direct contradiction discovered by the audit. Record every such edit.
 
-Do not modify the supplement or its generated artifacts unless the main build unexpectedly reveals a direct cross-reference dependency.
+Compilation may regenerate tracked auxiliaries.
+
+Do not modify:
+
+* checked results;
+* source code or tests;
+* submodules;
+* thesis chapters;
+* operational plans;
+* Author Kit files;
+* prior stage reports;
+* literature PDFs;
+* bibliography except for a verified narrow citation defect.
 
 ---
 
-# Report updates
+# Build and validation
 
-Append a clearly titled repair section to:
-
-```text
-thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
-```
-
-Record:
-
-```text
-Repair baseline HEAD
-Exact defects repaired
-Previous and repaired script hashes
-Previous and repaired Figure 1 hashes
-Dataset-lane topology check
-Minimum font sizes used
-Deterministic regeneration check
-Standalone visual inspection
-Embedded visual inspection
-Type 3 font check
-Caption changes
-Main PDF build result
-Main PDF page count
-Technical-content endpoint
-P9 compression estimate
-Files changed
-Protected-file verification
-No-commit/no-push verification
-```
-
-Update:
-
-```text
-thesis-writing/paper-aaai/evidence/P8_figure_table_value_checks.md
-```
-
-with the repaired Figure 1 hash and explicit passes for:
-
-* separate per-dataset exports;
-* separate per-dataset aggregation;
-* no pooling implication;
-* final-size readability.
-
-The report must still end with exactly one of:
-
-```text
-READY FOR STAGE P9 — PAPER AND SUPPLEMENT ARTIFACTS COMPLETE
-```
-
-or:
-
-```text
-NARROW REPAIR REQUIRED BEFORE STAGE P9 — <EXACT DEFECT>
-```
-
----
-
-# Build
-
-From:
+Build from:
 
 ```text
 thesis-writing/paper-aaai/
 ```
 
-run:
+using:
 
 ```bash
 env TEXINPUTS=AuthorKit27: \
@@ -373,14 +420,96 @@ env TEXINPUTS=AuthorKit27: \
     latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
 ```
 
-Verify:
+When the supplement changes, rebuild it separately.
 
-* build succeeds;
-* citations and references remain resolved;
-* Figure 1 is embedded correctly;
-* no float collision or clipping occurs;
-* US Letter and anonymous AAAI formatting remain intact;
-* no scientific content outside Figure 1/caption changed;
-* the Abstract remains empty.
+Validate:
+
+* technical content ends by the end of page 7;
+* pages 8–9 contain references only;
+* total pages do not exceed 9;
+* Abstract is present and readable;
+* no undefined citations or references;
+* no duplicate labels;
+* all fonts embedded;
+* no Type 3 fonts;
+* US Letter and anonymous AAAI layout remain intact;
+* no clipping, overlap, margin, or gutter defect;
+* every page visually inspected;
+* all headline claims remain;
+* no formatting workaround was used.
+
+---
+
+# Durable report
+
+Create:
+
+```text
+thesis-writing/paper-aaai/reports/P9_global_audit_compression_abstract_report.md
+```
+
+Include:
+
+```text
+Stage
+Model and reasoning
+Canonical plan path/hash
+Baseline HEAD
+Commits and reports inspected
+Feedback files found or absent
+Files changed
+Claim/evidence audit
+Numerical audit
+Citation audit
+Current-code/archive-language audit
+CausalPFN audit
+Before/after section word counts
+Compression changes by section
+Claims removed, narrowed, or merged
+Figure/Table changes
+Before/after page boundaries
+Final Abstract text and evidence mapping
+Final title decision
+Proposed keywords
+Open evidence/runtime/release/AAAI gates
+Human-review decision list
+Build result
+PDF page count
+Technical-content endpoint
+Fonts and visual inspection
+Protected-file verification
+No-commit/no-push verification
+Readiness decision
+```
+
+Explicitly confirm:
+
+* no protected number changed;
+* no central contribution was compressed away;
+* CausalPFN remains prominent but bounded;
+* no unsupported clinical, causal, LLM, runtime, or release claim remains;
+* the Abstract was written from the final stabilized body;
+* no formatting trick was used;
+* the exact human-approval state is reported honestly.
+
+End with exactly one of:
+
+```text
+READY FOR STAGE P10 — SCIENTIFIC CONTENT APPROVED AND WITHIN BUDGET
+```
+
+Use this only when explicit author and supervisor approval evidence exists.
+
+Otherwise end with:
+
+```text
+HUMAN REVIEW REQUIRED BEFORE STAGE P10 — AUDITED COMPRESSED DRAFT AND ABSTRACT READY
+```
+
+For a blocking defect use:
+
+```text
+NARROW REPAIR REQUIRED BEFORE HUMAN REVIEW — <EXACT DEFECT>
+```
 
 Do not stage, commit, or push.
