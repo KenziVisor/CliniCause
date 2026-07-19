@@ -1,4 +1,4 @@
-# CliniCause AAAI-27 — Stage P8: Final Figures, Tables, Supplement, and Code/Data Appendix
+# CliniCause AAAI-27 — Narrow P8 Repair: Figure 1 Dataset Separation and Readability
 
 ## Model
 
@@ -6,62 +6,37 @@
 Terra-high
 ```
 
-This is a bounded technical production and validation stage. Scientific interpretation is already frozen.
+This is a narrowly bounded technical graphics and LaTeX repair.
 
-Do not use Sol-extra high or Terra-extra high. A separate Terra-extra-high audit is warranted only if a concrete numerical or graphics inconsistency is discovered.
-
----
-
-## Canonical plan
-
-Use exclusively:
-
-```text
-thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md
-```
-
-Read it completely.
-
-The revised workflow combines the remaining figures, tables, supplement, and code/data appendix because they share:
-
-* checked aggregate numerical sources;
-* figure and table labels;
-* main-paper versus supplement boundaries;
-* anonymity and packaging constraints;
-* provenance and reproducibility records.
+Do not begin P9.
 
 ---
 
-## Accepted baseline
+## Baseline
 
-Accepted P7 commit:
-
-```text
-e7edfc3a7d74240c73afa7cf3d1fcfd1678ca4cb
-AAAI p7
-```
-
-Accepted P6 commit:
+The current P8 commit is:
 
 ```text
-ae8b1ef39222ba41c3dc702be931505940f5d7c8
-AAAI P6
+0c1fd3c7b14d3694d7140efe9f4a72cb143df3ac
+AAAI P8
 ```
 
-Accepted numerical baseline:
+P8 is accepted except for the two Figure 1 defects defined below.
 
-```text
-47f487c84a92f0a0b6a8271b370ff9d7afcace23
-AAAI P5
-```
+Preserve without reopening:
 
-P3–P7 scientific prose and the P5 numerical audit are accepted.
-
-Do not redesign the scientific story or reinterpret checked results.
+* CausalPFN literature ingestion and citation;
+* Figure 2;
+* Tables 1 and 2;
+* supplement contents and generated tables;
+* code/data appendix;
+* Sections 1–7 scientific prose;
+* numerical audits;
+* all checked result sources.
 
 ---
 
-## Initial repository inspection
+## Initial inspection
 
 Run:
 
@@ -69,718 +44,305 @@ Run:
 git status --short
 git branch --show-current
 git rev-parse HEAD
-git log -7 --oneline --decorate
-git show --stat --oneline HEAD
-git show --stat --oneline HEAD~1
+git log -5 --oneline --decorate
 git submodule status
 ```
 
-Record:
-
-* current HEAD;
-* branch;
-* dirty and untracked work;
-* recent relevant commits;
-* nested revisions;
-* files changed after P7;
-* overlap with P8 paths.
-
-Preserve:
+Read:
 
 ```text
-prompt.txt
-thesis-writing/literature/papers/causalPFN.pdf
+thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md
+thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
+thesis-writing/paper-aaai/paper.tex
+thesis-writing/paper-aaai/evidence/P8_figure_table_value_checks.md
+thesis-writing/paper-aaai/paper_build_report.md
+thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
 ```
 
-The CausalPFN PDF was supplied by the user and is read-only. Do not move, rename, modify, or delete it.
-
-Repository cleanup remains deferred. Do not alter `.gitignore` or remove tracked auxiliaries.
+Preserve unrelated user work, including `prompt.txt`.
 
 Do not reset, restore, clean, stage, commit, or push.
 
 ---
 
-# Sources
+# Exact defects
 
-Read:
+## Defect 1 — Dataset lanes converge prematurely
 
-```text
-thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/paper_build_report.md
-thesis-writing/paper-aaai/reports/P5_results_report.md
-thesis-writing/paper-aaai/reports/P6_discussion_conclusion_report.md
-thesis-writing/paper-aaai/reports/P7_introduction_related_work_report.md
-```
+The current graphic maintains separate MIMIC-III and PhysioNet lanes only through their temporal-model boxes. Both then point to one shared normalized-export box and one shared aggregation box before splitting again into two resources.
 
-Use checked aggregate evidence under:
+Even though the figure says “not pooled,” this topology can imply that outputs from both datasets are jointly normalized or aggregated.
+
+The figure must instead preserve dataset separation through:
 
 ```text
-thesis-writing/results/
-thesis-writing/reproducibility/
-thesis-writing/audit/
-thesis-writing/planning/
+source records
+→ preprocessing and canonical IDs
+→ deterministic rule labels
+→ four temporal-model annotations
+→ normalized probability/binary exports
+→ five-source aggregation
+→ outcome, covariates, DAG/adjustment, and provenance
+→ dataset-specific estimator-ready resource
 ```
 
-Inspect relevant read-only schemas, proxy definitions, DAG metadata, configuration records, and implementation contracts under:
+Use two separate parallel paths:
 
 ```text
-STraTS/
-causal-irregular-time-series/
-router.py
+MIMIC-III export → MIMIC-III aggregation → MIMIC-III resource
+PhysioNet export → PhysioNet aggregation → PhysioNet resource
 ```
 
-Use code only to document interfaces or current contracts. Do not claim that repaired current code produced archived results unless lineage proves it.
+The two resources may converge visually only at the downstream-characterization stage, where the method family is shared but analyses remain separate.
 
-Do not access patient-level values.
+Do not draw any arrow that implies:
 
-Do not run models or experiments.
+* cross-dataset voting;
+* cross-dataset aggregation;
+* pooled records;
+* a shared causal-analysis table;
+* semantic equivalence of similarly named proxies.
 
-Do not perform a new literature search.
+A compact shared label such as “same interface, separate execution” is acceptable.
+
+## Defect 2 — Text is too small
+
+The current script uses many labels between approximately 5.5 and 7.8 points. This is below the requested approximately 9-point final embedded size.
+
+Revise the figure so:
+
+* primary box text is at least approximately 9 points at final paper size;
+* stage headings are at least approximately 9 points;
+* secondary gate labels and the bounded LLM note are preferably at least 8.5 points and never below 8 points;
+* all text remains readable in the main PDF at normal viewing scale;
+* no text is clipped or overlaps arrows or boxes.
+
+Simplify wording rather than shrinking text.
+
+Examples of compact labels:
+
+```text
+Preprocess + IDs
+Rule labels
+4 model annotations
+Normalize exports
+5-source vote
+Outcome + covariates
+DAG + provenance
+```
+
+The caption can carry detail that does not fit legibly in the graphic.
 
 ---
 
-# Objective
+# Required figure structure
 
-Complete the main and supplementary technical artifacts:
+Retain three major bands.
 
-1. replace the Figure 1 placeholder with a final vector figure;
-2. audit and finalize Figure 2;
-3. audit and optimize Tables 1 and 2;
-4. create a complete technical supplement;
-5. create anonymous, release-neutral code/data appendix content;
-6. verify every numerical and textual artifact against checked sources;
-7. preserve the main-paper page architecture for P9.
-
-Do not write or revise the Abstract.
-
-Do not globally compress the scientific paper.
-
----
-
-# A. Finalize Figure 1
-
-Replace the current boxed placeholder with a paper-ready vector figure.
-
-Preferred files:
+## 1. Design time
 
 ```text
-thesis-writing/paper-aaai/figures/figure1_pipeline.pdf
-thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
-```
-
-Use an existing canonical location instead if one already exists.
-
-## Required scientific structure
-
-The figure must show three clear stages.
-
-### 1. Design time
-
-Show:
-
-```text
-dataset descriptions
+Dataset descriptions
 → structured LLM proposals
 → project/human selection
-→ deterministic proxy-rule and DAG source artifacts
+→ deterministic rule and DAG source
 ```
 
-The LLM may propose:
-
-* proxy ontologies;
-* rule families;
-* missingness considerations;
-* dataset-specific DAGs.
-
-Make clear that:
-
-* the LLM operates at design time;
-* selected proposals are encoded as deterministic source;
-* the LLM does not receive runtime patient rows;
-* the LLM is not the patient-level estimator.
-
-### 2. Dataset construction
-
-Use distinct MIMIC-III and PhysioNet lanes:
+State legibly:
 
 ```text
-irregular source records
-→ dataset-specific preprocessing and canonical IDs
-→ deterministic rule labels
-→ STraTS / GRU / GRU-D / TCN annotations
-→ normalized probability and binary exports
-→ five-source deterministic aggregation
-→ outcome + covariates + DAG/adjustment metadata
-→ reusable estimator-ready causal-analysis dataset
+Design time only; no patient rows; not an estimator
 ```
 
-Do not imply pooled dataset semantics.
+The deterministic source may feed both dataset-specific runtime lanes.
 
-Place the two resulting validated causal-analysis resources prominently.
+## 2. Construction
 
-### 3. Downstream characterization
+Create two visibly independent lanes:
 
-Show:
+```text
+MIMIC-III lane
+PhysioNet 2012 lane
+```
+
+Each lane must independently contain:
+
+* irregular records;
+* preprocessing/canonical IDs;
+* rule labels;
+* four temporal-model annotations;
+* normalized exports;
+* five-source aggregation;
+* outcome/covariates;
+* DAG/adjustment and provenance;
+* estimator-ready causal-analysis resource.
+
+Repeated small boxes are preferable to a visually pooled shared box.
+
+Validation gates should remain visible but concise:
+
+* schema/ID;
+* prediction export;
+* voter/cohort alignment;
+* output/provenance.
+
+## 3. Downstream characterization
+
+Both finished resources may connect to one shared method-family panel containing:
 
 ```text
 CausalForestDML
 LinearDML
 CausalPFN
 matching
-sensitivity and permutation diagnostics
-outcome-downsampling robustness
+sensitivity/permutations
+outcome downsampling
 ```
 
-Add compact validation gates at:
+Make clear that the method interface is shared while execution and results remain dataset specific.
 
-* schema handoffs;
-* cohort alignment;
-* prediction exports;
-* aggregation;
-* estimator-ready output;
-* provenance/manifests.
+---
 
-Do not add a current test-pass claim.
+# Design requirements
 
-## Figure design requirements
+The repaired figure must be:
 
-* vector PDF;
-* deterministic generation;
-* no screenshots;
+* full-width vector PDF;
+* deterministic;
 * grayscale safe;
-* direct labels rather than a large legend;
-* readable at final full-width placement;
-* minimum approximately 9-point final text;
-* no clipped nodes or arrows;
-* no Type 3 fonts;
 * anonymous;
-* no institution, username, machine path, or repository-owner identifier;
-* similar or smaller main-paper footprint than the placeholder.
+* data free;
+* free of screenshots;
+* free of Type 3 fonts;
+* free of absolute paths or identifying metadata;
+* readable at its final embedded size;
+* free of clipped labels, arrows, or boxes.
 
-The generation script must:
-
-* contain no patient data;
-* use only labels and workflow structure;
-* produce deterministic output;
-* suppress volatile PDF metadata where feasible;
-* fail clearly when output cannot be produced.
+A modest height increase is allowed when required for readability, but first shorten labels and improve layout. Record any main-paper page-footprint change.
 
 Do not install packages.
 
 ---
 
-# B. Audit Figure 2
+# Determinism and validation
 
-Audit:
+Generate Figure 1 twice using the same command and compare hashes.
 
-```text
-thesis-writing/paper-aaai/figures/generate_figure2_estimator_agreement.py
-thesis-writing/paper-aaai/figures/figure2_estimator_agreement.pdf
+Recommended command:
+
+```bash
+MPLCONFIGDIR=/tmp/matplotlib-p8-repair \
+python3 thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
 ```
 
-Verify independently:
+Validate:
 
-* input is the checked CATE source;
-* original sampling is explicitly selected;
-* correct main-text status is selected for each estimator;
-* exactly 19 dataset–exposure combinations exist;
-* exactly 3 estimators exist for each combination;
-* all 57 values are present once;
-* no duplicates or omissions;
-* full source precision is plotted;
-* PhysioNet shock is visible;
-* zero lines are visible;
-* ordering matches the caption;
-* output is deterministic;
-* labels remain readable at embedded size;
-* no Type 3 font exists;
-* the caption’s `19/19` and `18/19` statements match the checked matrix.
+* both runs produce the same SHA-256;
+* the PDF has no Type 3 fonts;
+* the two dataset lanes remain separate until completed resources;
+* every primary label is readable;
+* no label is below 8 points;
+* primary labels are approximately 9 points or larger;
+* no clipping or overlap appears;
+* the LLM remains design-time only;
+* no test-pass or public-release claim appears.
 
-Do not change Figure 2 merely for stylistic novelty.
+Render the standalone figure and inspect it at:
 
-Modify it only to fix a verified defect or materially improve readability without changing data.
-
-Record pre- and post-audit hashes.
+* full-page scale;
+* final embedded scale;
+* approximately 100% PDF viewing scale.
 
 ---
 
-# C. Audit Tables 1 and 2
+# Manuscript integration
 
-## Table 1
+Update `paper.tex` only if the Figure 1 caption requires a small alignment correction.
 
-Verify:
+The caption must retain:
 
-* resource counts;
-* admitted-exposure counts;
-* prediction-model families;
-* causal-estimator families;
-* matching and robustness fields;
-* terminology;
-* consistency with Sections 3–7.
+* dataset-specific processing;
+* deterministic proxy rules;
+* four predictive models;
+* per-dataset five-source aggregation;
+* separate estimator-ready resources;
+* design-time-only LLM role;
+* validation gates;
+* observational downstream use.
 
-Improve only where needed for readability or space.
-
-## Table 2
-
-Verify all:
-
-```text
-8 rows
-32 metric values
-bolded dataset-specific leaders
-three-decimal rounding
-loss direction
-AUROC/AUPRC/minRP direction
-caption qualification
-```
-
-Cross-check against:
-
-```text
-thesis-writing/results/checked_predictive_metrics.csv
-```
-
-Do not remove a metric unless a genuine layout blocker requires moving it to the supplement.
-
-Do not use `\resizebox`.
-
-Do not reduce text below a readable AAAI size.
-
----
-
-# D. Create the technical supplement
-
-Create:
-
-```text
-thesis-writing/paper-aaai/supplement/technical_appendix.tex
-thesis-writing/paper-aaai/supplement/technical_appendix.pdf
-```
-
-Use a separate anonymous supplement source and PDF.
-
-Do not append it to the main manuscript.
-
-Use the Author Kit style when appropriate and compatible, but do not create a fake main-paper page-limit claim for the supplement.
-
-## Required supplement contents
-
-Include only evidence-supported material.
-
-### A. Resource and construction details
-
-Include compact documentation of:
-
-* dataset-specific analysis units;
-* canonical identifier contracts;
-* admitted exposure/proxy-state lists;
-* source-specific proxy semantics;
-* deterministic aggregation contract;
-* outcome and covariate schema;
-* DAG and adjustment metadata;
-* validation layers;
-* provenance boundaries.
-
-Use tables where more efficient than prose.
-
-### B. Complete predictive evaluation details
-
-Include:
-
-* the complete predictive results already used in the main paper;
-* metric definitions;
-* degenerate-target handling;
-* selected-run and uncertainty boundaries;
-* available model/configuration details only where checked.
-
-Do not invent hyperparameters or split lineage.
-
-### C. Complete original-cohort estimator table
-
-Provide all 19 dataset–exposure rows and all three estimators:
-
-```text
-Dataset
-Exposure
-CausalForestDML
-LinearDML
-CausalPFN
-sign agreement
-```
-
-Use full checked values with an explicit, consistent display precision.
-
-State that values are mean model-estimated CATE summaries over the analyzed samples.
-
-### D. Outcome-downsampling table
-
-Provide all 57 original-versus-downsampled estimator comparisons or an equivalent complete table that clearly identifies:
-
-* original value/sign;
-* downsampled value/sign;
-* preserved versus changed direction;
-* the two sign changes.
-
-Do not imply magnitude transport between populations.
-
-### E. Matching details
-
-Provide all 19 exposure rows with:
-
-* success or failure;
-* matched-pair result where available;
-* pair/support information where checked;
-* final distance or warning where checked;
-* explicit failure reason.
-
-Failures must not be represented as zero effects.
-
-### F. Sensitivity and permutation coverage
-
-Create a coverage/provenance table distinguishing:
-
-* estimator-native sensitivity;
-* recomputed or reconstructed sensitivity;
-* partial coverage;
-* unavailable or failed diagnostics;
-* treatment permutation availability;
-* outcome permutation availability;
-* absence of equivalent archived CausalPFN stages.
-
-Do not collapse provenance classes.
-
-Do not invent diagnostic magnitudes.
-
-### G. Provenance and reproducibility boundaries
-
-Summarize:
-
-* checked archived artifact support;
-* exact historical producing-lineage gaps;
-* current repaired-contract evidence;
-* current-runtime gates;
-* release gates;
-* source-data access restrictions.
-
-Keep archived results and current implementation clearly separated.
-
----
-
-# Supplement generation
-
-Where tables are derived from checked CSVs, create a deterministic generator rather than manually transcribing large matrices.
-
-Preferred file:
-
-```text
-thesis-writing/paper-aaai/supplement/generate_supplement_tables.py
-```
-
-Generated fragments may be placed under:
-
-```text
-thesis-writing/paper-aaai/supplement/generated/
-```
-
-The generator must:
-
-* read checked aggregate files only;
-* use explicit predicates;
-* validate expected row counts;
-* fail on missing or duplicate rows;
-* retain full precision internally;
-* apply documented display rounding;
-* emit deterministic LaTeX;
-* avoid patient-level data;
-* avoid absolute paths in generated output.
-
----
-
-# E. Code/data appendix
-
-Create:
-
-```text
-thesis-writing/paper-aaai/code-data-appendix/README.md
-```
-
-This is release-neutral preparatory content, not a public-release announcement.
-
-Include:
-
-* artifact purpose;
-* intended anonymous package structure;
-* main pipeline components;
-* relative entry-point paths;
-* source-data access requirements for MIMIC-III and PhysioNet;
-* safe derived artifacts intended for inclusion, subject to licensing;
-* checked aggregate result files used by the paper;
-* figure and supplement regeneration commands;
-* known historical-lineage gaps;
-* current-runtime validation gates;
-* release/license decisions still required;
-* no patient data statement;
-* anonymity checklist for the eventual package.
-
-Do not include:
-
-* author names;
-* institution names;
-* repository owner;
-* personal usernames;
-* server paths;
-* private URLs;
-* tokens or credentials;
-* unsupported “publicly available” claims;
-* unsupported exact reproduction claims.
-
-Use exact commands only when verified.
-
-Represent unresolved information with existing TODO gates rather than invented values.
-
----
-
-# CausalPFN bibliography gate
-
-The user-supplied PDF has been verified, but the approved bibliography still lacks a CausalPFN entry and citation key.
-
-P8 must not:
-
-* edit the bibliography;
-* invent a key;
-* add a method citation;
-* add architectural or theoretical claims.
-
-Record the gate for P9.
-
-The PDF itself remains protected.
-
----
-
-# Main-paper constraints
-
-In `paper.tex`, make only bounded artifact changes:
-
-* replace the Figure 1 placeholder;
-* update its caption only where the final visual requires exact alignment;
-* make justified Table 1 or Table 2 formatting improvements;
-* make necessary figure/table cross-reference repairs.
-
-Do not alter Sections 1–7 scientific prose.
+Do not change any other scientific prose.
 
 Do not write the Abstract.
 
-Do not add detailed supplement material to the main paper.
-
-The current main paper has technical content ending on page 7 while the Abstract is empty. Preserve at least the existing path to approximately 0.20 page of P9 scientific compression.
-
-Measure the new technical-content endpoint after Figure 1 replacement.
+Do not alter Figure 2, Tables 1–2, the supplement, or CausalPFN metadata.
 
 ---
 
-# Evidence and numerical audit
+# Allowed files
 
-Create or update a technical artifact audit, preferably:
+Edit only:
 
 ```text
+thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
+thesis-writing/paper-aaai/figures/figure1_pipeline.pdf
+thesis-writing/paper-aaai/paper.tex
+thesis-writing/paper-aaai/paper.pdf
+thesis-writing/paper-aaai/paper_build_report.md
 thesis-writing/paper-aaai/evidence/P8_figure_table_value_checks.md
+thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
 ```
 
-Record for every numerical table or plot:
+Compilation may regenerate already tracked main-paper auxiliary files.
 
-* artifact and cell/mark identifier;
-* displayed value;
-* full source value;
-* checked source path;
-* selection predicate;
-* rounding rule;
-* expected row count;
-* validation outcome.
+Do not modify the supplement or its generated artifacts unless the main build unexpectedly reveals a direct cross-reference dependency.
 
-At minimum cover:
+---
 
-* Table 1 counts;
-* all 32 Table 2 cells;
-* all 57 Figure 2 values;
-* complete original estimator supplement table;
-* downsampling comparison table;
-* matching table;
-* all derived agreement and availability counts.
+# Report updates
+
+Append a clearly titled repair section to:
+
+```text
+thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
+```
+
+Record:
+
+```text
+Repair baseline HEAD
+Exact defects repaired
+Previous and repaired script hashes
+Previous and repaired Figure 1 hashes
+Dataset-lane topology check
+Minimum font sizes used
+Deterministic regeneration check
+Standalone visual inspection
+Embedded visual inspection
+Type 3 font check
+Caption changes
+Main PDF build result
+Main PDF page count
+Technical-content endpoint
+P9 compression estimate
+Files changed
+Protected-file verification
+No-commit/no-push verification
+```
 
 Update:
 
 ```text
-thesis-writing/paper-aaai/paper_evidence_map.md
-```
-
-only where artifact locations, supplement mappings, or source links change.
-
-Do not add new scientific claims.
-
----
-
-# Allowed edits and creations
-
-The intended P8 scope is:
-
-```text
-thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/paper.pdf
-thesis-writing/paper-aaai/paper_build_report.md
-thesis-writing/paper-aaai/paper_evidence_map.md
-
-thesis-writing/paper-aaai/figures/figure1_pipeline.pdf
-thesis-writing/paper-aaai/figures/generate_figure1_pipeline.py
-thesis-writing/paper-aaai/figures/figure2_estimator_agreement.pdf
-thesis-writing/paper-aaai/figures/generate_figure2_estimator_agreement.py
-
-thesis-writing/paper-aaai/supplement/**
-thesis-writing/paper-aaai/code-data-appendix/**
 thesis-writing/paper-aaai/evidence/P8_figure_table_value_checks.md
-thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
 ```
 
-Compilation may regenerate already tracked LaTeX auxiliary files.
+with the repaired Figure 1 hash and explicit passes for:
 
-Do not edit:
+* separate per-dataset exports;
+* separate per-dataset aggregation;
+* no pooling implication;
+* final-size readability.
 
-* either operational plan;
-* `prompt.txt`;
-* the CausalPFN PDF;
-* the bibliography;
-* P3–P7 reports;
-* thesis source;
-* checked results;
-* reproducibility evidence;
-* source code;
-* tests;
-* submodules;
-* Author Kit reference files.
-
----
-
-# Build and validation
-
-## Generate artifacts
-
-Run deterministic generation commands from relative paths and record them.
-
-Regenerate each generated artifact twice where feasible and compare hashes.
-
-## Main paper
-
-Build from:
-
-```text
-thesis-writing/paper-aaai/
-```
-
-using:
-
-```bash
-env TEXINPUTS=AuthorKit27: \
-    BSTINPUTS=AuthorKit27: \
-    BIBINPUTS=../literature/metadata: \
-    latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
-```
-
-## Supplement
-
-Build the supplement with an explicit documented command and sufficient LaTeX passes.
-
-Validate:
-
-* successful builds;
-* no undefined citations or references;
-* no duplicate labels;
-* US Letter;
-* anonymous formatting;
-* all fonts embedded;
-* no Type 3 fonts;
-* no clipping, overlap, or margin/gutter breach;
-* readable tables and figures at final size;
-* no absolute paths or identifying metadata;
-* all main and supplement pages visually inspected;
-* Figure 1 accurately separates design-time LLM assistance from runtime;
-* Figure 2 still contains all 57 checked values;
-* technical content page endpoint is measured;
-* no Abstract was written.
-
----
-
-# Durable report
-
-Create:
-
-```text
-thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
-```
-
-Include:
-
-```text
-Stage
-Model and reasoning
-Canonical plan path and hash
-Current HEAD before work
-Accepted P7 commit
-Recent commits inspected
-Worktree state
-Nested revisions
-Sources inspected
-Files changed
-Figure 1 design and generation method
-Figure 1 scientific-contract checks
-Figure 1 deterministic hash check
-Figure 1 visual and font checks
-Figure 2 source and predicate audit
-Figure 2 19×3 completeness audit
-Figure 2 deterministic hash check
-Table 1 audit
-Table 2 32-cell audit
-Supplement structure
-Supplement generated tables and row counts
-Original-estimator table audit
-Downsampling table audit
-Matching table audit
-Sensitivity/permutation coverage audit
-Provenance-boundary treatment
-Code/data appendix structure
-Anonymity and release-neutral checks
-CausalPFN bibliography-gate status
-Evidence-map changes
-Artifact-value audit path
-Main build command and result
-Supplement build command and result
-Main PDF page count and technical-content endpoint
-Supplement PDF page count
-Font and metadata checks
-Visual inspection results
-Estimated P9 compression requirement
-Protected-file verification
-Repository-cleanup deferral
-No-commit/no-push verification
-Readiness decision
-```
-
-Explicitly confirm:
-
-* no patient-level data was accessed;
-* no model or experiment was run;
-* no checked source was modified;
-* no large numerical matrix was manually transcribed without source validation;
-* Figure 1 does not depict the LLM as a runtime estimator;
-* Figure 2 contains every prespecified comparison;
-* matching failures are not zero effects;
-* original and downsampled magnitudes are not treated as interchangeable;
-* archived-result and current-code claims remain separate;
-* no unsupported CausalPFN method citation was added;
-* no public-release claim was added;
-* no Abstract or global scientific compression was performed;
-* the revised P6–P10 plan was followed.
-
-End with exactly one of:
+The report must still end with exactly one of:
 
 ```text
 READY FOR STAGE P9 — PAPER AND SUPPLEMENT ARTIFACTS COMPLETE
@@ -792,628 +354,19 @@ or:
 NARROW REPAIR REQUIRED BEFORE STAGE P9 — <EXACT DEFECT>
 ```
 
-or:
+---
+
+# Build
+
+From:
 
 ```text
-BLOCKED BEFORE STAGE P9 — <EXACT REASON>
+thesis-writing/paper-aaai/
 ```
 
-# P8 Extension — Verify, Ingest, and Immediately Use the CausalPFN Primary Paper
-
-## Scope override
-
-This extension is part of P8 and overrides every earlier P8 instruction that:
-
-* treats `thesis-writing/literature/papers/causalPFN.pdf` as protected;
-* prohibits editing the literature bibliography or metadata;
-* requires the CausalPFN citation gate to remain open;
-* excludes literature, citation-planning, or CausalPFN-ingestion files from the allowed paths.
-
-The override applies **only** to the exact CausalPFN ingestion, verification, citation, and planning work specified below.
-
-Do not broaden the literature corpus or edit unrelated references.
-
-The scientific positioning already approved in the paper remains unchanged: CausalPFN is a meaningful complementary estimator supporting cross-estimator triangulation, not the paper’s primary contribution.
-
----
-
-## Objective
-
-Integrate the user-supplied CausalPFN paper into the complete CliniCause literature system so that:
-
-1. its local PDF and publication identity are verified;
-2. it becomes a canonical core literature entry;
-3. it receives one stable project-wide citation key;
-4. the AAAI paper uses the primary citation immediately;
-5. the missing-citation gate is resolved;
-6. future thesis editing can use the paper without repeating ingestion or bibliographic research;
-7. no unsupported claim about CausalPFN or the local experiment is introduced.
-
-Do not edit the thesis chapter prose during P8.
-
-Prepare the literature and planning records so a later thesis-editing stage can integrate the citation directly.
-
----
-
-# 1. Inspect all current CausalPFN state
-
-Before editing, run:
+run:
 
 ```bash
-git status --short
-git log -5 --oneline --decorate
-
-find thesis-writing -iname '*causal*pfn*' -o -iname '*causalpfn*'
-rg -n \
-  "CausalPFN|causalpfn|CIT-GAP-001|G-EVD-01|NEEDS CITATION" \
-  thesis-writing
-```
-
-Inspect completely:
-
-```text
-thesis-writing/literature/README.md
-thesis-writing/literature/metadata/references.bib
-thesis-writing/literature/metadata/catalog.csv
-thesis-writing/literature/metadata/checksums.sha256
-thesis-writing/planning/citation_plan.md
-thesis-writing/planning/chapter_evidence_map.md
-thesis-writing/audit/claim_evidence_ledger.csv
-thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/reports/P7_introduction_related_work_report.md
-```
-
-The P7 report is historical and read-only. Do not revise it merely because P8 resolves its former gate.
-
-Locate every exact project record whose status depends solely on the absence of a verified CausalPFN primary citation.
-
-Do not close unrelated runtime, historical-producing-lineage, uncertainty, diagnostic, release, or causal-identification gates.
-
----
-
-# 2. Verify the local PDF
-
-Input candidate:
-
-```text
-thesis-writing/literature/papers/causalPFN.pdf
-```
-
-Treat it as user-supplied source material that may now be normalized and ingested.
-
-Run available non-destructive checks, such as:
-
-```bash
-file thesis-writing/literature/papers/causalPFN.pdf
-pdfinfo thesis-writing/literature/papers/causalPFN.pdf
-pdftotext thesis-writing/literature/papers/causalPFN.pdf - | sed -n '1,120p'
-sha256sum thesis-writing/literature/papers/causalPFN.pdf
-```
-
-When installed, also run:
-
-```bash
-qpdf --check thesis-writing/literature/papers/causalPFN.pdf
-```
-
-Do not install new software.
-
-Verify from the PDF itself:
-
-* exact title;
-* author list and order;
-* arXiv identifier;
-* version/date when present;
-* page count;
-* readable first and last pages;
-* absence of truncation or corruption;
-* whether it is an arXiv manuscript, accepted manuscript, or final proceedings version;
-* whether the binary matches the SHA-256 recorded by P7.
-
-Render representative pages for visual inspection if local tooling permits. Do not use OCR unless normal PDF text extraction fails.
-
-## External publication verification
-
-Verify the publication record against primary sources in this order when network access is available:
-
-1. official NeurIPS 2025 proceedings page;
-2. official NeurIPS/OpenReview conference record;
-3. arXiv record `2506.07918`;
-4. official author repository only as a secondary consistency check.
-
-The publication should be verified as:
-
-```text
-CausalPFN: Amortized Causal Effect Estimation via In-Context Learning
-Advances in Neural Information Processing Systems 38
-NeurIPS 2025 Main Conference Track
-```
-
-Resolve author-name differences between the local arXiv PDF and final proceedings metadata explicitly.
-
-Use the **final official NeurIPS proceedings metadata** for the bibliographic citation. Record local-PDF version differences in catalog notes rather than silently mixing author lists.
-
-If network access is unavailable:
-
-* use the local PDF and already checked P7 evidence;
-* do not guess missing metadata;
-* record the exact offline-verification limitation in the ingestion and P8 reports.
-
-Do not replace a valid user-supplied PDF merely because it is an arXiv version. A valid arXiv copy may remain the local source while the bibliography cites the final conference publication.
-
----
-
-# 3. Normalize the PDF into the canonical corpus
-
-The paper is a **core** reference because it is the primary method citation for an estimator used in the main AAAI paper and thesis results.
-
-Normalize the file path using the literature naming convention.
-
-Preferred path:
-
-```text
-thesis-writing/literature/papers/causal_causalpfn_balazadeh_et_al_2025.pdf
-```
-
-Use `git mv` semantics or an equivalent tracked rename:
-
-```bash
-git mv \
-  thesis-writing/literature/papers/causalPFN.pdf \
-  thesis-writing/literature/papers/causal_causalpfn_balazadeh_et_al_2025.pdf
-```
-
-Do not retain two duplicate local PDFs.
-
-If the file is not present at the expected input path, locate the exact user-supplied file before proceeding. Do not download or create a substitute blindly.
-
-After renaming, confirm:
-
-```bash
-test -f thesis-writing/literature/papers/causal_causalpfn_balazadeh_et_al_2025.pdf
-test ! -e thesis-writing/literature/papers/causalPFN.pdf
-```
-
----
-
-# 4. Add the canonical BibTeX entry
-
-Add exactly one entry to:
-
-```text
-thesis-writing/literature/metadata/references.bib
-```
-
-Use the stable citation key:
-
-```text
-balazadeh2025causalpfn
-```
-
-Use an `@inproceedings` entry based on the final official NeurIPS publication record.
-
-It must contain, when verified:
-
-```text
-author
-title
-booktitle = Advances in Neural Information Processing Systems
-volume = 38
-year = 2025
-official proceedings URL
-local file path
-keywords = core
-```
-
-Add pages only if they are verified from an authoritative publication record.
-
-Do not invent a DOI. The arXiv DOI is not automatically the conference-paper DOI.
-
-The `file` field should point to:
-
-```text
-../papers/causal_causalpfn_balazadeh_et_al_2025.pdf
-```
-
-Before adding the entry, verify that no existing record duplicates its:
-
-* title;
-* arXiv identifier;
-* proceedings URL;
-* citation key;
-* local PDF hash.
-
-After editing, verify that exactly one entry exists:
-
-```bash
-rg -n "balazadeh2025causalpfn|2506\.07918|CausalPFN:" \
-  thesis-writing/literature/metadata/references.bib
-```
-
----
-
-# 5. Add the metadata catalog row
-
-Add exactly one row to:
-
-```text
-thesis-writing/literature/metadata/catalog.csv
-```
-
-Preserve its existing CSV schema and quoting conventions.
-
-Use:
-
-```text
-citation_key: balazadeh2025causalpfn
-tier: core
-topic: causal foundation models and heterogeneous-effect estimation
-pdf_path: papers/causal_causalpfn_balazadeh_et_al_2025.pdf
-pdf_status: present or the existing equivalent for a valid user-supplied PDF
-```
-
-The role should communicate:
-
-* primary method citation for CausalPFN;
-* supports the method description in the AAAI paper;
-* supports future thesis Related Work and causal-methodology edits;
-* contextualizes the empirical three-estimator triangulation;
-* does not validate the project’s local effect estimates or causal identification.
-
-The notes field must record:
-
-* local PDF version;
-* final publication status;
-* any author-name differences between local arXiv and final proceedings metadata;
-* official NeurIPS venue/volume;
-* arXiv identifier;
-* that the project uses CausalPFN empirically but retains separate diagnostic and identification boundaries.
-
-Do not add a second catalog or metadata file outside `metadata/`.
-
----
-
-# 6. Regenerate corpus checksums and validate the corpus
-
-Regenerate:
-
-```text
-thesis-writing/literature/metadata/checksums.sha256
-```
-
-Follow the existing sorting and relative-path convention exactly.
-
-Remove the stale checksum entry for the old filename and add exactly one entry for the normalized filename.
-
-Run the corpus checks required by `thesis-writing/literature/README.md`:
-
-* duplicate citation-key check;
-* duplicate normalized-title check;
-* duplicate DOI/arXiv/URL check;
-* duplicate PDF-hash check;
-* catalog-to-BibTeX key consistency;
-* catalog-to-PDF path consistency;
-* BibTeX `file` path consistency;
-* checksum verification;
-* PDF validity;
-* missing/orphan PDF detection;
-* orphan catalog-row detection.
-
-At minimum verify:
-
-```bash
-sha256sum -c thesis-writing/literature/metadata/checksums.sha256
-```
-
-Use any existing project literature-validation scripts when present. Do not create a parallel validation framework when the repository already has one.
-
----
-
-# 7. Update the canonical literature overview
-
-Update:
-
-```text
-thesis-writing/literature/README.md
-```
-
-Recompute all corpus counts programmatically rather than manually assuming the new totals.
-
-Update:
-
-* core-paper count;
-* total catalog count if rendered;
-* valid-local-PDF count;
-* missing-PDF count;
-* topic summary to include causal foundation models or prior-data-fitted causal estimation.
-
-Do not rewrite unrelated corpus policy.
-
-Keep the “Adding a Future Paper” instructions intact.
-
----
-
-# 8. Resolve thesis-planning citation records
-
-Update:
-
-```text
-thesis-writing/planning/citation_plan.md
-```
-
-Replace the current placeholder row:
-
-```text
-[NEEDS CITATION] CausalPFN
-```
-
-with the real key:
-
-```text
-balazadeh2025causalpfn
-```
-
-Recommended planned thesis locations:
-
-```text
-C2.4
-C7
-C9
-C10
-C11
-```
-
-Adapt these labels only if the current thesis chapter structure uses different identifiers.
-
-The citation-plan row should state that the paper supports:
-
-* CausalPFN as a prior-data-fitted or in-context causal-effect estimator;
-* the method’s amortized estimation setup;
-* its use as a method-level comparator in the project;
-* future discussion of its distinct modeling paradigm.
-
-Usage limitations must state:
-
-* the source does not validate the project’s local proxy definitions;
-* it does not prove that the project’s observational assumptions hold;
-* it does not validate the local numerical effects;
-* it does not imply diagnostic parity with the DML estimators;
-* the project’s `18/19` result is supported by checked local outputs, not by the CausalPFN paper.
-
-Mark:
-
-```text
-CIT-GAP-001
-```
-
-as resolved by `balazadeh2025causalpfn`.
-
-Do not mark project-specific provenance or runtime gaps as resolved.
-
-## Future thesis-integration record
-
-Create:
-
-```text
-thesis-writing/planning/causalpfn_thesis_integration_plan.md
-```
-
-Include:
-
-* verified citation key;
-* canonical PDF path and checksum;
-* publication metadata;
-* approved method claims;
-* prohibited overclaims;
-* exact recommended thesis locations;
-* one concise proposed use for each location:
-
-  * Related Work;
-  * causal methodology;
-  * experiment/estimator setup;
-  * Results cross-reference;
-  * Discussion and limitations;
-* distinction between claims supported by the external paper and claims supported by local CliniCause results;
-* statement that thesis chapter prose was not edited during P8.
-
-Inspect `chapter_evidence_map.md`, `claim_evidence_ledger.csv`, and other planning or audit files returned by the repository-wide search.
-
-Update an existing CausalPFN citation-gap row only when:
-
-* it explicitly depends on the missing primary paper;
-* the new verified citation genuinely resolves it.
-
-Do not add broad edits to unrelated thesis claims.
-
----
-
-# 9. Use the citation immediately in the AAAI paper
-
-Update:
-
-```text
-thesis-writing/paper-aaai/paper.tex
-```
-
-This extension authorizes narrowly bounded CausalPFN citation edits in existing prose despite the general P8 prohibition on scientific-prose edits.
-
-## Related Work
-
-Replace the temporary gate sentence:
-
-```text
-CausalPFN is retained as an empirically evaluated complementary estimator;
-method-level positioning awaits an approved bibliographic entry and citation key.
-```
-
-with a concise citation-backed description.
-
-The replacement should state, at a bounded level, that CausalPFN:
-
-* amortizes causal-effect estimation through a prior-data-fitted/in-context model;
-* is trained on simulated data-generating processes under stated assumptions;
-* is used in CliniCause as a complementary estimator from a different modeling paradigm.
-
-Cite:
-
-```latex
-\cite{balazadeh2025causalpfn}
-```
-
-Do not repeat promotional benchmark claims unless needed and directly relevant.
-
-## Empirical Evaluation
-
-Add the primary citation to the existing first method-level mention of CausalPFN in Section 4.
-
-Keep the established project wording:
-
-* complementary estimator;
-* same prespecified dataset–exposure comparisons;
-* tests whether directions are specific to the DML estimators;
-* smaller archived local diagnostic package.
-
-Do not change the estimator hierarchy.
-
-## Other sections
-
-Add another citation only when grammatically and scientifically necessary. Avoid repetitive citation of the same paper in Results and Discussion when those paragraphs report local findings rather than external method claims.
-
-Do not alter:
-
-* the local `18/19` result;
-* the PhysioNet-shock exception;
-* the numerical audit;
-* the resource-first contribution hierarchy;
-* the Abstract, which remains unwritten in P8.
-
----
-
-# 10. Resolve the paper evidence gate
-
-Update:
-
-```text
-thesis-writing/paper-aaai/paper_evidence_map.md
-```
-
-Change `G-EVD-01` from an unresolved missing-primary-citation gate to a resolved evidence item.
-
-Record:
-
-* citation key `balazadeh2025causalpfn`;
-* normalized local PDF path;
-* PDF SHA-256;
-* official publication record;
-* exact manuscript locations using the citation;
-* method claims supported by the external paper;
-* local empirical claims supported separately by P5;
-* remaining local diagnostic and identification limitations.
-
-Do not delete the historical explanation of why the citation was formerly gated when preserving that history improves auditability.
-
-Do not modify the P7 report; P8 records the resolution.
-
----
-
-# 11. Create a durable ingestion report
-
-Create:
-
-```text
-thesis-writing/logs/causalpfn_literature_ingestion_report.md
-```
-
-Include:
-
-```text
-Task
-Date
-Baseline HEAD
-Input PDF path
-Normalized PDF path
-Old and new file hashes
-PDF type and version
-PDF page count
-PDF validity checks
-Visual inspection
-Official sources checked
-Final publication metadata
-Resolved author-name differences
-Citation key
-Exact BibTeX entry fields
-Catalog-row summary
-README count changes
-Checksum regeneration command
-Duplicate checks
-Path-consistency checks
-Citation-plan changes
-CIT-GAP-001 status
-Thesis-integration-plan path
-AAAI manuscript locations changed
-Paper evidence-map changes
-Build command and result
-Remaining CausalPFN boundaries
-Files changed
-Protected-file verification
-No-commit/no-push verification
-```
-
-Explicitly distinguish:
-
-```text
-External-paper support
-Local CliniCause empirical support
-Unresolved project-specific limitations
-```
-
----
-
-# 12. Extend the P8 allowed-file scope
-
-This extension authorizes modifications only to the following additional paths:
-
-```text
-thesis-writing/literature/papers/causalPFN.pdf
-thesis-writing/literature/papers/causal_causalpfn_balazadeh_et_al_2025.pdf
-thesis-writing/literature/README.md
-thesis-writing/literature/metadata/references.bib
-thesis-writing/literature/metadata/catalog.csv
-thesis-writing/literature/metadata/checksums.sha256
-
-thesis-writing/planning/citation_plan.md
-thesis-writing/planning/causalpfn_thesis_integration_plan.md
-thesis-writing/planning/chapter_evidence_map.md
-thesis-writing/audit/claim_evidence_ledger.csv
-
-thesis-writing/logs/causalpfn_literature_ingestion_report.md
-
-thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/paper.pdf
-thesis-writing/paper-aaai/paper.aux
-thesis-writing/paper-aaai/paper.bbl
-thesis-writing/paper-aaai/paper.blg
-thesis-writing/paper-aaai/paper.fdb_latexmk
-thesis-writing/paper-aaai/paper.fls
-thesis-writing/paper-aaai/paper_build_report.md
-thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
-```
-
-For `chapter_evidence_map.md` and `claim_evidence_ledger.csv`, edit only existing CausalPFN citation-gap records. Leave them unchanged when no such record exists.
-
-All other literature, thesis, planning, audit, report, source-code, result, and Author Kit files remain protected.
-
----
-
-# 13. Build and final verification
-
-Rebuild the main AAAI paper after adding the citation:
-
-```bash
-cd thesis-writing/paper-aaai
-
 env TEXINPUTS=AuthorKit27: \
     BSTINPUTS=AuthorKit27: \
     BIBINPUTS=../literature/metadata: \
@@ -1422,68 +375,12 @@ env TEXINPUTS=AuthorKit27: \
 
 Verify:
 
-* `balazadeh2025causalpfn` resolves;
-* the bibliography renders the correct authors, title, venue, volume, and year;
-* no undefined citation or reference remains;
-* no duplicate bibliography entry exists;
-* the CausalPFN citation appears at the intended method-level locations;
-* local Results still cite local evidence rather than treating the external paper as evidence for `18/19`;
-* the new bibliography entry does not create a visible layout defect;
-* page pressure is remeasured for P9;
-* all main-paper pages are visually inspected.
-
-Also verify:
-
-```bash
-rg -n \
-  "G-EVD-01|CIT-GAP-001|NEEDS CITATION.*CausalPFN|method-level positioning awaits" \
-  thesis-writing
-```
-
-Any remaining match must be:
-
-* historical documentation clearly marked as superseded;
-* a report describing the former gate;
-* or an unrelated limitation that the primary citation cannot resolve.
-
-There must be no active unresolved assertion that the primary CausalPFN citation is missing.
-
----
-
-# 14. P8 report additions
-
-Add a dedicated section to:
-
-```text
-thesis-writing/paper-aaai/reports/P8_artifacts_supplement_report.md
-```
-
-covering:
-
-```text
-CausalPFN PDF verification
-Official publication verification
-Author/version reconciliation
-Normalized corpus path
-BibTeX entry
-Catalog row
-Checksum update
-Corpus validation
-README count update
-Citation-plan update
-CIT-GAP-001 resolution
-Future thesis-integration readiness
-Immediate AAAI citation usage
-G-EVD-01 resolution
-Remaining scientific boundaries
-```
-
-P8 may end with:
-
-```text
-READY FOR STAGE P9 — PAPER AND SUPPLEMENT ARTIFACTS COMPLETE
-```
-
-only when both the original P8 artifact requirements and this CausalPFN ingestion extension pass.
+* build succeeds;
+* citations and references remain resolved;
+* Figure 1 is embedded correctly;
+* no float collision or clipping occurs;
+* US Letter and anonymous AAAI formatting remain intact;
+* no scientific content outside Figure 1/caption changed;
+* the Abstract remains empty.
 
 Do not stage, commit, or push.

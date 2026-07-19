@@ -12,4 +12,14 @@ All checks use checked aggregate files only; no patient-level artifact was opene
 | Matching appendix table | 19 rows | `checked_matching_results.csv` original CausalForest supporting selection plus original `checked_matching_failures.csv` supporting appendix | Signed six-decimal successful effects; failures explicit | PASS: 15 successes + 4 failures; failures are never rendered as zero |
 | Diagnostic coverage | aggregate availability | original supporting rows in `checked_sensitivity_candidates.csv` and `checked_permutation_candidates.csv` | Recorded status classes, not magnitudes | PASS: source/provenance classes retained; CausalPFN unavailable stages distinct |
 
-The deterministic supplement generator validates every stated row count and aborts on missing or duplicate selections. It retains source precision internally and emits only documented display rounding. Figure 2 was regenerated twice with SHA-256 `335a8685d0794f68f158b98110d94b2a43d5617c8a1452c0787a872ee9055423`; Figure 1 was regenerated twice with SHA-256 `e194745a0e36e1edaba5ba2f8127680ef33e3aecebdd5b13e0c06afb2bda1e44`.
+The deterministic supplement generator validates every stated row count and aborts on missing or duplicate selections. It retains source precision internally and emits only documented display rounding. Figure 2 was regenerated twice with SHA-256 `335a8685d0794f68f158b98110d94b2a43d5617c8a1452c0787a872ee9055423`; the current repaired Figure 1 was regenerated twice with SHA-256 `3c1c0c63e04dfdba9d7aada3245948f3de59add7e6eb2bd4db1ded99d814c836`.
+
+## P8 Figure 1 narrow-repair checks
+
+| Check | Result |
+| --- | --- |
+| Separate per-dataset exports | PASS: each MIMIC-III/PhysioNet lane has its own `Normalize exports` box. |
+| Separate per-dataset aggregation | PASS: each lane has its own `5-source vote`; no arrow connects either vote to the other lane. |
+| No pooling implication | PASS: each path ends in its own estimator-ready resource; only completed resources connect to the shared, explicitly separate-execution method interface. |
+| Final-size readability | PASS: source primary labels are 10.0 pt, headings 10.2 pt, and gate/note labels 9.3 pt; at the 0.99-text-width embedding these remain approximately 9.5 pt, 9.7 pt, and 8.9 pt. |
+| Vector/font check | PASS: the repaired PDF contains embedded CID TrueType fonts and no Type 3 font. |

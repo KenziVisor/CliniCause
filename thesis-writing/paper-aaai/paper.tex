@@ -181,12 +181,12 @@ resources.
   \includegraphics[width=0.99\textwidth]{figures/figure1_pipeline.pdf}
   \caption{CliniCause resource construction.  Dataset-specific preprocessing and
   deterministic proxy rules transform irregular ICU records; four time-series
-  models add normalized predictive annotations, and deterministic five-source
+  models add normalized predictive annotations, and per-dataset deterministic five-source
   aggregation packages the aligned proxy layer with outcomes, observed
   covariates, and inspectable DAG metadata.  The design-time LLM proposes
   candidates only; deterministic selected source governs runtime. Validation
   gates protect schema, cohort, prediction-export, aggregation, and provenance
-  handoffs before dataset-specific estimator-ready resources are used for
+  handoffs before separate dataset-specific estimator-ready resources are used for
   observational analysis.}
   \label{fig:pipeline}
 \end{figure*}
