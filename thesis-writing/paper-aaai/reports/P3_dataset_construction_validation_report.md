@@ -13,7 +13,7 @@
 | Worktree state before work | Modified `prompt.txt` only. It was treated as pre-existing user work and was not edited, staged, restored, normalized, or committed. |
 | STraTS nested revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
 | Causal nested revision | `379ed9b75107b52007957ba5908e507b719c9247` |
-| Commit SHA | Pending content commit at report drafting; to be replaced by the narrow post-commit evidence update allowed by the P3 protocol. |
+| Commit SHA | `60504040c86721782e6fdf8a29971c8b1e0ab9e4` (`paper: draft dataset construction and validation`); this is the five-file P3 content commit. |
 
 ## Canonical plan and sources inspected
 
