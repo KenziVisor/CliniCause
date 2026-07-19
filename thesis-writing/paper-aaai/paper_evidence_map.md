@@ -1,6 +1,6 @@
 # CliniCause AAAI-27 paper evidence map
 
-Status: P0/P0A/P2 baseline plus P3--P4 manuscript claim activation, 2026-07-19
+Status: P0/P0A/P2 baseline plus P3--P5 manuscript claim activation, 2026-07-19
 
 Scope: evidence control for the AAAI-27 manuscript; this file is not manuscript prose.
 Canonical plan: `clinicause_aaai27_paper_operational_plan.md`.
@@ -47,6 +47,20 @@ The baseline is intentionally descriptive. The current root and nested revisions
 | STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
 | Causal repository revision | `379ed9b75107b52007957ba5908e507b719c9247` |
 | Repository policy | User explicitly deferred cleanup; tracked auxiliaries are preserved and may be regenerated, never deleted |
+
+### P5 stage baseline
+
+| Item | P5 value |
+|---|---|
+| Current HEAD before work | `b604d68fdf85aa278d80c3f8916c9fd1ef837bcc` (`AAAI p4`) |
+| Branch | `main` |
+| Last two commits inspected | `b604d68` (`AAAI p4`) and `14337a2` (`AAAI P3`) |
+| Accepted P4 commit | `b604d68fdf85aa278d80c3f8916c9fd1ef837bcc` |
+| Worktree before P5 | Modified `prompt.txt` only; protected user work with no overlap with permitted P5 paths |
+| STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
+| Causal repository revision | `379ed9b75107b52007957ba5908e507b719c9247` |
+| P5 numerical authority | Checked result CSVs under `thesis-writing/results/`; prompt values were not used as evidence |
+| Figure 2 selection | Original sampling only; estimator-specific main-text selection statuses; exactly 19 combinations and three estimators required |
 
 ### Evidence-packet hashes
 
@@ -273,6 +287,39 @@ P4 uses the same drafting statuses as P3: **SUPPORTED**, **SUPPORTED WITH QUALIF
 
 `chernozhukov2018dml`, `wager2018causalforest`, `athey2019grf`, and `oprescu_et_al_2019_econml` are present in `literature/metadata/references.bib` and support only the DML, causal-forest, and implementation-family descriptions in Section 4.2. No CausalPFN citation or unsupported CausalPFN architecture/theory claim was added.
 
+### P5 manuscript claim register
+
+P5 activates the checked numerical Results claims below. Causal-source dataset
+spellings are `mimic` and `physionet`; predictive-source spellings are
+`mimic_iii` and `physionet_2012`.
+
+| Claim ID | Manuscript claim/function | Exact manuscript location | Highest-authority source and selection predicate | Status | Local qualification / artifact link |
+|---|---|---|---|---|---|
+| C56 | Resources contain 26,845 MIMIC-III and 7,993 PhysioNet analysis records and nine and ten admitted exposures | Sec. 5 opening | `checked_cohort_candidates.csv`: original causal-analysis model-row candidates; `checked_cate_candidates.csv`: original main-text rows grouped by dataset/treatment | SUPPORTED | Analysis records, not raw-source cohort sizes; Table 1 and Sec. 5 opening |
+| C57 | The evaluation sequence is applied separately and results are not pooled | Sec. 5 opening | `results_decision_register.md`, original-population/no-pooling freeze | SUPPORTED | Dataset-specific findings; no pooled clinical replication |
+| C58 | Table 2 contains all eight selected held-out predictive rows and all four metrics | Sec. 5.1, Table 2 | `checked_predictive_metrics.csv`: `selection_status == PRIMARY_MAIN_TEXT`, exactly 8 rows; fields `loss`, `auroc`, `auprc`, `minrp` | SUPPORTED WITH QUALIFICATION | Three-decimal display; point estimates only; no uncertainty/significance claim |
+| C59 | STraTS leads all four MIMIC-III metrics and GRU-D leads all four PhysioNet metrics | Sec. 5.1, paragraphs 1--2 and Table 2 | C58 predicate; per-dataset minimum loss and maximum AUROC/AUPRC/minRP | SUPPORTED WITH QUALIFICATION | Archived leadership, not statistical superiority |
+| C60 | STraTS MIMIC-III AUROC/AUPRC are 0.905/0.869 and GRU-D PhysioNet AUROC/AUPRC are 0.918/0.905 | Sec. 5.1, paragraph 2 | C58 rows and fields; full precision retained in P5 audit | SUPPORTED WITH QUALIFICATION | Rounded point metrics against rule-derived targets |
+| C61 | All nine MIMIC-III primary Forest summaries are positive; nine of ten PhysioNet summaries are positive and shock is negative | Sec. 5.2, paragraph 1 and Figure 2 | `checked_cate_candidates.csv`: `sampling_condition == original`, `estimator == CausalForestDML`, `selection_status == PRIMARY_MAIN_TEXT`; exactly 19 rows | SUPPORTED WITH QUALIFICATION | Mean model-estimated CATE over analyzed sample; no intervention/clinical recommendation claim |
+| C62 | Largest primary summaries are MIMIC cardiac 0.220 and inflammation/sepsis 0.161; PhysioNet renal 0.120, cardiac 0.112, global 0.108; shock is -0.014 | Sec. 5.2, paragraph 1 | C61 predicate; decreasing full-precision `mean_cate` within dataset | SUPPORTED WITH QUALIFICATION | Three-decimal descriptive ranking |
+| C63 | CausalForestDML and LinearDML agree in direction for 19/19 comparisons | Sec. 5.2, paragraph 2 and Figure 2 caption | Join original `PRIMARY_MAIN_TEXT` Forest and `SECONDARY_MAIN_TEXT` Linear rows on dataset/treatment; compare full-precision signs; 19 joins | SUPPORTED WITH QUALIFICATION | Direction only; not magnitude equality or identification |
+| C64 | CausalPFN reproduces the prevailing direction in 18/19 comparisons | Sec. 5.2, paragraph 3 and Figure 2 caption | Join C63 rows to original `EXPLORATORY_MAIN_TEXT` CausalPFN rows; compare all signs; 19 complete joins | SUPPORTED WITH QUALIFICATION | Complete exposure set, not favorable subset; smaller diagnostic package |
+| C65 | PhysioNet shock is the sole exception: Forest -0.014, Linear -0.027, PFN 0.004; matching is positive 0.010 | Sec. 5.2, paragraph 4 and Figure 2 | `checked_cate_candidates.csv`: original PhysioNet `LAT_SHOCK`, three estimator-specific main-text rows; `checked_matching_results.csv`: original PhysioNet `LAT_SHOCK` | SUPPORTED WITH QUALIFICATION | Matching is a descriptive outcome difference; disagreement stays visible |
+| C66 | Figure 2 includes all 19 original-cohort combinations and all 57 estimator values, ordered by decreasing Forest value | Figure 2 and generation script | `checked_cate_candidates.csv`: original estimator-specific main-text statuses; require 19 combinations, 3 expected estimators, no duplicates/missing rows | SUPPORTED | Full-precision vector plot; source-read rather than transcribed matrix |
+| C67 | Matching succeeds for 8/9 MIMIC and 7/10 PhysioNet exposures (15/19), and 14/15 share the Forest direction | Sec. 5.3, paragraph 1 | `checked_matching_results.csv`: original, 15 rows; `checked_matching_failures.csv`: original, 4 rows; sign join to C61 | SUPPORTED WITH QUALIFICATION | Failures are absent usable binary representations, never zero effects |
+| C68 | Original/downsampled direction is preserved in 55/57; sign changes are PhysioNet LinearDML coagulation/hematologic dysfunction and PhysioNet CausalPFN shock | Sec. 5.3, paragraph 2 | Join 57 original main-text CATE rows to 57 `outcome-downsampled`/`ROBUSTNESS_APPENDIX` rows on dataset/treatment/estimator; compare full-precision signs | SUPPORTED WITH QUALIFICATION | Different population; magnitudes are not original-population estimates |
+| C69 | DML sensitivity evidence spans recorded provenance classes; permutations are disruption checks; equivalent PFN stages are unarchived | Sec. 5.3, paragraph 2 | `checked_sensitivity_candidates.csv`; `checked_permutation_candidates.csv`; `results_source_packet.md` | SUPPORTED WITH QUALIFICATION | Coverage nonuniform; provenance/status classes remain distinct |
+| C70 | Shared workflow operates across both resources while predictive leadership, effect ordering, and at least one primary sign differ | Sec. 5.3, paragraph 2 | C57, C59, C61--C69 and their checked sources | SUPPORTED WITH QUALIFICATION | Workflow portability, not construct equivalence or pooled replication |
+
+### P5 Table 2 and Figure 2 evidence
+
+| Artifact | Content and exact source | Validation/status |
+|---|---|---|
+| Table 2 | All 8 `PRIMARY_MAIN_TEXT` rows in `checked_predictive_metrics.csv`; model, dataset, loss, AUROC, AUPRC, and minRP; full precision rounded to three decimals | 8 rows and 32 metric cells; best values recomputed with lower loss/higher other metrics; SUPPORTED WITH QUALIFICATION |
+| Figure 2 | All 57 original main-text CATE rows in `checked_cate_candidates.csv`, using estimator-specific statuses; ordered by decreasing CausalForestDML within panel | Script rejects duplicates, missing estimators, wrong dataset counts, and totals other than 19 combinations; 19/19 DML and 18/19 all-three signs rechecked; SUPPORTED WITH QUALIFICATION |
+
+No new citation key was activated in P5. No unsupported CausalPFN methodological citation or attribution was added.
+
 ## 6. Current validation-contract evidence
 
 Static inspection found implementation and test cases for canonical identifier normalization, duplicate rejection, exact cohort equality (including allowed reordering and rejected missing/extra IDs), split integrity, prediction-schema and probability consistency, malformed prediction rejection, metadata/fingerprint validation, manifest and receipt handling, reuse checks, derived seeds, mutation detection, and dataset isolation. This supports a paper/checklist statement only in the form “the current code contains these validation contracts.”
@@ -324,9 +371,12 @@ It does **not** support either “the archived experiments ran this exact code�
 - P0A: paper workspace and author kit are inventoried and hashed; no pre-existing paper artifacts were overwritten.
 - P1: exact kit behavior and current official AAAI-27 constraints are recorded in `aaai_structure_notes.md`.
 - P2: protected facts, result families, claim locks, conflicts, and actionable gates are recorded here.
+- P5: all Results claims, Table 2 values, and the complete Figure 2 matrix are checked and linked through C56--C70 and the P5 numerical audit.
 
 READY FOR STAGE P0A — PAPER BASELINE FROZEN
 
 READY FOR STAGE P1 — AAAI GENRE AND FORMAT STUDIED
 
 READY FOR STAGE P2 — CLAIMS AND EVIDENCE LOCKED
+
+READY FOR STAGE P6 — RESULTS DRAFTED AND NUMERICALLY MAPPED

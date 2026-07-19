@@ -1,11 +1,11 @@
-# CliniCause AAAI-27 — Stage P4: Write the Empirical Evaluation Section
+# CliniCause AAAI-27 — Stage P5: Write and Numerically Audit the Results Section
 
 ## Model and reasoning
 
 * **Model:** GPT-5.6
 * **Reasoning effort:** High
 
-This stage requires scientific synthesis across the thesis, checked experiment records, estimator implementations, and the paper evidence map. Use confident technical writing while preserving the exact evidentiary boundaries.
+This stage requires exact numerical extraction, cross-source validation, result-led scientific writing, and production of a legible estimator-comparison figure. Do not use Extra High unless authoritative result sources materially conflict.
 
 ---
 
@@ -14,29 +14,39 @@ This stage requires scientific synthesis across the thesis, checked experiment r
 Implement:
 
 ```text
-Stage P4 — Empirical Evaluation
+Stage P5 — Results Draft
 ```
 
-Write the complete manuscript section that explains how the two CliniCause causal-analysis datasets are empirically characterized.
+Write the complete Results section of the AAAI-27 manuscript using only approved, checked repository evidence.
 
-This stage covers experimental design and evaluation methodology. It must not report the numerical results, which belong in Stage P5.
+This stage must deliver:
+
+* the complete Section 5;
+* the full predictive-results table;
+* the cross-estimator comparison figure;
+* the headline CausalPFN finding;
+* the primary effect patterns;
+* the matching and downsampling findings;
+* a durable numerical audit in the P5 report.
 
 ---
 
 ## User-approved repository policy
 
-The user has explicitly decided to postpone repository cleanup.
+The user is temporarily committing all generated and modified files and has deferred repository cleanup.
 
 Therefore:
 
 * do not remove tracked LaTeX auxiliary files;
-* do not add or revise `.gitignore`;
-* do not revert or repair earlier mixed-scope commits;
+* do not add or modify `.gitignore`;
+* do not repair or rewrite earlier mixed-scope commits;
 * do not clean the repository;
-* do not treat tracked build artifacts as a blocker;
+* do not treat generated build files as a blocker;
 * preserve all pre-existing work.
 
-The user will commit the resulting changes. Do not commit or push in this task.
+The user will commit the work.
+
+Do not stage, commit, push, reset, restore, revert, or clean anything.
 
 ---
 
@@ -56,19 +66,20 @@ thesis-writing/paper-aaai/paper_evidence_map.md
 thesis-writing/paper-aaai/aaai_structure_notes.md
 thesis-writing/paper-aaai/paper_build_report.md
 thesis-writing/paper-aaai/reports/P3_dataset_construction_validation_report.md
+thesis-writing/paper-aaai/reports/P4_empirical_evaluation_report.md
 ```
 
-Treat the operational plan as authoritative for:
+The operational plan is authoritative for:
 
-* contribution hierarchy;
-* section order;
-* terminology;
-* claim strength;
+* the resource-first paper framing;
+* the result hierarchy;
+* the protected numerical claims;
 * CausalPFN positioning;
-* primary versus robustness analyses;
-* page allocation;
-* evidence gates;
-* optimistic but precise tone.
+* the original-versus-downsampled hierarchy;
+* the no-pooling policy;
+* claim strength;
+* optimistic but precise tone;
+* the page and visual budget.
 
 Do not redesign the paper.
 
@@ -76,23 +87,21 @@ Do not redesign the paper.
 
 ## Accepted scientific baseline
 
-The accepted P3 scientific content commit is:
+The accepted current P4 commit is:
+
+```text
+b604d68fdf85aa278d80c3f8916c9fd1ef837bcc
+AAAI p4
+```
+
+The accepted P3 content commit is:
 
 ```text
 60504040c86721782e6fdf8a29971c8b1e0ab9e4
 paper: draft dataset construction and validation
 ```
 
-The P3 evidence update is:
-
-```text
-a851e3829f4a46c4b9f51c45b2a3d28e1b765625
-docs: record P3 commit evidence
-```
-
-More recent commits may include prompt or build-artifact changes. Inspect them, but do not treat them as scientific changes unless `paper.tex`, the evidence map, or the P3 report actually changed.
-
-Verify the current repository state rather than assuming these are still the latest commits.
+Verify the repository state locally. Do not assume the commit list or worktree is unchanged.
 
 ---
 
@@ -108,7 +117,7 @@ git log -8 --oneline --decorate
 git submodule status
 ```
 
-Inspect the last two commits in full:
+Inspect the latest two commits:
 
 ```bash
 git show --stat --oneline HEAD
@@ -116,10 +125,13 @@ git show --stat --oneline HEAD~1
 git diff --name-status HEAD~2..HEAD
 ```
 
-Also inspect the accepted P3 content commit:
+Inspect the accepted P4 manuscript changes:
 
 ```bash
-git show --stat --oneline 60504040c86721782e6fdf8a29971c8b1e0ab9e4
+git diff \
+  14337a293eee03a24216c299c312ad5c7d61b3a7 \
+  b604d68fdf85aa278d80c3f8916c9fd1ef837bcc \
+  -- thesis-writing/paper-aaai/paper.tex
 ```
 
 Record:
@@ -128,424 +140,183 @@ Record:
 * branch;
 * dirty files;
 * relevant nested revisions;
-* whether any manuscript file changed after P3;
-* whether any pre-existing user changes overlap this task.
+* files changed after P4;
+* whether any user changes overlap the permitted P5 files.
 
-Do not reset, restore, clean, delete, normalize, stage, commit, or push.
+Do not alter unrelated work.
 
 ---
 
 # Objective
 
-Replace the current Evaluation placeholders with a complete polished section:
+Replace the current Results placeholders with a complete polished section:
 
 ```text
-4 Empirical Evaluation
+5 Results
 ```
 
-The section should contain these scientific functions:
+Use this structure:
 
 ```text
-4.1 Prediction Tasks and Metrics
-4.2 Effect Estimators and Cross-Estimator Evaluation
-4.3 Matching and Robustness Diagnostics
+5.1 Predictive Characterization
+5.2 Effect Patterns and Estimator Agreement
+5.3 Robustness and Cross-Dataset Findings
 ```
 
-The exact subsection titles may be refined for AAAI readability, but all three functions must remain.
+A short resource-oriented opening paragraph may appear directly under the Section 5 heading before Subsection 5.1.
 
-The section must allow a reviewer to understand:
+The section must answer:
 
-* what is evaluated;
-* which experimental units and populations are primary;
-* which models and estimators are used;
-* which metrics and summaries are reported;
-* how cross-estimator agreement is assessed;
-* how matching and robustness analyses complement the primary analyses;
-* what role CausalPFN plays;
-* what is prespecified versus result-selected.
+1. What resources were empirically characterized?
+2. Which predictive model led each dataset?
+3. What were the primary CausalForestDML patterns?
+4. How strongly did LinearDML agree?
+5. How strongly did CausalPFN agree?
+6. What was the central disagreement?
+7. What did matching show?
+8. How stable were directions under outcome downsampling?
+9. What cross-dataset conclusions are supported?
 
 ---
 
-# Source hierarchy
+# Evidence hierarchy
 
-Use the highest-authority available source for every statement.
+## Level 1 — Checked result sources
 
-## Level 1 — Checked empirical evidence
+Use the checked sources under:
+
+```text
+thesis-writing/results/
+```
+
+Locate the authoritative files for:
+
+* primary cohort counts;
+* predictive metrics;
+* predictive selection status;
+* original-cohort CATE values for all three estimators;
+* exposure prevalence;
+* matching results;
+* matching failures;
+* sensitivity results and provenance classes;
+* treatment permutations;
+* outcome permutations;
+* original-versus-downsampled comparisons;
+* result manifests;
+* checksums;
+* result-admission decisions.
+
+Likely source families include checked CSV files and the result-source packet. Use the actual paths found in the repository.
+
+The checked result tables override prose summaries when values differ.
+
+## Level 2 — Decision and provenance records
 
 Inspect:
 
 ```text
-thesis-writing/results/
+thesis-writing/planning/
 thesis-writing/reproducibility/
 thesis-writing/audit/
 thesis-writing/logs/
-thesis-writing/planning/
 ```
 
-Locate and use the authoritative sources for:
+Use these for:
 
-* predictive metrics;
-* model–dataset combinations;
-* exposure lists;
-* original and downsampled analysis populations;
-* estimator families;
-* matching configuration;
-* sensitivity outputs;
-* permutation outputs;
-* estimator comparison rules;
-* result-admission hierarchy;
-* manifests and result-source tables.
+* primary-versus-robustness hierarchy;
+* approved result selection;
+* source status;
+* provenance limitations;
+* display and interpretation rules.
 
-## Level 2 — Thesis methodology
+## Level 3 — Thesis
 
-Inspect the relevant chapters, especially:
+Inspect:
 
 ```text
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
-thesis-writing/thesis/chapters/07_causal_methodology.tex
-thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
 thesis-writing/thesis/chapters/10_results.tex
 thesis-writing/thesis/chapters/11_discussion.tex
 ```
 
 Use actual filenames if they differ.
 
-The Results and Discussion chapters may clarify the implemented protocol, but do not copy result values into the Evaluation section.
+The thesis can guide concise interpretation, but all numbers must be rechecked against Level 1 sources.
 
-## Level 3 — Active implementation
-
-Read, without editing:
-
-```text
-STraTS/
-causal-irregular-time-series/
-router.py
-tests/
-```
-
-Use implementation only to verify current method contracts.
-
-Do not attribute current repaired implementation to archived result production unless lineage proves that connection.
-
-## Level 4 — Approved bibliography
+## Level 4 — Existing manuscript and evidence map
 
 Use:
 
 ```text
-thesis-writing/literature/metadata/references.bib
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/paper.tex
 ```
 
-Do not invent citation keys.
-
-Do not add a CausalPFN methodological citation unless a verified primary source already exists in the approved repository bibliography.
-
-If it is absent, retain the existing evidence gate and describe CausalPFN empirically without unsupported novelty or theory attribution.
+Preserve the terminology and estimator hierarchy established in Sections 3 and 4.
 
 ---
 
-# Scientific hierarchy
+# Protected headline findings
 
-The Evaluation section must reflect this hierarchy:
+Verify every value before inserting it.
 
-## Primary data condition
-
-```text
-Original, non-downsampled causal-analysis populations
-```
-
-These define the main empirical analysis.
-
-## Primary causal estimator
+The accepted headline findings are:
 
 ```text
-CausalForestDML
+Primary causal-analysis records:
+- MIMIC-III: 26,845
+- PhysioNet 2012: 7,993
+
+Admitted proxy-state exposures:
+- MIMIC-III: 9
+- PhysioNet 2012: 10
+
+Predictive models:
+- STraTS
+- GRU
+- GRU-D
+- TCN
+
+MIMIC-III archived predictive leader:
+- STraTS across test loss, AUROC, AUPRC, and minRP
+
+PhysioNet archived predictive leader:
+- GRU-D across test loss, AUROC, AUPRC, and minRP
+
+CausalForestDML versus LinearDML directional agreement:
+- 19/19 dataset–exposure comparisons
+
+Agreement across CausalForestDML, LinearDML, and CausalPFN:
+- 18/19 dataset–exposure comparisons
+
+Central disagreement:
+- PhysioNet shock
+
+Original-versus-downsampled directional preservation:
+- 55/57 estimator–dataset–exposure comparisons
 ```
 
-## Main comparator
+Do not insert a value merely because it appears in this prompt. Revalidate it against the checked repository source.
 
-```text
-LinearDML
-```
-
-## Complementary triangulation estimator
-
-```text
-CausalPFN
-```
-
-CausalPFN must be visible and important.
-
-Do not reduce it to a brief exploratory footnote.
-
-Present its role positively:
-
-* it provides a distinct modeling perspective;
-* it is evaluated across the same prespecified dataset–exposure comparisons;
-* it enables cross-estimator directional triangulation;
-* later Results will show that it agrees with the two DML estimators in 18 of 19 comparisons.
-
-Do not report the `18/19` result in this Evaluation section unless it is needed in a forward-looking sentence. Prefer to reserve the numerical agreement for Results.
-
-One precise boundary is sufficient:
-
-> CausalPFN is treated as a complementary estimator because the archived pipeline contains less complete estimator-specific sensitivity and permutation support for it than for the DML estimators.
-
-Do not repeatedly call it weak, preliminary, or marginal.
-
-## Robustness condition
-
-```text
-Outcome-downsampled analyses
-```
-
-These are robustness analyses, not co-primary populations.
-
-## Supporting analyses
-
-* matching;
-* sensitivity analysis;
-* treatment permutation;
-* outcome permutation;
-* empirical-support and availability checks.
+If an authoritative conflict appears, stop that claim, document the conflict, and use the report readiness status to request a narrow repair.
 
 ---
 
-# Required content
+# Result-writing rule
 
-## 4.1 Prediction Tasks and Metrics
-
-Explain the prediction evaluation clearly and compactly.
-
-Include:
-
-* a separate multi-label prediction task for each dataset;
-* deterministic proxy-state vectors as targets;
-* the four learned models:
-
-  * STraTS;
-  * GRU;
-  * GRU-D;
-  * TCN;
-* evaluation on archived held-out test outputs;
-* dataset-specific target sets;
-* no pooling between datasets;
-* archived selected model–dataset runs;
-* the exact reported predictive metrics.
-
-Verify the metric definitions from authoritative source code or thesis text before writing.
-
-Expected metrics include:
+Every substantive Results paragraph should follow:
 
 ```text
-binary cross-entropy test loss
-macro AUROC
-macro AUPRC
-macro minRP
+finding
+→ quantitative evidence
+→ scientific meaning
+→ one local boundary where necessary
 ```
 
-Define `minRP` correctly from the repository or thesis rather than guessing.
+Do not begin Results paragraphs with limitations.
 
-State how macro metrics handle degenerate proxy targets if this is explicitly documented.
+Use direct and confident language.
 
-Do not claim:
-
-* statistical significance;
-* universal superiority;
-* state-of-the-art performance;
-* clinical-label validation;
-* uncertainty estimates that were not archived.
-
-Use a single precise sentence to establish that prediction evaluates learnability and reproducibility of rule-derived constructs.
-
-Do not report the actual model scores in this subsection.
-
----
-
-## 4.2 Effect Estimators and Cross-Estimator Evaluation
-
-Define the observational analysis for each prespecified proxy-state exposure.
-
-Explain:
-
-* binary aggregated proxy-state exposure;
-* in-hospital mortality outcome;
-* exposure-specific observed adjustment variables selected through the project DAG;
-* separate analysis for every admitted exposure;
-* separate analysis for MIMIC-III and PhysioNet;
-* no result-based exposure selection;
-* no numerical pooling across datasets;
-* original populations as primary.
-
-Describe the three estimators:
-
-### CausalForestDML
-
-Present as the primary nonlinear heterogeneous-effect estimator.
-
-Describe only supported features, such as:
-
-* orthogonal or double-machine-learning adjustment;
-* flexible nuisance models;
-* heterogeneous conditional-effect estimation;
-* record-level model-estimated CATE outputs;
-* sample-level mean summary.
-
-Use the verified repository terminology and approved citation.
-
-### LinearDML
-
-Present as the main structured comparator.
-
-Explain that it supplies a different final-stage model form while preserving the DML adjustment framework.
-
-Its role is cross-model-form triangulation, not merely a fallback baseline.
-
-### CausalPFN
-
-Present as a complementary estimator from a distinct modeling paradigm.
-
-State confidently that it is included to test whether the main directional patterns are specific to the two DML estimators.
-
-Do not characterize its architecture, training corpus, theoretical properties, or novelty without a verified primary citation.
-
-Where supported, explain that all three estimators produce exposure-specific conditional-effect summaries over the analyzed records.
-
-### Reported effect quantity
-
-Define the quantity reported in Results precisely.
-
-The expected wording is close to:
-
-> For each dataset–exposure analysis, we summarize the fitted conditional estimates by their mean over the analyzed sample.
-
-Use the thesis or checked records to determine whether the paper should call this:
-
-```text
-mean model-estimated CATE
-sample mean of fitted conditional effects
-```
-
-Do not call it:
-
-```text
-risk ratio
-odds ratio
-unqualified ATE
-validated treatment effect
-```
-
-### Cross-estimator comparison protocol
-
-Explain that the main triangulation comparison evaluates:
-
-* sign or direction agreement;
-* all prespecified dataset–exposure pairs;
-* CausalForestDML versus LinearDML;
-* agreement across all three estimators;
-* explicit retention of disagreement cases.
-
-State that directional agreement is used as a concise robustness summary across different model forms.
-
-Also state once that agreement does not require equal magnitudes or prove identification.
-
----
-
-## 4.3 Matching and Robustness Diagnostics
-
-Explain the supporting analyses without reporting their numerical outcomes.
-
-### Matching
-
-Verify the implemented matching method.
-
-Describe, where supported:
-
-* binary matching representation;
-* Hamming-distance criterion;
-* progressive allowed-distance behavior;
-* matched-pair mortality difference;
-* sufficient-pair or availability warnings;
-* explicit failure when no usable matching representation remains.
-
-Call the result:
-
-```text
-descriptive matched-pair outcome difference
-```
-
-Do not call it an independent causal effect estimate unless the repository explicitly justifies that claim.
-
-### Sensitivity analysis
-
-Describe the available DML sensitivity analysis at the appropriate level.
-
-Distinguish where necessary:
-
-* estimator-native saved sensitivity output;
-* reconstructed sensitivity output;
-* partial or unavailable diagnostics.
-
-Do not imply that every exposure has identical sensitivity support.
-
-### Permutation diagnostics
-
-Explain:
-
-* treatment permutation;
-* outcome permutation;
-* their role as disruption-based sanity checks;
-* that they are not automatically formal randomization tests.
-
-State that these diagnostics are available for the DML analyses and not equivalently archived for CausalPFN.
-
-Do not phrase this as a failure of CausalPFN; describe it as a difference in the archived diagnostic package.
-
-### Outcome downsampling
-
-Explain:
-
-* outcome-positive records are retained;
-* outcome-negative records are sampled according to the implemented configuration;
-* the analysis population and mortality prevalence therefore change;
-* these analyses test qualitative robustness under a major class-balance perturbation;
-* they are not co-primary analyses;
-* their magnitudes are not directly interchangeable with original-population estimates.
-
-### Cross-dataset evaluation
-
-End the section by emphasizing that applying the full evaluation sequence to both datasets tests workflow portability under heterogeneous data contracts.
-
-State positively that:
-
-* the analytical sequence is shared;
-* definitions and results remain dataset specific;
-* cross-dataset evidence is compared but not pooled.
-
----
-
-# Writing and tone policy
-
-Write in polished AAAI manuscript style.
-
-The section should be:
-
-* direct;
-* compact;
-* technically confident;
-* methodologically explicit;
-* optimistic about what the resources enable.
-
-Do not scatter limitations into every paragraph.
-
-Preferred pattern:
-
-1. state the method positively;
-2. define the comparison;
-3. add one precise boundary where required;
-4. continue.
-
-Avoid phrases such as:
+Avoid:
 
 ```text
 we merely
@@ -554,64 +325,420 @@ we just
 preliminary
 tentative
 unfortunately
-despite these severe limitations
 ```
 
 Do not overstate clinical or causal interpretation.
 
 ---
 
-# Page budget
+# Section opening — Resource-oriented result context
 
-Target for the complete Evaluation section:
+Open Section 5 with a compact paragraph that reconnects the empirical results to the resource contribution.
 
-```text
-0.85–1.10 AAAI technical-content pages
-```
+State that:
 
-Target approximately:
+* the two validated causal-analysis resources contain 26,845 MIMIC-III and 7,993 PhysioNet analysis records;
+* they cover nine and ten admitted proxy-state exposures, respectively;
+* the full evaluation sequence was applied separately to both;
+* results remain dataset specific and are not numerically pooled.
 
-* 6–9 substantive paragraphs;
-* 650–850 prose words;
-* no new full-width figure;
-* no large table.
-
-A compact evaluation-design table may be added only if it clearly saves space and improves comprehension. Do not add one by default.
-
-Do not compress through formatting tricks.
-
-Do not change:
-
-* margins;
-* font size;
-* line spacing;
-* column width;
-* float spacing;
-* AAAI style settings.
+Do not repeat the full Table 1 description.
 
 ---
 
-# Section integration
+# 5.1 Predictive Characterization
 
-Update the current manuscript structure so that:
+## Required prose
+
+Write two compact paragraphs.
+
+### Paragraph 1 — Headline comparison
+
+State confidently:
+
+> STraTS led all four archived MIMIC-III test metrics, whereas GRU-D led the corresponding PhysioNet metrics.
+
+Explain the scientific meaning:
+
+* the strongest representation differed by dataset;
+* representation choice depends on source-specific variables, missingness, sampling, and proxy definitions;
+* the experiment supports dataset-dependent architecture selection.
+
+Do not claim statistical superiority.
+
+### Paragraph 2 — Metric-level context
+
+Summarize the most important metric comparisons without narrating all 32 cells.
+
+Use exact values from Table 2.
+
+Mention, at minimum:
+
+* MIMIC-III STraTS AUROC and AUPRC;
+* PhysioNet GRU-D AUROC and AUPRC;
+* that within each dataset the same model led loss, AUROC, AUPRC, and minRP.
+
+State once that these are archived point estimates against rule-derived targets.
+
+Do not repeat the full limitations discussion from Section 4.
+
+---
+
+# Table 2 — Predictive Results
+
+Replace the current predictive placeholder with a complete two-column table.
+
+Use all eight model–dataset rows and all four metrics:
 
 ```text
-3 Constructing the CliniCause Datasets
-4 Empirical Evaluation
-5 Results
-6 Discussion
-7 Conclusion
+Dataset
+Model
+Test loss
+Test AUROC
+Test AUPRC
+Test minRP
 ```
 
-remains coherent.
+Expected checked display values are:
 
-Ensure the final paragraph of Section 3 transitions naturally into Section 4.
+```text
+MIMIC-III
+STraTS   0.348  0.905  0.869  0.795
+GRU      0.386  0.881  0.840  0.770
+GRU-D    0.404  0.884  0.841  0.773
+TCN      0.414  0.867  0.823  0.758
 
-Ensure the final paragraph of Section 4 prepares the reader for Results without previewing every numerical finding.
+PhysioNet 2012
+STraTS   0.341  0.915  0.877  0.818
+GRU      0.397  0.915  0.897  0.831
+GRU-D    0.331  0.918  0.905  0.835
+TCN      0.477  0.899  0.875  0.811
+```
 
-Do not edit scientific prose in Section 3 except for a very small transition repair that is strictly necessary.
+Revalidate every value.
 
-Record any such repair explicitly in the P4 report.
+Formatting requirements:
+
+* full-width `table*` unless a one-column version remains fully legible;
+* bold the best value in each dataset for each metric;
+* for loss, smaller is better;
+* for AUROC, AUPRC, and minRP, larger is better;
+* use three decimal places;
+* keep table text at 9 or 10 points;
+* do not use `\resizebox`;
+* use the AAAI caption convention;
+* caption must say these are archived selected held-out test results;
+* caption or nearby prose must state that no uncertainty or significance claim is implied.
+
+Do not omit loss or minRP unless the full table cannot fit legibly. If compression is required, document the decision and move omitted columns to a clearly marked supplement plan.
+
+---
+
+# 5.2 Effect Patterns and Estimator Agreement
+
+Write three or four result-led paragraphs.
+
+## Paragraph 1 — Primary CausalForestDML pattern
+
+Report:
+
+* all nine MIMIC-III mean model-estimated CATE summaries were positive;
+* nine of ten PhysioNet summaries were positive;
+* PhysioNet shock was negative.
+
+Use the exact checked values.
+
+Where space permits, identify the largest primary values:
+
+### Expected MIMIC-III leaders
+
+```text
+Cardiac strain: approximately 0.220
+Inflammation/sepsis: approximately 0.161
+```
+
+### Expected PhysioNet leaders
+
+```text
+Renal dysfunction: approximately 0.120
+Cardiac injury/strain: approximately 0.112
+Global severity: approximately 0.108
+```
+
+### Expected central negative value
+
+```text
+PhysioNet shock: approximately -0.014
+```
+
+Revalidate all values and construct names.
+
+Interpretation:
+
+* the resources contain systematic mortality-related variation across the implemented proxy-state and adjustment framework;
+* magnitude and ordering differ by dataset and construct.
+
+Use the established term:
+
+```text
+mean model-estimated CATE over the analyzed sample
+```
+
+Do not call these risk ratios, odds ratios, intervention effects, or treatment recommendations.
+
+## Paragraph 2 — DML agreement
+
+State prominently:
+
+> CausalForestDML and LinearDML agreed in direction for all 19 prespecified dataset–exposure comparisons.
+
+Frame this as:
+
+* complete directional concordance across nonlinear and linear final-stage DML models;
+* evidence that the sign pattern is not unique to one DML final-stage form.
+
+Do not claim equal magnitudes or identification.
+
+## Paragraph 3 — CausalPFN headline result
+
+This is a headline paragraph, not a footnote.
+
+State prominently:
+
+> CausalPFN reproduced the prevailing direction in 18 of 19 prespecified comparisons.
+
+Use confident positive framing:
+
+* it supplies strong directional triangulation from a distinct modeling perspective;
+* it demonstrates promise as a complementary estimator for the constructed resources;
+* the result is especially valuable because it is compared over the complete prespecified exposure set, not a favorable subset.
+
+Use one bounded sentence noting that its archived estimator-specific diagnostic package is less complete than the DML package.
+
+Do not repeatedly call CausalPFN exploratory.
+
+Do not add unsupported architecture, training, theory, novelty, or method-attribution claims.
+
+## Paragraph 4 — Informative exception
+
+Explain the PhysioNet-shock disagreement clearly:
+
+* CausalForestDML and LinearDML were negative;
+* CausalPFN was slightly positive;
+* the descriptive matching result was positive, if confirmed;
+* this is the sole three-estimator sign disagreement.
+
+Present the exception as scientifically informative:
+
+* it reveals model and support sensitivity;
+* it should remain visible rather than being resolved by estimator voting;
+* it motivates deeper analysis of proxy definition, support, adjustment assumptions, and estimator behavior.
+
+Do not describe the negative DML estimate as a clinically protective effect.
+
+---
+
+# Figure 2 — Cross-Estimator Agreement
+
+Replace the current Figure 2 placeholder with an actual paper-ready figure whenever the local environment permits.
+
+## Preferred figure
+
+Create a full-width two-panel horizontal dot plot:
+
+* left panel: nine MIMIC-III exposures;
+* right panel: ten PhysioNet exposures;
+* one row per exposure;
+* three markers per row:
+
+  * CausalForestDML;
+  * LinearDML;
+  * CausalPFN;
+* horizontal axis: mean model-estimated CATE;
+* visible zero reference line;
+* exact checked full-precision values as input;
+* concise human-readable proxy labels;
+* PhysioNet shock clearly visible;
+* magnitude differences preserved.
+
+Do not replace the values with signs only.
+
+## Ordering
+
+Within each dataset, use one stable, documented ordering:
+
+* either decreasing CausalForestDML value;
+* or the checked source order.
+
+State the ordering in the caption or generation script.
+
+Do not omit any of the 19 comparisons.
+
+## Visual design
+
+The figure must be:
+
+* readable in two-column width;
+* grayscale safe;
+* differentiated by both marker shape and color or line style;
+* legible at normal PDF zoom;
+* at least 9-point text at final placement;
+* vector PDF where possible;
+* free of clipped labels;
+* free of Type 3 fonts;
+* anonymous;
+* fully reproducible from checked repository sources.
+
+## Generation artifacts
+
+Preferred paths:
+
+```text
+thesis-writing/paper-aaai/figures/figure2_estimator_agreement.pdf
+thesis-writing/paper-aaai/figures/generate_figure2_estimator_agreement.py
+```
+
+The script must:
+
+* read the checked result source rather than transcribing the 19×3 matrix manually;
+* filter the original-sampling primary rows explicitly;
+* validate that exactly 19 dataset–exposure combinations and three estimators are present;
+* fail on duplicate or missing rows;
+* retain full precision for plotting;
+* avoid patient-level data;
+* use only checked aggregate result files;
+* document the input path and selection rule;
+* produce deterministic output.
+
+If Python or required plotting packages are unavailable:
+
+1. do not install packages;
+2. attempt a reproducible LaTeX-native vector implementation using already available permitted packages;
+3. if that is also unavailable, produce a compact complete estimator-agreement table in the main paper and retain a fully specified Figure 2 placeholder;
+4. document the exact blocker in the report.
+
+Do not fabricate a graphical artifact.
+
+## Caption
+
+The caption should state:
+
+* all 19 prespecified original-cohort comparisons are included;
+* CausalForestDML and LinearDML agree in 19/19;
+* all three estimators agree in 18/19;
+* PhysioNet shock is the three-estimator exception;
+* the figure preserves magnitude differences;
+* values are mean model-estimated CATE summaries over the analyzed samples.
+
+Do not turn the caption into a limitations paragraph.
+
+---
+
+# 5.3 Robustness and Cross-Dataset Findings
+
+Write two or three concise paragraphs.
+
+## Matching result
+
+Verify and report:
+
+* eight of nine MIMIC-III exposures produced a matching summary;
+* seven of ten PhysioNet exposures produced a matching summary;
+* therefore 15 of 19 comparisons were successful;
+* 14 of those 15 successful matching summaries shared the primary CausalForestDML direction.
+
+State that:
+
+* failed matching rows are support information, not zero effects;
+* the failures resulted from the absence of usable binary matching columns after preprocessing, if confirmed;
+* detailed failures and distances can move to the supplement.
+
+Name the four failed exposures only if space permits and all names are verified.
+
+## Outcome-downsampling result
+
+State prominently:
+
+> Direction was preserved in 55 of 57 original-versus-downsampled estimator–dataset–exposure comparisons.
+
+Explain:
+
+* this is broad sign stability under a substantial mortality-class perturbation;
+* every magnitude need not remain equal;
+* the two sign changes remain explicit.
+
+Identify the two sign-changing comparisons if the checked sources support concise naming.
+
+Do not interpret downsampled magnitudes as estimates for the original population.
+
+## Sensitivity and permutation evidence
+
+Include one compact result sentence or paragraph only when the checked sources support an unambiguous result.
+
+Possible content:
+
+* DML sensitivity evidence exists across several provenance classes;
+* treatment and outcome permutations provide disruption-based checks;
+* coverage is not uniform across all exposures;
+* equivalent diagnostic stages were not archived for CausalPFN.
+
+Do not enumerate every diagnostic in the main paper.
+
+Move full coverage tables to the supplement plan.
+
+## Cross-dataset synthesis
+
+End the Results section positively:
+
+* the same resource-construction and evaluation sequence operated across both datasets;
+* predictive leadership differed by dataset;
+* effect rankings and at least one sign differed by dataset;
+* estimator agreement was nevertheless broad;
+* this demonstrates workflow portability while preserving dataset-specific semantics.
+
+Do not claim pooled clinical replication.
+
+---
+
+# Numerical audit requirement
+
+Every rendered number must be entered into the P5 report’s numerical audit.
+
+For each number record:
+
+```text
+Audit ID
+Manuscript location
+Rendered value
+Full-precision source value
+Unit or scale
+Dataset
+Estimator/model
+Exposure, where applicable
+Sampling condition
+Source file
+Source row or selection predicate
+Source status
+Rounding rule
+Cross-check source
+Qualification
+```
+
+The audit must include:
+
+* all 32 predictive metric cells;
+* both cohort counts;
+* both exposure counts if rendered again;
+* every causal value displayed in prose;
+* all 57 values plotted in Figure 2;
+* 19/19;
+* 18/19;
+* matching success counts;
+* 14/15;
+* 55/57;
+* every named exception.
+
+Do not use manuscript prose or this prompt as a numerical source.
 
 ---
 
@@ -623,50 +750,102 @@ Update:
 thesis-writing/paper-aaai/paper_evidence_map.md
 ```
 
-For every new Evaluation claim:
+For every Results claim:
 
-* link it to an existing claim ID or create a new ID;
-* record exact manuscript location;
-* record authoritative source;
-* classify it as:
+* connect it to an existing claim ID or create a new claim ID;
+* record the exact manuscript location;
+* record the authoritative checked source;
+* record the full result-selection predicate;
+* classify support status;
+* record the local qualification;
+* link the claim to Table 2, Figure 2, or the relevant paragraph;
+* preserve existing TODO gates.
 
-  * supported;
-  * supported with qualification;
-  * gated;
-  * excluded;
-* record associated TODOs.
+At minimum map:
 
-At minimum, the evidence map must cover:
-
-* prediction task definition;
-* metric definitions;
-* archived test-evaluation scope;
-* original cohorts as primary;
-* all exposures retained;
-* CausalForestDML role;
-* LinearDML role;
-* CausalPFN role;
-* mean model-estimated CATE summary;
-* directional-agreement comparison;
-* matching definition;
-* sensitivity scope;
-* permutation scope;
-* downsampling design;
-* no-pooling policy.
-
-Do not insert unsupported method claims merely to make the section sound sophisticated.
+* resource counts;
+* all predictive metric rows;
+* dataset-specific model leadership;
+* MIMIC-III primary sign pattern;
+* PhysioNet primary sign pattern;
+* largest primary values;
+* 19/19 DML agreement;
+* 18/19 three-estimator agreement;
+* CausalPFN interpretation;
+* PhysioNet-shock disagreement;
+* matching availability and direction agreement;
+* 55/57 downsampling stability;
+* cross-dataset interpretation.
 
 ---
 
-# Mandatory stage report
+# Main-paper space budget
+
+Target for Section 5:
+
+```text
+1.45–1.75 AAAI technical-content pages
+```
+
+Target:
+
+* 7–9 substantive paragraphs;
+* Table 2;
+* Figure 2;
+* no additional main-paper table unless Figure 2 cannot be generated.
+
+The figure and table may float across nearby pages, but the combined manuscript architecture must remain viable for a seven-page technical-content limit.
+
+Do not compress by changing:
+
+* font size;
+* margins;
+* line spacing;
+* column width;
+* float spacing;
+* AAAI style settings.
+
+Do not use `\resizebox`.
+
+If the section exceeds the target, shorten repetitive interpretation before removing checked findings.
+
+---
+
+# Manuscript integration
+
+Preserve:
+
+```text
+3 Constructing the CliniCause Datasets
+4 Empirical Evaluation
+5 Results
+6 Discussion and Limitations
+7 Conclusion
+```
+
+Section 5 should follow directly from the Evaluation section.
+
+Do not revise Sections 3 or 4 except for one strictly necessary transition sentence. Record any such edit in the report.
+
+Do not write:
+
+* the Abstract;
+* the Introduction;
+* Related Work;
+* Discussion;
+* Conclusion.
+
+---
+
+# Mandatory P5 report
 
 Create:
 
 ```text
-thesis-writing/paper-aaai/reports/P4_empirical_evaluation_report.md
+thesis-writing/paper-aaai/reports/P5_results_report.md
 ```
 
-The report must be complete enough for review without copying Codex chat output.
+The report must be complete enough for independent validation without Codex chat output.
 
 Include:
 
@@ -677,90 +856,104 @@ Reasoning effort
 Current HEAD before work
 Branch
 Last two commits inspected
-Accepted P3 content commit
+Accepted P4 commit
 Worktree state before work
-Pre-existing tracked build artifacts
 Nested revisions
 Canonical plan read
-Sources inspected
+Checked result sources inspected
 Files changed
-Section title and subsection structure
+Section structure
 Paragraph count
 Approximate prose word count
 Measured PDF page footprint
-Prediction-task definition
-Verified metric definitions
-Estimator roles
-Reported effect quantity
-Cross-estimator comparison protocol
-CausalPFN treatment
-Matching protocol
-Sensitivity protocol
-Permutation protocol
-Downsampling protocol
-Cross-dataset policy
+Table 2 structure
+Table 2 numerical source
+Figure 2 generation method
+Figure 2 input source and filter
+Figure 2 row-count validation
+Figure 2 estimator-count validation
+Figure 2 visual inspection
+Primary CausalForestDML findings
+LinearDML agreement result
+CausalPFN agreement result
+PhysioNet-shock result
+Matching result
+Downsampling result
+Sensitivity/permutation summary
+Cross-dataset result
 Citation keys used
 Evidence-map changes
+Complete numerical audit
+Rounding policy
+Source conflicts
 TODO-EVIDENCE items
 TODO-RUNTIME items
 TODO-RELEASE items
-Source conflicts
 Build command
 Build result
 PDF page count
 PDF page size
+Font validation
 LaTeX warnings
 Visual inspection findings
 Protected-file verification
+Repository-cleanup deferral
+No-commit/no-push verification
 Readiness decision
 ```
 
 The report must explicitly state:
 
-* no numerical Results prose was written;
-* the Abstract was not written;
-* P3’s scientific contribution hierarchy was preserved;
-* CausalPFN was presented as a meaningful complementary estimator;
-* no unsupported CausalPFN methodological citation was invented;
-* repository cleanup was intentionally deferred by user decision;
-* no experiments or model runs were performed;
-* no commit or push was performed.
+* every rendered number was traced to a checked source;
+* no number was copied from the prompt without verification;
+* no favorable exposure or estimator subset was selected;
+* all 19 original-cohort comparisons appear in Figure 2 or its accepted fallback;
+* CausalPFN is presented prominently;
+* no unsupported CausalPFN methodological citation was added;
+* matching failures are not interpreted as zero effects;
+* no experiment or model run was performed;
+* no commit or push was performed;
+* repository cleanup remains deferred by user decision.
 
-End the report with exactly one of:
+End with exactly one of:
 
 ```text
-READY FOR STAGE P5 — EMPIRICAL EVALUATION DRAFTED
+READY FOR STAGE P6 — RESULTS DRAFTED AND NUMERICALLY MAPPED
 ```
 
 or:
 
 ```text
-NARROW REPAIR REQUIRED BEFORE STAGE P5 — <EXACT DEFECT>
+NARROW REPAIR REQUIRED BEFORE STAGE P6 — <EXACT DEFECT>
 ```
 
 or:
 
 ```text
-BLOCKED BEFORE STAGE P5 — <EXACT REASON>
+BLOCKED BEFORE STAGE P6 — <EXACT REASON>
 ```
 
 ---
 
 # Allowed edits
 
-Edit only:
+You may edit or create only:
 
 ```text
 thesis-writing/paper-aaai/paper.tex
 thesis-writing/paper-aaai/paper.pdf
 thesis-writing/paper-aaai/paper_build_report.md
 thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/reports/P4_empirical_evaluation_report.md
+thesis-writing/paper-aaai/reports/P5_results_report.md
+thesis-writing/paper-aaai/figures/figure2_estimator_agreement.pdf
+thesis-writing/paper-aaai/figures/generate_figure2_estimator_agreement.py
 ```
 
-Creating the P4 report is allowed.
+If an existing canonical figure-generation location exists, use it instead of creating a duplicate path and record that decision.
 
-LaTeX build auxiliaries may be regenerated as part of compilation. Do not clean, remove, or reorganize them.
+Tracked LaTeX auxiliaries may be regenerated during compilation.
+
+Do not clean or reorganize them.
 
 ---
 
@@ -774,6 +967,7 @@ prompt.txt
 thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan.md
 thesis-writing/paper-aaai/aaai_structure_notes.md
 thesis-writing/paper-aaai/reports/P3_dataset_construction_validation_report.md
+thesis-writing/paper-aaai/reports/P4_empirical_evaluation_report.md
 thesis-writing/paper-aaai/AnonymousSubmission2027.tex
 thesis-writing/paper-aaai/CameraReady2027.tex
 thesis-writing/paper-aaai/ReproducibilityChecklist.tex
@@ -799,7 +993,7 @@ processed/
 runs/
 ```
 
-Do not modify the bibliography database in this stage.
+Do not edit the bibliography.
 
 ---
 
@@ -807,33 +1001,30 @@ Do not modify the bibliography database in this stage.
 
 Do not:
 
+* invent or estimate numbers;
+* use this prompt as a numerical authority;
+* select exposures based on favorable results;
+* omit PhysioNet shock;
+* hide estimator disagreements;
+* reduce CausalPFN to a footnote;
+* invent a CausalPFN citation;
+* claim statistical significance;
+* claim clinical-label validation;
+* call model estimates treatment recommendations;
 * write the Abstract;
-* write the Introduction;
-* write Related Work;
-* write numerical Results prose;
-* write the Discussion or Conclusion;
-* alter the title;
-* alter the primary contribution;
-* weaken the dataset contribution;
-* reduce CausalPFN to an incidental footnote;
-* invent references;
-* invent metric definitions;
-* invent hyperparameters;
-* invent run counts;
-* invent confidence intervals;
+* write the Introduction or Related Work;
+* write Discussion or Conclusion;
+* modify Sections 3 or 4 beyond a necessary transition;
+* modify source data or checked results;
+* access patient-level values;
 * run experiments;
 * run models;
-* access patient-level values;
+* install packages;
 * modify code;
 * modify thesis prose;
-* modify checked result files;
 * clean the repository;
-* delete auxiliary files;
-* change `.gitignore`;
-* reset, restore, or revert files;
-* stage files;
-* commit;
-* push.
+* alter `.gitignore`;
+* reset, restore, revert, stage, commit, or push.
 
 ---
 
@@ -845,7 +1036,7 @@ Build from:
 thesis-writing/paper-aaai/
 ```
 
-Use the established command:
+Use:
 
 ```bash
 env TEXINPUTS=AuthorKit27: \
@@ -854,7 +1045,7 @@ env TEXINPUTS=AuthorKit27: \
     latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
 ```
 
-Run sufficient passes to resolve citations and references.
+Run sufficient passes to resolve references and citations.
 
 Then run:
 
@@ -866,57 +1057,50 @@ git diff --stat
 git diff -- thesis-writing/paper-aaai/paper.tex
 git diff -- thesis-writing/paper-aaai/paper_evidence_map.md
 git diff -- thesis-writing/paper-aaai/paper_build_report.md
-git diff -- thesis-writing/paper-aaai/reports/P4_empirical_evaluation_report.md
+git diff -- thesis-writing/paper-aaai/reports/P5_results_report.md
 ```
 
 Validate:
 
-* anonymous author block remains intact;
-* US Letter remains intact;
-* two-column AAAI format remains intact;
-* no forbidden packages were added;
-* no undefined references;
-* no undefined citations;
-* no duplicated labels;
-* no table or text crosses margins;
-* Section 4 is self-contained;
-* no numerical results leaked into Evaluation;
-* CausalPFN is clearly visible;
-* the estimator hierarchy is accurate;
-* original cohorts are clearly primary;
-* downsampling is clearly robustness-only;
-* no unsupported clinical or causal claim appears;
-* page footprint is within or close to the target.
+* the anonymous author block remains intact;
+* the PDF remains US Letter;
+* the PDF remains in official two-column AAAI format;
+* no prohibited package was added;
+* no undefined citation or reference remains;
+* no duplicate labels remain;
+* Table 2 fits and is readable;
+* Figure 2 fits and is readable;
+* all 19 comparisons are represented;
+* the zero line and PhysioNet-shock exception are visible;
+* no figure label is clipped;
+* no text crosses margins or gutters;
+* no Type 3 font appears;
+* Section 5 remains within or close to its page budget;
+* Results do not become a limitations section;
+* all numerical claims match the audit;
+* no unsupported causal or clinical claim appears.
 
 Render and visually inspect every page of `paper.pdf`.
 
-Pay particular attention to:
-
-* Section 3–4 transition;
-* section and subsection heading placement;
-* column balance;
-* page breaks;
-* overfull boxes;
-* bibliography rendering;
-* tracked placeholder behavior.
+Inspect Figure 2 separately at its final embedded size.
 
 ---
 
 # Completion standard
 
-The stage passes only if:
+P5 passes only if:
 
-* the complete Empirical Evaluation section is polished manuscript prose;
-* prediction tasks and metrics are defined;
-* all three causal estimators have clear roles;
-* CausalPFN is presented as a meaningful triangulation estimator;
-* the reported effect summary is defined precisely;
-* directional agreement is defined as the primary cross-estimator comparison;
-* matching and robustness methods are explained;
-* the no-pooling policy is explicit;
-* no numerical Results section was written;
-* the evidence map is updated;
+* Section 5 is complete polished Results prose;
+* Table 2 contains the checked predictive results;
+* Figure 2 contains all 19×3 estimator summaries or an explicitly justified complete fallback;
+* the 19/19 DML agreement is prominent;
+* the 18/19 CausalPFN finding is prominent;
+* PhysioNet shock is visible and accurately described;
+* matching and downsampling results are included;
+* cross-dataset findings are stated without pooling;
+* all numbers are independently audited;
+* the evidence map is current;
 * the manuscript compiles;
 * the PDF remains AAAI compliant;
-* the durable P4 report exists;
+* the durable P5 report exists;
 * no commit or push was performed.

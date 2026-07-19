@@ -345,47 +345,114 @@ cross-dataset evidence is compared without pooling.  Section 5 reports the
 resulting predictive, estimator-agreement, matching, and robustness findings.
 
 \section{Results}
-% P5 placeholder section. No numerical Results prose was written in P4.
+
+The validated causal-analysis resources comprise 26,845 MIMIC-III records with
+nine admitted proxy-state exposures and 7,993 PhysioNet 2012 records with ten.
+We applied the complete predictive, effect-estimation, matching, and robustness
+sequence separately to each resource; all findings below remain dataset specific
+and are not numerically pooled.
 
 \subsection{Predictive Characterization}
-% Function: show the compact four-model, two-dataset archived comparison.
-% Evidence: checked_predictive_metrics.csv, selection PRIMARY_MAIN_TEXT;
-% claims C06/C07 and the protected numerical baseline.
 
-\plannedcontent{Planned content: archived predictive comparison in a future results table.}
+STraTS led all four archived MIMIC-III test metrics, whereas GRU-D led the
+corresponding PhysioNet metrics (Table~\ref{tab:predictive-results}).  Thus the
+strongest representation differed by dataset, supporting source-specific
+architecture selection as variables, missingness, sampling, and proxy
+definitions change, without implying statistical superiority.
+
+\begin{table*}[!t]
+  \centering
+  \small
+  \begin{tabular}{@{}llrrrr@{}}
+    \toprule
+    Dataset & Model & Test loss$\downarrow$ & Test AUROC$\uparrow$ & Test AUPRC$\uparrow$ & Test minRP$\uparrow$ \\
+    \midrule
+    MIMIC-III & STraTS & \textbf{0.348} & \textbf{0.905} & \textbf{0.869} & \textbf{0.795} \\
+    & GRU & 0.386 & 0.881 & 0.840 & 0.770 \\
+    & GRU-D & 0.404 & 0.884 & 0.841 & 0.773 \\
+    & TCN & 0.414 & 0.867 & 0.823 & 0.758 \\
+    \addlinespace
+    PhysioNet 2012 & STraTS & 0.341 & 0.915 & 0.877 & 0.818 \\
+    & GRU & 0.397 & 0.915 & 0.897 & 0.831 \\
+    & GRU-D & \textbf{0.331} & \textbf{0.918} & \textbf{0.905} & \textbf{0.835} \\
+    & TCN & 0.477 & 0.899 & 0.875 & 0.811 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Archived selected held-out test results against rule-derived proxy
+  targets.  Bold marks the best archived point estimate within each dataset;
+  no uncertainty or significance claim is implied.}
+  \label{tab:predictive-results}
+\end{table*}
+
+At metric level, STraTS reached 0.905 AUROC and 0.869 AUPRC on MIMIC-III,
+whereas GRU-D reached 0.918 AUROC and 0.905 AUPRC on PhysioNet.  The same model
+within each dataset also led loss and minRP, so the dataset-dependent leadership
+was consistent across all four archived point metrics against rule-derived
+targets.
 
 \subsection{Effect Patterns and Estimator Agreement}
-% Function: present cross-estimator direction and the retained disagreement.
-% Evidence: checked_cate_candidates.csv; claims C09--C12.
-% Required qualification: model-estimated observational proxy effects, not
-% randomized effects, clinical recommendations, or intervention guarantees.
 
-\begin{figure*}[t]
-  \plannedwide{Figure 2 placeholder: cross-estimator directional agreement for 19 dataset--exposure combinations.}
-  % Intended source: checked_cate_candidates.csv at full precision.
-  % Intended width: two columns. Main-paper artifact.
-  % Required exception marker: PhysioNet shock.
-  \caption{Planned Figure 2: cross-estimator directional agreement.}
+The primary CausalForestDML pattern was predominantly positive: all nine
+MIMIC-III mean model-estimated CATE summaries were positive, as were nine of ten
+PhysioNet summaries.  MIMIC-III was led by cardiac strain (0.220) and
+inflammation/sepsis (0.161); PhysioNet was led by renal dysfunction (0.120),
+cardiac injury/strain (0.112), and global severity (0.108), while shock was
+negative ($-0.014$).  The resources therefore contain systematic
+mortality-related variation under the implemented proxy-state and adjustment
+framework, with dataset-specific magnitudes and construct orderings.
+
+CausalForestDML and LinearDML agreed in direction for all 19 prespecified
+dataset--exposure comparisons.  This complete concordance across nonlinear and
+linear DML final-stage forms shows that the sign pattern was not unique to one
+DML final-stage specification, although magnitudes and rankings need not match.
+
+CausalPFN reproduced the prevailing direction in 18 of 19 prespecified
+comparisons.  Agreement over the complete exposure set supplies strong
+directional triangulation from a distinct modeling perspective and demonstrates
+its promise as a complementary estimator for these resources.  Its archived
+estimator-specific diagnostic package is less complete than the DML package.
+
+PhysioNet shock was the sole three-estimator exception: CausalForestDML was
+$-0.014$, LinearDML was $-0.027$, and CausalPFN was slightly positive at 0.004;
+the descriptive matched-pair outcome difference was also positive at 0.010.
+This retained disagreement reveals model and support sensitivity and motivates
+deeper analysis of the proxy definition, support, adjustment assumptions, and
+estimator behavior rather than resolution by estimator voting.
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.99\textwidth]{figures/figure2_estimator_agreement.pdf}
+  \caption{All 19 prespecified original-cohort comparisons, ordered within each
+  dataset by decreasing CausalForestDML value.  Values are mean model-estimated
+  CATE summaries over the analyzed samples, with magnitude differences
+  preserved.  CausalForestDML and LinearDML agree in 19/19 directions, and all
+  three estimators agree in 18/19; PhysioNet shock is the sole exception.}
   \label{fig:agreement}
 \end{figure*}
 
-\begin{table*}[t]
-  \plannedwide{Table 2 placeholder: compact CATE and directional-concordance summary.}
-  % Intended source: checked_cate_candidates.csv.
-  % Include the 19/19, 18/19, and 55/57 denominators and name exceptions.
-  % Use rounded display values; preserve full precision for calculations.
-  \caption{Planned Table 2: causal-estimation and directional-concordance summary.}
-  \label{tab:causal}
-\end{table*}
-
-\plannedcontent{Planned content: checked central pattern, named exceptions, and bounded estimator interpretation.}
-
 \subsection{Robustness and Cross-Dataset Findings}
-% Function: report matching, sensitivity, permutation, and outcome-downsampling
-% results under the hierarchy defined in Section 4.
-% Evidence: checked matching/sensitivity/permutation/CATE files; claims C13--C16.
-\plannedcontent{Planned content: checked robustness findings and cross-dataset synthesis.}
 
+Matching produced summaries for eight of nine MIMIC-III exposures and seven of
+ten PhysioNet exposures, or 15 of 19 comparisons.  Four failures reflected the
+absence of usable binary matching columns after preprocessing and represent
+support information, not zero effects.  Among successful summaries, 14 of 15
+shared the primary CausalForestDML direction; PhysioNet shock was the exception.
+
+Direction was preserved in 55 of 57 original-versus-downsampled
+estimator--dataset--exposure comparisons, showing broad sign stability under a
+substantial mortality-class perturbation even though magnitudes changed.  The
+two sign changes---PhysioNet LinearDML coagulation/hematologic dysfunction and
+PhysioNet CausalPFN shock---remain explicit, and downsampled magnitudes do not
+estimate the original population.  DML sensitivity evidence spans several
+recorded provenance classes, and treatment/outcome permutations provide
+disruption checks, but coverage is not uniform and equivalent stages were not
+archived for CausalPFN.  Overall, the same resource-construction and evaluation
+sequence operated across both datasets: predictive leadership and effect
+rankings differed, and one primary sign differed, yet estimator agreement was
+broad.  This demonstrates workflow portability while preserving dataset-specific
+semantics rather than claiming pooled clinical replication.
+
+\FloatBarrier
 \section{Discussion and Limitations}
 % Function: interpret resource reuse and within-design triangulation while
 % consolidating limitations: proxy validity, observational identification,
