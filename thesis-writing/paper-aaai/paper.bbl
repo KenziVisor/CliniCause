@@ -1,0 +1,46 @@
+\begin{thebibliography}{6}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Bai, Kolter, and Koltun(2018)}]{bai2018tcn}
+Bai, S.; Kolter, J.~Z.; and Koltun, V. 2018.
+\newblock An Empirical Evaluation of Generic Convolutional and Recurrent
+  Networks for Sequence Modeling.
+\newblock \emph{arXiv}.
+
+\bibitem[{Che et~al.(2018)Che, Purushotham, Cho, Sontag, and Liu}]{che2018grud}
+Che, Z.; Purushotham, S.; Cho, K.; Sontag, D.; and Liu, Y. 2018.
+\newblock Recurrent Neural Networks for Multivariate Time Series with Missing
+  Values.
+\newblock \emph{Scientific Reports}, 8: 6085.
+
+\bibitem[{Cho et~al.(2014)Cho, van Merrienboer, Gulcehre, Bahdanau, Bougares,
+  Schwenk, and Bengio}]{cho2014gru}
+Cho, K.; van Merrienboer, B.; Gulcehre, C.; Bahdanau, D.; Bougares, F.;
+  Schwenk, H.; and Bengio, Y. 2014.
+\newblock Learning Phrase Representations using RNN Encoder--Decoder for
+  Statistical Machine Translation.
+\newblock In \emph{Proceedings of the 2014 Conference on Empirical Methods in
+  Natural Language Processing}, 1724--1734. Association for Computational
+  Linguistics.
+
+\bibitem[{Johnson et~al.(2016)Johnson, Pollard, Shen, wei H.~Lehman, Feng,
+  Ghassemi, Moody, Szolovits, Celi, and Mark}]{johnson2016mimiciii}
+Johnson, A. E.~W.; Pollard, T.~J.; Shen, L.; wei H.~Lehman, L.; Feng, M.;
+  Ghassemi, M.; Moody, B.; Szolovits, P.; Celi, L.~A.; and Mark, R.~G. 2016.
+\newblock {MIMIC-III}, a freely accessible critical care database.
+\newblock \emph{Scientific Data}, 3: 160035.
+
+\bibitem[{Silva et~al.(2012)Silva, Moody, Scott, Celi, and
+  Mark}]{silva2012physionet}
+Silva, I.; Moody, G.; Scott, D.~J.; Celi, L.~A.; and Mark, R.~G. 2012.
+\newblock Predicting In-Hospital Mortality of ICU Patients: The
+  {PhysioNet}/Computing in Cardiology Challenge 2012.
+\newblock In \emph{Computing in Cardiology}, volume~39, 245--248.
+
+\bibitem[{Tipirneni and Reddy(2022)}]{tipirneni2022strats}
+Tipirneni, S.; and Reddy, C.~K. 2022.
+\newblock Self-Supervised Transformer for Sparse and Irregularly Sampled
+  Multivariate Clinical Time-Series.
+\newblock \emph{ACM Transactions on Knowledge Discovery from Data}.
+
+\end{thebibliography}

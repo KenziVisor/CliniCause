@@ -1,115 +1,123 @@
-# CliniCause AAAI-27 Paper — Establish the Evidence Baseline, Study the AAAI Format, and Build the Manuscript Skeleton
+# CliniCause AAAI-27 — Stage P3: Draft the Dataset Construction and Validation Section
 
 ## Model and reasoning
 
 * **Model:** GPT-5.6
 * **Reasoning effort:** High
 
-This task requires broad repository inspection and careful evidence classification, but it does not require speculative scientific reasoning or manuscript prose generation.
+This stage requires scientific synthesis across the thesis, checked evidence, validation records, and code contracts. High reasoning is appropriate. Do not use Extra High unless a material contradiction between authoritative sources is discovered.
+
+---
+
+## Stage identity
+
+Implement:
+
+```text
+Stage P3 — Dataset Construction and Validation Draft
+```
+
+This stage writes the central resource and method section of the AAAI-27 manuscript.
+
+The paper’s primary contribution is:
+
+> CliniCause constructs reusable, validated causal-analysis datasets from heterogeneous irregular ICU records.
+
+The secondary contribution is the evidence-tracked pipeline used to construct those resources.
+
+This stage must produce polished manuscript prose, not notes, an outline, or a planning document.
 
 ---
 
 ## Canonical authority
 
-The canonical paper-writing plan is:
+Read completely before editing:
 
 ```text
 thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan.md
 ```
 
-Read it completely before doing any other work.
+Also read:
 
-Treat that document as authoritative for:
+```text
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/aaai_structure_notes.md
+thesis-writing/paper-aaai/paper_build_report.md
+thesis-writing/paper-aaai/paper.tex
+```
 
-* the paper’s primary and secondary contributions;
-* the positioning of the validated causal-analysis datasets;
-* the positioning of CausalPFN;
-* the role of the LLM;
-* the writing order;
-* the AAAI paper architecture;
-* the claim and tone policy;
-* protected numerical results;
-* the division of responsibility between ChatGPT, Codex, the author, and the supervisor.
+Treat the operational plan as authoritative for:
 
-Do not redesign the paper strategy.
+* scientific contribution hierarchy;
+* terminology;
+* claim-strength policy;
+* CausalPFN positioning;
+* LLM positioning;
+* section structure;
+* page budget;
+* protected results;
+* limitations;
+* AAAI formatting.
+
+Do not redesign the paper.
 
 ---
 
-## Task scope
+## Accepted baseline
 
-Implement the mechanical and evidence-foundation work for:
-
-* **Stage P0 — Baseline and source freeze**
-* **Stage P0A — AAAI structure and genre study**
-* **Stage P1 — Claim and evidence map**
-* **Stage P2 — Compilable AAAI manuscript skeleton**
-
-Do not write the scientific manuscript prose in this task.
-
-The manuscript itself will be written by ChatGPT in later stages. Your job here is to establish a reliable repository baseline, map the evidence, study the AAAI format and communication structure, and create a correct anonymous LaTeX skeleton.
-
----
-
-## Current repository context
-
-Repository:
+Current accepted parent commit:
 
 ```text
-KenziVisor/CliniCause
+884ff8e4d112ff732e43a6aea33ab9bddcf8ed5e
 ```
 
-Paper workspace:
+Previous parent commit:
 
 ```text
-thesis-writing/paper-aaai/
+c335d327b3ca63045d362f180518a2bfa7005e6e
 ```
 
-The workspace already contains the uncompressed AAAI-27 Author Kit and the canonical operational plan.
-
-The thesis and its evidence infrastructure are under:
+Relevant nested revisions reported by the accepted baseline:
 
 ```text
-thesis-writing/
+STraTS:
+c37cf381b971af4a4a29ef09b93884a4afe61060
+
+causal-irregular-time-series:
+379ed9b75107b52007957ba5908e507b719c9247
 ```
 
-Important source families include:
+Verify all revisions locally. Do not assume they remain unchanged.
 
-```text
-thesis-writing/thesis/
-thesis-writing/results/
-thesis-writing/reproducibility/
-thesis-writing/literature/
-thesis-writing/logs/
-thesis-writing/planning/
-thesis-writing/audit/
-```
+The accepted baseline established:
 
-The parent repository may contain unrelated code and debugging work. Inspect it, classify it, and protect it. Do not reset or clean anything.
+* a frozen evidence map;
+* AAAI structure notes;
+* an anonymous compilable `paper.tex`;
+* a successful US-Letter two-column build;
+* the working title;
+* the section architecture;
+* protected numerical claims.
+
+Do not reopen Stages P0–P2 unless a material contradiction blocks this task.
 
 ---
 
 ## Mandatory initial verification
 
-Run and record:
+Run:
 
 ```bash
 git status --short
 git branch --show-current
 git rev-parse HEAD
-git log -15 --oneline --decorate
+git log -5 --oneline --decorate
+git show --stat --oneline 884ff8e4d112ff732e43a6aea33ab9bddcf8ed5e
+git diff --stat 884ff8e4d112ff732e43a6aea33ab9bddcf8ed5e..HEAD
 git submodule status
 ```
 
-For every nested Git repository or submodule that is relevant to the paper, record:
-
-```bash
-git -C <path> status --short
-git -C <path> branch --show-current
-git -C <path> rev-parse HEAD
-git -C <path> log -5 --oneline
-```
-
-Also inspect all applicable instruction files before acting:
+Inspect applicable instruction files:
 
 ```text
 AGENTS.md
@@ -118,548 +126,573 @@ CONTRIBUTING.md
 WORKFLOW.md
 ```
 
-Search from the repository root and within `thesis-writing/` and `paper-aaai/`.
+Record all pre-existing dirty files.
 
-Do not assume that the newest commit is the thesis baseline or the historical producing-code baseline. Distinguish:
+Do not reset, clean, restore, delete, stage, or normalize pre-existing changes.
 
-* current parent HEAD;
-* current nested-repository revisions;
-* current thesis baseline;
-* checked-results baseline;
-* current repaired-code state;
-* runtime-validation state;
-* Author Kit baseline;
-* unrelated intervening commits.
+If `paper.tex`, `paper_evidence_map.md`, `paper_build_report.md`, or the intended P3 report already contains uncommitted changes, inspect and preserve them. Clearly distinguish pre-existing work from your edits.
 
 ---
 
-# Part A — Stage P0: Freeze the paper evidence baseline
+# Objective
 
-## A1. Inspect the paper workspace
-
-Inventory:
+Write the complete manuscript section:
 
 ```text
-thesis-writing/paper-aaai/
-```
-
-Identify:
-
-* the canonical operational plan;
-* all AAAI Author Kit files;
-* sample anonymous manuscript source;
-* rendered sample PDFs;
-* checklist source and PDF;
-* bibliography/style files;
-* existing paper drafts, notes, figures, tables, or generated files;
-* duplicated, legacy, or irrelevant kit files.
-
-Do not delete or reorganize files in this task.
-
-## A2. Identify authoritative scientific sources
-
-Locate and classify the repository sources for:
-
-### Thesis content
-
-* complete thesis source;
-* Introduction;
-* related work;
-* dataset and preprocessing chapters;
-* proxy-state construction;
-* predictive modeling;
-* causal methodology;
-* robustness;
-* Results;
-* Discussion;
-* Conclusion;
-* abstract.
-
-### Checked numerical evidence
-
-Locate the authoritative sources for:
-
-* MIMIC-III causal-analysis population;
-* PhysioNet causal-analysis population;
-* number of admitted proxy-state exposures per dataset;
-* all eight predictive model–dataset result rows;
-* all original-cohort CausalForestDML results;
-* all original-cohort LinearDML results;
-* all original-cohort CausalPFN results;
-* 19/19 CausalForestDML–LinearDML directional agreement;
-* 18/19 all-three-estimator directional agreement;
-* PhysioNet shock disagreement;
-* matching results;
-* downsampling robustness;
-* sensitivity and permutation evidence;
-* result manifests, hashes, and validation reports.
-
-Do not treat thesis prose as the highest numerical authority when a checked table, manifest, or source packet exists.
-
-### Resource-validation evidence
-
-Locate evidence supporting statements about:
-
-* canonical identifiers;
-* schema validation;
-* deterministic transformations;
-* exact cohort equality;
-* rejection of silent intersections;
-* rejection of malformed predictions;
-* duplicate-conflict handling;
-* artifact metadata;
-* manifests and receipts;
-* run-scoped outputs;
-* seed handling;
-* dataset isolation;
-* runtime-validation status;
-* current code versus historical producing-code provenance.
-
-### Literature
-
-Locate:
-
-* the approved bibliography;
-* literature metadata;
-* relevant PDFs;
-* citation keys for all methods and datasets;
-* whether a verified primary CausalPFN reference exists.
-
-Do not add literature in this task unless the canonical bibliography is missing an essential citation and the source can be verified reliably. Record missing citations as gates.
-
-## A3. Establish protected numerical claims
-
-Create a frozen list containing at least:
-
-```text
-MIMIC-III causal-analysis records: 26,845
-PhysioNet causal-analysis records: 7,993
-MIMIC-III admitted proxy-state exposures: 9
-PhysioNet admitted proxy-state exposures: 10
-
-Predictive models:
-- STraTS
-- GRU
-- GRU-D
-- TCN
-
-MIMIC-III archived predictive leader:
-- STraTS across loss, AUROC, AUPRC, and minRP
-
-PhysioNet archived predictive leader:
-- GRU-D across loss, AUROC, AUPRC, and minRP
-
-CausalForestDML–LinearDML directional agreement:
-- 19/19
-
-All-three-estimator directional agreement including CausalPFN:
-- 18/19
-
-Central disagreement:
-- PhysioNet shock
-```
-
-Verify every item against the highest-authority repository source.
-
-Do not silently “correct” a number. If sources disagree, record the conflict.
-
-## A4. Record unresolved evidence gates
-
-Use these exact categories:
-
-```text
-TODO-EVIDENCE
-TODO-RUNTIME
-TODO-RELEASE
-TODO-AAAI
-TODO-HUMAN
-```
-
-Every gate must specify:
-
-* exact missing fact;
-* expected source;
-* why it matters;
-* whether it blocks the first draft;
-* whether it blocks submission.
-
----
-
-# Part B — Stage P0A: Study the AAAI structure and genre
-
-## B1. Study the Author Kit in full
-
-Read:
-
-```text
-AnonymousSubmission2027.tex
-CameraReady2027.tex
-ReproducibilityChecklist.tex
-aaai2027.sty
-aaai2027.bst
-```
-
-Inspect the rendered PDFs as well as the source.
-
-Extract the binding requirements for:
-
-* document class;
-* submission mode;
-* anonymity;
-* title and author blocks;
-* US Letter;
-* two-column layout;
-* allowed and forbidden packages;
-* font handling;
-* citations and bibliography;
-* figure and table captions;
-* equations;
-* footnotes;
-* URLs;
-* appendices;
-* supplementary material;
-* checklist placement;
-* source-file structure;
-* PDF requirements;
-* metadata;
-* prohibited spacing, margin, and font manipulation.
-
-Do not reconstruct the preamble from memory. The final skeleton must copy the relevant 2027 anonymous sample structure.
-
-## B2. Study AAAI as a scientific paper genre
-
-Analyze the sample manuscript for:
-
-* page rhythm;
-* paragraph length;
-* section depth;
-* title and abstract density;
-* Introduction structure;
-* contribution-list style;
-* related-work compression;
-* method/result balance;
-* typical figure widths;
-* table density;
-* caption length;
-* use of appendices and supplementary references;
-* conclusion length.
-
-Where repository or network access permits, inspect a small purposeful sample of recent AAAI papers with at least some of these characteristics:
-
-* dataset or resource contribution;
-* healthcare or clinical AI;
-* causal inference;
-* heterogeneous-effect estimation;
-* integrated AI framework;
-* reproducibility or code/data release.
-
-Use only a small relevant sample. Do not conduct an open-ended literature review.
-
-For each sampled paper, record:
-
-```text
-paper
-year
-primary claim
-section order
-approximate page allocation
-figures and tables
-contribution wording
-resource-validation wording
-main-paper versus supplement boundary
-useful structural lesson
-```
-
-The purpose is to learn structure, not copy wording.
-
-## B3. Produce the AAAI paper architecture
-
-Confirm or narrowly refine the approved architecture:
-
-```text
-Abstract
-1 Introduction
-2 Related Work
 3 Constructing the CliniCause Datasets
-  3.1 Source Cohorts and Analysis Units
-  3.2 Proxy-State Design and Deterministic Construction
-  3.3 Predictive Annotations from Irregular Time Series
-  3.4 Causal-Analysis Schema and DAG Metadata
-  3.5 Dataset Validation and Provenance
-4 Empirical Evaluation
-  4.1 Prediction Tasks and Metrics
-  4.2 Effect Estimators and Cross-Estimator Evaluation
-  4.3 Matching and Robustness Diagnostics
-5 Results
-  5.1 Resource Summary and Predictive Characterization
-  5.2 Effect Patterns and Estimator Agreement
-  5.3 Robustness and Cross-Dataset Findings
-6 Discussion
-  6.1 Research Utility and Reuse
-  6.2 CausalPFN and Estimator Triangulation
-  6.3 Limitations and Appropriate Interpretation
-7 Conclusion
-References
 ```
 
-You may recommend merging subsections for space, but do not change the scientific hierarchy.
+with these scientific functions:
 
-Confirm the working seven-page technical-content budget and mark it `TODO-AAAI` if the exact AAAI-27 Main Track limit is not proven by an authoritative current source.
+```text
+3.1 Source Cohorts and Analysis Units
+3.2 Proxy-State Design and Deterministic Construction
+3.3 Predictive Annotations from Irregular Time Series
+3.4 Causal-Analysis Schema and DAG Metadata
+3.5 Dataset Validation and Provenance
+```
+
+The exact subsection count may be reduced only if doing so improves AAAI readability and preserves every scientific function.
+
+The section must explain, without requiring access to the code or thesis:
+
+* what the two resources are;
+* what one analysis row represents;
+* how the source cohorts remain dataset specific;
+* how proxy-state exposures are designed and constructed;
+* how predictive annotations enter the resources;
+* how outcomes, covariates, DAG metadata, and adjustment sets are represented;
+* what “validated causal-analysis datasets” means;
+* how the resources are made suitable for reuse.
 
 ---
 
-# Part C — Stage P1: Build the claim–evidence map
+# Source hierarchy
 
-Create a durable claim–evidence map with these fields:
+Use the highest-authority available source for every statement.
+
+## Level 1 — Checked numerical and validation evidence
+
+Inspect:
 
 ```text
-claim ID
-claim text
-claim role
-paper location
-supporting source
-support type
-confidence
-required qualification
-associated figure/table
-unresolved gate
-status
+thesis-writing/results/
+thesis-writing/reproducibility/
+thesis-writing/logs/
+thesis-writing/audit/
+thesis-writing/planning/
 ```
 
-Use claim roles:
+Use these sources for:
+
+* admitted record counts;
+* admitted proxy-state counts;
+* cohort contracts;
+* validation dimensions;
+* result-manifest facts;
+* artifact provenance;
+* current runtime-validation status.
+
+## Level 2 — Active implementation and tests
+
+Read, without editing:
 
 ```text
-primary
-secondary
-empirical
-supporting
-limitation
-future-work
+router.py
+tests/
+STraTS/
+causal-irregular-time-series/
 ```
 
-At minimum include claims for:
+Use active code and tests only for current implementation-supported contracts.
 
-## Primary resource claims
+Do not retroactively describe current repaired code as the historical producing implementation for archived results unless provenance proves that relationship.
 
-* CliniCause constructs two reusable causal-analysis datasets.
-* The resources are derived separately from MIMIC-III and PhysioNet 2012.
-* Each resource includes explicit analysis identifiers, proxy-state exposures, mortality outcomes, observed covariates, graph-derived adjustment metadata, predictive annotations, and estimator-ready outputs.
-* The resources preserve dataset-specific semantics through a common analytical interface.
-* Validation supports structural integrity, cohort integrity, artifact integrity, and analytical reuse.
+## Level 3 — Thesis
 
-## Pipeline claims
-
-* The pipeline is evidence tracked.
-* Proxy-state design proposals were LLM assisted.
-* Project-selected proposals were encoded in deterministic source.
-* The LLM was not a runtime patient-level estimator.
-* Four predictive models supplied learned annotations.
-* Archived causal runs aggregate one rule-derived source and four prediction-derived sources.
-* Source-coded DAGs operationalize exposure-specific adjustment assumptions.
-
-## Empirical claims
-
-* The resources contain 26,845 MIMIC-III and 7,993 PhysioNet primary causal-analysis records.
-* STraTS leads the four archived MIMIC-III predictive metrics.
-* GRU-D leads the corresponding PhysioNet metrics.
-* CausalForestDML and LinearDML agree in direction for 19/19 comparisons.
-* CausalPFN joins the prevailing direction in 18/19 comparisons.
-* CausalPFN therefore provides meaningful cross-estimator triangulation.
-* PhysioNet shock is the central estimator-disagreement case.
-* The shared workflow is demonstrated across two heterogeneous ICU sources without numerical pooling.
-
-## Reuse claims
-
-* The resources support follow-up evaluation of alternative estimators.
-* They support replacement or refinement of proxy definitions.
-* They support evaluation of alternative DAGs and adjustment sets.
-* They reduce the need to rebuild the complete integration pipeline for each follow-up study.
-* They expose construct and cohort lineage for audit and extension.
-
-For every claim, prefer direct positive wording. Add qualifications only where the evidence boundary requires them.
-
-Do not weaken supported claims by beginning them with phrases such as:
+Inspect the relevant thesis chapters, especially:
 
 ```text
-we only
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
+thesis-writing/thesis/chapters/04_data_preprocessing.tex
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
+thesis-writing/thesis/chapters/10_results.tex
+thesis-writing/thesis/chapters/11_discussion.tex
+```
+
+Use the actual filenames present if they differ.
+
+The thesis is the main prose source, but it does not override checked numerical evidence or active implementation facts.
+
+## Level 4 — Approved literature
+
+Use:
+
+```text
+thesis-writing/literature/metadata/references.bib
+thesis-writing/literature/
+```
+
+Do not invent references or citation keys.
+
+---
+
+# Scientific positioning
+
+## Primary claim
+
+State confidently that CliniCause constructs two reusable, validated causal-analysis datasets from:
+
+* MIMIC-III;
+* PhysioNet 2012.
+
+The resources preserve dataset-specific semantics through a common analytical interface.
+
+## Meaning of “validated”
+
+Define validation positively and concretely through four dimensions:
+
+1. **Structural integrity**
+
+   * expected files and schemas;
+   * canonical identifiers;
+   * expected columns and value contracts;
+   * complete output sets.
+
+2. **Cohort integrity**
+
+   * identifier preservation;
+   * exact equality at required handoffs;
+   * rejection of silent intersections;
+   * rejection of silent row shrinkage;
+   * explicit mismatch failures.
+
+3. **Artifact and provenance integrity**
+
+   * manifests;
+   * receipts;
+   * fingerprints or hashes where supported;
+   * prediction and checkpoint metadata;
+   * voter sidecars;
+   * run-scoped outputs;
+   * stale-artifact and reuse checks.
+
+4. **Analytical and empirical validation**
+
+   * estimator-ready schemas;
+   * predictive characterization;
+   * application of multiple effect estimators;
+   * matching and robustness diagnostics;
+   * execution across two heterogeneous ICU sources.
+
+End the validation subsection with one clear scope sentence close to:
+
+> Validation establishes the structural integrity, cohort consistency, provenance, and analytical reuse of the constructed resources; clinical construct validity and causal identification remain separate scientific questions.
+
+After defining this once, use the phrase `validated causal-analysis datasets` normally. Do not repeatedly apologize for it.
+
+## Tone
+
+The prose must be:
+
+* confident;
+* constructive;
+* optimistic;
+* technically precise;
+* focused on the reusable research contribution.
+
+Avoid habitual defensive phrasing such as:
+
+```text
 we merely
+we only
 we just
-preliminary
 tentative
+preliminary
+limited to
 ```
 
-unless the evidence truly requires such wording.
+Use qualifications only where a specific boundary is scientifically necessary.
+
+## LLM role
+
+State positively that a structured design-time LLM protocol proposed:
+
+* proxy-state ontologies;
+* rule families;
+* missingness considerations;
+* dataset-specific DAG structures.
+
+Then distinguish authority clearly:
+
+* project-selected proposals were encoded in deterministic source;
+* deterministic source is the runtime implementation authority;
+* the LLM was not a patient-level runtime estimator.
+
+Do not make the LLM the opening focus of the section.
+
+## Causal language
+
+Use:
+
+```text
+causal-analysis dataset
+observational analysis
+DAG-guided adjustment
+adjusted contrast
+model-estimated CATE
+effect-estimation workflow
+```
+
+Do not imply:
+
+* clinically validated diagnoses;
+* proven causal identification;
+* intervention effects;
+* treatment recommendations.
 
 ---
 
-# Part D — Stage P2: Build the anonymous AAAI manuscript skeleton
+# Required subsection content
 
-## D1. Create the working manuscript
+## 3.1 Source Cohorts and Analysis Units
+
+Explain:
+
+* MIMIC-III and PhysioNet 2012 as heterogeneous ICU sources;
+* source access and high-level dataset roles;
+* the primary analytical unit;
+* in-hospital mortality outcome;
+* source-specific covariates and data contracts;
+* final admitted primary causal-analysis populations:
+
+  * MIMIC-III: `26,845`;
+  * PhysioNet 2012: `7,993`;
+* why resources and results remain separate rather than pooled.
+
+State confidently that the shared construction workflow preserves source-specific semantics.
+
+Do not infer unverified temporal windows, raw cohort sizes, or historical producing settings.
+
+## 3.2 Proxy-State Design and Deterministic Construction
+
+Explain:
+
+* the design-time LLM proposal process;
+* project/human selection;
+* deterministic source-coded construction;
+* dataset-specific proxy ontologies;
+* missing or unavailable measurement handling;
+* canonical proxy-state fields;
+* the role of proxy states as explicit analytical constructs.
+
+The paper must make clear that proxy states provide a transparent interface between irregular records, prediction, and downstream analysis.
+
+Do not describe them as chart-adjudicated diagnoses.
+
+Do not over-expand prompt history; detailed prompt artifacts belong in the supplement.
+
+## 3.3 Predictive Annotations from Irregular Time Series
+
+Explain:
+
+* multi-label proxy-state prediction;
+* four learned models:
+
+  * STraTS;
+  * GRU;
+  * GRU-D;
+  * TCN;
+* irregular-time-series input representation at the level needed for this paper;
+* probabilities and thresholded binary predictions;
+* normalized exports;
+* archived aggregation of:
+
+  * one deterministic rule-derived source;
+  * four model-derived prediction sources;
+* how the aggregate becomes an analytical proxy-state exposure layer.
+
+Do not report predictive performance numbers here; those belong in Results.
+
+Do not imply that prediction validates the clinical constructs.
+
+## 3.4 Causal-Analysis Schema and DAG Metadata
+
+Define what the constructed resource contains, including where supported:
+
+* canonical record identifier;
+* proxy-state exposure fields;
+* in-hospital mortality outcome;
+* observed covariates;
+* dataset identifier;
+* sampling condition;
+* DAG or graph provenance;
+* exposure-specific adjustment-set metadata;
+* estimator-ready tables;
+* run or artifact provenance identifiers.
+
+Explain that source-coded DAGs operationalize explicit project assumptions and make adjustment choices inspectable and replaceable in follow-up work.
+
+Emphasize reuse:
+
+* researchers can test alternative estimators;
+* researchers can refine proxy definitions;
+* researchers can replace DAGs or adjustment sets;
+* researchers can investigate assumptions without rebuilding the complete source-integration pipeline.
+
+Do not claim that the project DAGs are clinically validated.
+
+## 3.5 Dataset Validation and Provenance
+
+This is the central contribution subsection.
+
+Present the validation framework as an achieved engineering and research result.
+
+Cover:
+
+* structural validation;
+* identifier and cohort contracts;
+* malformed-input rejection;
+* duplicate-conflict behavior;
+* complete-output validation;
+* prediction and voter metadata;
+* manifests, receipts, and fingerprints;
+* dataset-isolated run paths;
+* deterministic or seed-controlled behavior where supported;
+* current evidence boundaries between:
+
+  * archived results;
+  * historical producing code;
+  * current repaired implementation;
+  * runtime-validated execution.
+
+Do not turn the subsection into a debugging history.
+
+Describe the validation contracts that make the resource reusable, not the chronology of bugs that motivated them.
+
+---
+
+# Table 1 — Resource Summary
+
+Replace the existing Table 1 placeholder with a compact, reader-facing table.
+
+The table should summarize the constructed resources using only supported fields.
+
+Candidate columns:
+
+```text
+Dataset
+Primary analysis records
+Proxy-state exposures
+Outcome
+Predictive annotation sources
+Causal-analysis estimators
+```
+
+Supported values include:
+
+```text
+MIMIC-III:
+- 26,845 primary causal-analysis records
+- 9 admitted proxy-state exposures
+- in-hospital mortality
+- rule-derived source plus four predictive models
+- CausalForestDML, LinearDML, CausalPFN
+
+PhysioNet 2012:
+- 7,993 primary causal-analysis records
+- 10 admitted proxy-state exposures
+- in-hospital mortality
+- rule-derived source plus four predictive models
+- CausalForestDML, LinearDML, CausalPFN
+```
+
+Use concise table text suitable for AAAI.
+
+Do not add a `Validation: Pass` field unless the exact validation scope can be expressed without misleading the reader.
+
+Caption placement must follow the AAAI-27 kit.
+
+---
+
+# Figure 1 — Resource-Construction Pipeline
+
+Do not fabricate a final scientific figure in this stage unless a suitable approved figure already exists.
+
+Replace the placeholder with:
+
+* a correctly sized layout placeholder occupying approximately the intended final space;
+* a polished final-quality caption;
+* a detailed LaTeX comment specifying the intended figure contents.
+
+The intended figure must communicate:
+
+```text
+Raw irregular ICU records
+→ dataset-specific preprocessing
+→ deterministic proxy-state labels
+← selected design-time LLM proposals
+→ four-model predictive annotations
+→ normalized multi-source proxy exposures
+→ outcome + observed covariates + DAG metadata
+→ reusable estimator-ready causal-analysis datasets
+→ CausalForestDML / LinearDML / CausalPFN / matching / diagnostics
+```
+
+The dataset, not the estimator result, should appear as the central product.
+
+The specification must distinguish:
+
+* design time;
+* construction/runtime;
+* validation gates;
+* reusable resource output;
+* downstream empirical characterization.
+
+---
+
+# Page and prose budget
+
+Target for Section 3:
+
+```text
+1.80–2.10 AAAI technical-content pages
+```
+
+Expected first-pass structure:
+
+* 9–12 substantive paragraphs;
+* Figure 1;
+* Table 1.
+
+Do not compress through typography.
+
+Do not use:
+
+* smaller body fonts;
+* reduced line spacing;
+* modified margins;
+* negative vertical space;
+* manual page breaks;
+* float-spacing tricks.
+
+The first draft may be moderately over the local section budget if scientific completeness requires it, but report the measured page footprint.
+
+---
+
+# Evidence-map update
+
+Update:
+
+```text
+thesis-writing/paper-aaai/paper_evidence_map.md
+```
+
+For every claim inserted into Section 3:
+
+* connect it to an existing claim ID or create a new ID;
+* record the exact manuscript location;
+* record the highest-authority source;
+* mark whether it is:
+
+  * supported;
+  * supported with a qualification;
+  * gated;
+  * excluded;
+* record any `TODO-EVIDENCE`, `TODO-RUNTIME`, `TODO-RELEASE`, `TODO-AAAI`, or `TODO-HUMAN`.
+
+Do not hide uncertainty in prose when it belongs in the evidence map.
+
+Do not leave unsupported numerical claims in the manuscript.
+
+---
+
+# Report requirement
 
 Create:
 
 ```text
-thesis-writing/paper-aaai/paper.tex
+thesis-writing/paper-aaai/reports/P3_dataset_construction_validation_report.md
 ```
 
-Requirements:
+This report is mandatory and replaces the need for the user to copy Codex’s chat output.
 
-* start from the 2027 anonymous submission sample;
-* preserve the correct AAAI preamble;
-* use submission mode;
-* use anonymous author information;
-* do not include acknowledgments;
-* do not include identifying URLs, repository names tied to the authors, usernames, local paths, institutions, or metadata;
-* use the approved working title:
+The report must include:
 
 ```text
-CliniCause: Constructing Reusable Causal-Analysis Datasets from Irregular ICU Records
+Stage
+Model
+Reasoning effort
+Current HEAD before work
+Task baseline
+Branch
+Worktree state before work
+Nested revisions
+Canonical plan read
+Sources inspected
+Files changed
+Section structure written
+Paragraph count
+Approximate word count
+Measured PDF page footprint
+Table 1 values and authoritative sources
+Figure 1 specification
+Claims added or activated
+Citation keys used
+Evidence-map changes
+TODO-EVIDENCE items
+TODO-RUNTIME items
+TODO-RELEASE items
+Source conflicts
+Build command
+Build result
+PDF page count
+PDF page size
+LaTeX warnings
+Visual inspection findings
+Protected-file verification
+Staged-file list
+Commit SHA
+Readiness decision
 ```
 
-* create every approved section and subsection;
-* include an empty abstract placeholder marked:
-
-```latex
-% Abstract will be written after the complete paper body.
-```
-
-* connect the existing approved bibliography without modifying the bibliography database;
-* insert labeled placeholders for the planned figures and tables;
-* add precise evidence comments at the intended locations;
-* do not write scientific paragraphs.
-
-## D2. Planned placeholders
-
-Include placeholders for:
-
-### Figure 1
-
-```text
-CliniCause dataset-construction and validation pipeline
-```
-
-### Table 1
-
-```text
-Resource summary for MIMIC-III and PhysioNet
-```
-
-### Table 2
-
-```text
-Predictive performance across four models and two datasets
-```
-
-### Figure 2 or Table 3
-
-```text
-Cross-estimator directional agreement, including CausalPFN
-```
-
-Do not create fabricated figures or placeholder numerical values.
-
-Use LaTeX comments identifying:
-
-* intended source;
-* intended width;
-* intended section;
-* whether the artifact is main-paper or supplement;
-* unresolved evidence gate.
-
-## D3. Checklist
-
-Determine from the current kit whether the reproducibility checklist belongs:
-
-* inside the main `.tex`;
-* after the references;
-* in a separate file;
-* or in another submission field.
-
-Follow the kit exactly.
-
-When uncertain, preserve the kit’s example integration and mark a precise `TODO-AAAI`.
-
-Do not answer checklist questions speculatively.
-
-## D4. Build
-
-Determine the correct build command from the kit and available local tooling.
-
-Compile `paper.tex`.
-
-Record:
-
-* exact command;
-* engine;
-* bibliography command;
-* output PDF path;
-* page size;
-* page count;
-* whether layout is two column;
-* warnings;
-* missing citations;
-* missing references;
-* overfull or underfull boxes;
-* font-related warnings;
-* checklist-related failures.
-
-The empty skeleton should compile without scientific prose.
-
-Do not install system packages or modify the environment unless explicitly authorized.
+The report must be complete enough for an independent reviewer to validate the stage without reading Codex chat output.
 
 ---
 
-## Required repository artifacts
-
-Create or update only these files, unless a canonical equivalent already exists:
-
-```text
-thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/aaai_structure_notes.md
-thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/paper.pdf
-thesis-writing/paper-aaai/paper_build_report.md
-```
-
-Before creating each Markdown file, search for an existing file with the same durable role.
-
-If a canonical equivalent exists, update that file instead of creating a duplicate.
-
-Do not create additional planning, scratch, status, summary, or transcript files.
-
-Generated LaTeX auxiliary files may exist locally but should not be treated as intentional deliverables.
-
----
-
-## Allowed edits
+# Allowed edits
 
 You may edit only:
 
 ```text
-thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/aaai_structure_notes.md
 thesis-writing/paper-aaai/paper.tex
 thesis-writing/paper-aaai/paper.pdf
 thesis-writing/paper-aaai/paper_build_report.md
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/reports/P3_dataset_construction_validation_report.md
 ```
 
-You may also update an existing canonical equivalent instead of creating one of the two Markdown files.
+Creating the `reports/` directory is allowed.
 
-Do not edit the operational plan.
+Generated LaTeX auxiliary files may be created locally but must not be intentionally committed.
 
 ---
 
-## Protected paths
+# Protected paths
 
 Treat as read-only:
 
 ```text
 thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan.md
-thesis-writing/paper-aaai/aaai2027.sty
-thesis-writing/paper-aaai/aaai2027.bst
+thesis-writing/paper-aaai/aaai_structure_notes.md
 thesis-writing/paper-aaai/AnonymousSubmission2027.tex
 thesis-writing/paper-aaai/CameraReady2027.tex
 thesis-writing/paper-aaai/ReproducibilityChecklist.tex
+thesis-writing/paper-aaai/aaai2027.sty
+thesis-writing/paper-aaai/aaai2027.bst
 
 thesis-writing/thesis/
 thesis-writing/results/
@@ -670,115 +703,195 @@ thesis-writing/planning/
 thesis-writing/audit/
 
 router.py
+tests/
 STraTS/
 causal-irregular-time-series/
+clinicause_debug_operational_plan.md
+prompt.txt
 data/
 logs/
 processed/
 runs/
 ```
 
-Do not modify checked results, thesis prose, bibliography, literature, code, datasets, manifests, logs, or Author Kit files.
+Do not modify the bibliography database in this stage.
 
 ---
 
-## Forbidden actions
+# Forbidden actions
 
 Do not:
 
-* write manuscript prose;
-* rewrite thesis material;
-* change scientific claims;
-* invent references;
+* write the abstract;
+* write or revise the Introduction;
+* write or revise Related Work;
+* write Evaluation, Results, Discussion, or Conclusion prose;
+* alter the approved title;
+* alter the contribution hierarchy;
 * invent numbers;
+* invent references;
+* add an unverified CausalPFN citation;
 * run experiments;
 * run models;
-* access private patient-level records;
-* modify data;
+* access patient-level values;
 * modify code;
-* modify results;
-* modify the canonical plan;
-* modify the Author Kit;
-* change `aaai2027.sty`;
-* add formatting tricks;
-* delete files;
-* clean the worktree;
-* reset or revert commits;
-* stage files;
-* commit;
-* push;
-* open a pull request.
+* modify checked results;
+* modify thesis prose;
+* modify the operational plan;
+* modify Author Kit files;
+* modify `prompt.txt`;
+* use `git add .`;
+* use `git add -A`;
+* reset or clean the repository;
+* amend or rewrite the accepted baseline commit;
+* push.
 
 ---
 
-## Validation
+# Build and validation
 
-At completion, run:
+Build from:
+
+```text
+thesis-writing/paper-aaai/
+```
+
+Use the established command unless local evidence requires an equivalent correction:
 
 ```bash
-git status --short
+env TEXINPUTS=AuthorKit27: \
+    BSTINPUTS=AuthorKit27: \
+    BIBINPUTS=../literature/metadata: \
+    latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex
+```
+
+Run sufficient passes to resolve bibliography and cross-references.
+
+Then validate:
+
+```bash
 git diff --check
+git status --short
 git diff --stat
-git diff -- thesis-writing/paper-aaai/
+git diff -- thesis-writing/paper-aaai/paper.tex
+git diff -- thesis-writing/paper-aaai/paper_evidence_map.md
+git diff -- thesis-writing/paper-aaai/paper_build_report.md
+git diff -- thesis-writing/paper-aaai/reports/P3_dataset_construction_validation_report.md
+```
+
+Check:
+
+* anonymous author block remains intact;
+* US Letter remains intact;
+* two-column AAAI format remains intact;
+* no forbidden packages were added;
+* no bibliography-key errors;
+* no undefined references;
+* no overfull boxes affecting readability;
+* Figure 1 placeholder stays inside margins;
+* Table 1 is readable in one or two columns as designed;
+* Section 3 is understandable without the thesis or source code;
+* “validated causal-analysis datasets” is defined precisely and confidently;
+* no unsupported claim entered the manuscript.
+
+Visually inspect every PDF page, with particular attention to the pages containing Section 3, Figure 1, and Table 1.
+
+---
+
+# Commit protocol
+
+After validation, stage only:
+
+```bash
+git add -- \
+  thesis-writing/paper-aaai/paper.tex \
+  thesis-writing/paper-aaai/paper.pdf \
+  thesis-writing/paper-aaai/paper_build_report.md \
+  thesis-writing/paper-aaai/paper_evidence_map.md \
+  thesis-writing/paper-aaai/reports/P3_dataset_construction_validation_report.md
 ```
 
 Verify:
 
-* only allowed files changed;
-* the operational plan is unchanged;
-* Author Kit files are unchanged;
-* checked evidence is unchanged;
-* the paper skeleton compiles;
-* the output is US Letter;
-* the output is two column;
-* the submission is anonymous;
-* the bibliography path resolves;
-* all claims in the evidence map have explicit sources or gates;
-* all numerical claims were checked against authoritative repository evidence;
-* no scientific prose was generated.
+```bash
+git diff --cached --name-only
+git diff --cached --check
+```
+
+The staged list must contain exactly the five paths above.
+
+If any other path is staged:
+
+* unstage only the unintended path;
+* do not discard its working-tree changes;
+* recheck the staged list.
+
+Commit with:
+
+```text
+paper: draft dataset construction and validation
+```
+
+Do not push.
+
+After committing, record:
+
+```bash
+git rev-parse HEAD
+git show --stat --oneline HEAD
+git status --short
+```
+
+Update the stage report with the final commit SHA before completing the commit. If this requires the report to contain the commit SHA, use this safe sequence:
+
+1. finish all work and validation;
+2. write the report with `Commit SHA: pending`;
+3. stage and commit the five files;
+4. obtain the commit SHA;
+5. update only the report with the SHA;
+6. create a narrow follow-up commit named:
+
+```text
+docs: record P3 commit evidence
+```
+
+Alternatively, record the exact commit SHA as the first item in the next stage report. Do not amend published history merely to insert a commit’s own SHA into itself.
+
+A single content commit is preferred. The report may state the committed tree hash or `HEAD at report finalization` instead of embedding its own commit SHA.
 
 ---
 
-## Final report
+# Completion standard
 
-Return a concise report with:
+The stage passes only if:
 
-```text
-Model used
-Reasoning effort
-Current parent HEAD
-Relevant nested repository revisions
-Files inspected
-Files created or updated
-Author Kit findings
-AAAI structure findings
-Evidence sources identified
-Protected numerical claims verified
-Source conflicts found
-Unresolved evidence gates
-Build command
-Build result
-PDF page size
-PDF page count
-Warnings
-Changed-file list
-Protected-path verification
-Readiness decisions
-```
+* Section 3 is complete polished prose;
+* the primary resource contribution is explicit;
+* a technical reader understands the two constructed resources;
+* a technical reader understands how they were produced;
+* a technical reader understands exactly what “validated” means;
+* reuse is presented as a concrete scientific contribution;
+* Table 1 is complete and sourced;
+* Figure 1 has a final caption and implementable specification;
+* the evidence map is current;
+* the PDF compiles and remains AAAI compliant;
+* the stage report exists in the repository;
+* only the permitted files were committed.
 
-End with all applicable readiness lines:
+End the report with exactly one of:
 
 ```text
-READY FOR STAGE P0A — PAPER BASELINE FROZEN
-READY FOR STAGE P1 — AAAI GENRE AND FORMAT STUDIED
-READY FOR STAGE P2 — CLAIMS AND EVIDENCE LOCKED
-READY FOR STAGE P3 — AAAI SKELETON COMPILES
+READY FOR STAGE P4 — RESOURCE CONTRIBUTION DRAFTED
 ```
 
-If a stage is blocked, replace its readiness line with:
+or:
 
 ```text
-BLOCKED BEFORE <STAGE> — <EXACT REASON>
+NARROW REPAIR REQUIRED BEFORE STAGE P4 — <EXACT DEFECT>
 ```
 
-Do not claim readiness merely because files were created. Each readiness line must be supported by the required verification.
+or:
+
+```text
+BLOCKED BEFORE STAGE P4 — <EXACT REASON>
+```
