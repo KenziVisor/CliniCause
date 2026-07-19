@@ -1,0 +1,182 @@
+\documentclass[letterpaper]{article}
+
+% AAAI-27 author-kit baseline. Keep submission mode until the anonymous-review
+% process is complete.
+\usepackage[submission]{aaai2027}
+\usepackage[hyphens]{url}
+\usepackage{graphicx}
+\urlstyle{rm}
+\def\UrlFont{\rm}
+\usepackage{natbib}
+\usepackage{caption}
+\usepackage{booktabs}
+\frenchspacing
+\pdfinfo{/TemplateVersion (2027.1)}
+
+\setcounter{secnumdepth}{2}
+
+% Working title selected by the canonical operational plan. Revisit only after
+% the complete body and abstract exist. TODO-HUMAN G-HUM-01.
+\title{CliniCause: Constructing Reusable Causal-Analysis Datasets from Irregular ICU Records}
+\author{Anonymous Submission}
+\affiliations{}
+
+% Visible planning boxes make the structural baseline inspectable without
+% drafting scientific prose or fabricating results.
+\newcommand{\plannedcontent}[1]{%
+  \noindent\fbox{\parbox{0.94\linewidth}{\centering\textit{#1}}}\par
+}
+\newcommand{\plannedwide}[1]{%
+  \noindent\fbox{\parbox{0.96\textwidth}{\centering\textit{#1}}}\par
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+% Intentionally empty. Write the abstract only after the technical body is
+% complete and every headline statement is locked in paper_evidence_map.md.
+% Intended evidence: C01--C03, C06--C13. TODO-HUMAN G-HUM-01.
+\end{abstract}
+
+\section{Introduction}
+% Function: problem, resource-level answer, two-dataset scope, contribution
+% hierarchy, and non-deployment boundary.
+% Evidence: thesis Chapters 1, 3, and 11; claim IDs C01--C03 and C23.
+% Required qualification: observational, proxy-based resource; no prospective
+% deployment, clinical-effectiveness, or randomized-treatment claim.
+% TODO-HUMAN G-HUM-01: ratify the contribution hierarchy and claim strength.
+\plannedcontent{Planned content: problem, resource-level contribution, scope, and bounded contribution summary.}
+
+\section{Related Work}
+% Function: synthesize only the nearest irregular-time-series prediction,
+% proxy/weak-supervision, longitudinal causal-estimation, and resource strands.
+% Evidence: thesis Chapter 2 and ../literature/metadata/references.bib.
+% TODO-EVIDENCE G-EVD-01: add a verified primary CausalPFN reference before any
+% method-attribution, comparison, or theory statement is rendered.
+\plannedcontent{Planned content: compact gap-led synthesis using only verified bibliography entries.}
+
+\section{CliniCause Resource and Pipeline}
+% Function: orient the reader to the complete reusable object before component
+% details. Evidence: thesis Chapters 3--8 and evidence-map C01/C04/C17/C25.
+
+\begin{figure*}[t]
+  \plannedwide{Figure 1 placeholder: end-to-end CliniCause resource and pipeline.}
+  % Intended source: thesis method chapters plus current repository interfaces.
+  % Intended width: two columns. Main-paper artifact.
+  % Regeneration: paper-native vector/redraw; no screenshots.
+  % Gate: TODO-HUMAN G-HUM-01 for final emphasis; TODO-RUNTIME G-RUN-01 for any
+  % statement that current tests pass.
+  \caption{Planned Figure 1: CliniCause resource and pipeline.}
+  \label{fig:pipeline}
+\end{figure*}
+
+\subsection{Source Cohorts and Preprocessing}
+% Function: identify datasets, analysis unit, cohort flow, preprocessing, and
+% split boundary.
+% Evidence: thesis Chapters 3--4; checked_cohort_candidates.csv;
+% checked_predictive_exports.csv; claims C02/C03.
+% Locked values: 26,845 MIMIC-III and 7,993 PhysioNet majority-vote analysis
+% records. Always call them analysis records unless patient uniqueness is proven.
+% TODO-EVIDENCE G-EVD-02: exact split/checkpoint linkage remains incomplete.
+\plannedcontent{Planned content: cohort definitions, analysis units, preprocessing, and split boundaries.}
+
+\subsection{Proxy Construction}
+% Function: define the one-rule/four-predictive-source construction and proxy
+% label semantics without calling it a trained ensemble.
+% Evidence: thesis Chapters 5--6; checked proxy files; checked predictive files;
+% claims C04--C07.
+% Qualification: model-derived proxy constructs are not adjudicated diagnoses.
+\plannedcontent{Planned content: rule source, predictive sources, aggregation, and proxy semantics.}
+
+\subsection{Causal Estimation and Validation}
+% Function: state the estimand and exposure/outcome/confounder roles, introduce
+% ForestDML, LinearDML, and CausalPFN, and distinguish each diagnostic.
+% Evidence: thesis Chapters 7--8; checked CATE, matching, sensitivity, and
+% permutation files; claims C08--C19.
+% TODO-EVIDENCE G-EVD-01: CausalPFN primary citation.
+% TODO-EVIDENCE G-EVD-02: producing revisions/configurations.
+% TODO-RUNTIME G-RUN-01: static current contract is inspected but not executed.
+\plannedcontent{Planned content: estimand, estimator roles, validation contract, and diagnostic boundaries.}
+
+\section{Evaluation}
+
+\subsection{Experimental Setup}
+% Function: specify datasets, archived selection rule, metrics, sampling
+% conditions, and analysis denominators.
+% Evidence: results_source_packet.md; results_decision_register.md; checked CSVs;
+% claims C02/C03/C05/C08/C09/C25.
+% Qualification: one selected archived predictive run per model/dataset; do not
+% imply repeated-run uncertainty or statistical superiority.
+% TODO-EVIDENCE G-EVD-02 applies to exact production lineage.
+\plannedcontent{Planned content: checked archive, selection rule, metrics, sampling conditions, and qualifications.}
+
+\subsection{Predictive Results}
+% Function: show the compact four-model, two-dataset archived comparison.
+% Evidence: checked_predictive_metrics.csv, selection PRIMARY_MAIN_TEXT;
+% claims C06/C07 and the protected numerical baseline.
+
+\begin{table*}[t]
+  \plannedwide{Table 1 placeholder: dataset scope and archived predictive test metrics.}
+  % Intended source: checked_cohort_candidates.csv and
+  % checked_predictive_metrics.csv. Two-column main-paper table.
+  % Required label: archived selected runs; no significance claim.
+  \caption{Planned Table 1: dataset scope and archived predictive results.}
+  \label{tab:predictive}
+\end{table*}
+
+\plannedcontent{Planned content: result-led comparison tied directly to Table 1.}
+
+\subsection{Causal Results}
+% Function: present cross-estimator direction, the PhysioNet-shock exception,
+% and outcome-downsampling direction checks.
+% Evidence: checked_cate_candidates.csv; claims C09--C13.
+% Locked summaries: DML 19/19; all three 18/19; original/downsampled 55/57.
+% Required qualification: model-estimated observational proxy effects, not
+% randomized effects, clinical recommendations, or intervention guarantees.
+
+\begin{figure*}[t]
+  \plannedwide{Figure 2 placeholder: cross-estimator directional agreement for 19 dataset--exposure combinations.}
+  % Intended source: checked_cate_candidates.csv at full precision.
+  % Intended width: two columns. Main-paper artifact.
+  % Required exception marker: PhysioNet shock.
+  \caption{Planned Figure 2: cross-estimator directional agreement.}
+  \label{fig:agreement}
+\end{figure*}
+
+\begin{table*}[t]
+  \plannedwide{Table 2 placeholder: compact CATE and directional-concordance summary.}
+  % Intended source: checked_cate_candidates.csv.
+  % Include the 19/19, 18/19, and 55/57 denominators and name exceptions.
+  % Use rounded display values; preserve full precision for calculations.
+  \caption{Planned Table 2: causal-estimation and directional-concordance summary.}
+  \label{tab:causal}
+\end{table*}
+
+\plannedcontent{Planned content: checked central pattern, named exceptions, and bounded robustness interpretation.}
+
+\section{Discussion and Limitations}
+% Function: interpret resource reuse and within-design triangulation while
+% consolidating limitations: proxy validity, observational identification,
+% estimator disagreement, partial validation coverage, incomplete producing
+% lineage, current runtime status, and release status.
+% Evidence: thesis Chapter 11; claims C14--C25; evidence-map gate register.
+% TODO-RELEASE G-REL-01: do not render a public-availability statement until an
+% anonymous artifact, URL, license, and instructions exist.
+% TODO-HUMAN G-HUM-01/G-HUM-02: scientific/ethics/anonymity review.
+\plannedcontent{Planned content: bounded interpretation, explicit failure modes, provenance limits, and release state.}
+
+\section{Conclusion}
+% Function: restate only the ratified resource-level contribution and checked
+% scope; introduce no new number, citation, or clinical implication.
+% Evidence: locked claims only. TODO-HUMAN G-HUM-01.
+\plannedcontent{Planned content: concise resource-level conclusion with no new claims.}
+
+% The approved repository bibliography is connected without copying or editing
+% it. No citation is rendered until its exact use is evidenced and drafted.
+\bibliography{../literature/metadata/references}
+
+% AAAI-27 requires the reproducibility checklist as a separate submission-field
+% upload. Do not \input or append AuthorKit27/ReproducibilityChecklist.tex here.
+
+\end{document}

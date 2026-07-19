@@ -1,795 +1,784 @@
-Stage: Narrow Scientific Repair After Thesis Compression
+# CliniCause AAAI-27 Paper — Establish the Evidence Baseline, Study the AAAI Format, and Build the Manuscript Skeleton
 
-Model/reasoning level:
-Use the strongest available reasoning mode. This is a narrow post-review repair of a substantially completed thesis-compression stage.
+## Model and reasoning
+
+* **Model:** GPT-5.6
+* **Reasoning effort:** High
+
+This task requires broad repository inspection and careful evidence classification, but it does not require speculative scientific reasoning or manuscript prose generation.
+
+---
+
+## Canonical authority
+
+The canonical paper-writing plan is:
+
+```text
+thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan.md
+```
+
+Read it completely before doing any other work.
+
+Treat that document as authoritative for:
+
+* the paper’s primary and secondary contributions;
+* the positioning of the validated causal-analysis datasets;
+* the positioning of CausalPFN;
+* the role of the LLM;
+* the writing order;
+* the AAAI paper architecture;
+* the claim and tone policy;
+* protected numerical results;
+* the division of responsibility between ChatGPT, Codex, the author, and the supervisor.
+
+Do not redesign the paper strategy.
+
+---
+
+## Task scope
+
+Implement the mechanical and evidence-foundation work for:
+
+* **Stage P0 — Baseline and source freeze**
+* **Stage P0A — AAAI structure and genre study**
+* **Stage P1 — Claim and evidence map**
+* **Stage P2 — Compilable AAAI manuscript skeleton**
+
+Do not write the scientific manuscript prose in this task.
+
+The manuscript itself will be written by ChatGPT in later stages. Your job here is to establish a reliable repository baseline, map the evidence, study the AAAI format and communication structure, and create a correct anonymous LaTeX skeleton.
+
+---
+
+## Current repository context
 
 Repository:
+
+```text
 KenziVisor/CliniCause
+```
 
-Current expected HEAD:
-26b639cf3da6551e0e2aee388c8b2bfd7368d238
-commit message: aaai authors kit
+Paper workspace:
 
-Thesis-compression baseline:
-ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3
-commit message: thesis compression
+```text
+thesis-writing/paper-aaai/
+```
 
-Reviewed parent thesis state:
-d77fada7b63c2b0b37746302fcda1c6351fa3e9b
-commit message: SAnD removal
+The workspace already contains the uncompressed AAAI-27 Author Kit and the canonical operational plan.
 
-Do not commit or push.
+The thesis and its evidence infrastructure are under:
 
-======================================================================
-1. CONTEXT AND SCOPE
-======================================================================
+```text
+thesis-writing/
+```
 
-The current HEAD contains one commit after the thesis-compression commit. That later commit adds the AAAI 2027 author kit under:
+Important source families include:
 
-thesis-writing/paper-aaai/AuthorKit27/
+```text
+thesis-writing/thesis/
+thesis-writing/results/
+thesis-writing/reproducibility/
+thesis-writing/literature/
+thesis-writing/logs/
+thesis-writing/planning/
+thesis-writing/audit/
+```
 
-It is unrelated to the thesis manuscript repair.
+The parent repository may contain unrelated code and debugging work. Inspect it, classify it, and protect it. Do not reset or clean anything.
 
-Continue from the current HEAD. Do not reset, detach, revert, rewrite, or remove the AAAI commit.
+---
 
-Treat:
+## Mandatory initial verification
 
-- `26b639cf` as the repository baseline;
-- `ddbf52b4` as the current thesis-manuscript baseline;
-- `d77fada7` as the useful pre-compression reference for material that may need to be restored.
+Run and record:
 
-The AAAI author kit is protected and outside this task.
-
-Do not:
-
-- edit anything under `thesis-writing/paper-aaai/`;
-- apply AAAI formatting requirements to the thesis;
-- interpret AAAI prohibitions on `setspace`, margins, page size, fonts, or XeLaTeX as thesis requirements;
-- include the AAAI templates in the thesis build;
-- search the AAAI kit as if it were active thesis prose;
-- modify the conference-paper work.
-
-The active thesis remains:
-
-thesis-writing/thesis/main.tex
-
-with its chapters, front matter, appendix, bibliography, and generated `main.pdf`.
-
-======================================================================
-2. REVIEW DECISION
-======================================================================
-
-The thesis-compression commit is broadly successful.
-
-Preserve its principal improvements:
-
-- complete active SAnD clearance;
-- four-model predictive scope:
-  STraTS, GRU, GRU-D, and TCN;
-- five-source aggregate:
-  four predicted-label sources plus one rule-derived source;
-- merged experimental and validation chapter;
-- removal of duplicative contribution, audit, research-question, limitation, and status tables;
-- preservation of all checked numerical Results;
-- existing approximately 1.5-spaced body prose;
-- improved total length and narrative flow.
-
-Do not reopen the full compression stage.
-
-A narrow repair is required in three areas:
-
-1. restore sufficient operational detail for the proxy-state definitions;
-2. restore a compact executed-configuration and provenance specification;
-3. resolve the inactive Chapter 9 compatibility stub.
-
-The author prioritizes scientific completeness over a particular page count.
-
-The current 94-page PDF is not a target that must be preserved. It is acceptable and expected for the repair to add several pages. Do not cut other strong material merely to compensate for restored content.
-
-A final length around 99–105 pages may arise naturally, but no page number is mandatory.
-
-======================================================================
-3. BASELINE VERIFICATION
-======================================================================
-
-Before editing, run and record:
-
+```bash
 git status --short
 git branch --show-current
-git log -10 --oneline
-git show --stat --oneline 26b639cf3da6551e0e2aee388c8b2bfd7368d238
-git diff --stat ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3..26b639cf3da6551e0e2aee388c8b2bfd7368d238
-git show --stat --oneline ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3
-git diff --stat d77fada7b63c2b0b37746302fcda1c6351fa3e9b..ddbf52b489bc7bffc0b17f39d54aca5d766fe8e3
+git rev-parse HEAD
+git log -15 --oneline --decorate
+git submodule status
+```
 
-Confirm that the commit after `ddbf52b4` changes only the AAAI author-kit area and does not change active thesis source.
+For every nested Git repository or submodule that is relevant to the paper, record:
 
-Read all applicable `AGENTS.md` and thesis-local instructions.
+```bash
+git -C <path> status --short
+git -C <path> branch --show-current
+git -C <path> rev-parse HEAD
+git -C <path> log -5 --oneline
+```
+
+Also inspect all applicable instruction files before acting:
+
+```text
+AGENTS.md
+README.md
+CONTRIBUTING.md
+WORKFLOW.md
+```
+
+Search from the repository root and within `thesis-writing/` and `paper-aaai/`.
+
+Do not assume that the newest commit is the thesis baseline or the historical producing-code baseline. Distinguish:
+
+* current parent HEAD;
+* current nested-repository revisions;
+* current thesis baseline;
+* checked-results baseline;
+* current repaired-code state;
+* runtime-validation state;
+* Author Kit baseline;
+* unrelated intervening commits.
+
+---
+
+# Part A — Stage P0: Freeze the paper evidence baseline
+
+## A1. Inspect the paper workspace
+
+Inventory:
+
+```text
+thesis-writing/paper-aaai/
+```
+
+Identify:
+
+* the canonical operational plan;
+* all AAAI Author Kit files;
+* sample anonymous manuscript source;
+* rendered sample PDFs;
+* checklist source and PDF;
+* bibliography/style files;
+* existing paper drafts, notes, figures, tables, or generated files;
+* duplicated, legacy, or irrelevant kit files.
+
+Do not delete or reorganize files in this task.
+
+## A2. Identify authoritative scientific sources
+
+Locate and classify the repository sources for:
+
+### Thesis content
+
+* complete thesis source;
+* Introduction;
+* related work;
+* dataset and preprocessing chapters;
+* proxy-state construction;
+* predictive modeling;
+* causal methodology;
+* robustness;
+* Results;
+* Discussion;
+* Conclusion;
+* abstract.
+
+### Checked numerical evidence
+
+Locate the authoritative sources for:
+
+* MIMIC-III causal-analysis population;
+* PhysioNet causal-analysis population;
+* number of admitted proxy-state exposures per dataset;
+* all eight predictive model–dataset result rows;
+* all original-cohort CausalForestDML results;
+* all original-cohort LinearDML results;
+* all original-cohort CausalPFN results;
+* 19/19 CausalForestDML–LinearDML directional agreement;
+* 18/19 all-three-estimator directional agreement;
+* PhysioNet shock disagreement;
+* matching results;
+* downsampling robustness;
+* sensitivity and permutation evidence;
+* result manifests, hashes, and validation reports.
+
+Do not treat thesis prose as the highest numerical authority when a checked table, manifest, or source packet exists.
+
+### Resource-validation evidence
+
+Locate evidence supporting statements about:
+
+* canonical identifiers;
+* schema validation;
+* deterministic transformations;
+* exact cohort equality;
+* rejection of silent intersections;
+* rejection of malformed predictions;
+* duplicate-conflict handling;
+* artifact metadata;
+* manifests and receipts;
+* run-scoped outputs;
+* seed handling;
+* dataset isolation;
+* runtime-validation status;
+* current code versus historical producing-code provenance.
+
+### Literature
+
+Locate:
+
+* the approved bibliography;
+* literature metadata;
+* relevant PDFs;
+* citation keys for all methods and datasets;
+* whether a verified primary CausalPFN reference exists.
+
+Do not add literature in this task unless the canonical bibliography is missing an essential citation and the source can be verified reliably. Record missing citations as gates.
+
+## A3. Establish protected numerical claims
+
+Create a frozen list containing at least:
+
+```text
+MIMIC-III causal-analysis records: 26,845
+PhysioNet causal-analysis records: 7,993
+MIMIC-III admitted proxy-state exposures: 9
+PhysioNet admitted proxy-state exposures: 10
+
+Predictive models:
+- STraTS
+- GRU
+- GRU-D
+- TCN
+
+MIMIC-III archived predictive leader:
+- STraTS across loss, AUROC, AUPRC, and minRP
+
+PhysioNet archived predictive leader:
+- GRU-D across loss, AUROC, AUPRC, and minRP
+
+CausalForestDML–LinearDML directional agreement:
+- 19/19
+
+All-three-estimator directional agreement including CausalPFN:
+- 18/19
+
+Central disagreement:
+- PhysioNet shock
+```
+
+Verify every item against the highest-authority repository source.
+
+Do not silently “correct” a number. If sources disagree, record the conflict.
+
+## A4. Record unresolved evidence gates
+
+Use these exact categories:
+
+```text
+TODO-EVIDENCE
+TODO-RUNTIME
+TODO-RELEASE
+TODO-AAAI
+TODO-HUMAN
+```
+
+Every gate must specify:
+
+* exact missing fact;
+* expected source;
+* why it matters;
+* whether it blocks the first draft;
+* whether it blocks submission.
+
+---
+
+# Part B — Stage P0A: Study the AAAI structure and genre
+
+## B1. Study the Author Kit in full
+
+Read:
+
+```text
+AnonymousSubmission2027.tex
+CameraReady2027.tex
+ReproducibilityChecklist.tex
+aaai2027.sty
+aaai2027.bst
+```
+
+Inspect the rendered PDFs as well as the source.
+
+Extract the binding requirements for:
+
+* document class;
+* submission mode;
+* anonymity;
+* title and author blocks;
+* US Letter;
+* two-column layout;
+* allowed and forbidden packages;
+* font handling;
+* citations and bibliography;
+* figure and table captions;
+* equations;
+* footnotes;
+* URLs;
+* appendices;
+* supplementary material;
+* checklist placement;
+* source-file structure;
+* PDF requirements;
+* metadata;
+* prohibited spacing, margin, and font manipulation.
+
+Do not reconstruct the preamble from memory. The final skeleton must copy the relevant 2027 anonymous sample structure.
+
+## B2. Study AAAI as a scientific paper genre
+
+Analyze the sample manuscript for:
+
+* page rhythm;
+* paragraph length;
+* section depth;
+* title and abstract density;
+* Introduction structure;
+* contribution-list style;
+* related-work compression;
+* method/result balance;
+* typical figure widths;
+* table density;
+* caption length;
+* use of appendices and supplementary references;
+* conclusion length.
+
+Where repository or network access permits, inspect a small purposeful sample of recent AAAI papers with at least some of these characteristics:
+
+* dataset or resource contribution;
+* healthcare or clinical AI;
+* causal inference;
+* heterogeneous-effect estimation;
+* integrated AI framework;
+* reproducibility or code/data release.
+
+Use only a small relevant sample. Do not conduct an open-ended literature review.
+
+For each sampled paper, record:
+
+```text
+paper
+year
+primary claim
+section order
+approximate page allocation
+figures and tables
+contribution wording
+resource-validation wording
+main-paper versus supplement boundary
+useful structural lesson
+```
+
+The purpose is to learn structure, not copy wording.
+
+## B3. Produce the AAAI paper architecture
+
+Confirm or narrowly refine the approved architecture:
+
+```text
+Abstract
+1 Introduction
+2 Related Work
+3 Constructing the CliniCause Datasets
+  3.1 Source Cohorts and Analysis Units
+  3.2 Proxy-State Design and Deterministic Construction
+  3.3 Predictive Annotations from Irregular Time Series
+  3.4 Causal-Analysis Schema and DAG Metadata
+  3.5 Dataset Validation and Provenance
+4 Empirical Evaluation
+  4.1 Prediction Tasks and Metrics
+  4.2 Effect Estimators and Cross-Estimator Evaluation
+  4.3 Matching and Robustness Diagnostics
+5 Results
+  5.1 Resource Summary and Predictive Characterization
+  5.2 Effect Patterns and Estimator Agreement
+  5.3 Robustness and Cross-Dataset Findings
+6 Discussion
+  6.1 Research Utility and Reuse
+  6.2 CausalPFN and Estimator Triangulation
+  6.3 Limitations and Appropriate Interpretation
+7 Conclusion
+References
+```
+
+You may recommend merging subsections for space, but do not change the scientific hierarchy.
+
+Confirm the working seven-page technical-content budget and mark it `TODO-AAAI` if the exact AAAI-27 Main Track limit is not proven by an authoritative current source.
+
+---
+
+# Part C — Stage P1: Build the claim–evidence map
+
+Create a durable claim–evidence map with these fields:
+
+```text
+claim ID
+claim text
+claim role
+paper location
+supporting source
+support type
+confidence
+required qualification
+associated figure/table
+unresolved gate
+status
+```
+
+Use claim roles:
+
+```text
+primary
+secondary
+empirical
+supporting
+limitation
+future-work
+```
+
+At minimum include claims for:
+
+## Primary resource claims
+
+* CliniCause constructs two reusable causal-analysis datasets.
+* The resources are derived separately from MIMIC-III and PhysioNet 2012.
+* Each resource includes explicit analysis identifiers, proxy-state exposures, mortality outcomes, observed covariates, graph-derived adjustment metadata, predictive annotations, and estimator-ready outputs.
+* The resources preserve dataset-specific semantics through a common analytical interface.
+* Validation supports structural integrity, cohort integrity, artifact integrity, and analytical reuse.
+
+## Pipeline claims
+
+* The pipeline is evidence tracked.
+* Proxy-state design proposals were LLM assisted.
+* Project-selected proposals were encoded in deterministic source.
+* The LLM was not a runtime patient-level estimator.
+* Four predictive models supplied learned annotations.
+* Archived causal runs aggregate one rule-derived source and four prediction-derived sources.
+* Source-coded DAGs operationalize exposure-specific adjustment assumptions.
+
+## Empirical claims
+
+* The resources contain 26,845 MIMIC-III and 7,993 PhysioNet primary causal-analysis records.
+* STraTS leads the four archived MIMIC-III predictive metrics.
+* GRU-D leads the corresponding PhysioNet metrics.
+* CausalForestDML and LinearDML agree in direction for 19/19 comparisons.
+* CausalPFN joins the prevailing direction in 18/19 comparisons.
+* CausalPFN therefore provides meaningful cross-estimator triangulation.
+* PhysioNet shock is the central estimator-disagreement case.
+* The shared workflow is demonstrated across two heterogeneous ICU sources without numerical pooling.
+
+## Reuse claims
+
+* The resources support follow-up evaluation of alternative estimators.
+* They support replacement or refinement of proxy definitions.
+* They support evaluation of alternative DAGs and adjustment sets.
+* They reduce the need to rebuild the complete integration pipeline for each follow-up study.
+* They expose construct and cohort lineage for audit and extension.
+
+For every claim, prefer direct positive wording. Add qualifications only where the evidence boundary requires them.
+
+Do not weaken supported claims by beginning them with phrases such as:
+
+```text
+we only
+we merely
+we just
+preliminary
+tentative
+```
+
+unless the evidence truly requires such wording.
+
+---
+
+# Part D — Stage P2: Build the anonymous AAAI manuscript skeleton
+
+## D1. Create the working manuscript
+
+Create:
+
+```text
+thesis-writing/paper-aaai/paper.tex
+```
+
+Requirements:
+
+* start from the 2027 anonymous submission sample;
+* preserve the correct AAAI preamble;
+* use submission mode;
+* use anonymous author information;
+* do not include acknowledgments;
+* do not include identifying URLs, repository names tied to the authors, usernames, local paths, institutions, or metadata;
+* use the approved working title:
+
+```text
+CliniCause: Constructing Reusable Causal-Analysis Datasets from Irregular ICU Records
+```
+
+* create every approved section and subsection;
+* include an empty abstract placeholder marked:
+
+```latex
+% Abstract will be written after the complete paper body.
+```
+
+* connect the existing approved bibliography without modifying the bibliography database;
+* insert labeled placeholders for the planned figures and tables;
+* add precise evidence comments at the intended locations;
+* do not write scientific paragraphs.
+
+## D2. Planned placeholders
+
+Include placeholders for:
+
+### Figure 1
+
+```text
+CliniCause dataset-construction and validation pipeline
+```
+
+### Table 1
+
+```text
+Resource summary for MIMIC-III and PhysioNet
+```
+
+### Table 2
+
+```text
+Predictive performance across four models and two datasets
+```
+
+### Figure 2 or Table 3
+
+```text
+Cross-estimator directional agreement, including CausalPFN
+```
+
+Do not create fabricated figures or placeholder numerical values.
+
+Use LaTeX comments identifying:
+
+* intended source;
+* intended width;
+* intended section;
+* whether the artifact is main-paper or supplement;
+* unresolved evidence gate.
+
+## D3. Checklist
+
+Determine from the current kit whether the reproducibility checklist belongs:
+
+* inside the main `.tex`;
+* after the references;
+* in a separate file;
+* or in another submission field.
+
+Follow the kit exactly.
+
+When uncertain, preserve the kit’s example integration and mark a precise `TODO-AAAI`.
+
+Do not answer checklist questions speculatively.
+
+## D4. Build
+
+Determine the correct build command from the kit and available local tooling.
+
+Compile `paper.tex`.
 
 Record:
 
-- current HEAD;
-- current thesis baseline;
-- pre-existing dirty files;
-- nested-repository state;
-- current PDF page count;
-- existing build command;
-- existing body-spacing configuration;
-- protected paths;
-- exact files expected to change in this repair.
+* exact command;
+* engine;
+* bibliography command;
+* output PDF path;
+* page size;
+* page count;
+* whether layout is two column;
+* warnings;
+* missing citations;
+* missing references;
+* overfull or underfull boxes;
+* font-related warnings;
+* checklist-related failures.
 
-Do not reset, clean, normalize, stage, or overwrite unrelated work.
+The empty skeleton should compile without scientific prose.
 
-======================================================================
-4. PROTECTED MATERIAL
-======================================================================
+Do not install system packages or modify the environment unless explicitly authorized.
 
-Protect and verify unchanged:
+---
 
-- all checked numerical result CSVs;
-- result manifests and checksums;
-- result tables and their values;
-- result figures and figure data;
-- DAG artifacts;
-- active research code;
-- raw and processed data;
-- literature PDFs;
-- abstracts;
-- title and administrative metadata;
-- institutional forms;
-- estimator hierarchy;
-- model rankings;
-- signs, counts, sample sizes, percentages, and effect estimates;
-- citation keys except where an actual citation repair is required;
-- the AAAI author-kit commit and all files under `thesis-writing/paper-aaai/`;
-- all unrelated pre-existing dirty files.
+## Required repository artifacts
 
-The repair must not change:
+Create or update only these files, unless a canonical equivalent already exists:
 
-- the four learned prediction models;
-- the five-source aggregate lineage;
-- the SAnD-clearance result;
-- primary CausalForestDML status;
-- secondary LinearDML status;
-- exploratory CausalPFN status;
-- original versus downsampled population hierarchy;
-- any checked numerical result.
+```text
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/aaai_structure_notes.md
+thesis-writing/paper-aaai/paper.tex
+thesis-writing/paper-aaai/paper.pdf
+thesis-writing/paper-aaai/paper_build_report.md
+```
 
-Create an appropriate protected-content snapshot before editing and compare it after editing.
+Before creating each Markdown file, search for an existing file with the same durable role.
 
-======================================================================
-5. TASK A — RESTORE OPERATIONAL PROXY DEFINITIONS
-======================================================================
+If a canonical equivalent exists, update that file instead of creating a duplicate.
 
-This is the highest-priority repair.
+Do not create additional planning, scratch, status, summary, or transcript files.
 
-The compressed Chapter 5 currently names and broadly summarizes the proxy families, but it no longer gives enough operational information for a thesis reader to determine what each downstream prediction target and causal exposure represents.
+Generated LaTeX auxiliary files may exist locally but should not be treated as intentional deliverables.
 
-The proxy definitions are scientifically central because they define:
+---
 
-- the supervised prediction targets;
-- the predicted voter columns;
-- the mixed-source aggregate;
-- the proxy-state exposures used by matching and effect estimation;
-- the interpretation of every proxy-specific result.
+## Allowed edits
 
-A reader must not be required to inspect Python source or a Git repository merely to understand the operational meaning of each `LAT_*` variable.
+You may edit only:
 
-----------------------------------------------------------------------
-5.1 Sources of authority
-----------------------------------------------------------------------
+```text
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/aaai_structure_notes.md
+thesis-writing/paper-aaai/paper.tex
+thesis-writing/paper-aaai/paper.pdf
+thesis-writing/paper-aaai/paper_build_report.md
+```
 
-Inspect and reconcile:
+You may also update an existing canonical equivalent instead of creating one of the two Markdown files.
 
-- the current compressed Chapter 5 at `ddbf52b4`;
-- the pre-compression Chapter 5 at `d77fada7`;
-- the active PhysioNet tagger;
-- the active MIMIC tagger;
-- the existing proxy-rule citation matrix;
-- existing evidence reports describing rule behavior;
-- current bibliography entries.
+Do not edit the operational plan.
 
-Use this hierarchy:
+---
 
-1. active tagger source defines implemented behavior;
-2. validated source/schema evidence supports the reported implementation;
-3. the pre-compression chapter provides an already reviewed presentation baseline;
-4. prompt records explain design provenance but do not override active code;
-5. clinical literature provides bounded conceptual grounding, not automatic validation.
+## Protected paths
 
-Do not invent or simplify a threshold in a way that changes rule meaning.
+Treat as read-only:
 
-----------------------------------------------------------------------
-5.2 Required main-text content
-----------------------------------------------------------------------
+```text
+thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan.md
+thesis-writing/paper-aaai/aaai2027.sty
+thesis-writing/paper-aaai/aaai2027.bst
+thesis-writing/paper-aaai/AnonymousSubmission2027.tex
+thesis-writing/paper-aaai/CameraReady2027.tex
+thesis-writing/paper-aaai/ReproducibilityChecklist.tex
 
-Restore two compact but operational tables in Chapter 5:
+thesis-writing/thesis/
+thesis-writing/results/
+thesis-writing/reproducibility/
+thesis-writing/literature/
+thesis-writing/logs/
+thesis-writing/planning/
+thesis-writing/audit/
 
-1. PhysioNet proxy-state definitions;
-2. MIMIC-III proxy-state definitions.
+router.py
+STraTS/
+causal-irregular-time-series/
+data/
+logs/
+processed/
+runs/
+```
 
-Every active proxy state must have its own row.
+Do not modify checked results, thesis prose, bibliography, literature, code, datasets, manifests, logs, or Author Kit files.
 
-PhysioNet must cover all eleven active states.
+---
 
-MIMIC-III must cover all ten active states.
-
-Each row should communicate, as applicable:
-
-- exact `LAT_*` identifier;
-- construct represented;
-- principal input measurements or helper flags;
-- temporal or aggregation basis;
-- main threshold or score logic;
-- important sufficient conditions;
-- important missingness or input-mode behavior;
-- principal clinical/construct-validity boundary.
-
-The tables need not reproduce every source-code branch verbatim, but they must be operationally informative.
-
-For example, it is not sufficient to say only:
-
-“Shock combines hemodynamic and perfusion evidence.”
-
-The table should communicate the principal implemented evidence and decision form, such as the relevant pressure, lactate, heart-rate, urine, acid-base, vasopressor, or support conditions and whether the rule uses a score, conjunction, or sufficient critical marker.
-
-Likewise, it is not sufficient to say only:
-
-“Renal dysfunction combines renal measurements.”
-
-The table should communicate the relevant creatinine, change-from-baseline, BUN, urine, electrolyte, dialysis, or sufficient-condition logic implemented for that dataset.
-
-----------------------------------------------------------------------
-5.3 Balance detail and readability
-----------------------------------------------------------------------
-
-Do not blindly restore the former tables unchanged.
-
-The old tables may be used as source material, but edit them for thesis readability.
-
-Preferred structure for each table:
-
-- Proxy state;
-- Operational evidence;
-- Decision form;
-- Principal boundary.
-
-A fifth column may be used only when it materially improves clarity.
-
-Keep globally shared behavior in surrounding prose instead of repeating it in every row, including:
-
-- non-missing numeric comparisons;
-- general interpretation of negative labels;
-- broad score-versus-sufficient-condition pattern;
-- active-code authority;
-- lack of chart-adjudicated validation.
-
-Retain row-specific details when they differ materially.
-
-Use landscape `longtable` only if needed. Tables may use conventional compact spacing locally; do not force 1.5 spacing inside large tables.
+## Forbidden actions
 
 Do not:
 
-- use unreadably small text;
-- shrink the page margins;
-- abbreviate thresholds beyond recognition;
-- remove clinically important conditions merely to keep a table on one page;
-- restore verbose provenance columns;
-- restore prompt-file paths in every row;
-- turn the tables back into repository-audit matrices.
-
-----------------------------------------------------------------------
-5.4 Main-text independence and supplement boundary
-----------------------------------------------------------------------
-
-The main thesis should stand on its own scientifically.
-
-The technical evidence package may retain:
-
-- exact clause-by-clause source mappings;
-- hashes;
-- prompt-to-code lineage;
-- full source paths;
-- detailed citation-status matrices;
-- superseded versions.
-
-The main thesis must retain:
-
-- enough operational information to understand each construct;
-- the active number and identity of states;
-- the major thresholds and score/sufficient-condition form;
-- dataset-specific differences;
-- missingness and input-mode implications;
-- construct-validity limitations.
-
-Keep a concise reference to the repository evidence package for exhaustive clauses, but do not use that reference as a substitute for the operational definitions.
-
-----------------------------------------------------------------------
-5.5 Preserve the successful compression
-----------------------------------------------------------------------
-
-Do not restore:
-
-- the full prompt inventory table;
-- the prompt-to-source traceability matrix;
-- the proxy-source-type table if prose already explains it;
-- repeated artifact-path inventories;
-- repeated version-history narrative;
-- repeated full disclaimers;
-- inactive or superseded rules;
-- SAnD content.
-
-Preserve the compressed chapter’s clearer structure and the existing section on predicted and aggregated proxy labels.
-
-======================================================================
-6. TASK B — ADD A COMPACT EXECUTED-CONFIGURATION SPECIFICATION
-======================================================================
-
-The merged “Experimental and Validation Design” chapter is structurally sound, but it now needs a compact specification of the executed settings required to interpret or attempt reproduction of the reported experiments.
-
-Do not restore the old audit-heavy Chapters 8 and 9.
-
-Add one concise subsection, for example:
-
-“Executed Settings and Provenance Status”
-
-or:
-
-“Confirmed Experimental Settings and Unresolved Lineage”
-
-Place it where it best connects the experiment-family description to result admission.
-
-----------------------------------------------------------------------
-6.1 Required content
-----------------------------------------------------------------------
-
-Create one compact table with approximately these columns:
-
-- Analysis component;
-- Confirmed or execution-supported settings;
-- Unresolved provenance or interpretation boundary.
-
-Cover, where supported by current evidence:
-
-Prediction:
-
-- PhysioNet 2012 and MIMIC-III;
-- STraTS, GRU, GRU-D, and TCN;
-- multi-label prediction of rule-derived proxy labels;
-- archived dataset–model combinations;
-- prediction threshold of 0.5;
-- exported probability and binary fields;
-- exported split setting where verified;
-- seed, run identifier, and training fraction where directly supported by archived logs or checked evidence;
-- checkpoint-selection metric;
-- STraTS pretraining distinction.
-
-Causal analysis:
-
-- two datasets;
-- CausalForestDML, LinearDML, and CausalPFN;
-- original and outcome-downsampled conditions;
-- twelve archived run families;
-- original cohorts as primary;
-- outcome-downsampled populations as robustness analyses;
-- five-source mixed aggregate;
-- estimator hierarchy;
-- exposure-specific analysis;
-- matching and diagnostic roles.
-
-Permutation and sensitivity:
-
-- ten permutation trials where verified;
-- seed 42 where verified;
-- treatment-versus-outcome permutation distinction;
-- CausalPFN diagnostic limitations;
-- sensitivity evidence-status distinctions.
-
-Provenance gaps:
-
-- missing processed-pickle hashes;
-- missing split manifests or identifiers;
-- incomplete checkpoint-to-export mapping;
-- missing numbered final causal configurations;
-- incomplete producing commands or archive-copy records;
-- incomplete source/environment lineage.
-
-Only include a setting as “confirmed” when current checked evidence supports it.
-
-Classify uncertain settings explicitly as:
-
-- source-defined;
-- log-supported;
-- artifact-supported;
-- unresolved;
-- not applicable.
-
-Do not infer historical execution merely from current defaults.
-
-----------------------------------------------------------------------
-6.2 Keep it compact
-----------------------------------------------------------------------
-
-The subsection should add approximately one or two pages, not recreate the previous four experiment/reproducibility tables.
-
-Do not restore:
-
-- full environment-field inventories;
-- hardware wish lists;
-- ten-item admission checklists;
-- repeated source-status columns;
-- full artifact path matrices;
-- operational configuration precedence unless needed to interpret a reported setting.
-
-The purpose is to make the experiment sufficiently specified, not to reproduce the audit package.
-
-======================================================================
-7. TASK C — RESOLVE THE INACTIVE CHAPTER 9 STUB
-======================================================================
-
-The file:
-
-thesis-writing/thesis/chapters/09_experimental_design.tex
-
-currently contains only an inactive compatibility comment and is no longer included by `main.tex`.
-
-Search the repository for:
-
-- direct references to this path;
-- scripts that expect it;
-- validation tools that inspect it;
-- planning files that rely on its existence;
-- local instructions requiring chapter placeholders.
-
-If no active dependency requires the path:
-
-- delete the file.
-
-If an active dependency requires it:
-
-- retain it;
-- expand the comment to identify the exact dependency;
-- state that active content is in `08_robustness_sensitivity_validation.tex`;
-- ensure it cannot accidentally define duplicate labels or be included in the build.
-
-Do not re-enable the old chapter.
-
-Do not split the merged chapter again.
-
-======================================================================
-8. LINE SPACING AND TYPOGRAPHY
-======================================================================
-
-The thesis already uses:
-
-\usepackage{setspace}
-\onehalfspacing
-
-This provides approximately 1.5 spacing for ordinary body prose.
-
-Preserve this configuration unchanged unless direct rendered evidence shows it is not functioning.
-
-Do not:
-
-- add another spacing package or command;
-- stack `\setstretch{1.5}` on top of `\onehalfspacing`;
-- tighten line spacing to offset the restored pages;
-- reduce margins;
-- reduce body font size;
-- shrink figures;
-- globally change table row spacing;
-- apply AAAI formatting rules to the thesis.
-
-Use context-appropriate compact spacing for:
-
-- long tables;
-- captions;
-- bibliography;
-- contents and lists;
-- equations;
-- title material;
-- footnotes;
-- dense technical entries.
-
-The page increase must reflect restored scientific content, not typographic manipulation.
-
-======================================================================
-9. ALLOWED EDITS
-======================================================================
-
-Expected thesis edits are limited primarily to:
-
-- `thesis-writing/thesis/chapters/05_proxy_state_construction.tex`;
-- `thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex`;
-- `thesis-writing/thesis/chapters/09_experimental_design.tex`, only for deletion or clarified compatibility handling;
-- `thesis-writing/thesis/main.pdf`;
-- LaTeX auxiliary/index effects generated by a clean build;
-- one narrow repair evidence report in the established logs directory.
-
-Edit `main.tex` only if required by deletion or integration, and do not change its spacing, margins, fonts, language setup, front matter, or chapter order.
-
-Do not create multiple overlapping reports.
-
-Do not modify `prompt.txt` except when the local workflow explicitly uses it as Codex’s current instruction file.
-
-======================================================================
-10. FORBIDDEN EDITS
-======================================================================
-
-Do not modify:
-
-- `thesis-writing/paper-aaai/`;
-- active research code;
-- model outputs;
-- causal outputs;
-- checked result CSVs;
-- result manifests;
-- raw or processed data;
-- figures or figure source values;
-- DAG definitions or artifacts;
-- abstracts;
-- title pages;
-- institutional metadata;
-- bibliography entries unless a directly necessary citation repair is identified;
-- unrelated planning or audit history;
-- unrelated dirty files.
-
-Do not run:
-
-- preprocessing;
-- model training;
-- prediction;
-- matching;
-- causal estimation;
-- sensitivity regeneration;
-- permutation regeneration;
-- new experiments.
-
-Static inspection and thesis build/validation are authorized.
-
-======================================================================
-11. REQUIRED VALIDATION
-======================================================================
-
-11.1 Scientific validation
-
-Verify that Chapter 5 contains:
-
-- all eleven PhysioNet proxy states;
-- all ten MIMIC proxy states;
-- no extra or obsolete states;
-- exact active identifiers;
-- operationally meaningful evidence and decision logic;
-- important sufficient conditions;
-- dataset-specific distinctions;
-- correct missingness/input-mode qualifications;
-- no statement upgrading a proxy to a diagnosis;
-- no SAnD content.
-
-Compare the restored descriptions against active tagger source.
-
-Create a row-level validation ledger:
-
-- proxy identifier;
-- source function or rule;
-- thesis row;
-- main thresholds/conditions checked;
-- status;
-- discrepancy, if any.
-
-Any unresolved rule discrepancy is blocking.
-
-11.2 Experimental-setting validation
-
-For every setting placed in the compact configuration table, record its evidence class and source.
-
-Verify that:
-
-- a current default is not presented as a historical producing value;
-- an archived path is not presented as a portable command;
-- requirements are not presented as producing-environment proof;
-- original and downsampled populations remain distinct;
-- estimator hierarchy remains correct;
-- the permutation count and seed are reported only where verified;
-- prediction threshold and export schema remain correct;
-- the five-source aggregate remains exact.
-
-11.3 Protected-content comparison
-
-Confirm:
-
-- zero checked-result value changes;
-- zero result-figure changes;
-- zero abstract changes;
-- zero title/admin changes;
-- zero research-code changes;
-- zero AAAI author-kit changes;
-- zero SAnD reintroduction;
-- zero changes to the four-model scope;
-- zero changes to estimator hierarchy.
-
-Explain all citation, label, reference, and numeric-token changes.
-
-11.4 LaTeX build
-
-Run a clean build using the existing documented process:
-
-latexmk -C
-latexmk -xelatex main.tex
-
-from the thesis directory.
-
-Check:
-
-- build exit status;
-- XeLaTeX and Biber completion;
-- undefined citations;
-- undefined references;
-- multiply defined labels;
-- missing files;
-- missing characters;
-- table overflow;
-- overfull/underfull warnings;
-- bibliography errors;
-- PDF syntax.
-
-Run:
-
-qpdf --check main.pdf
-
-or the established equivalent.
-
-11.5 PDF and visual inspection
-
-Record:
-
-- starting page count;
-- final page count;
-- pages added;
-- where the added pages occur.
-
-Render and inspect the complete PDF because pagination will change.
-
-At minimum, inspect individually at adequate resolution:
-
-- contents;
-- List of Tables;
-- all Chapter 5 pages;
-- both restored proxy-definition tables;
-- Chapter 8;
-- the compact configuration table;
-- chapter transitions;
-- Results opening;
-- bibliography;
-- final covers.
-
-Check:
-
-- table readability;
-- repeated longtable headers;
-- clipping;
-- overlap;
-- broken identifiers;
-- detached headings;
-- excessive whitespace;
-- blank or nearly blank pages;
-- RTL integrity;
-- line-spacing consistency;
-- correct table numbering;
-- correct page references.
-
-The restored tables may be compactly spaced, but ordinary English and Hebrew prose must remain approximately 1.5-spaced.
-
-======================================================================
-12. REQUIRED DELIVERABLES
-======================================================================
-
-Produce:
-
-1. revised Chapter 5;
-2. revised merged experimental/validation chapter;
-3. resolved Chapter 9 stub;
-4. rebuilt `main.pdf`;
-5. one narrow evidence report, for example:
-
-thesis-writing/logs/thesis_compression_scientific_repair_report.md
-
-Do not create redundant Markdown or CSV files when the evidence can be included in the single report.
-
-The report should contain:
-
-# Thesis Compression Scientific Repair
-
-## Baseline
-- current HEAD;
-- thesis baseline commit;
-- unrelated AAAI commit classification;
-- worktree state;
-- protected scope;
-- initial PDF page count;
-- spacing status.
-
-## Review findings addressed
-- insufficient proxy operational detail;
-- insufficient compact executed-setting specification;
-- inactive Chapter 9 stub.
-
-## Proxy-definition repair
-- source hierarchy;
-- table design;
-- all 21 proxy rows;
-- row-level source validation;
-- important details restored;
-- audit detail deliberately not restored.
-
-## Experimental-setting repair
-- confirmed settings;
-- evidence classes;
-- unresolved provenance;
-- material deliberately kept in external evidence package.
-
-## Stub resolution
-- dependency search;
-- deletion or retention decision;
-- justification.
-
-## Scientific preservation
-- results unchanged;
-- figures unchanged;
-- abstracts unchanged;
-- model and estimator scope unchanged;
-- SAnD remains absent;
-- five-source lineage unchanged;
-- 1.5 body spacing preserved.
+* write manuscript prose;
+* rewrite thesis material;
+* change scientific claims;
+* invent references;
+* invent numbers;
+* run experiments;
+* run models;
+* access private patient-level records;
+* modify data;
+* modify code;
+* modify results;
+* modify the canonical plan;
+* modify the Author Kit;
+* change `aaai2027.sty`;
+* add formatting tricks;
+* delete files;
+* clean the worktree;
+* reset or revert commits;
+* stage files;
+* commit;
+* push;
+* open a pull request.
+
+---
 
 ## Validation
-- clean build;
-- references and citations;
-- PDF check;
-- page count;
-- visual review;
-- protected comparison.
 
-## Length outcome
-- starting pages;
-- final pages;
-- pages restored;
-- why the added material is scientifically necessary;
-- confirmation that no compensating cuts or spacing manipulation were used.
+At completion, run:
 
-## Unresolved issues
+```bash
+git status --short
+git diff --check
+git diff --stat
+git diff -- thesis-writing/paper-aaai/
+```
 
-## Readiness decision
+Verify:
 
-Use exactly one:
+* only allowed files changed;
+* the operational plan is unchanged;
+* Author Kit files are unchanged;
+* checked evidence is unchanged;
+* the paper skeleton compiles;
+* the output is US Letter;
+* the output is two column;
+* the submission is anonymous;
+* the bibliography path resolves;
+* all claims in the evidence map have explicit sources or gates;
+* all numerical claims were checked against authoritative repository evidence;
+* no scientific prose was generated.
 
-READY FOR AUTHOR REVIEW
+---
 
-READY FOR AUTHOR REVIEW WITH NON-BLOCKING PRESENTATION NOTES
+## Final report
 
-BLOCKED FOR PROXY-DEFINITION ACCURACY — <reason>
+Return a concise report with:
 
-BLOCKED FOR DOCUMENT INTEGRITY — <reason>
+```text
+Model used
+Reasoning effort
+Current parent HEAD
+Relevant nested repository revisions
+Files inspected
+Files created or updated
+Author Kit findings
+AAAI structure findings
+Evidence sources identified
+Protected numerical claims verified
+Source conflicts found
+Unresolved evidence gates
+Build command
+Build result
+PDF page size
+PDF page count
+Warnings
+Changed-file list
+Protected-path verification
+Readiness decisions
+```
 
-BLOCKED FOR SCIENTIFIC CONSISTENCY — <reason>
+End with all applicable readiness lines:
 
-======================================================================
-13. FINAL SUCCESS CRITERIA
-======================================================================
+```text
+READY FOR STAGE P0A — PAPER BASELINE FROZEN
+READY FOR STAGE P1 — AAAI GENRE AND FORMAT STUDIED
+READY FOR STAGE P2 — CLAIMS AND EVIDENCE LOCKED
+READY FOR STAGE P3 — AAAI SKELETON COMPILES
+```
 
-The repair is successful when:
+If a stage is blocked, replace its readiness line with:
 
-- the thesis remains concise and coherent;
-- the successful compression is preserved;
-- each proxy exposure is operationally understandable from the thesis itself;
-- Chapter 5 no longer depends on source-code access for core construct meaning;
-- the experimental chapter contains a compact but adequate specification of confirmed settings and unresolved provenance;
-- the inactive Chapter 9 file is cleanly resolved;
-- all checked Results remain unchanged;
-- active SAnD clearance remains complete;
-- ordinary body prose remains approximately 1.5-spaced;
-- no AAAI author-kit file or rule affects the thesis;
-- the PDF builds cleanly and is visually professional;
-- the final page count is determined by scientific quality rather than an arbitrary target.
+```text
+BLOCKED BEFORE <STAGE> — <EXACT REASON>
+```
 
-Do not commit or push.
+Do not claim readiness merely because files were created. Each readiness line must be supported by the required verification.
