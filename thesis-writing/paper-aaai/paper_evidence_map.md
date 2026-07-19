@@ -1,6 +1,6 @@
 # CliniCause AAAI-27 paper evidence map
 
-Status: P0/P0A/P2 baseline plus P3--P6 manuscript claim activation, 2026-07-19
+Status: P0/P0A/P2 baseline plus P3--P7 manuscript claim activation, 2026-07-19
 
 Scope: evidence control for the AAAI-27 manuscript; this file is not manuscript prose.
 Canonical plan: `clinicause_aaai27_paper_operational_plan_v1.1.md`, Version 1.1.
@@ -73,6 +73,30 @@ The baseline is intentionally descriptive. The current root and nested revisions
 | Worktree before P6 | Modified `prompt.txt` and untracked Version 1.1 operational plan; both pre-existing, protected, and non-overlapping with permitted P6 edits |
 | Canonical plan | `thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md`; Version 1.1; SHA-256 `8df13e88892da8cd0d78df33e0b7a997983d95f99222de0eb9605426e905b1c1` |
 | Workflow followed | Revised consolidated P6--P10 sequence; P6 combines Discussion, Limitations, future-work priorities, and Conclusion |
+
+### P7 stage baseline
+
+| Item | P7 value |
+|---|---|
+| Current HEAD before work | `ae8b1ef39222ba41c3dc702be931505940f5d7c8` (`AAAI P6`) |
+| Branch | `main` |
+| Accepted P6 commit | `ae8b1ef39222ba41c3dc702be931505940f5d7c8` |
+| Accepted P5 numerical baseline | `47f487c84a92f0a0b6a8271b370ff9d7afcace23` |
+| Worktree before P7 | Modified `prompt.txt` only; protected user work with no overlap with permitted P7 paths |
+| Files changed after P6 before P7 | `prompt.txt` only |
+| STraTS revision | `c37cf381b971af4a4a29ef09b93884a4afe61060` |
+| Causal repository revision | `379ed9b75107b52007957ba5908e507b719c9247` |
+| Canonical plan | `thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md`; Version 1.1; SHA-256 `8df13e88892da8cd0d78df33e0b7a997983d95f99222de0eb9605426e905b1c1` |
+| Workflow followed | Revised consolidated P6--P10 sequence; P7 combines Introduction and Related Work after complete-body inspection |
+
+During P7 the user added the untracked primary paper
+`literature/papers/causalPFN.pdf` (SHA-256
+`cd3dcd6017745e31db617503f77fa31f6bac454b3be5b3748c4e51d8f5ab3950`).
+The PDF verifies Balazadeh et al., \emph{CausalPFN: Amortized Causal Effect
+Estimation via In-Context Learning}, NeurIPS 2025, arXiv:2506.07918v2. It is
+not yet represented in `references.bib`, `catalog.csv`, or the checksum catalog,
+so no approved existing citation key is available and method-level manuscript
+treatment remains gated.
 
 ### Evidence-packet hashes
 
@@ -232,7 +256,7 @@ Statuses: **LOCKED** may be drafted with its qualification; **GATED** needs the 
 | C16 | Matching provides support diagnostics with recorded failures/insufficient-support flags | Validation detail | Validation | Matching checked files | Checked diagnostic | High | Do not turn diagnostic success into effect confirmation | Supplement | None | LOCKED |
 | C17 | Current routing code enforces canonical IDs, cohort equality, schema/probability validation, hashes, manifests, receipts, derived seeds, and dataset isolation | Current implementation | Sec. 3.5 Dataset Validation and Provenance | `router.py`; `tests/test_router_contracts.py`; relevant STraTS source/tests | Static code/test inspection | Medium | Say “current contract implements/tests”; runtime not verified in this environment; never attribute it retroactively to archived production | Fig. 1/supplement | G-RUN-01 only for test-pass wording | SUPPORTED WITH QUALIFICATION |
 | C18 | Archived results are exactly reproducible from complete producing revisions/configurations | Reproducibility | Validation/checklist | Reproducibility CSVs | Explicitly incomplete | Low | Claim is prohibited until missing lineage is recovered | None | G-EVD-02 | GATED |
-| C19 | CausalPFN supplies a complementary third estimator family | Contribution/method | Intro/Causal Estimation | Checked results; thesis method text | Empirical + secondary description | Medium | Primary method citation is missing; avoid novelty/theory claims | Fig. 2 | G-EVD-01 | GATED |
+| C19 | CausalPFN supplies a complementary third estimator perspective | Contribution/method | Intro/Causal Estimation | Checked results; thesis method text; user-added verified primary PDF | Empirical + verified source without approved metadata key | Medium | Primary PDF is verified, but an approved bibliography/catalog entry and citation key are missing; avoid architecture, training, novelty, or theory attribution in the manuscript | Fig. 2 | G-EVD-01 | GATED |
 | C20 | Code/data/resources are publicly available at submission | Release claim | Discussion/checklist | No anonymized release artifact currently evidenced | None | Low | No URL, license, or release package may be invented | None | G-REL-01 | GATED |
 | C21 | The evaluation demonstrates clinical effectiveness, treatment benefit, or deployability | Prohibited overclaim | Nowhere | No prospective/randomized evidence | Unsupported | None | Must not appear | None | Permanent | GATED |
 | C22 | Cross-estimator directional concordance is evidence of stability within this archived observational design | Interpretation | Discussion | C10–C16 | Triangulated checked results | Medium | Pair with exception, partial validation coverage, and proxy/confounding limitations | Fig. 2 | Human wording review | HUMAN |
@@ -357,6 +381,54 @@ numerical result or citation.
 No new citation key is activated in P6. The Conclusion contains no number,
 citation, public-release statement, new experiment, or clinical recommendation.
 
+### P7 Introduction and Related Work claim register
+
+P7 replaces the two planning boxes with a five-paragraph, resource-led
+Introduction and a four-paragraph, gap-led Related Work synthesis. The gap and
+answer are deliberately matched: approved prior strands supply source resources,
+prediction models, proxy/weak-label methods, causal estimators, and bounded LLM
+design precedents; CliniCause contributes their traceable integration into two
+validated causal-analysis resources.
+
+| Claim ID | Manuscript claim/function | Exact manuscript location | Highest-authority source | Status | Required qualification / gate |
+|---|---|---|---|---|---|
+| C84 | Irregular ICU records contain measurements observed at unequal frequencies and times, with sparsity/missingness patterns that can reflect patient state and workflow | Sec. 1, paragraph 1 | `sun_2026_review_irregular_medical_timeseries`; `lipton_kale_wetzel_2016_missingness_rnns`; their approved primary PDFs | SUPPORTED WITH QUALIFICATION | Measurement patterns may mix physiology, workflow, and data quality; no causal interpretation of missingness |
+| C85 | Causal analysis requires explicit unit, exposure, outcome, covariate, cohort, graph/adjustment, and provenance interfaces beyond a prediction-ready sequence | Sec. 1, paragraph 1 | C26--C40; thesis Chs. 1, 3, and 11; complete accepted paper body | SUPPORTED | Resource-design requirement; not a claim that one flat file contains every element |
+| C86 | Existing dataset, temporal-modeling, phenotyping/weak-supervision, and causal-ML strands leave the resource-level integration gap addressed by CliniCause | Sec. 1, paragraph 2; Sec. 2, paragraph 4 | Approved sources mapped in C98--C101; thesis Ch. 2 synthesis | SUPPORTED WITH QUALIFICATION | Gap is a synthesis of the closest approved literature, not a universal absence or priority claim |
+| C87 | CliniCause answers the gap with two dataset-specific causal-analysis resources under a common interface, combining deterministic proxies, four predictive annotations, outcomes/covariates, DAG/adjustment metadata, cohort identity, and provenance | Sec. 1, paragraph 3 | C28--C40; Table 1; complete accepted Sections 3--7 | SUPPORTED WITH QUALIFICATION | Dataset semantics and estimates remain separate and unpooled |
+| C88 | “Validated” denotes construction and analytical integrity, including aligned schemas, cohorts, artifacts, provenance, and analytical use, not construct validity or causal identification | Sec. 1, paragraph 3 | C36--C40; accepted Sec. 3.5 | SUPPORTED WITH QUALIFICATION | Exact scope controls every resource-level validation use |
+| C89 | The LLM supplied structured design-time proposals selected and encoded into deterministic source before patient-level execution | Sec. 1, paragraph 3; Sec. 2, paragraph 4 | C29, C79; thesis Chs. 3, 5, and 11; `audit/llm_prompt_provenance_audit.md` | SUPPORTED WITH QUALIFICATION | No autonomous clinical authority, construct validation, runtime patient processing, or causal estimation claim |
+| C90 | Contribution 1: two reusable, validated causal-analysis datasets spanning MIMIC-III and PhysioNet 2012 | Sec. 1, paragraph 5, item 1 | C02, C26--C40, C56, C82 | SUPPORTED WITH QUALIFICATION | Resource availability/public release is not claimed while G-REL-01 remains open |
+| C91 | Contribution 2: an evidence-tracked pipeline integrating LLM-assisted proposals, deterministic proxies, prediction, DAG metadata, validation, and provenance while preserving source semantics | Sec. 1, paragraph 5, item 2 | C29--C40, C71--C74, C79 | SUPPORTED WITH QUALIFICATION | LLM remains subordinate to project selection and deterministic source; producing lineage is incomplete |
+| C92 | Contribution 3: full predictive and multi-estimator characterization, including 19/19 DML and 18/19 all-estimator directional agreement | Sec. 1, paragraph 5, item 3 | C58--C66; accepted P5 numerical audit | SUPPORTED WITH QUALIFICATION | Archived point metrics and directional agreement; no significance, magnitude equality, or identification claim |
+| C93 | Contribution 4: explicit interfaces support replacement of proxies, temporal models, DAGs, adjustment sets, estimators, and robustness analyses without repeating every upstream integration stage | Sec. 1, paragraph 5, item 4 | C35, C71--C72, C83; accepted Secs. 3, 6, and 7 | SUPPORTED WITH QUALIFICATION | Interface-level reuse, not proof that every replacement is clinically valid or publicly available |
+| C94 | Headline resource sizes are 26,845 MIMIC-III records with nine exposures and 7,993 PhysioNet records with ten | Sec. 1, paragraph 4 | P5 audit P5-C01--P5-C04; `checked_cohort_candidates.csv`; `checked_cate_candidates.csv` | SUPPORTED | Analysis records and admitted exposures, not raw-source cohorts or necessarily unique people |
+| C95 | STraTS leads all four archived MIMIC-III metrics and GRU-D all four corresponding PhysioNet metrics | Sec. 1, paragraph 4 | P5 audit P5-C05--P5-C10; `checked_predictive_metrics.csv` | SUPPORTED WITH QUALIFICATION | Archived selected point metrics; no uncertainty, significance, or universal superiority claim |
+| C96 | CausalForestDML and LinearDML agree in 19/19 directions and CausalPFN joins in 18/19 | Sec. 1, paragraphs 4--5 | P5 audit P5-C19--P5-C26; `checked_cate_candidates.csv` | SUPPORTED WITH QUALIFICATION | Complete prespecified original-cohort set; no equal-magnitude, clinical-effect, or identification claim |
+| C97 | Direction is preserved in 55/57 original-versus-downsampled estimator--dataset--exposure comparisons | Sec. 1, paragraph 4 | P5 audit P5-C32--P5-C33; C68; `checked_cate_candidates.csv` | SUPPORTED WITH QUALIFICATION | Robustness population differs; broad preservation is not invariance or magnitude transport |
+| C98 | MIMIC-III is a heterogeneous relational critical-care database; PhysioNet 2012 and the MIMIC-III benchmark define prediction-oriented resources; STraTS/GRU-D address irregularity and GRU/TCN supply sequence baselines | Sec. 2, paragraph 1 | `johnson2016mimiciii`; `silva2012physionet`; `harutyunyan_2019_mimiciii_benchmark`; `tipirneni2022strats`; `che2018grud`; `cho2014gru`; `bai2018tcn`; inspected primary PDFs | SUPPORTED | Published method/resource roles only; no claim that local adaptations reproduce original tasks exactly |
+| C99 | Phenotyping spans rule and learned approaches; data programming uses heuristic labeling functions; Snorkel learns source accuracy/dependence, whereas CliniCause uses deterministic rules and fixed majority vote rather than a trained label model | Sec. 2, paragraph 2 | `banda_2018_electronic_phenotyping`; `ratner_et_al_2016_data_programming`; `ratner_et_al_2020_snorkel`; inspected primary PDFs; C30--C32 | SUPPORTED WITH QUALIFICATION | Citations provide conceptual context, not implementation equivalence or proxy clinical validity |
+| C100 | DML uses orthogonal scores and cross-fitting for flexible nuisance estimation; causal/generalized forests support nonlinear heterogeneous-effect estimation under stated assumptions | Sec. 2, paragraph 3 | `chernozhukov2018dml`; `wager2018causalforest`; `athey2019grf`; inspected primary PDFs | SUPPORTED WITH QUALIFICATION | CliniCause does not introduce these estimators; assumptions remain binding |
+| C101 | Medical LLM evaluation shows capability with reliability gaps, and LLM causal-graph work studies model judgments as fallible soft priors | Sec. 2, paragraph 4 | `singhal_et_al_2023_llm_clinical_knowledge`; `darvariu_et_al_2024_llm_causal_graph_priors`; inspected primary PDFs | SUPPORTED WITH QUALIFICATION | The sources do not validate CliniCause proposals, clinical expertise equivalence, or autonomous deployment |
+| C102 | The retained title accurately names the resource contribution and irregular-ICU scope without implying validated causality or LLM primacy | Title review | C23, C40, C82--C93; complete manuscript body | SUPPORTED WITH QUALIFICATION | Final title approval remains G-HUM-01 and is revisited in P9 |
+| C103 | CausalPFN is empirically evaluated as a complementary estimator, but method-level Related Work treatment remains gated | Sec. 2, paragraph 3 | C50, C64--C65, C76; verified user-added `causalPFN.pdf` | GATED | G-EVD-01: no approved bibliography/catalog/checksum entry or existing citation key; no method attribution was added |
+
+### P7 citation activation and source roles
+
+New P7 citation keys are
+`sun_2026_review_irregular_medical_timeseries`,
+`lipton_kale_wetzel_2016_missingness_rnns`,
+`harutyunyan_2019_mimiciii_benchmark`,
+`banda_2018_electronic_phenotyping`,
+`ratner_et_al_2016_data_programming`, `ratner_et_al_2020_snorkel`,
+`singhal_et_al_2023_llm_clinical_knowledge`, and
+`darvariu_et_al_2024_llm_causal_graph_priors`. Each exists in the approved
+`references.bib`, has cataloged metadata, and was checked against its primary PDF.
+Previously activated dataset/model/estimator keys are reused only within their
+existing supported roles. No citation key, bibliography entry, title, author,
+venue, or finding was invented. The verified CausalPFN PDF is not cited because
+it lacks an approved existing key.
+
 ## 6. Current validation-contract evidence
 
 Static inspection found implementation and test cases for canonical identifier normalization, duplicate rejection, exact cohort equality (including allowed reordering and rejected missing/extra IDs), split integrity, prediction-schema and probability consistency, malformed prediction rejection, metadata/fingerprint validation, manifest and receipt handling, reuse checks, derived seeds, mutation detection, and dataset isolation. This supports a paper/checklist statement only in the form “the current code contains these validation contracts.”
@@ -371,7 +443,7 @@ It does **not** support either “the archived experiments ran this exact code�
 | Historical `final-results/AGENTS.md` records older parent/nested revisions than the current repository | Treat those revisions as a historical audit snapshot and the values in §1 as the current baseline; neither is silently substituted for producing provenance |
 | The full-run pointer commit advances nested repositories but has no root archived run manifest | Record the commit, but do not call it an evidenced complete production run |
 | Current router/test code is newer than parts of the archived evidence | Describe only the current contract; do not attribute it to archived result production |
-| Thesis positioning treats CausalPFN cautiously, while the paper plan gives its three-estimator concordance a central role | Use it as complementary empirical triangulation while retaining the thesis limitations and primary-reference gate |
+| Thesis positioning treats CausalPFN cautiously, while the paper plan gives its three-estimator concordance a central role | Use it as complementary empirical triangulation while retaining the thesis limitations and the approved-metadata/citation-key gate for the verified primary PDF |
 | The operational plan's tentative AAAI page-limit/checklist questions | Resolved from the current official AAAI-27 call and submission pages: 7 technical pages, up to 9 total with references; checklist uploaded separately |
 | A genre-example index and its PDF disagree by one on that example's dataset size | Do not reuse the external example's numerical claim; it has no evidentiary role in CliniCause |
 
@@ -379,7 +451,7 @@ It does **not** support either “the archived experiments ran this exact code�
 
 | Gate | Category | Exact missing fact/artifact | Expected source/owner | Why it matters | Blocks first draft? | Blocks submission? |
 |---|---|---|---|---|---|---|
-| G-EVD-01 | TODO-EVIDENCE | Verified primary bibliographic entry for CausalPFN | Authors/literature review; approved `references.bib` | Required for method attribution and any theory/novelty comparison | No, if all CausalPFN prose remains commented/gated | Yes for CausalPFN method claims |
+| G-EVD-01 | TODO-EVIDENCE | Approved bibliography/catalog/checksum entry and existing citation key for the now-verified CausalPFN primary PDF | Authors/literature owner; approved `references.bib`, `catalog.csv`, and checksum catalog | Required for method attribution and any theory/novelty comparison | No, if CausalPFN is described only as an empirically evaluated complementary estimator | Yes for CausalPFN method claims |
 | G-EVD-02 | TODO-EVIDENCE | Producing commit(s), numbered causal configuration files, causal source version, and predictive split/checkpoint-to-export linkage | Experiment archive owners; lineage tables; original run directories | Separates archived outputs from current code and bounds reproducibility claims | No, if claims describe checked artifacts only | No for an honestly bounded paper; yes for any exact-rerun claim/checklist answer asserting full linkage |
 | G-RUN-01 | TODO-RUNTIME | Executed current root/nested test results | Maintained environment or CI with `pytest` installed | Static test presence is not a passing runtime result | No | No, unless the paper/checklist claims current tests pass |
 | G-RUN-02 | TODO-RUNTIME | A complete integrated rerun manifest at the frozen current revisions | Maintained experiment environment and immutable run receipt | Needed to label the current tree as an executed end-to-end baseline | No | No, unless claiming a current full rerun |
@@ -410,6 +482,7 @@ It does **not** support either “the archived experiments ran this exact code�
 - P2: protected facts, result families, claim locks, conflicts, and actionable gates are recorded here.
 - P5: all Results claims, Table 2 values, and the complete Figure 2 matrix are checked and linked through C56--C70 and the P5 numerical audit.
 - P6: all Discussion interpretations and the one-paragraph Conclusion are mapped through C71--C83; no new result, citation, release claim, or clinical recommendation was introduced.
+- P7: the five-paragraph resource-led Introduction and four-paragraph gap-led Related Work are mapped through C84--C103; all new citations use approved keys, and CausalPFN method attribution remains gated on approved metadata and a citation key.
 
 READY FOR STAGE P0A — PAPER BASELINE FROZEN
 
@@ -420,3 +493,5 @@ READY FOR STAGE P2 — CLAIMS AND EVIDENCE LOCKED
 READY FOR STAGE P6 — RESULTS DRAFTED AND NUMERICALLY MAPPED
 
 READY FOR STAGE P7 — INTERPRETATION AND CONCLUSION DRAFTED
+
+READY FOR STAGE P8 — COMPLETE MAIN-PAPER BODY DRAFTED

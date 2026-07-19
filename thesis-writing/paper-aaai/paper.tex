@@ -21,15 +21,6 @@
 \author{Anonymous Submission}
 \affiliations{}
 
-% Visible planning boxes make the structural baseline inspectable without
-% drafting scientific prose or fabricating results.
-\newcommand{\plannedcontent}[1]{%
-  \noindent\fbox{\parbox{0.94\linewidth}{\centering\textit{#1}}}\par
-}
-\newcommand{\plannedwide}[1]{%
-  \noindent\fbox{\parbox{0.96\textwidth}{\centering\textit{#1}}}\par
-}
-
 \begin{document}
 \maketitle
 
@@ -40,21 +31,135 @@
 \end{abstract}
 
 \section{Introduction}
-% Function: problem, resource-level answer, two-dataset scope, contribution
-% hierarchy, and non-deployment boundary.
-% Evidence: thesis Chapters 1, 3, and 11; claim IDs C01--C03 and C23.
-% Required qualification: observational, proxy-based resource; no prospective
-% deployment, clinical-effectiveness, or randomized-treatment claim.
-% TODO-HUMAN G-HUM-01: ratify the contribution hierarchy and claim strength.
-\plannedcontent{Planned content: problem, resource-level contribution, scope, and bounded contribution summary.}
+
+Intensive-care records combine laboratory measurements, vital signs, care
+processes, and outcomes observed at unequal frequencies and nonuniform times.
+Their sparsity and missingness are not merely empty cells: measurement patterns
+can reflect both patient state and clinical workflow
+\cite{sun_2026_review_irregular_medical_timeseries,
+lipton_kale_wetzel_2016_missingness_rnns}.  Although these records create rich
+opportunities for causal-AI research, causal analysis requires more than a
+prediction-ready sequence.  Researchers must define an analysis unit, explicit
+exposures and outcomes, observed covariates, cohort boundaries, graph-based
+adjustment assumptions, and provenance.  Reconstructing these interfaces for
+each study raises the cost of reproducible comparison and makes silent changes
+in constructs or cohorts difficult to detect.  Differences in identifiers,
+measurement availability, and preprocessing can also change which records reach
+an analysis even when two studies begin from the same database.  A reusable
+causal-analysis resource must therefore preserve not only variables but the
+lineage and assumptions that give them analytical meaning.
+
+Existing work supplies essential pieces of this process.  ICU databases and
+benchmarks provide source records and standardized prediction tasks
+\cite{johnson2016mimiciii,silva2012physionet,
+harutyunyan_2019_mimiciii_benchmark}; irregular-time-series models represent
+sparse events or measurement gaps \cite{tipirneni2022strats,che2018grud};
+electronic phenotyping and weak supervision turn clinical evidence or heuristics
+into analytical labels \cite{banda_2018_electronic_phenotyping,
+ratner_et_al_2016_data_programming}; and causal machine learning estimates
+adjusted, potentially heterogeneous contrasts \cite{chernozhukov2018dml,
+wager2018causalforest}.  Taken together, these strands leave the resource-level
+integration addressed here: carrying explicit, replaceable proxy constructs from
+heterogeneous irregular records through predictive annotation and into
+graph-documented, estimator-ready datasets with validation and provenance.
+Without such an interface, targets, exposures, adjustment variables, and
+analysis populations can be individually reasonable yet difficult to reuse or
+compare as one traceable scientific object.
+
+CliniCause addresses this gap by constructing two validated causal-analysis
+datasets from MIMIC-III and PhysioNet 2012 while retaining dataset-specific
+semantics under a common analytical interface.  Deterministic rules define
+project-selected proxy states; STraTS, GRU, GRU-D, and TCN provide predictive
+annotations; and the resources package aggregated proxy exposures with
+in-hospital mortality, observed covariates, dataset-specific DAG and adjustment
+metadata, cohort identity, and provenance.  A structured design-time LLM
+protocol proposed candidate ontologies, rules, missingness considerations, and
+DAGs, but project-selected proposals were encoded into deterministic source
+artifacts before patient-level execution.  The resource boundary also keeps the
+datasets separate rather than treating similarly named proxies as equivalent or
+pooling their estimates.  Here, \emph{validated} denotes
+construction and analytical integrity---including aligned schemas, cohorts,
+artifacts, provenance, and successful analytical use---not clinical construct
+validation or causal identification.
+
+The resulting primary resources contain 26,845 MIMIC-III analysis records with
+nine admitted proxy-state exposures and 7,993 PhysioNet analysis records with
+ten admitted exposures.  Across the four archived predictive metrics, STraTS
+led every MIMIC-III metric and GRU-D led every corresponding PhysioNet metric.
+CausalForestDML and LinearDML agreed in direction for all 19 prespecified
+dataset--exposure comparisons; CausalPFN joined that agreement in 18 of 19.
+Across all three estimators, 55 of 57 original-versus-downsampled comparisons
+preserved
+direction, providing broad robustness evidence under the stated observational
+and proxy-based design.
+
+Our contributions are fourfold.  (1)~We provide two reusable, validated
+causal-analysis datasets spanning MIMIC-III and PhysioNet 2012.  (2)~We develop
+an evidence-tracked construction pipeline that integrates design-time
+LLM-assisted proposals, deterministic proxy-state definitions, temporal
+prediction, DAG metadata, validation, and provenance while preserving source
+semantics.  (3)~We provide full predictive and multi-estimator
+characterization, including 19/19 DML and 18/19 all-estimator directional
+agreement.  (4)~We expose interfaces through which researchers can replace
+proxy definitions, temporal models, DAGs, adjustment sets, estimators, and
+robustness analyses without reconstructing every upstream integration stage.
+This hierarchy keeps the reusable resources primary, the construction pipeline
+secondary, and the analyses as demonstrations of utility.
 
 \section{Related Work}
-% Function: synthesize only the nearest irregular-time-series prediction,
-% proxy/weak-supervision, longitudinal causal-estimation, and resource strands.
-% Evidence: thesis Chapter 2 and ../literature/metadata/references.bib.
-% TODO-EVIDENCE G-EVD-01: add a verified primary CausalPFN reference before any
-% method-attribution, comparison, or theory statement is rendered.
-\plannedcontent{Planned content: compact gap-led synthesis using only verified bibliography entries.}
+
+MIMIC-III exposes a heterogeneous relational critical-care database, whereas
+the PhysioNet 2012 Challenge and MIMIC-III benchmark turn ICU observations into
+specified prediction tasks \cite{johnson2016mimiciii,silva2012physionet,
+harutyunyan_2019_mimiciii_benchmark}.  Modeling research addresses the resulting
+irregularity through, for example, missingness-aware recurrence in GRU-D and
+sparse time--variable--value representations in STraTS
+\cite{che2018grud,tipirneni2022strats}.  GRU and TCN provide complementary
+recurrent and convolutional sequence baselines \cite{cho2014gru,bai2018tcn}.
+These resources and methods enable reusable source access, benchmark prediction,
+and outcome modeling; CliniCause instead uses multiple temporal models to
+characterize and transport explicit proxy constructs into downstream
+causal-analysis resources.
+
+Electronic phenotyping ranges from inspectable rule-based definitions to learned
+models, with validity depending on the intended use
+\cite{banda_2018_electronic_phenotyping}.  Data programming represents domain
+heuristics as labeling functions, and Snorkel models the accuracies and
+dependencies of noisy sources to produce probabilistic labels for discriminative
+training \cite{ratner_et_al_2016_data_programming,
+ratner_et_al_2020_snorkel}.  CliniCause adopts the inspectability of
+programmatic rules but not a trained label model: it preserves dataset-specific
+proxy ontologies and deterministic project-selected definitions, then applies a
+fixed majority vote over one rule source and four model sources.  Construct
+lineage and the resulting proxy exposures remain explicit in the resource
+schema.
+
+Causal estimator research provides the analytical machinery used after resource
+construction.  Double machine learning combines orthogonal scores with
+cross-fitting to accommodate flexible nuisance estimation
+\cite{chernozhukov2018dml}, while causal and generalized random forests support
+nonlinear heterogeneous-effect estimation under their stated assumptions
+\cite{wager2018causalforest,athey2019grf}.  These methods supply estimators, not
+the clinical analysis tables on which they operate.  CliniCause contributes
+reusable tables with exposure, outcome, covariate, cohort, DAG, adjustment, and
+provenance interfaces, then compares multiple estimators on every prespecified
+exposure across both datasets.  CausalPFN is retained as an empirically evaluated
+complementary estimator; method-level positioning awaits an approved
+bibliographic entry and citation key.
+
+LLMs have shown substantial medical question-answering capability alongside
+clinically important reliability gaps \cite{singhal_et_al_2023_llm_clinical_knowledge},
+and LLM judgments have been studied as fallible soft priors for causal-graph
+discovery \cite{darvariu_et_al_2024_llm_causal_graph_priors}.  These findings
+motivate proposal assistance, not autonomous clinical authority.  Accordingly,
+CliniCause uses an LLM only at design time to propose inspectable candidates;
+project selection and deterministic source govern runtime behavior.  Together,
+the preceding strands supply necessary components but leave a gap in reusable
+resources that jointly connect heterogeneous irregular ICU records, replaceable
+proxy constructs, predictive annotations, dataset-specific graph metadata,
+estimator-ready tables, validation and provenance, and cross-estimator
+characterization across two datasets.  CliniCause is designed to fill that
+integration gap.
 
 \section{Constructing the CliniCause Datasets}
 % P3 claim locations: C01--C05, C08, C17, C25--C40 in

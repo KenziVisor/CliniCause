@@ -353,3 +353,63 @@ report was edited. Repository cleanup remains deferred. No experiment, model
 run, test-pass claim, staging, commit, or push occurred.
 
 READY FOR STAGE P7 — INTERPRETATION AND CONCLUSION DRAFTED
+
+---
+
+## P7 Introduction and Related Work build update
+
+Date: 2026-07-19
+
+Stage P7 replaced the Introduction and Related Work placeholders with a
+resource-led, result-aware five-paragraph Introduction and a four-paragraph,
+gap-led literature synthesis. The working title was retained. The Abstract
+remains intentionally empty, and Sections 3--7, Table 1, Table 2, and both
+figures were not changed.
+
+### P7 build identity and content
+
+| Field | Result |
+|---|---|
+| Parent HEAD before P7 | `ae8b1ef39222ba41c3dc702be931505940f5d7c8` (`AAAI P6`) on `main` |
+| Accepted numerical baseline | `47f487c84a92f0a0b6a8271b370ff9d7afcace23` (`AAAI P5`) |
+| Canonical plan | Version 1.1 at `clinicause_aaai27_paper_operational_plan_v1.1.md`; SHA-256 `8df13e88892da8cd0d78df33e0b7a997983d95f99222de0eb9605426e905b1c1` |
+| Introduction | 5 substantive paragraphs; 564 prose words; approximately 0.78 physical AAAI page |
+| Related Work | 4 thematic paragraphs; 376 prose words; approximately 0.52 physical AAAI page |
+| New evidence-map entries | C84--C103: framing, gap, resource answer, validation boundary, LLM role, four contributions, four headline-result groups, literature claims, title, and CausalPFN gate |
+| CausalPFN literature status | User-added primary PDF verified, but method-level attribution remains gated because the approved bibliography/catalog has no entry or citation key |
+
+### P7 final build and visual audit
+
+| Field | Result |
+|---|---|
+| Build command | `env TEXINPUTS=AuthorKit27: BSTINPUTS=AuthorKit27: BIBINPUTS=../literature/metadata: latexmk -pdf -interaction=nonstopmode -halt-on-error paper.tex` |
+| Build result | Success; `latexmk` exit code 0; citations and references resolved |
+| Output | `thesis-writing/paper-aaai/paper.pdf` |
+| PDF SHA-256 | `88d256db48b9c4242fba4e950eb414a5f06fbe7ff952d52955679d970226821a` |
+| Page count/size | 8 pages; 612 x 792 pt US Letter |
+| Technical-content boundary | Conclusion ends on page 7 at y=386.06 pt; References begins on page 7 at y=397.71 pt; page 8 is reference continuation |
+| Layout/anonymity | Official AAAI two-column submission layout; `Anonymous submission` block intact |
+| Fonts | All embedded/subset; Type 1 or CID TrueType; no Type 3 font |
+
+All eight pages were rendered and inspected as a contact sheet; pages 1 and 2
+were additionally inspected at full resolution after the final prose pass.
+Introduction, Related Work, their transition into Section 3, floats, references,
+margins, gutters, and column flow are readable and free of clipping, collisions,
+or overflow. No undefined citation/reference, duplicate label, overfull box,
+missing-file, or fatal warning remains. Underfull diagnostics are limited to
+ordinary paragraph/table justification.
+
+The empty Abstract leaves the exact P9 footprint unresolved. Based on the
+current page-7 technical endpoint, P9 should reserve approximately 0.20 physical
+AAAI page of scientific compression (about 150 prose-equivalent words or an
+equivalent float/text saving) after the Abstract is drafted. This is a safety
+margin to be remeasured in P9, not evidence of a present seven-page technical
+overflow. No formatting trick or global compression was used in P7.
+
+The user-added `literature/papers/causalPFN.pdf` and pre-existing `prompt.txt`
+change were preserved. Compilation regenerated tracked LaTeX auxiliaries under
+the deferred-cleanup policy. No bibliography, plan, thesis, checked evidence,
+code, test, nested repository, Author Kit file, protected scientific section,
+table, or figure was edited; no staging, commit, or push occurred.
+
+READY FOR STAGE P8 — COMPLETE MAIN-PAPER BODY DRAFTED

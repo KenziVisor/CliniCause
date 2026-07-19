@@ -3,44 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: paper.aux
 The style file: aaai2027.bst
 Database file #1: ../literature/metadata/references.bib
-You've used 10 entries,
+You've used 18 entries,
             2840 wiz_defined-function locations,
-            646 strings with 6832 characters,
-and the built_in function-call counts, 7831 in all, are:
-= -- 598
-> -- 494
-< -- 1
-+ -- 181
-- -- 170
-* -- 606
-:= -- 1273
-add.period$ -- 41
-call.type$ -- 10
-change.case$ -- 95
-chr.to.int$ -- 11
-cite$ -- 10
-duplicate$ -- 499
-empty$ -- 477
-format.name$ -- 199
-if$ -- 1499
+            705 strings with 9689 characters,
+and the built_in function-call counts, 15944 in all, are:
+= -- 1166
+> -- 1120
+< -- 3
++ -- 411
+- -- 390
+* -- 1286
+:= -- 2559
+add.period$ -- 77
+call.type$ -- 18
+change.case$ -- 198
+chr.to.int$ -- 19
+cite$ -- 18
+duplicate$ -- 1005
+empty$ -- 902
+format.name$ -- 445
+if$ -- 3035
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 119
-newline$ -- 54
-num.names$ -- 40
-pop$ -- 255
+missing$ -- 255
+newline$ -- 96
+num.names$ -- 76
+pop$ -- 518
 preamble$ -- 1
-purify$ -- 89
+purify$ -- 185
 quote$ -- 0
-skip$ -- 227
+skip$ -- 447
 stack$ -- 0
-substring$ -- 314
-swap$ -- 285
-text.length$ -- 1
+substring$ -- 573
+swap$ -- 624
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 90
+type$ -- 162
 warning$ -- 0
-while$ -- 57
+while$ -- 105
 width$ -- 0
-write$ -- 133
+write$ -- 245

@@ -1,332 +1,454 @@
-# CliniCause AAAI-27 — Stage P6: Discussion, Limitations, and Conclusion
+# CliniCause AAAI-27 — Stage P7: Introduction and Related Work
 
 ## Model
 
 ```text
-Sol-high
+Sol-extra high
 ```
 
-This is a difficult but bounded scientific interpretation task. Do not use Sol-extra high; that model is reserved for whole-context transition reviews, P7, and P9 under the revised plan.
+This stage requires the complete accumulated manuscript, evidence map, literature context, contribution hierarchy, and page architecture.
+
+Do not downgrade the model.
 
 ---
 
-## Revised plan orientation
+## Canonical plan
 
-A new Version 1.1 operational plan is located under:
-
-```text
-thesis-writing/paper-aaai/
-```
-
-Locate the newest file whose header identifies it as:
+Use exclusively:
 
 ```text
-CliniCause — Complete AAAI-27 Paper Writing Operational Plan
-Version 1.1
+thesis-writing/paper-aaai/clinicause_aaai27_paper_operational_plan_v1.1.md
 ```
 
-It may be named:
+Read it completely.
 
-```text
-clinicause_aaai27_paper_operational_plan_v1.1.md
-```
+Do not combine it with the obsolete P6–P15 sequence in the older plan.
 
-or may have replaced the former canonical filename.
+The revised workflow combines Introduction and Related Work because:
 
-If both the old and Version 1.1 plans exist:
-
-* Version 1.1 is canonical;
-* do not combine their stage definitions;
-* do not revert to the old P6–P15 sequence;
-* treat both files as protected;
-* record the exact canonical path, version, and hash in the P6 report.
-
-The revised remaining workflow is:
-
-```text
-P6 — Discussion, Limitations, and Conclusion       Sol-high
-P7 — Introduction and Related Work                 Sol-extra high
-P8 — Figures, Tables, Supplement, Code/Data Appendix Terra-high
-P9 — Global Audit, Compression, Feedback, Abstract Sol-extra high
-P10 — Submission Compliance and Package            Terra-high
-```
-
-The consolidation reduces repeated context loading only where tasks genuinely share evidence. Every stage still requires a durable report under:
-
-```text
-thesis-writing/paper-aaai/reports/
-```
+* Related Work must establish the exact research gap;
+* the Introduction must answer that established gap;
+* both must distinguish CliniCause from prior work;
+* the contribution list must reflect the completed Methods, Results, Discussion, and Conclusion;
+* loading this full context twice would waste tokens and risk inconsistent framing.
 
 ---
 
 ## Accepted baseline
 
-The accepted P5 commit is:
+The accepted P6 commit is:
+
+```text
+ae8b1ef39222ba41c3dc702be931505940f5d7c8
+AAAI P6
+```
+
+The accepted P5 numerical baseline is:
 
 ```text
 47f487c84a92f0a0b6a8271b370ff9d7afcace23
 AAAI P5
 ```
 
-P5 is scientifically accepted. Do not reopen its numerical analysis unless a direct contradiction blocks Discussion.
+P3–P6 scientific content is accepted.
 
-Its accepted findings include:
-
-* two validated causal-analysis resources;
-* MIMIC-III: 26,845 records and 9 admitted exposures;
-* PhysioNet 2012: 7,993 records and 10 admitted exposures;
-* dataset-specific predictive leadership;
-* CausalForestDML–LinearDML direction agreement: 19/19;
-* agreement across CausalForestDML, LinearDML, and CausalPFN: 18/19;
-* PhysioNet shock as the sole three-estimator sign exception;
-* matching summaries for 15/19 comparisons, with 14/15 matching the primary direction;
-* original-versus-downsampled direction preservation: 55/57.
-
-Use only the checked wording and numerical mappings already frozen in P5.
+Do not reopen numerical analysis or redesign the paper unless a material contradiction blocks P7.
 
 ---
 
 ## Initial inspection
 
-Before editing, run:
+Run:
 
 ```bash
 git status --short
 git branch --show-current
 git rev-parse HEAD
-git log -6 --oneline --decorate
+git log -7 --oneline --decorate
 git show --stat --oneline HEAD
 git show --stat --oneline HEAD~1
 git submodule status
 ```
 
-Read completely:
+Record:
 
-```text
-<Version 1.1 operational plan>
-thesis-writing/paper-aaai/paper.tex
-thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/paper_build_report.md
-thesis-writing/paper-aaai/reports/P5_results_report.md
-```
+* current HEAD;
+* branch;
+* dirty work;
+* last relevant commits;
+* current nested revisions;
+* files changed after P6;
+* whether user work overlaps the permitted P7 files.
 
-Also inspect the relevant thesis Discussion and Conclusion sources and the checked result/evidence records referenced by the P5 report.
-
-Record pre-existing changes. Preserve them.
+Preserve all unrelated work.
 
 Do not reset, restore, clean, stage, commit, or push.
 
 ---
 
-# Objective
+# Required source inspection
 
-Replace the placeholders for:
-
-```text
-6 Discussion and Limitations
-7 Conclusion
-```
-
-with polished manuscript prose.
-
-Write both sections in one task because they use the same frozen Results context and interpretive boundaries.
-
-Do not edit the Abstract, Introduction, Related Work, Sections 3–5, figures, or result tables except for a strictly necessary transition correction.
-
----
-
-# Discussion structure
-
-Target approximately:
+Read the complete current manuscript:
 
 ```text
-Discussion: 5–6 substantive paragraphs
-Conclusion: 1 compact paragraph
-Combined footprint: approximately 0.80–1.10 AAAI pages
+thesis-writing/paper-aaai/paper.tex
 ```
 
-Use a compact subsection structure only when it improves navigation. A suitable structure is:
+Read:
 
 ```text
-6.1 Resource Utility and Cross-Dataset Portability
-6.2 Estimator Triangulation and CausalPFN
-6.3 LLM-Assisted Design and Future Research
-6.4 Limitations
-7 Conclusion
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/aaai_structure_notes.md
+thesis-writing/paper-aaai/paper_build_report.md
+thesis-writing/paper-aaai/reports/P5_results_report.md
+thesis-writing/paper-aaai/reports/P6_discussion_conclusion_report.md
 ```
 
-Fewer subsections are acceptable if the same functions remain clear.
-
----
-
-## 6.1 Resource utility and reuse
-
-Present the primary contribution positively.
-
-Explain that the constructed resources let researchers:
-
-* compare alternative causal estimators;
-* test new irregular-time-series representations;
-* refine or replace proxy-state definitions;
-* substitute DAGs and adjustment sets;
-* study cohort and support sensitivity;
-* audit construct and artifact lineage;
-* reuse estimator-ready tables without rebuilding every integration stage.
-
-Emphasize that CliniCause contributes reusable analytical resources, not merely final effect tables.
-
-Do not claim public availability while `TODO-RELEASE G-REL-01` remains unresolved.
-
-Use wording such as:
+Inspect the relevant thesis sources, especially:
 
 ```text
-provides
-constructs
-supports reuse
-enables follow-up evaluation
+thesis-writing/thesis/chapters/01_introduction.tex
+thesis-writing/thesis/chapters/02_related_work.tex
+thesis-writing/thesis/chapters/11_discussion.tex
+thesis-writing/thesis/chapters/12_conclusions*.tex
 ```
 
-Avoid:
+Use the actual paths present when filenames differ.
+
+Inspect the approved literature materials:
 
 ```text
-publicly releases
-is openly available
-can be downloaded
+thesis-writing/literature/metadata/references.bib
+thesis-writing/literature/
 ```
 
-unless a checked anonymous release package now exists.
+Also inspect any literature-role, literature-summary, inclusion, exclusion, or metadata files already present.
+
+Use only verified references and existing citation keys.
+
+Do not perform a new broad literature search.
+
+Do not invent references, titles, authors, venues, findings, or citation keys.
 
 ---
 
-## 6.2 Cross-dataset portability
+# Internal drafting order
 
-Interpret the cross-dataset findings:
+Use this order:
 
-* the same construction and evaluation sequence operated across two heterogeneous ICU sources;
-* predictive leadership differed by dataset;
-* effect magnitudes and rankings differed;
-* similarly named proxy states are not assumed to be semantically identical;
-* results remained dataset specific and unpooled;
-* portability is demonstrated at the workflow and interface level.
+1. inspect the completed paper body;
+2. identify the exact gap that the completed contribution answers;
+3. classify the nearest approved literature by role;
+4. draft Related Work as a compact gap-led synthesis;
+5. draft the Introduction around that demonstrated gap;
+6. write the explicit contribution list;
+7. integrate the headline findings;
+8. review the working title against the completed story;
+9. update the evidence map;
+10. build and visually inspect the manuscript.
 
-Frame preservation of dataset-specific definitions as a design strength.
-
-Do not claim pooled clinical replication.
-
----
-
-## 6.3 Estimator triangulation and CausalPFN
-
-Discuss the estimator evidence prominently:
-
-* complete 19/19 directional agreement between CausalForestDML and LinearDML;
-* 18/19 agreement across both DML estimators and CausalPFN;
-* the value of triangulation across different model forms;
-* CausalPFN’s promise as a complementary estimator for these resources;
-* the PhysioNet-shock disagreement as useful model-sensitivity evidence.
-
-The Discussion must not reduce CausalPFN to a footnote.
-
-Use one bounded statement explaining that its archived estimator-specific sensitivity and permutation package is less complete than the DML package.
-
-Explain that directional agreement:
-
-* supports robustness of the observed sign pattern within the implemented design;
-* does not establish equal magnitudes;
-* does not by itself prove causal identification.
-
-Do not add unsupported CausalPFN architecture, training, theory, novelty, or citation claims.
+Do not begin with generic introductory prose before understanding the complete body.
 
 ---
 
-## 6.4 LLM-assisted design and future research
+# Scientific story to preserve
 
-Present the LLM component as:
+The paper’s focused story is:
 
-* a structured design-time aid;
-* a way to translate domain and causal reasoning into inspectable proposals;
-* separated from deterministic patient-level execution;
-* subordinate to project/human selection and encoded source authority.
+> CliniCause constructs reusable, validated causal-analysis datasets from heterogeneous irregular ICU records and demonstrates their analytical utility through irregular-time-series prediction, DAG-guided analysis, and cross-estimator agreement.
 
-Discuss future work such as:
+The hierarchy is:
 
-* clinician evaluation of proxy constructs;
-* multi-LLM or multi-expert comparison;
-* isolated LLM-design ablation;
-* alternative proxy ontologies;
-* alternative DAGs and adjustment sets;
-* stronger uncertainty and repeated-run evaluation;
-* richer CausalPFN diagnostics;
-* external validation on additional datasets.
+1. **Primary:** two reusable, validated causal-analysis datasets.
+2. **Secondary:** an evidence-tracked construction and validation pipeline.
+3. **Empirical demonstration:** predictive characterization, three causal estimators, matching, and robustness analysis.
+4. **Design component:** structured LLM-assisted proposals encoded into deterministic source artifacts.
 
-Do not claim that the LLM validated clinical constructs or estimated patient-level effects.
+Do not turn the paper into:
+
+* primarily an LLM paper;
+* primarily a new causal-estimator paper;
+* a generic ICU prediction comparison;
+* a shortened thesis;
+* a clinical treatment-effect claim.
 
 ---
 
-## 6.5 Centralized limitations
+# Related Work
 
-Use one concentrated limitations passage or subsection. Do not scatter defensive language throughout the Discussion.
+Replace the Related Work placeholder with a compact, gap-led synthesis.
 
-Prioritize:
+## Function
 
-1. Proxy states are transparent analytical constructs, not chart-adjudicated phenotypes.
-2. DAGs encode project assumptions and do not prove intervention validity.
-3. Observational analyses remain vulnerable to unmeasured confounding and unresolved identification assumptions.
-4. Repeated-run uncertainty and diagnostic coverage are incomplete for some archived comparisons.
-5. CausalPFN has a smaller archived diagnostic envelope than the DML estimators.
-6. Exact historical producing revisions, configurations, and checkpoint/export lineage remain incomplete.
-7. Current-runtime and anonymous-release status remain separately gated.
-8. Dataset access restrictions and lack of external clinical validation limit immediate generalization.
-9. The LLM design layer lacks an isolated ablation.
+Related Work must establish that existing work provides important components but does not, in the combination evidenced by the approved literature, provide the same reusable resource contribution:
 
-Pair major limitations with the resource feature or next experiment that can address them.
+* heterogeneous irregular ICU records;
+* explicit and replaceable proxy-state constructs;
+* predictive annotations from irregular time-series models;
+* dataset-specific DAG and adjustment metadata;
+* estimator-ready causal-analysis tables;
+* structural, cohort, provenance, and analytical validation;
+* cross-estimator characterization across two ICU datasets.
 
-Example pattern:
+Do not claim categorical absence across all literature unless the approved evidence supports it.
+
+Prefer wording such as:
 
 ```text
-Although the current proxy states are not chart-adjudicated phenotypes,
-their deterministic definitions and preserved lineage make them directly
-replaceable and testable in future clinical validation studies.
+These strands provide the necessary components, but they leave a gap in...
 ```
 
-Maintain an optimistic, technically precise tone.
-
----
-
-# Conclusion
-
-Write exactly one compact paragraph.
-
-It should state:
-
-* what CliniCause constructs;
-* that it spans MIMIC-III and PhysioNet 2012;
-* that structural, cohort, provenance, and analytical validation support reuse;
-* that broad agreement across DML and CausalPFN demonstrates the value of estimator triangulation;
-* what research agenda the resources enable.
-
-Do not introduce:
-
-* a new number;
-* a new citation;
-* a new experiment;
-* a public-release claim;
-* a clinical recommendation.
-
-Use a release-neutral closing sentence. For example:
+rather than:
 
 ```text
-By providing transparent, estimator-ready resources rather than only final
-effect tables, CliniCause establishes a reusable foundation for testing new
-proxy definitions, temporal representations, graph assumptions, and causal
-estimators in irregular clinical data.
+No prior work has ever...
 ```
 
-Revise this wording as needed, but preserve its bounded meaning.
+## Required literature strands
+
+Cover only the closest literature needed to establish the gap.
+
+### 1. Irregular clinical time-series modeling
+
+Discuss the relevant approved work on:
+
+* irregular and sparse clinical observations;
+* missingness-aware recurrent modeling;
+* continuous or irregular-time representations;
+* STraTS, GRU-D, GRU, and TCN only as needed to position the predictive-annotation layer.
+
+Do not repeat the model descriptions already present in Sections 3 and 4.
+
+The purpose is to show that prior models generally predict labels or outcomes, whereas CliniCause uses multiple temporal models to characterize and transport explicit proxy constructs into reusable causal-analysis resources.
+
+### 2. Proxy states, weak supervision, and programmatic labeling
+
+Discuss approved literature on:
+
+* proxy labels;
+* weak or programmatic supervision;
+* deterministic labeling rules;
+* multi-source label aggregation;
+* inspectable construct definitions.
+
+Distinguish CliniCause by emphasizing:
+
+* dataset-specific proxy ontologies;
+* deterministic project-selected rules;
+* preservation of construct lineage;
+* integration into causal-analysis resource schemas.
+
+Do not call the majority vote a trained label model.
+
+### 3. Causal machine learning and heterogeneous effects
+
+Position:
+
+* double machine learning;
+* causal forests;
+* heterogeneous-effect estimation;
+* observational causal-analysis workflows.
+
+Explain that prior estimator literature supplies analysis methods, while CliniCause contributes reusable, validated datasets and metadata on which multiple estimators can be compared.
+
+Do not imply that CliniCause introduces CausalForestDML or LinearDML.
+
+### 4. Clinical data resources
+
+Discuss approved dataset/resource literature where it directly supports the gap.
+
+Distinguish:
+
+* raw clinical databases;
+* benchmark prediction datasets;
+* task-specific processed cohorts;
+* reusable causal-analysis resources with explicit proxy, graph, adjustment, validation, and provenance interfaces.
+
+Avoid criticizing MIMIC-III or PhysioNet; they are source resources on which CliniCause builds.
+
+### 5. LLM-assisted domain design
+
+Use only verified approved literature supporting LLMs as domain-reasoning or design aids.
+
+Position the LLM as:
+
+* design-time proposal assistance;
+* a mechanism for generating inspectable candidate ontologies, rules, missingness considerations, and DAGs;
+* subordinate to project selection and deterministic encoded source.
+
+Do not claim that the literature proves clinical expertise equivalence, clinical validity, or safe autonomous deployment unless an approved source explicitly supports that claim.
+
+### 6. CausalPFN
+
+Discuss CausalPFN in Related Work only if a verified primary source and approved citation key now exist.
+
+If `G-EVD-01` remains unresolved:
+
+* do not invent or add a citation;
+* do not provide architectural, theoretical, training, or novelty attribution;
+* retain CausalPFN as an empirically evaluated complementary estimator in the paper body;
+* state in the P7 report that method-level Related Work treatment remains gated.
+
+## Related Work structure and size
+
+Target:
+
+```text
+2–4 compact paragraphs
+approximately 350–500 prose words
+approximately 0.45–0.60 AAAI page
+```
+
+Prefer thematic synthesis over one-paper-per-sentence enumeration.
+
+Every citation must support the sentence in which it appears.
 
 ---
 
-# Evidence and citation rules
+# Introduction
+
+Replace the Introduction placeholder with a result-aware, resource-led Introduction.
+
+## Paragraph structure
+
+Target five compact paragraphs.
+
+### Paragraph 1 — Problem and opportunity
+
+Establish:
+
+* irregular ICU records are heterogeneous, sparse, and difficult to reuse;
+* causal analysis requires more than prediction-ready time series;
+* researchers need explicit exposure, outcome, covariate, graph, cohort, and provenance interfaces;
+* reconstructing these interfaces repeatedly creates a barrier to reproducible causal AI research.
+
+Lead with the research problem, not repository implementation details.
+
+### Paragraph 2 — Gap
+
+Explain that existing strands address:
+
+* ICU time-series modeling;
+* proxy or weak labels;
+* observational causal estimation;
+* clinical data resources;
+
+but do not directly solve the integrated resource-construction problem addressed here.
+
+The gap must be consistent with Related Work and should not rely on unsupported universal novelty language.
+
+### Paragraph 3 — CliniCause approach
+
+Introduce CliniCause clearly:
+
+* constructs two validated causal-analysis datasets from MIMIC-III and PhysioNet 2012;
+* retains dataset-specific semantics under a common analytical interface;
+* combines deterministic proxy rules with predictive annotations from STraTS, GRU, GRU-D, and TCN;
+* packages proxy exposures, mortality, observed covariates, DAG metadata, adjustment sets, and provenance;
+* uses a structured design-time LLM protocol whose selected proposals are encoded into deterministic source artifacts.
+
+Define “validated causal-analysis datasets” concisely:
+
+* validated construction and analytical integrity;
+* not validated causal identification.
+
+Do not repeat the full four-part validation taxonomy from Section 3.
+
+### Paragraph 4 — Headline empirical findings
+
+State the most reviewer-relevant results:
+
+* 26,845 MIMIC-III analysis records and nine admitted exposures;
+* 7,993 PhysioNet analysis records and ten admitted exposures;
+* STraTS leads all four archived MIMIC-III predictive metrics;
+* GRU-D leads all four corresponding PhysioNet metrics;
+* CausalForestDML and LinearDML agree in direction in 19/19 comparisons;
+* all three estimators including CausalPFN agree in 18/19;
+* broad `55/57` original-versus-downsampled directional preservation.
+
+Keep this paragraph compact.
+
+Mention PhysioNet shock only if needed to avoid making `18/19` abstract; do not narrate the full exception.
+
+Use the exact terminology and evidentiary boundaries frozen in P5.
+
+Do not claim:
+
+* significance;
+* clinical-label validity;
+* causal identification;
+* equal estimator magnitudes;
+* randomized treatment effects;
+* public availability.
+
+### Paragraph 5 — Explicit contributions
+
+Provide three or four numbered or sentence-level contributions.
+
+Preferred four-contribution structure:
+
+1. **Resource contribution:** two reusable, validated causal-analysis datasets spanning MIMIC-III and PhysioNet 2012.
+2. **Construction contribution:** an evidence-tracked pipeline integrating proxy-state design, temporal prediction, DAG metadata, validation, and provenance.
+3. **Empirical contribution:** full predictive and multi-estimator characterization, including `19/19` DML and `18/19` all-estimator directional agreement.
+4. **Reuse contribution:** explicit interfaces enabling alternative proxy definitions, temporal models, DAGs, adjustment sets, causal estimators, and robustness studies.
+
+The LLM should appear inside the construction contribution, not as a separate primary contribution.
+
+End with a concise paper roadmap only if it materially improves navigation and fits the page budget.
+
+## Introduction size
+
+Target:
+
+```text
+approximately 550–700 prose words
+approximately 0.75–0.90 AAAI page
+```
+
+Do not exceed the budget through generic motivation.
+
+---
+
+# Title review
+
+Review the current title:
+
+```text
+CliniCause: Constructing Reusable Causal-Analysis Datasets from Irregular ICU Records
+```
+
+Retain it unless the completed Introduction and Related Work reveal a material mismatch.
+
+Do not change the title merely for stylistic variety.
+
+If recommending or applying a change:
+
+* preserve the resource contribution;
+* preserve “causal-analysis” rather than implying validated causality;
+* avoid emphasizing the LLM over the resource;
+* document the exact rationale in the P7 report.
+
+Final title approval remains a human decision and is revisited in P9.
+
+---
+
+# Citation and claim policy
+
+For every literature statement:
+
+* verify the citation key exists;
+* inspect the actual approved source or reliable repository summary;
+* ensure the source supports the rendered claim;
+* avoid citation laundering through thesis prose;
+* distinguish original method papers from surveys;
+* prefer primary sources for method attribution;
+* do not cite a source merely because it is adjacent in the thesis.
+
+For every Introduction result:
+
+* trace it to the accepted P5 numerical audit;
+* do not recompute or reinterpret the result;
+* preserve the exact denominator and scope.
 
 Update:
 
@@ -334,18 +456,61 @@ Update:
 thesis-writing/paper-aaai/paper_evidence_map.md
 ```
 
-Map every new interpretive claim to:
+Add or update entries for:
 
-* the P5 checked findings;
-* the construction/validation evidence;
-* the thesis Discussion where appropriate;
-* an existing gate where the statement remains bounded.
+* problem framing;
+* literature gap;
+* resource-level answer;
+* validation definition;
+* LLM role;
+* each explicit contribution;
+* each headline result;
+* title consistency;
+* every new citation-dependent claim.
 
-Do not use Discussion prose as authority for a new numerical claim.
+Classify each as:
 
-Prefer no new citations unless an approved existing bibliography entry is genuinely required.
+```text
+SUPPORTED
+SUPPORTED WITH QUALIFICATION
+GATED
+EXCLUDED
+```
 
-Do not modify the bibliography.
+---
+
+# Page-budget policy
+
+Current P6 reporting found:
+
+* seven PDF pages;
+* technical content ending on page 6;
+* page 7 containing reference continuation;
+* empty Abstract and placeholder Introduction/Related Work still present.
+
+P7 will create page pressure.
+
+Do not globally compress Sections 3–7 in this stage.
+
+Instead:
+
+* keep Introduction and Related Work within their assigned budgets;
+* remove their placeholders completely;
+* avoid generic background and repeated limitations;
+* avoid repeating Section 3 method detail;
+* avoid repeating Section 5 result detail;
+* report the new technical-content endpoint precisely;
+* record a concrete P9 compression estimate.
+
+Do not use:
+
+* smaller fonts;
+* margin changes;
+* spacing hacks;
+* caption compression tricks;
+* float manipulation intended only to conceal page length.
+
+P9 performs the whole-paper scientific compression.
 
 ---
 
@@ -358,12 +523,40 @@ thesis-writing/paper-aaai/paper.tex
 thesis-writing/paper-aaai/paper.pdf
 thesis-writing/paper-aaai/paper_build_report.md
 thesis-writing/paper-aaai/paper_evidence_map.md
-thesis-writing/paper-aaai/reports/P6_discussion_conclusion_report.md
+thesis-writing/paper-aaai/reports/P7_introduction_related_work_report.md
 ```
 
-Compilation may regenerate already tracked LaTeX auxiliary files under the user’s deferred-cleanup policy.
+Compilation may regenerate already tracked LaTeX auxiliary files under the deferred-cleanup policy.
 
-Do not modify the Version 1.1 plan.
+Do not edit the bibliography unless the prompt’s CausalPFN gate is resolved by an already present, verified source and a bibliography correction is strictly necessary. Prefer documenting the gate over broadening scope.
+
+Do not edit either operational-plan file.
+
+---
+
+# Protected content
+
+Do not modify:
+
+```text
+Sections 3–7 scientific prose
+Table 1
+Table 2
+Figure 1 placeholder/specification
+Figure 2 or its generation script
+P3–P6 reports
+checked result files
+thesis source
+literature PDFs
+code
+tests
+submodules
+Author Kit files
+```
+
+A microscopic transition correction outside Sections 1–2 is allowed only if the new Introduction/Related Work creates a direct contradiction. Record it explicitly.
+
+Do not write the Abstract.
 
 ---
 
@@ -372,71 +565,78 @@ Do not modify the Version 1.1 plan.
 Create:
 
 ```text
-thesis-writing/paper-aaai/reports/P6_discussion_conclusion_report.md
+thesis-writing/paper-aaai/reports/P7_introduction_related_work_report.md
 ```
 
 Include:
 
 ```text
 Stage
-Model
-Reasoning effort
-Canonical Version 1.1 plan path, version, and hash
+Model and reasoning
+Canonical Version 1.1 plan path and hash
 Current HEAD before work
-Last commits inspected
+Accepted P6 commit
+Recent commits inspected
 Worktree state
-Sources inspected
-Files changed
-Discussion structure
-Conclusion structure
-Paragraph and word counts
-Measured page footprint
-Resource-reuse interpretation
-Cross-dataset interpretation
-19/19 DML interpretation
-18/19 CausalPFN interpretation
-PhysioNet-shock interpretation
-LLM-assisted-design interpretation
-Centralized limitations
-Future-work priorities
-Release-neutral wording check
-New citations, if any
+Nested revisions
+Complete-body sources inspected
+Literature files inspected
+Approved citation keys used
+Excluded or gated literature
+CausalPFN citation-gate status
+Related Work thematic structure
+Related Work paragraph and word count
+Introduction paragraph and word count
+Exact contribution list
+Headline results rendered
+Numerical source mapping to P5 audit
+Validation-definition wording
+LLM-positioning wording
+Title review and decision
 Evidence-map changes
-Open TODO-EVIDENCE/RUNTIME/RELEASE/HUMAN/AAAI gates
+Files changed
+Technical-content page endpoint
+Total PDF page count
+Estimated P9 compression need
 Build command and result
-PDF page count and page size
-Warnings and visual inspection
+Citation/reference warnings
+Visual inspection
 Protected-file verification
+Repository-cleanup deferral
 No-commit/no-push verification
 Readiness decision
 ```
 
 Explicitly confirm:
 
-* no new numerical result was introduced;
-* CausalPFN remains prominent;
-* no unsupported causal, clinical, LLM, or release claim was added;
-* Discussion does not repeat the Results section cell by cell;
-* Conclusion introduces no new claim;
-* the revised P6–P10 plan was followed;
-* repository cleanup remains deferred by user decision.
+* Related Work proves the same gap answered by the Introduction;
+* the contribution hierarchy remains resource first;
+* the LLM is not promoted to the primary contribution;
+* CausalPFN is prominent in the headline findings;
+* no unsupported CausalPFN method citation was invented;
+* every new citation exists and supports its rendered statement;
+* every headline number maps to the accepted P5 audit;
+* no Abstract was written;
+* no public-release, clinical-deployment, significance, or causal-identification claim was added;
+* no global compression was attempted;
+* the revised P6–P10 plan was followed.
 
 End with exactly one of:
 
 ```text
-READY FOR STAGE P7 — INTERPRETATION AND CONCLUSION DRAFTED
+READY FOR STAGE P8 — COMPLETE MAIN-PAPER BODY DRAFTED
 ```
 
 or:
 
 ```text
-NARROW REPAIR REQUIRED BEFORE STAGE P7 — <EXACT DEFECT>
+NARROW REPAIR REQUIRED BEFORE STAGE P8 — <EXACT DEFECT>
 ```
 
 or:
 
 ```text
-BLOCKED BEFORE STAGE P7 — <EXACT REASON>
+BLOCKED BEFORE STAGE P8 — <EXACT REASON>
 ```
 
 ---
@@ -460,17 +660,19 @@ env TEXINPUTS=AuthorKit27: \
 
 Validate:
 
-* successful compilation;
-* no undefined citations or references;
+* no undefined citations;
+* no undefined references;
 * no duplicate labels;
-* anonymous AAAI format remains intact;
-* US Letter and two columns remain intact;
-* Discussion plus Conclusion remain near their combined page budget;
-* no float crosses from Results into the wrong section;
-* no margin, gutter, clipping, or font defect;
-* the full manuscript still has a viable path to the seven-page technical-content limit;
-* every page is visually inspected.
-
-Do not globally compress earlier sections in P6. Record any emerging page-budget pressure for P9.
+* anonymous author block remains intact;
+* US Letter and official AAAI two-column format remain intact;
+* Introduction and Related Work are readable and within their individual budgets;
+* no unsupported novelty sentence appears;
+* contribution list matches the completed body;
+* headline numbers match P5;
+* title matches the paper;
+* no text crosses margins or gutters;
+* no Type 3 font appears;
+* every PDF page is visually inspected;
+* page pressure is measured honestly for P9.
 
 Do not stage, commit, or push.

@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{18}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Athey, Tibshirani, and Wager(2019)}]{athey2019grf}
@@ -11,6 +11,13 @@ Bai, S.; Kolter, J.~Z.; and Koltun, V. 2018.
 \newblock An Empirical Evaluation of Generic Convolutional and Recurrent
   Networks for Sequence Modeling.
 \newblock \emph{arXiv}.
+
+\bibitem[{Banda et~al.(2018)Banda, Seneviratne, Hernandez-Boussard, and
+  Shah}]{banda_2018_electronic_phenotyping}
+Banda, J.~M.; Seneviratne, M.; Hernandez-Boussard, T.; and Shah, N.~H. 2018.
+\newblock Advances in Electronic Phenotyping: From Rule-Based Definitions to
+  Machine Learning Models.
+\newblock \emph{Annual Review of Biomedical Data Science}, 1: 53--68.
 
 \bibitem[{Che et~al.(2018)Che, Purushotham, Cho, Sontag, and Liu}]{che2018grud}
 Che, Z.; Purushotham, S.; Cho, K.; Sontag, D.; and Liu, Y. 2018.
@@ -36,12 +43,36 @@ Cho, K.; van Merrienboer, B.; Gulcehre, C.; Bahdanau, D.; Bougares, F.;
   Natural Language Processing}, 1724--1734. Association for Computational
   Linguistics.
 
+\bibitem[{Darvariu, Hailes, and
+  Musolesi(2024)}]{darvariu_et_al_2024_llm_causal_graph_priors}
+Darvariu, V.-A.; Hailes, S.; and Musolesi, M. 2024.
+\newblock Large Language Models are Effective Priors for Causal Graph
+  Discovery.
+\newblock Version 1; preprint under review., arXiv:2405.13551.
+
+\bibitem[{Harutyunyan et~al.(2019)Harutyunyan, Khachatrian, Kale, Steeg, and
+  Galstyan}]{harutyunyan_2019_mimiciii_benchmark}
+Harutyunyan, H.; Khachatrian, H.; Kale, D.~C.; Steeg, G.~V.; and Galstyan, A.
+  2019.
+\newblock Multitask Learning and Benchmarking with Clinical Time Series Data.
+\newblock \emph{Scientific Data}, 6(1): 96.
+
 \bibitem[{Johnson et~al.(2016)Johnson, Pollard, Shen, wei H.~Lehman, Feng,
   Ghassemi, Moody, Szolovits, Celi, and Mark}]{johnson2016mimiciii}
 Johnson, A. E.~W.; Pollard, T.~J.; Shen, L.; wei H.~Lehman, L.; Feng, M.;
   Ghassemi, M.; Moody, B.; Szolovits, P.; Celi, L.~A.; and Mark, R.~G. 2016.
 \newblock {MIMIC-III}, a freely accessible critical care database.
 \newblock \emph{Scientific Data}, 3: 160035.
+
+\bibitem[{Lipton, Kale, and
+  Wetzel(2016)}]{lipton_kale_wetzel_2016_missingness_rnns}
+Lipton, Z.~C.; Kale, D.~C.; and Wetzel, R. 2016.
+\newblock Directly Modeling Missing Data in Sequences with {RNNs}: Improved
+  Classification of Clinical Time Series.
+\newblock In Doshi-Velez, F.; Fackler, J.; Kale, D.; Wallace, B.; and Wiens,
+  J., eds., \emph{Proceedings of the 1st Machine Learning for Healthcare
+  Conference}, volume~56 of \emph{Proceedings of Machine Learning Research},
+  253--270. Northeastern University, Boston, MA, USA: PMLR.
 
 \bibitem[{Oprescu et~al.(2019)Oprescu, Syrgkanis, Battocchi, Hei, and
   Lewis}]{oprescu_et_al_2019_econml}
@@ -50,12 +81,52 @@ Oprescu, M.; Syrgkanis, V.; Battocchi, K.; Hei, M.; and Lewis, G. 2019.
   Treatment Effects.
 \newblock In \emph{NeurIPS 2019 Workshop on Causal Machine Learning}, 1--6.
 
+\bibitem[{Ratner et~al.(2020)Ratner, Bach, Ehrenberg, Fries, Wu, and
+  R{\'e}}]{ratner_et_al_2020_snorkel}
+Ratner, A.; Bach, S.~H.; Ehrenberg, H.; Fries, J.; Wu, S.; and R{\'e}, C. 2020.
+\newblock Snorkel: rapid training data creation with weak supervision.
+\newblock \emph{The VLDB Journal}, 29(2--3): 709--730.
+
+\bibitem[{Ratner et~al.(2016)Ratner, Sa, Wu, Selsam, and
+  R{\'e}}]{ratner_et_al_2016_data_programming}
+Ratner, A.~J.; Sa, C. M.~D.; Wu, S.; Selsam, D.; and R{\'e}, C. 2016.
+\newblock Data Programming: Creating Large Training Sets, Quickly.
+\newblock In Lee, D.~D.; Sugiyama, M.; von Luxburg, U.; Guyon, I.; and Garnett,
+  R., eds., \emph{Advances in Neural Information Processing Systems},
+  volume~29, 3567--3575. Curran Associates, Inc.
+\newblock The local PDF is the extended arXiv v3 copy revised 8 January 2017.
+
 \bibitem[{Silva et~al.(2012)Silva, Moody, Scott, Celi, and
   Mark}]{silva2012physionet}
 Silva, I.; Moody, G.; Scott, D.~J.; Celi, L.~A.; and Mark, R.~G. 2012.
 \newblock Predicting In-Hospital Mortality of ICU Patients: The
   {PhysioNet}/Computing in Cardiology Challenge 2012.
 \newblock In \emph{Computing in Cardiology}, volume~39, 245--248.
+
+\bibitem[{Singhal et~al.(2023)Singhal, Azizi, Tu, Mahdavi, Wei, Chung, Scales,
+  Tanwani, Cole-Lewis, Pfohl, Payne, Seneviratne, Gamble, Kelly, Babiker,
+  Sch{\"a}rli, Chowdhery, Mansfield, Demner-Fushman, {Ag{\"u}era y Arcas},
+  Webster, Corrado, Matias, Chou, Gottweis, Tomasev, Liu, Rajkomar, Barral,
+  Semturs, Karthikesalingam, and
+  Natarajan}]{singhal_et_al_2023_llm_clinical_knowledge}
+Singhal, K.; Azizi, S.; Tu, T.; Mahdavi, S.~S.; Wei, J.; Chung, H.~W.; Scales,
+  N.; Tanwani, A.; Cole-Lewis, H.; Pfohl, S.; Payne, P.; Seneviratne, M.;
+  Gamble, P.; Kelly, C.; Babiker, A.; Sch{\"a}rli, N.; Chowdhery, A.;
+  Mansfield, P.; Demner-Fushman, D.; {Ag{\"u}era y Arcas}, B.; Webster, D.;
+  Corrado, G.~S.; Matias, Y.; Chou, K.; Gottweis, J.; Tomasev, N.; Liu, Y.;
+  Rajkomar, A.; Barral, J.; Semturs, C.; Karthikesalingam, A.; and Natarajan,
+  V. 2023.
+\newblock Large language models encode clinical knowledge.
+\newblock \emph{Nature}, 620(7972): 172--180.
+\newblock Corrected open-access publisher version; the publisher correction
+  amended reference numbering.
+
+\bibitem[{Sun et~al.(2026)Sun, Song, Cai, Zhang, Li, and
+  Hong}]{sun_2026_review_irregular_medical_timeseries}
+Sun, C.; Song, M.; Cai, D.; Zhang, B.; Li, H.; and Hong, S. 2026.
+\newblock A Review of Deep Learning Methods for Irregularly Sampled Medical
+  Time Series Data.
+\newblock \emph{Health Data Science}, hds.0456.
 
 \bibitem[{Tipirneni and Reddy(2022)}]{tipirneni2022strats}
 Tipirneni, S.; and Reddy, C.~K. 2022.
