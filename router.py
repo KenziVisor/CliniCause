@@ -37,12 +37,14 @@ STAGE_ORDER = [
     "normalize-predictions",
     "thesis-main",
 ]
-SUPPORTED_STAGES = set(STAGE_ORDER) | {"all"}
+DATASET_EXTRACTION_PRESET = "dataset-extraction"
+DATASET_EXTRACTION_CAUSAL_STAGES = "graph,majority_vote"
+SUPPORTED_STAGES = set(STAGE_ORDER) | {"all", DATASET_EXTRACTION_PRESET}
 DATASETS = ("physionet", "mimic")
 MODELS = ("strats", "gru", "grud", "tcn")
 RUN_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}\Z")
 ID_TEXT_RE = re.compile(r"(?:0|[1-9][0-9]*)(?:[.]0+)?\Z")
-ROUTER_PRODUCER_VERSION = "clinicause-router-static-contract-v4"
+ROUTER_PRODUCER_VERSION = "clinicause-router-static-contract-v5"
 SENSITIVE_OPTIONS = {
     "--token",
     "--api-key",
@@ -190,7 +192,9 @@ def parse_bool(value: str | None) -> bool | None:
     raise argparse.ArgumentTypeError(f"Invalid boolean value: {value!r}")
 
 
-def normalize_stage_list(stages: str | Iterable[str]) -> list[str]:
+def normalize_stage_selection(
+    stages: str | Iterable[str],
+) -> tuple[str, str, list[str]]:
     if isinstance(stages, str):
         raw_parts = [part.strip().lower() for part in stages.split(",") if part.strip()]
     else:
@@ -200,12 +204,31 @@ def normalize_stage_list(stages: str | Iterable[str]) -> list[str]:
     unknown = sorted(set(raw_parts) - SUPPORTED_STAGES)
     if unknown:
         raise ValueError(f"Unsupported stages {unknown}; expected one of {sorted(SUPPORTED_STAGES)}")
-    if "all" in raw_parts:
+    preset_selectors = {"all", DATASET_EXTRACTION_PRESET}
+    selected_presets = preset_selectors.intersection(raw_parts)
+    if selected_presets:
         if len(raw_parts) != 1:
-            raise ValueError("Stage selector 'all' cannot be combined with explicit stage names.")
-        return list(STAGE_ORDER)
+            selector = sorted(selected_presets)[0]
+            raise ValueError(
+                f"Stage selector {selector!r} cannot be combined with other stage names."
+            )
+        selector = raw_parts[0]
+        return selector, selector, list(STAGE_ORDER)
     selected = set(raw_parts)
-    return [stage for stage in STAGE_ORDER if stage in selected]
+    normalized = [stage for stage in STAGE_ORDER if stage in selected]
+    return "explicit", ",".join(normalized), normalized
+
+
+def normalize_stage_list(stages: str | Iterable[str]) -> list[str]:
+    return normalize_stage_selection(stages)[2]
+
+
+def causal_stage_selector(args: argparse.Namespace) -> str:
+    return (
+        DATASET_EXTRACTION_CAUSAL_STAGES
+        if args.stage_mode == DATASET_EXTRACTION_PRESET
+        else "all"
+    )
 
 
 def validate_run_id(run_id: str) -> str:
@@ -286,7 +309,10 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
 
     args = parser.parse_args(list(argv) if argv is not None else None)
     args.run_id = validate_run_id(args.run_id)
-    args.stages = normalize_stage_list(args.stages)
+    args.stage_mode, args.stage_selector, args.stages = normalize_stage_selection(
+        args.stages
+    )
+    args.causal_stages = causal_stage_selector(args)
     args.python_executable = resolve_python_executable(args.python_executable)
     if args.run_strats is None:
         args.run_strats = "run-strats" in args.stages
@@ -541,6 +567,9 @@ def build_context(args: argparse.Namespace, dataset: str) -> RouterContext:
             "strats_train_frac": args.strats_train_frac,
             "strats_model_run": args.strats_model_run,
         "stages": args.stages,
+        "stage_mode": args.stage_mode,
+        "stage_selector": args.stage_selector,
+        "causal_stages": args.causal_stages,
         "config_fingerprint": config_fingerprint,
         "seed": args.seed,
         "scientific_overrides": {
@@ -1267,6 +1296,9 @@ def initialize_dataset_run(context: RouterContext) -> None:
             "run_id": context.run_id,
             "pid": os.getpid(),
             "plan_fingerprint": context.plan_fingerprint,
+            "stage_mode": context.args.stage_mode,
+            "stage_selector": context.args.stage_selector,
+            "causal_stages": context.args.causal_stages,
             "config_fingerprint": context.config_fingerprints[dataset],
             "base_seed": context.args.seed,
             "derived_seeds": {
@@ -1363,6 +1395,9 @@ def initialize_coordinator(
             "requested_datasets": list(contexts),
             "coordinator_pid": os.getpid(),
             "plan_fingerprint": fingerprint,
+            "stage_mode": args.stage_mode,
+            "stage_selector": args.stage_selector,
+            "causal_stages": args.causal_stages,
             "base_seed": args.seed,
             "start_time": utc_now(),
             "finish_time": None,
@@ -2791,7 +2826,7 @@ def normalize_prediction_csvs(context: RouterContext) -> StageResult:
     return StageResult(details={"outputs": outputs, "cohort_size": len(expected_ids)})
 
 
-def run_thesis_main(dataset: str, context: RouterContext) -> StageResult:
+def build_thesis_main_command(dataset: str, context: RouterContext) -> list[str]:
     paths = context.datasets[dataset]
     command = [
         context.args.python_executable,
@@ -2806,11 +2841,19 @@ def run_thesis_main(dataset: str, context: RouterContext) -> StageResult:
         str(paths.thesis_input_pkl),
         "--output-dir",
         str(paths.thesis_main_output_dir),
+        "--causal-stages",
+        context.args.causal_stages,
     ]
     if context.args.cate_model is not None:
         command.extend(["--model-type", context.args.cate_model])
     if context.args.cate_model == "CausalPFN":
         command.extend(["--mortality-device", "cpu"])
+    return command
+
+
+def run_thesis_main(dataset: str, context: RouterContext) -> StageResult:
+    paths = context.datasets[dataset]
+    command = build_thesis_main_command(dataset, context)
 
     assignment = context.gpu_assignment
     lock_path = assignment.lock_path if assignment else (
@@ -2837,10 +2880,26 @@ def run_thesis_main(dataset: str, context: RouterContext) -> StageResult:
                     context.thesis_repo_root,
                     build_stage_log_path(context.run_dir, "thesis_main", dataset),
                 )
-                if not summary.is_file():
-                    raise FileNotFoundError(
-                        f"Expected thesis main summary not found: {summary}"
+                required_outputs = [summary]
+                if context.args.stage_mode == DATASET_EXTRACTION_PRESET:
+                    required_outputs.extend(
+                        [
+                            paths.thesis_main_output_dir
+                            / "majority_vote"
+                            / "latent_tags_majority_vote.csv",
+                            paths.thesis_main_output_dir
+                            / "graph"
+                            / f"{dataset}_causal_graph.pkl",
+                            paths.thesis_main_output_dir
+                            / "graph"
+                            / f"{dataset}_causal_dag.png",
+                        ]
                     )
+                for required_output in required_outputs:
+                    if not required_output.is_file():
+                        raise FileNotFoundError(
+                            f"Expected thesis main output not found: {required_output}"
+                        )
             except BaseException as exc:
                 return_code = (
                     exc.returncode
@@ -2876,10 +2935,41 @@ def run_thesis_main(dataset: str, context: RouterContext) -> StageResult:
                 causal_failure_reason=f"{type(exc).__name__}: {exc}",
             )
         raise
+    output_paths = [str(paths.thesis_main_output_dir)]
+    if context.args.stage_mode == DATASET_EXTRACTION_PRESET:
+        output_paths = [
+            str(summary),
+            str(
+                paths.thesis_main_output_dir
+                / "majority_vote"
+                / "latent_tags_majority_vote.csv"
+            ),
+            str(
+                paths.thesis_main_output_dir
+                / "graph"
+                / f"{dataset}_causal_graph.pkl"
+            ),
+            str(
+                paths.thesis_main_output_dir
+                / "graph"
+                / f"{dataset}_causal_dag.png"
+            ),
+        ]
     return StageResult(
         details={
             "command": sanitize_command(command),
-            "outputs": [str(paths.thesis_main_output_dir)],
+            "outputs": output_paths,
+            "stage_mode": context.args.stage_mode,
+            "causal_stages": context.args.causal_stages,
+            "terminal_artifact": (
+                str(
+                    paths.thesis_main_output_dir
+                    / "majority_vote"
+                    / "latent_tags_majority_vote.csv"
+                )
+                if context.args.stage_mode == DATASET_EXTRACTION_PRESET
+                else None
+            ),
         }
     )
 
@@ -3041,6 +3131,8 @@ def _planned_stage_command(context: RouterContext, stage: str) -> list[str]:
         if not script.is_absolute():
             script = (context.strats_repo_root / script).resolve()
         return ["bash", str(script)]
+    if stage == "thesis-main":
+        return build_thesis_main_command(dataset, context)
     return [
         str(Path(__file__).resolve()),
         f"<internal-stage:{stage}>",
@@ -3103,6 +3195,19 @@ def _expected_stage_output_paths(
             )
         ]
     if stage == "thesis-main":
+        if context.args.stage_mode == DATASET_EXTRACTION_PRESET:
+            return [
+                paths.thesis_main_output_dir / "run_summary.json",
+                paths.thesis_main_output_dir
+                / "majority_vote"
+                / "latent_tags_majority_vote.csv",
+                paths.thesis_main_output_dir
+                / "graph"
+                / f"{dataset}_causal_graph.pkl",
+                paths.thesis_main_output_dir
+                / "graph"
+                / f"{dataset}_causal_dag.png",
+            ]
         return [paths.thesis_main_output_dir]
     raise ValueError(f"Unsupported stage output contract: {stage}")
 
@@ -3311,7 +3416,7 @@ def build_child_command(
         "--strats-script-path",
         str(args.strats_script_path),
         "--stages",
-        ",".join(args.stages),
+        args.stage_selector,
         "--seed",
         str(args.seed),
         "--python-executable",
@@ -3478,6 +3583,9 @@ def _write_terminal_child_manifest(
             "run_id": context.run_id,
             "pid": pid,
             "plan_fingerprint": context.plan_fingerprint,
+            "stage_mode": context.args.stage_mode,
+            "stage_selector": context.args.stage_selector,
+            "causal_stages": context.args.causal_stages,
             "config_fingerprint": context.config_fingerprints[dataset],
             "base_seed": context.args.seed,
             "start_time": None,

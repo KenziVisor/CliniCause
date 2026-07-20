@@ -22,6 +22,103 @@ class RouterParsingTests(unittest.TestCase):
             "--strats-repo-root", str(Path(".").resolve()),
         ])
         self.assertEqual(args.stages, router.STAGE_ORDER)
+        self.assertEqual(args.stage_mode, "all")
+        self.assertEqual(args.causal_stages, "all")
+
+    def test_dataset_extraction_is_a_distinct_full_router_preset(self):
+        args = router.parse_args([
+            "--dataset", "physionet",
+            "--run-id", "extract_test",
+            "--stages", "dataset-extraction",
+            "--thesis-repo-root", str(Path(".").resolve()),
+            "--strats-repo-root", str(Path(".").resolve()),
+        ])
+        self.assertEqual(args.stages, router.STAGE_ORDER)
+        self.assertEqual(args.stage_mode, "dataset-extraction")
+        self.assertEqual(args.stage_selector, "dataset-extraction")
+        self.assertEqual(args.causal_stages, "graph,majority_vote")
+
+    def test_dataset_extraction_rejects_combinations(self):
+        for selector in (
+            "dataset-extraction,tagging",
+            "all,dataset-extraction",
+        ):
+            with self.subTest(selector=selector), self.assertRaises(ValueError):
+                router.normalize_stage_list(selector)
+
+    def test_explicit_subset_retains_explicit_mode(self):
+        args = router.parse_args([
+            "--dataset", "physionet",
+            "--run-id", "explicit_test",
+            "--stages", "thesis-main,tagging",
+            "--thesis-repo-root", str(Path(".").resolve()),
+            "--strats-repo-root", str(Path(".").resolve()),
+        ])
+        self.assertEqual(args.stages, ["tagging", "thesis-main"])
+        self.assertEqual(args.stage_mode, "explicit")
+        self.assertEqual(args.causal_stages, "all")
+
+    def test_dataset_extraction_fingerprint_child_and_causal_contract(self):
+        root = Path(__file__).resolve().parents[1]
+        thesis = root / "causal-irregular-time-series"
+        strats = root / "STraTS"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            common = [
+                "--dataset", "both",
+                "--run-id", "semantic_test",
+                "--output-root", str(Path(temp_dir) / "runs"),
+                "--thesis-repo-root", str(thesis),
+                "--strats-repo-root", str(strats),
+            ]
+            all_args = router.parse_args([*common, "--stages", "all"])
+            extraction_args = router.parse_args(
+                [*common, "--stages", "dataset-extraction"]
+            )
+            all_context = router.build_context(all_args, "physionet")
+            extraction_context = router.build_context(
+                extraction_args, "physionet"
+            )
+            self.assertNotEqual(
+                all_context.plan_fingerprint,
+                extraction_context.plan_fingerprint,
+            )
+            all_causal = router.build_thesis_main_command(
+                "physionet", all_context
+            )
+            self.assertEqual(
+                all_causal[all_causal.index("--causal-stages") + 1], "all"
+            )
+            policy = router.resolve_gpu_policy(
+                extraction_args,
+                ["physionet"],
+                environ={"CUDA_VISIBLE_DEVICES": ""},
+                run_root=extraction_context.run_root,
+            )
+            child = router.build_child_command(
+                extraction_args,
+                "physionet",
+                extraction_context,
+                policy.assignments["physionet"],
+            )
+            self.assertEqual(
+                child[child.index("--stages") + 1], "dataset-extraction"
+            )
+            causal = router.build_thesis_main_command(
+                "physionet", extraction_context
+            )
+            self.assertEqual(
+                causal[causal.index("--causal-stages") + 1],
+                "graph,majority_vote",
+            )
+            self.assertEqual(
+                router._expected_stage_output_paths(
+                    extraction_context, "thesis-main"
+                )[1],
+                extraction_context.run_dir
+                / "causal"
+                / "majority_vote"
+                / "latent_tags_majority_vote.csv",
+            )
 
     def test_run_strats_flag_defaults_to_true_when_stage_requested(self):
         args = router.parse_args([

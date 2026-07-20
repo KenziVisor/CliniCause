@@ -175,6 +175,67 @@ def test_stage_names_are_deduplicated_and_canonicalized():
     ) == ["preprocessing", "tagging", "thesis-main"]
 
 
+def test_dataset_extraction_fingerprint_and_child_selector_are_distinct(tmp_path: Path):
+    common = [
+        "--dataset", "both",
+        "--run-id", "semantic_scope",
+        "--output-root", str(tmp_path / "runs"),
+        "--thesis-repo-root", str(THESIS),
+        "--strats-repo-root", str(STRATS),
+    ]
+    all_args = router.parse_args([*common, "--stages", "all"])
+    extraction_args = router.parse_args(
+        [*common, "--stages", "dataset-extraction"]
+    )
+    all_context = runtime.build_context(all_args, "physionet")
+    extraction_context = runtime.build_context(extraction_args, "physionet")
+    assert all_context.plan_fingerprint != extraction_context.plan_fingerprint
+
+    policy = runtime.resolve_gpu_policy(
+        extraction_args,
+        ["physionet"],
+        environ={"CUDA_VISIBLE_DEVICES": ""},
+        run_root=extraction_context.run_root,
+    )
+    command = runtime.build_child_command(
+        extraction_args,
+        "physionet",
+        extraction_context,
+        policy.assignments["physionet"],
+    )
+    assert command[command.index("--stages") + 1] == "dataset-extraction"
+    child_args = router.parse_args(command[2:])
+    assert child_args.stage_mode == "dataset-extraction"
+    assert child_args.causal_stages == "graph,majority_vote"
+
+
+@pytest.mark.parametrize("dataset", ["physionet", "mimic"])
+def test_dataset_extraction_thesis_contract_is_dataset_local(
+    tmp_path: Path, dataset: str
+):
+    args = router.parse_args([
+        "--dataset", dataset,
+        "--run-id", "extract_contract",
+        "--output-root", str(tmp_path / "runs"),
+        "--thesis-repo-root", str(THESIS),
+        "--strats-repo-root", str(STRATS),
+        "--stages", "dataset-extraction",
+    ])
+    context = runtime.build_context(args, dataset)
+    command = runtime.build_thesis_main_command(dataset, context)
+    assert command[command.index("--causal-stages") + 1] == "graph,majority_vote"
+    assert command[command.index("--output-dir") + 1] == str(
+        context.run_dir / "causal"
+    )
+    outputs = runtime._expected_stage_output_paths(context, "thesis-main")
+    assert outputs == [
+        context.run_dir / "causal" / "run_summary.json",
+        context.run_dir / "causal" / "majority_vote" / "latent_tags_majority_vote.csv",
+        context.run_dir / "causal" / "graph" / f"{dataset}_causal_graph.pkl",
+        context.run_dir / "causal" / "graph" / f"{dataset}_causal_dag.png",
+    ]
+
+
 @pytest.mark.parametrize("selector", ["all,tagging", "tagging,unknown", "", ",,"])
 def test_invalid_stage_selectors_fail(selector):
     with pytest.raises(ValueError):
@@ -1177,4 +1238,3 @@ def test_coordinator_signal_handler_targets_every_child_process_group(monkeypatc
         (101, signal.SIGTERM),
         (202, signal.SIGTERM),
     ]
-
