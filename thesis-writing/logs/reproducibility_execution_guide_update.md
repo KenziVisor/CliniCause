@@ -3,7 +3,7 @@
 ## Baseline and scope
 
 - Branch: `main`
-- Current HEAD: `0fe0649f9abc2959eb9653a57379e555d7143b37`
+- Conversion-validation HEAD: `0fe0649f9abc2959eb9653a57379e555d7143b37`
 - Task baseline: `0fe0649f9abc2959eb9653a57379e555d7143b37`
 - Baseline comparison: HEAD exactly matched the prepared task baseline, so there were no intervening commits to classify.
 - Worktree status before editing: ` M prompt.txt`
@@ -46,7 +46,7 @@ Static parsing with pip's requirements-file parser resolved 32 entries without i
 
 At the author's follow-up request, the two clean component checkouts were converted from gitlinks to ordinary parent-repository directories. The conversion removed `.gitmodules`, both component `.git` marker files, and the two corresponding parent `.git/modules/` metadata directories. It then staged the regular directory contents without committing.
 
-The staged parent index was compared against read-only copies of the original component revisions. All 152 originally tracked paths have identical blob hashes and modes; the two original executable scripts retain mode `100755`; 26 ignored cache files that were present on disk but absent from the original component indexes were left on disk and excluded from the parent index. The final parent index has zero mode-`160000` gitlinks. HEAD remains `0fe0649f9abc2959eb9653a57379e555d7143b37` because the author explicitly requested no commit.
+The staged parent index was compared against read-only copies of the original component revisions. All 152 originally tracked paths have identical blob hashes and modes; the two original executable scripts retain mode `100755`; 26 ignored cache files that were present on disk but absent from the original component indexes were left on disk and excluded from the parent index. The converted project tree has zero mode-`160000` gitlinks for the two former component submodules. At validation time, HEAD was still `0fe0649f9abc2959eb9653a57379e555d7143b37`; publication was requested afterward.
 
 `git diff --cached --check` reports historical trailing whitespace because the structural conversion presents the byte-identical component files as additions. Those component bytes were intentionally not normalized. The ordinary unstaged `git diff --check` for the reproducibility and dependency edits passes.
 
@@ -90,7 +90,7 @@ No approved anonymized repository or artifact URL was found. Existing paper plan
 
 - Root requirements file exists; both obsolete parent files are absent: pass.
 - Recursive requirements includes exist and parse statically: pass, 32 entries.
-- Component conversion: pass, 152 exact blob/mode matches, two preserved executable files, zero gitlinks, and no commit.
+- Component conversion: pass, 152 exact blob/mode matches, two preserved executable files, and zero component gitlinks.
 - Required command/path/variable coverage in both detailed guides: pass.
 - Ordinary clone is the only documented repository setup; no secondary initialization command or nested-repository claim remains: pass.
 - `bash -n run_clinicause.sh`: pass.
@@ -111,7 +111,7 @@ Builds were performed on clean copies under `/tmp` so tracked PDFs and auxiliary
 
 ## Final worktree note
 
-During validation, an untracked nested `CliniCause/` checkout appeared in the workspace. No command in this task created, modified, staged, or removed that checkout; it is excluded from the changed-file list above and left untouched in accordance with the no-clean/no-delete instruction. It was used read-only to verify the original component revisions after their nested metadata was removed, and it does not affect the static or isolated-copy build results.
+During validation, an untracked nested `CliniCause/` checkout appeared in the workspace. No command in this task created or modified that checkout. It was used read-only to verify the original component revisions after their nested metadata was removed, and it remains excluded from the published project tree and does not affect the static or isolated-copy build results.
 
 ## Readiness
 
