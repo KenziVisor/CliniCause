@@ -110,6 +110,82 @@ zero.
 
 \input{generated/diagnostic_coverage_table.tex}
 
+\section{Code Availability and Reproduction Workflow}
+
+CliniCause provides a single top-level execution interface for reconstructing
+the derived resources from appropriately obtained raw inputs. During anonymous
+review, the repository location below remains a visible release gate rather
+than an invented or author-identifying URL. Once the approved anonymous
+location is supplied, one ordinary clone contains the complete pipeline,
+including the \texttt{STraTS/} and
+\texttt{causal-irregular-time-series/} component directories:
+
+\begin{verbatim}
+git clone <ANONYMIZED_REPOSITORY_URL>
+cd CliniCause
+\end{verbatim}
+
+The supported environment uses Python 3.10. The root requirements file is the
+single installation entry point for parent orchestration dependencies and the
+dependency declarations maintained in both component directories:
+
+\begin{verbatim}
+conda create -n clinicause python=3.10 -y
+conda activate clinicause
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+\end{verbatim}
+
+MIMIC-III and the PhysioNet 2012 Challenge records are not redistributed with
+the code. Users obtain both through PhysioNet and must comply with the terms on
+the applicable project page. MIMIC-III requires credentialing, the specified
+human-subjects training, and its data-use agreement. PhysioNet currently lists
+the 2012 Challenge as open access under its stated license. CliniCause neither
+automates nor bypasses these conditions. After authorized acquisition and
+extraction, the source-specific preprocessors consume raw dataset roots at the
+following repository-relative launcher defaults:
+
+\begin{verbatim}
+data/physionet2012
+data/mimiciii
+\end{verbatim}
+
+Protected data may remain outside the checkout. Absolute paths are accepted;
+relative paths are resolved from the CliniCause repository root:
+
+\begin{verbatim}
+export PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012
+export MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii
+\end{verbatim}
+
+To reconstruct both resources through the implemented graph-and-majority-vote
+boundary, including preprocessing, rule and temporal-model annotations,
+prediction normalization, and aggregation, run:
+
+\begin{verbatim}
+STAGES=dataset-extraction bash run_clinicause.sh
+\end{verbatim}
+
+The default \texttt{DATASET} value is \texttt{both}. Outputs are isolated
+below \texttt{runs/<run-id>/<dataset>/}; the run contains resolved
+configuration, logs, dataset manifests, hashes and cohort fingerprints,
+provenance sidecars, and per-stage receipts. The preset's terminal artifacts
+are the dataset-specific graph and aggregated latent-tag table, with a run
+summary. It stops before the later causal estimators.
+
+The complete integrated predictive and causal workflow is invoked with:
+
+\begin{verbatim}
+STAGES=all bash run_clinicause.sh
+\end{verbatim}
+
+This run is computationally heavier, and temporal-model stages may require
+suitable accelerator resources. Optional controls include
+\texttt{DATASET=physionet} or \texttt{DATASET=mimic},
+\texttt{OUTPUT\_ROOT}, \texttt{RUN\_ID},
+\texttt{PHYSIONET\_RAW\_DATA\_PATH}, \texttt{MIMIC\_RAW\_DATA\_PATH},
+\texttt{STRATS\_MAX\_CONCURRENT}, and \texttt{PYTHON\_BIN}.
+
 \section{Provenance and Reproducibility Boundaries}
 
 Checked archived artifacts support the resource counts, selected predictive
@@ -121,11 +197,14 @@ checkpoint-to-export linkage, raw/processed-data manifests, producing
 environment/hardware capture, and CausalPFN package/version alignment.
 
 Current source inspection documents stricter runtime validation gates for
-schemas, canonical identifiers, voters, and artifact reuse.  Those current
-contracts must be tested and release-validated separately; this appendix makes
-no current test-pass claim.  Any eventual anonymous package must keep
-source-data access restricted to authorized MIMIC-III and PhysioNet users,
+schemas, canonical identifiers, voters, and artifact reuse. The current
+launcher and dependency declarations support implementation reproduction and
+reconstruction from appropriately obtained raw inputs; they do not establish
+that exact historical producing environment. Software and hardware differences
+may affect runtime, and software reproducibility remains separate from clinical
+validation and causal identification. Any eventual anonymous package must
+respect MIMIC-III restrictions and the applicable PhysioNet 2012 license,
 include only licensing-permitted derived artifacts, and undergo a final identity
-and metadata audit.  No patient-level values are included in this appendix.
+and metadata audit. No patient-level values are included in this appendix.
 
 \end{document}

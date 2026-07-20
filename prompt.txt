@@ -1,520 +1,646 @@
-Implement a new top-level CliniCause stage preset:
+Task: Update the thesis and AAAI paper reproducibility instructions for the current CliniCause launcher
 
-```text
-STAGES=dataset-extraction
-```
+Recommended model: strongest available Codex coding/reasoning model
+Reasoning effort: high
 
-This preset must run the integrated pipeline from the beginning through creation of the majority-vote latent-tag dataset, then stop successfully without running mortality prediction, matching, CATE estimation, analysis, or permutation tests.
+Repository: KenziVisor/CliniCause
+Expected task baseline when this prompt was prepared:
+0fe0649f9abc2959eb9653a57379e555d7143b37
 
-## Scope
+Work from the actual current HEAD. Do not reset or rewrite later commits. If HEAD is
+newer than the expected baseline, inspect and classify the intervening commits before
+editing.
 
-Inspect and modify only files required for this behavior, expected primarily to include:
+OBJECTIVE
 
-```text
-router.py
-tests/test_router.py
-tests/test_router_contracts.py
-causal-irregular-time-series/main.py
-causal-irregular-time-series/tests/
-run_clinicause.sh
-```
+Revise the reproducibility material in both the thesis and AAAI paper package so that
+a new authorized user can understand, from a fresh machine, how to:
 
-Do not modify STraTS implementation files, dataset preprocessing semantics, model behavior, causal estimators, checked results, thesis files, paper files, data, logs, runs, or generated artifacts.
+1. clone CliniCause together with both Git submodules;
+2. recover correctly if the repository was cloned without submodules;
+3. create and activate a Conda environment using Python 3.10;
+4. install the complete project dependencies;
+5. obtain the restricted raw ICU datasets through the appropriate PhysioNet access
+   process;
+6. place the raw datasets under the repository's default data locations, or supply
+   external raw-data locations through the launcher environment variables;
+7. construct the CliniCause causal-analysis datasets from the authorized raw data;
+8. run the complete integrated pipeline through the canonical shell launcher.
 
-Do not commit or push.
+The text should be practical, positive, technically precise, and evidence-bounded.
+Present the implemented workflow as a meaningful reproducibility achievement while
+retaining the genuine limitations around restricted data access and incomplete
+historical producing lineage.
 
-## Required initial inspection
+Do not merely add commands. Explain briefly what each phase achieves and distinguish:
 
-Before editing, run:
+- current implementation reproducibility;
+- reconstruction from authorized raw inputs;
+- exact historical reproduction of the archived thesis results.
 
-```bash
+MANDATORY BASELINE INSPECTION
+
+Before editing, run and record:
+
 git status --short
 git branch --show-current
 git rev-parse HEAD
-git log -10 --oneline
+git log -10 --oneline --decorate
 
-git -C causal-irregular-time-series status --short
-git -C causal-irregular-time-series branch --show-current
-git -C causal-irregular-time-series rev-parse HEAD
-git -C causal-irregular-time-series log -10 --oneline
-```
+Read all applicable AGENTS.md, README.md, and local instructions before editing.
 
-Read all applicable `AGENTS.md`, `README.md`, and local instruction files.
+Inspect at minimum:
 
-Inspect the current implementations of:
+- .gitmodules
+- run_clinicause.sh
+- router.py
+- requirements-full.txt
+- requirements-router.txt
+- causal-irregular-time-series/requirements.txt
+- STraTS/requirements.txt
+- the preprocessing entry points for both datasets
+- thesis-writing/thesis/appendices/appendices.tex
+- thesis-writing/thesis/main.tex
+- thesis-writing/thesis/README.md
+- thesis-writing/paper-aaai/paper.tex
+- thesis-writing/paper-aaai/supplement/technical_appendix.tex
+- thesis-writing/paper-aaai/ReproducibilityChecklist.tex or the actual checklist
+  location, if present
+- existing paper build instructions and reports
+- existing reproducibility and provenance reports under thesis-writing/reproducibility/
+  and thesis-writing/logs/
 
-```text
-router.py:
-- STAGE_ORDER
-- SUPPORTED_STAGES
-- normalize_stage_list
-- parse_args
-- stage dependency validation
-- run_thesis_main
-- stage input/output contracts
-- manifests and plan fingerprints
-- coordinator-to-child argument propagation
+Confirm the exact raw-data directory contracts from source before describing their
+internal contents. Do not invent expected filenames, extracted layouts, credentials,
+or download commands.
 
-causal-irregular-time-series/main.py:
-- STAGE_SEQUENCE
-- parse_args
-- build_run_context
-- validate_config_only
-- prepare_output_directories
-- validate_context
-- orchestrate
-- write_run_summary
-- final success calculation
-```
+PHASE 1 — CREATE ONE UNIVERSAL ROOT REQUIREMENTS FILE
 
-Also inspect existing router and causal-main tests before designing the change.
+Complete this phase before editing the thesis or paper.
 
-## Intended public behavior
+Objective:
 
-The shell command:
+Create one canonical dependency installation file at the CliniCause repository root:
 
-```bash
+requirements.txt
+
+After this phase, `requirements.txt` must be the only requirements file owned by the
+top-level CliniCause repository. Remove obsolete top-level alternatives such as:
+
+- requirements-full.txt
+- requirements-router.txt
+- any other root-level `requirements*.txt` file whose role is superseded by the new
+  requirements.txt
+
+Scope boundary:
+
+- This cleanup applies only to requirements files owned by the parent CliniCause
+  repository.
+- Do not edit, rename, move, delete, normalize, or otherwise modify any file inside:
+  - STraTS/
+  - causal-irregular-time-series/
+- In particular, preserve:
+  - STraTS/requirements.txt
+  - causal-irregular-time-series/requirements.txt
+  exactly as they are.
+
+Mandatory inspection before consolidation:
+
+1. Enumerate all requirements files while distinguishing parent-repository files from
+   submodule files:
+
+   find . -name 'requirements*.txt' -print
+
+2. Read:
+   - requirements-full.txt
+   - requirements-router.txt
+   - every other parent-owned root requirements file, if present
+   - STraTS/requirements.txt, read-only
+   - causal-irregular-time-series/requirements.txt, read-only
+
+3. Search the parent repository for references to the old root filenames:
+
+   git grep -n \
+     -e 'requirements-full\.txt' \
+     -e 'requirements-router\.txt' \
+     -e 'pip install.*requirements'
+
+4. Inspect router.py and parent-level Python imports to determine the dependencies
+   specific to the parent orchestration layer.
+
+Required implementation:
+
+Create root `requirements.txt` as the single supported installation entry point.
+
+The preferred design is:
+
+- place all parent/router-specific package requirements directly in requirements.txt;
+- include the unchanged submodule requirement files using pip recursive includes:
+
+  -r causal-irregular-time-series/requirements.txt
+  -r STraTS/requirements.txt
+
+This is considered a universal root requirements file because:
+
+- the user runs one installation command;
+- it installs the parent router dependencies;
+- it recursively installs both submodules' dependencies;
+- the submodules retain their own independently maintained dependency declarations;
+- no duplicate copy of all submodule dependencies needs to be maintained at the
+  parent level.
+
+Use relative paths from the repository root.
+
+Do not flatten or copy all submodule dependencies into the root file unless recursive
+includes are demonstrably incompatible with the current dependency specifications.
+If flattening becomes necessary, explain why in the evidence report and still do not
+modify the submodule files.
+
+Consolidation rules:
+
+- Preserve every actual dependency required by the parent and both submodules.
+- Do not silently drop packages.
+- Do not invent version pins.
+- Preserve existing version constraints unless a concrete incompatibility requires a
+  change.
+- Detect duplicate or conflicting declarations.
+- Where the same dependency appears with compatible constraints, let pip consume the
+  declarations normally or consolidate only when equivalence is clear.
+- Where constraints conflict, do not guess. Record the conflict and mark the task
+  blocked unless the repository already establishes the authoritative constraint.
+- Do not use `pip freeze` as the source of requirements.
+- Do not convert the file into an environment lock file.
+- Do not add platform-specific packages unless already supported by repository
+  evidence.
+- Do not install dependencies during this task.
+
+Required final root layout:
+
+requirements.txt
+
+must exist, and the superseded parent-owned root requirements files must be deleted.
+
+Expected user installation command:
+
+python -m pip install -r requirements.txt
+
+Repository-reference updates:
+
+Update active parent-repository documentation or scripts that explicitly direct users
+to install:
+
+- requirements-full.txt
+- requirements-router.txt
+
+so they refer to:
+
+requirements.txt
+
+However, keep this task narrow:
+
+- update only active user-facing setup references needed to prevent broken
+  instructions;
+- do not rewrite historical evidence reports merely because they mention the old
+  filenames as historical facts;
+- do not modify copied archival documentation unless it is an active user guide;
+- do not edit anything inside either submodule.
+
+Phase 1 validation:
+
+1. Confirm the new file exists:
+
+   test -f requirements.txt
+
+2. Confirm the obsolete parent-owned files are absent.
+
+3. Confirm submodule files are byte-for-byte unchanged:
+
+   git -C STraTS status --short
+   git -C causal-irregular-time-series status --short
+
+   Both submodule worktrees must show no changes caused by this task.
+
+4. Confirm the recursive includes resolve to existing files.
+
+5. Parse the root dependency graph without installing packages. Use a safe static
+   method appropriate to pip requirement syntax.
+
+6. Search for stale active installation instructions:
+
+   git grep -n \
+     -e 'requirements-full\.txt' \
+     -e 'requirements-router\.txt'
+
+Classify any remaining occurrence as:
+
+- historical and intentionally preserved;
+- generated or archival;
+- active and requiring correction.
+
+Do not begin the thesis or paper edits until Phase 1 passes.
+
+AUTHORITATIVE IMPLEMENTATION INTERFACE
+
+Use run_clinicause.sh as the only documented top-level launcher.
+
+Do not recommend run_clinicause_shell.sh.
+
+The two required user-facing launcher commands are:
+
 STAGES=dataset-extraction bash run_clinicause.sh
-```
-
-must be supported.
-
-It must run these top-level router operations in their existing order:
-
-```text
-preprocessing
-tagging
-trees
-prepare-strats
-run-strats
-collect-strats
-normalize-predictions
-thesis-main
-```
-
-However, for this preset only, the `thesis-main` invocation must run only these causal stages:
-
-```text
-graph
-majority_vote
-```
-
-It must then stop successfully.
-
-The canonical final causal-dataset artifact must be:
-
-```text
-<dataset thesis-main output directory>/majority_vote/latent_tags_majority_vote.csv
-```
-
-For `--dataset both`, each dataset child must independently produce its own majority-vote CSV under its own isolated run directory. Preserve the existing two-process coordinator architecture and all dataset isolation guarantees.
-
-`STAGES=all` must remain exactly equivalent to the current complete pipeline and must continue running every causal stage.
-
-Explicit existing stage selectors must retain their current behavior unless a change is strictly required to implement the preset.
-
-## Router design
-
-Treat `dataset-extraction` as a named preset or execution mode, not as a ninth physical stage appended to `STAGE_ORDER`.
-
-Introduce an explicit representation that preserves both:
-
-1. the expanded top-level router stages;
-2. the semantic selection mode that caused the expansion.
-
-For example, after parsing, the router may retain information equivalent to:
-
-```python
-args.stage_mode = "all" | "dataset-extraction" | "explicit"
-args.stages = [...]
-```
-
-The exact internal design may differ, but do not infer dataset-extraction mode later merely by comparing stage lists. The distinction must survive:
-
-* argument parsing;
-* plan fingerprinting;
-* manifests;
-* coordinator-to-dataset-child invocation;
-* dry-run;
-* validate-only;
-* normal single-dataset execution;
-* `--dataset both`.
-
-Required preset expansion:
-
-```python
-dataset-extraction -> list(STAGE_ORDER)
-```
-
-The top-level sequence includes `thesis-main`; the difference is the causal stopping point passed to causal `main.py`.
-
-Update supported-selector validation so:
-
-```text
---stages dataset-extraction
-```
-
-is accepted.
-
-Reject combinations such as:
-
-```text
---stages dataset-extraction,tagging
---stages all,dataset-extraction
-```
-
-with a clear validation error.
-
-Preserve current comma-separated explicit-stage behavior.
-
-Include the semantic stage mode and causal-stage selection in fingerprints and manifests so that:
-
-```text
-STAGES=all
-```
 
 and:
 
-```text
-STAGES=dataset-extraction
-```
-
-cannot collide, resume each other, or reuse each other’s completion records merely because their top-level router stage lists are identical.
-
-When the router launches dataset child processes for `--dataset both`, propagate the original semantic mode explicitly. Do not rely on serializing only the expanded stage list.
-
-## Router invocation of causal main
-
-Change `run_thesis_main` so it explicitly tells causal `main.py` which internal stages to execute.
-
-For a complete run:
-
-```text
---causal-stages all
-```
-
-or the equivalent supported causal CLI spelling.
-
-For dataset extraction:
-
-```text
---causal-stages graph,majority_vote
-```
-
-or the equivalent supported causal CLI spelling.
-
-Choose one clear CLI name and use it consistently. Prefer a name that avoids confusion with the router’s own `--stages`, for example:
-
-```text
---causal-stages
-```
-
-The router stage result, command record, manifest, and fingerprint must expose the chosen causal-stage scope.
-
-The router must continue requiring:
-
-* the canonical dataset pickle;
-* normalized voter inputs;
-* causal repository `main.py`.
-
-For dataset extraction, the router’s `thesis-main` output contract must validate at least:
-
-```text
-run_summary.json
-majority_vote/latent_tags_majority_vote.csv
-graph/<dataset>_causal_graph.pkl
-graph/<dataset>_causal_dag.png
-```
-
-For a complete run, preserve the current complete-output receipt and validation behavior.
-
-Do not weaken provenance, cohort, path, immutability, resume, or receipt checks.
-
-## Causal `main.py` design
-
-Add a CLI option such as:
-
-```text
---causal-stages
-```
-
-Supported forms must include:
-
-```text
-all
-graph
-graph,majority_vote
-```
-
-Implement this as an ordered-prefix selector.
-
-The valid causal sequence is:
-
-```python
-[
-    "graph",
-    "majority_vote",
-    "mortality_prediction",
-    "matching",
-    "cate_estimation",
-    "analyze_cate_results",
-    "permutations_test",
-]
-```
-
-A selected causal scope must be a non-empty prefix of this sequence.
-
-Accept:
-
-```text
-graph
-graph,majority_vote
-graph,majority_vote,mortality_prediction
-...
-all
-```
-
-Reject non-prefix, reordered, duplicated, or unknown selections, including:
-
-```text
-majority_vote
-graph,matching
-majority_vote,graph
-graph,graph
-```
-
-Use clear errors that show the valid stage order.
-
-Default behavior must be `all`, preserving backward compatibility for direct callers that do not pass the new option.
-
-Store both the selected causal stages and the original selector in the run context and summary.
-
-## Causal validation behavior
-
-Validation must apply only to stages selected for execution, plus their true dependencies.
-
-For:
-
-```text
-graph,majority_vote
-```
-
-require:
-
-* the graph script;
-* the majority-vote script;
-* the latent-tags input directory;
-* the dataset configuration required for graph generation.
-
-Inspect whether the dataset pickle is genuinely required by either selected stage.
-
-If neither graph nor majority vote consumes the dataset pickle, do not require `--dataset-pkl-path` for a direct graph-through-majority-vote causal invocation. However, the router may continue passing it because it is part of the integrated pipeline’s canonical input contract.
-
-Do not require scripts, model configuration, device configuration, or output files belonging exclusively to unselected downstream stages.
-
-`--validate-config-only` must print only selected child commands and clearly report intentionally omitted stages.
-
-## Causal orchestration behavior
-
-Refactor the current hardcoded orchestration safely so that it honors the selected prefix.
-
-For the dataset-extraction prefix:
-
-1. reset and run `graph`;
-2. verify the graph pickle and graph PNG;
-3. reset and run `majority_vote`;
-4. verify `latent_tags_majority_vote.csv`;
-5. do not start background mortality or matching threads;
-6. do not run CATE estimation;
-7. do not run analysis;
-8. do not run permutation tests;
-9. mark all unselected stages as `skipped`;
-10. give each skipped stage a reason such as:
-
-```text
-Not selected by causal stage scope: graph,majority_vote.
-```
-
-11. write `run_summary.json`;
-12. return exit code 0 when both selected stages succeed;
-13. report overall status as success.
-
-A skipped unselected stage must not make the run fail.
-
-A selected stage that fails must retain current fail-fast/dependency behavior and produce a nonzero exit.
-
-Do not create, reset, or delete output directories for unselected stages. This matters for path purity and avoiding unnecessary side effects.
-
-The complete `all` path must preserve current concurrency behavior:
-
-* graph;
-* majority vote;
-* mortality and matching background threads;
-* foreground CATE;
-* analysis and permutations where applicable;
-* current CausalPFN skip rules;
-* thread joining and failure propagation.
-
-Do not replace the existing full-run process/thread policy except where a minimal refactor is needed to support selected prefixes.
-
-## Summary and provenance
-
-Extend `run_summary.json` to include fields equivalent to:
-
-```json
-{
-  "causal_stage_selector": "graph,majority_vote",
-  "selected_causal_stages": [
-    "graph",
-    "majority_vote"
-  ],
-  "terminal_artifact": ".../majority_vote/latent_tags_majority_vote.csv"
-}
-```
-
-For a complete run, the terminal artifact may remain the current complete-run output or be represented separately. Do not mislabel the majority-vote CSV as the terminal artifact of an `all` run.
-
-All stages must remain represented in the summary. Selected stages should be `success` or `failed`; unselected stages should be `skipped` with explicit reasons.
-
-The router’s own manifest and stage details must also make it unambiguous that the run was `dataset-extraction`, not `all`.
-
-## Shell wrapper
-
-The current shell wrapper already forwards:
-
-```bash
---stages "${STAGES}"
-```
-
-Therefore, avoid adding unnecessary shell branching.
-
-Update only comments, examples, or validation if needed so users clearly see:
-
-```bash
 STAGES=all bash run_clinicause.sh
-```
 
-runs the complete pipeline, while:
+Explain them accurately:
 
-```bash
+- `dataset-extraction` constructs the dataset/resource pipeline through the implemented
+  dataset-construction and aggregation boundary. Confirm the exact terminal stage from
+  router.py and describe it precisely.
+- `all` runs the complete integrated pipeline.
+- The default dataset selection is `both`, subject to confirmation from the current
+  script.
+- Dataset-specific runs may be shown as optional examples only if confirmed by the
+  current script, using `DATASET=physionet` or `DATASET=mimic`.
+
+DEPENDENCY COMMAND
+
+The current root umbrella dependency file is requirements-full.txt. It includes:
+
+- requirements-router.txt
+- causal-irregular-time-series/requirements.txt
+- STraTS/requirements.txt
+
+Therefore, unless the current checkout contains a newly added root requirements.txt
+with the same umbrella role, document:
+
+python -m pip install -r requirements-full.txt
+
+Do not write `pip install -r requirements.txt` when that file does not exist.
+
+Do not rename or create dependency files in this task. If the local repository differs
+from the expected state, document the actual supported root installation command and
+explain the difference in the evidence report.
+
+REQUIRED FRESH-START COMMAND SEQUENCE
+
+The detailed thesis instructions and detailed paper supplement instructions must show
+a coherent sequence equivalent to the following, adjusted only where current source
+inspection proves a correction is necessary:
+
+git clone --recurse-submodules https://github.com/KenziVisor/CliniCause.git
+cd CliniCause
+
+Also explicitly include the recovery command for users who already cloned without
+submodules:
+
+git submodule update --init --recursive
+
+Explain that an ordinary clone may leave `STraTS/` and
+`causal-irregular-time-series/` absent or uninitialized and that the recursive
+submodule step is mandatory.
+
+Then show:
+
+conda create -n clinicause python=3.10 -y
+conda activate clinicause
+python -m pip install --upgrade pip
+python -m pip install -r requirements-full.txt
+
+Do not claim that this dependency declaration proves the exact historical environment
+that produced the archived thesis results. It is the supported setup interface for the
+current repository.
+
+RAW-DATA ACCESS AND LOCATION
+
+State clearly and professionally that:
+
+- MIMIC-III and PhysioNet 2012 are not redistributed with CliniCause.
+- Users must obtain authorized access through PhysioNet and comply with the applicable
+  credentialing, training, license, and data-use requirements.
+- Because the source records are access restricted, users reconstruct CliniCause from
+  their own authorized raw-data copies.
+- The pipeline does not bypass, automate, or weaken those access conditions.
+
+Document the default repository-relative locations exposed by run_clinicause.sh:
+
+data/physionet2012
+data/mimiciii
+
+Before finalizing the prose, inspect the preprocessing code and confirm what each path
+must point to. Describe the path as the raw dataset root expected by the implementation
+without inventing a specific extracted file hierarchy.
+
+Also document the supported external-location interface:
+
+export PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012
+export MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii
+
 STAGES=dataset-extraction bash run_clinicause.sh
-```
 
-runs from raw-data preprocessing through majority vote and stops with the causal dataset.
+Alternatively, an inline form may be shown:
 
-Do not add Conda, Apptainer, Slurm, `/workspace`, or machine-specific repository paths.
+PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012 \
+MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii \
+STAGES=dataset-extraction \
+bash run_clinicause.sh
 
-## Required tests
+Make clear that relative paths are resolved from the CliniCause repository root and
+absolute paths are accepted, if that remains true in the current launcher.
 
-Add focused synthetic tests covering at least the following.
+RUNNING THE WORKFLOW
 
-### Router parsing
+Include the following two primary use cases.
 
-* `all` retains complete behavior.
-* `dataset-extraction` is accepted.
-* `dataset-extraction` expands to the full top-level router stage order.
-* its semantic mode remains distinct from `all`.
-* invalid combinations are rejected.
-* explicit existing subsets still parse as before.
+A. Construct the reusable CliniCause datasets from authorized raw data:
 
-### Router fingerprints and manifests
+STAGES=dataset-extraction bash run_clinicause.sh
 
-* `all` and `dataset-extraction` produce different plan fingerprints.
-* semantic mode is present in manifest/config payloads.
-* dataset-child commands preserve dataset-extraction mode.
-* resume/reuse cannot cross between `all` and `dataset-extraction`.
+Explain what artifacts this produces, where the run output is placed by default, and
+what validation/provenance records are created, but only based on current router
+behavior.
 
-### Router causal command
+B. Run the complete pipeline:
 
-* complete mode passes causal `all`.
-* dataset-extraction passes exactly `graph,majority_vote`.
-* command construction is correct for both datasets.
-* paths remain dataset-local.
-* output contracts differ appropriately between complete and extraction modes.
+STAGES=all bash run_clinicause.sh
 
-### Causal parsing
+Explain that this includes the integrated downstream predictive and causal workflow.
+Mention that the complete run is computationally heavier and that temporal-model
+stages may require suitable accelerator resources. Do not state exact hardware or
+runtime requirements unless verified.
 
-* default selector is `all`.
-* `graph,majority_vote` is accepted.
-* unknown, duplicate, reordered, and non-prefix selectors are rejected.
-* selected stages preserve canonical order.
+Optionally document these confirmed launcher controls in a compact paragraph or table:
 
-### Causal execution
+- DATASET
+- OUTPUT_ROOT
+- RUN_ID
+- PHYSIONET_RAW_DATA_PATH
+- MIMIC_RAW_DATA_PATH
+- STRATS_MAX_CONCURRENT
+- PYTHON_BIN
 
-Using mocks or synthetic child scripts:
+Do not let optional controls obscure the two canonical commands.
 
-* graph and majority vote run in order.
-* downstream child processes are never launched in extraction mode.
-* background threads are never started in extraction mode.
-* unselected output directories are not reset or created unnecessarily.
-* selected output validation is enforced.
-* missing majority-vote output fails.
-* successful extraction writes a successful summary and returns zero.
-* downstream stages are marked skipped with explicit reasons.
-* full `all` mode retains existing orchestration behavior.
-* CausalPFN behavior remains unchanged for full runs.
-* validation-only lists only selected commands.
+THESIS EDIT
 
-### Integration contract
+Primary allowed thesis file:
 
-Add at least one router-to-causal contract test demonstrating that:
+thesis-writing/thesis/appendices/appendices.tex
 
-```text
-STAGES=dataset-extraction
-```
+Expand the existing “Reproducibility and Evidence Boundary” appendix into a
+self-contained reproducibility appendix.
 
-results in a causal command limited to:
+Suggested structure:
 
-```text
-graph,majority_vote
-```
+1. Current reproducibility interface
+2. Repository and submodule setup
+3. Python 3.10 environment and dependencies
+4. Restricted raw-data access
+5. Default and external data locations
+6. Dataset construction command
+7. Complete-pipeline command
+8. Outputs, validation, and provenance
+9. Reproducibility boundary and limitations
 
-and expects:
+The thesis may use the exact public repository URL:
 
-```text
-majority_vote/latent_tags_majority_vote.csv
-```
+https://github.com/KenziVisor/CliniCause.git
 
-as the extraction artifact.
+Preserve the important existing distinction that the current launcher and dependency
+files define the supported current interface but do not establish the exact historical
+command, environment, source revisions, splits, checkpoints, or export lineage that
+produced every archived result.
 
-Do not access real data, launch models, use CUDA, run Slurm, or execute expensive workloads.
+Do not leave the appendix dominated by limitations. Begin with what is now available
+and usable, then close with a proportionate limitations paragraph.
 
-## Validation commands
+PAPER EDIT
 
-Run the relevant existing and new synthetic suites, for example:
+Potentially allowed paper files:
 
-```bash
-python -m pytest tests/test_router.py tests/test_router_contracts.py -q
+- thesis-writing/paper-aaai/paper.tex
+- thesis-writing/paper-aaai/supplement/technical_appendix.tex
 
-python -m pytest causal-irregular-time-series/tests -q
+The main AAAI paper has strict space constraints. Keep the main-paper addition compact:
+approximately one concise paragraph or a short subsection near the existing
+Dataset Validation and Provenance discussion or the limitations/reproducibility
+material.
 
-bash -n run_clinicause.sh
+The main paper should state that the repository provides:
 
-git diff --check
-git -C causal-irregular-time-series diff --check
-```
+- a single top-level launcher;
+- a dedicated dataset-construction mode;
+- a complete-pipeline mode;
+- explicit submodule, environment, data-path, validation, and provenance interfaces;
+- reconstruction from authorized source data.
 
-Also run any narrower causal-main test file separately while iterating.
+Place the detailed scratch-to-run command guide in the technical appendix under an
+expanded section such as:
 
-## Final report
+“Code Availability and Reproduction Workflow”
 
-Return a concise report containing:
+or:
 
-* baseline commits and dirty state;
-* files changed;
-* exact preset expansion;
-* exact causal CLI added;
-* how `all` and `dataset-extraction` remain provenance-distinct;
-* extraction output path;
-* tests run and results;
-* confirmation that no real data, model, CUDA, Slurm, Conda, or container execution occurred;
-* remaining uncertainty;
-* complete diff summary.
+“Reproduction from Authorized Raw Data”
 
-Use this readiness statement only if all scoped synthetic checks pass:
+The technical appendix should contain the complete clone, submodule, Conda,
+dependency, data-placement, override, dataset-construction, and full-run commands.
 
-```text
-READY FOR MANUAL DATASET-EXTRACTION RUNTIME VALIDATION
-```
+ANONYMITY REQUIREMENT
 
-Do not commit or push.
+The paper is currently in anonymous-submission mode.
+
+Do not place:
+
+https://github.com/KenziVisor/CliniCause.git
+
+or any other author-identifying URL in paper.tex or the anonymous supplement unless
+the repository already contains an explicitly approved review-safe/anonymized release
+URL.
+
+Search for an existing anonymous repository or artifact URL.
+
+If one exists, use it.
+
+If none exists:
+
+- keep the exact public URL in the thesis only;
+- use the project's existing anonymous repository macro or neutral placeholder if one
+  exists;
+- otherwise use non-identifying prose in the main paper and record a human gate for
+  insertion of an anonymized repository URL;
+- do not invent an anonymous URL;
+- do not expose author identity;
+- report exactly what URL decision remains unresolved.
+
+The commands may use:
+
+git clone --recurse-submodules <ANONYMIZED_REPOSITORY_URL>
+
+in the anonymous technical appendix only when a visible placeholder is compatible with
+the current paper workflow. If visible placeholders are prohibited by current project
+policy, keep the command sequence in source comments or the evidence report and mark
+the anonymous URL as a blocking human input.
+
+TONE AND CLAIM BOUNDARY
+
+Use an optimistic but accurate framing similar in substance to:
+
+“CliniCause now exposes a unified, submodule-aware execution interface that can
+reconstruct the analysis resources from authorized raw inputs and execute the
+integrated predictive and causal workflow.”
+
+Emphasize achieved capabilities:
+
+- one canonical launcher;
+- reproducible repository composition through pinned submodules;
+- one umbrella dependency installation;
+- explicit raw-data path contracts;
+- separate dataset-construction and complete-pipeline modes;
+- dataset-isolated execution;
+- validation, cohort, artifact, receipt, and provenance contracts;
+- the ability to rebuild derived causal-analysis resources without redistributing
+  restricted patient-level source data.
+
+Retain limitations without sounding defeatist:
+
+- raw source access remains restricted;
+- users must satisfy external data-use conditions;
+- full runs require appropriate compute;
+- software and hardware differences may affect runtime;
+- the current interface does not by itself recover every missing historical producing
+  revision, split, checkpoint, configuration, or environment detail;
+- current-code reproducibility is not automatically identical to exact historical
+  reproduction of archived results;
+- clinical validation and causal identification remain separate from software
+  reproducibility.
+
+Do not repeat the same limitation paragraph in several places. State it once clearly
+in each deliverable at the appropriate level of detail.
+
+PROTECTED CONTENT
+
+Do not change:
+
+- numerical results;
+- record counts;
+- exposure counts;
+- estimator findings;
+- prediction metrics;
+- figures;
+- tables;
+- captions unrelated to reproducibility;
+- causal or clinical interpretation;
+- bibliography entries unless a genuinely missing citation is required;
+- paper title, authorship, submission mode, or anonymity settings;
+- run_clinicause.sh;
+- router.py;
+- requirement files;
+- submodule pointers;
+- research code;
+- generated result artifacts;
+- AAAI style or author-kit files.
+
+Do not run:
+
+- preprocessing;
+- model training;
+- inference;
+- causal estimation;
+- the complete pipeline;
+- Slurm jobs;
+- real-data commands;
+- dependency installation or environment mutation.
+
+This is a documentation and build-validation task only.
+
+ALLOWED FILES
+
+Edit only as necessary:
+
+- thesis-writing/thesis/appendices/appendices.tex
+- thesis-writing/paper-aaai/paper.tex
+- thesis-writing/paper-aaai/supplement/technical_appendix.tex
+- one new evidence report under thesis-writing/logs/, named clearly for this task
+
+Do not edit all three scientific files merely because they are allowed. Keep the
+main-paper change concise and put detailed commands in the thesis and supplement.
+
+VALIDATION
+
+Perform static command validation:
+
+1. Confirm every documented path and environment-variable name against
+   run_clinicause.sh and router.py.
+2. Confirm requirements-full.txt exists and includes the router and both submodule
+   requirement files.
+3. Confirm `.gitmodules` contains both expected submodules.
+4. Confirm the documentation contains:
+   - `git clone --recurse-submodules`
+   - `git submodule update --init --recursive`
+   - Python 3.10 Conda creation
+   - dependency installation
+   - both default raw-data paths
+   - both raw-data override variables
+   - `STAGES=dataset-extraction bash run_clinicause.sh`
+   - `STAGES=all bash run_clinicause.sh`
+5. Confirm no changed document recommends run_clinicause_shell.sh.
+6. Confirm no paper file exposes an identifying URL without explicit existing
+   authorization.
+7. Confirm no archived-result claim has been strengthened into an exact historical
+   rerun claim.
+8. Run:
+   bash -n run_clinicause.sh
+9. Run:
+   git diff --check
+10. Build the thesis using its existing canonical build command.
+11. Build the AAAI paper using its existing canonical build procedure.
+12. Build the technical appendix using its existing canonical build procedure.
+13. Inspect the changed PDF pages for:
+    - clipped command blocks;
+    - overfull lines caused by URLs or shell commands;
+    - unreadable code;
+    - broken references;
+    - undesirable page-count or float disruption.
+
+Do not install missing LaTeX tools. If the build environment is unavailable, report
+that honestly and perform all possible static checks.
+
+EVIDENCE REPORT
+
+Create:
+
+thesis-writing/logs/reproducibility_execution_guide_update.md
+
+The report must contain:
+
+- current HEAD and branch;
+- task baseline;
+- worktree status before editing;
+- instructions and files inspected;
+- exact files changed;
+- documented commands;
+- confirmation of the actual umbrella requirements filename;
+- confirmation of both submodules;
+- raw-data path contract findings;
+- paper anonymity decision;
+- static validation results;
+- thesis build result;
+- paper build result;
+- technical-appendix build result;
+- protected-content confirmation;
+- unresolved human gates;
+- final readiness decision.
+
+READINESS WORDING
+
+Use exactly one of:
+
+READY FOR AUTHOR REVIEW — REPRODUCIBILITY GUIDES UPDATED
+
+READY FOR AUTHOR REVIEW WITH ANONYMOUS-REPOSITORY URL GATE
+
+BLOCKED — <specific reason>
+
+Do not commit, stage, push, reset, clean, or modify submodule revisions.

@@ -1,10 +1,165 @@
 \chapter{Reproducibility and Evidence Boundary}
 \label{app:reproducibility-evidence-boundary}
 
-This appendix records the scope of the reproducibility evidence available for the thesis. The accompanying project archive contains checked result tables, a result manifest, checksums, a source packet, and a decision register. The compact reproducibility package indexes the causal-run, predictive-run, data, environment, source-version, archive-copy, and unresolved-gap records without duplicating the detailed manifest. Together, those records support the numerical traceability of the displayed results and preserve distinctions between admitted evidence, excluded artifacts, and unresolved limitations.
+\section{Current reproducibility interface}
 
-The available records do not establish a complete clean-checkout reproduction. The exact raw and processed data lineage, numbered producing configurations, predictive split and checkpoint-to-export lineage, producing source versions, and archive-copy history are incomplete. A repository requirements file or current wrapper can describe an implementation interface, but is not evidence that it was the exact environment or command that produced an archived result.
+CliniCause now exposes a unified execution interface that can
+reconstruct causal-analysis resources from appropriately obtained raw inputs
+and execute the integrated predictive and causal workflow. The repository
+provides one canonical shell launcher, one project-wide dependency entry point,
+\texttt{requirements.txt}, dataset-isolated run
+directories, and explicit validation, cohort, artifact, receipt, and provenance
+contracts. This makes the current implementation and its reconstruction path
+substantially more reproducible without redistributing source ICU records.
 
-The two external ICU datasets also remain subject to their own access and governance conditions. The repository does not establish institutional approval numbers, an ethics-board determination, consent basis, or the final data-governance wording required for submission or any prospective use. These gaps do not negate the checked numerical record, but they limit reproducibility, administrative compliance, and any stronger clinical interpretation.
+\section{Repository setup}
 
-For these reasons, the thesis treats the available materials as an evidence and provenance boundary: they make the reported workflow more inspectable while leaving the recovery of complete per-run lineage, qualified clinical review, and authoritative institutional documentation as necessary future work.
+On a fresh machine, clone the repository normally. The checkout contains the
+complete pipeline, including the \texttt{STraTS/} and
+\texttt{causal-irregular-time-series/} component directories:
+
+\begin{quote}\small
+\begin{verbatim}
+git clone https://github.com/KenziVisor/CliniCause.git
+cd CliniCause
+\end{verbatim}
+\end{quote}
+
+The first component contains the temporal-model implementation; the second
+contains preprocessing, proxy construction, graph, and causal-analysis code.
+No separate repository initialization step is required.
+
+\section{Python 3.10 environment and dependencies}
+
+Create an isolated Conda environment, activate it, upgrade its packaging tool,
+and install the complete project through the root requirements file:
+
+\begin{quote}\small
+\begin{verbatim}
+conda create -n clinicause python=3.10 -y
+conda activate clinicause
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+\end{verbatim}
+\end{quote}
+
+The root file declares the parent orchestration dependencies and recursively
+includes the independently maintained requirement files of both component
+directories.
+It is the single supported installation interface for the current checkout;
+it is not an environment lock or proof of the exact software environment used
+to produce every archived thesis result.
+
+\section{Source-data access}
+
+MIMIC-III and the PhysioNet/Computing in Cardiology Challenge 2012 records are
+not redistributed with CliniCause. Users must obtain their own copies from
+PhysioNet and follow the access and license terms shown on the respective
+project pages. MIMIC-III is a restricted resource: access requires PhysioNet
+credentialing, the currently specified human-subjects training, and acceptance
+of its data-use agreement. The Challenge 2012 files are currently presented
+by PhysioNet as open access under their specified license; users must still
+comply with that license and verify the current project-page terms. The
+pipeline neither automates nor bypasses these processes, and restricted source
+records must remain under the authorized user's control.
+
+\section{Default and external data locations}
+
+After obtaining and extracting the sources in a form consistent with their
+official distributions, place each raw dataset root at the launcher default:
+
+\begin{quote}\small
+\begin{verbatim}
+data/physionet2012
+data/mimiciii
+\end{verbatim}
+\end{quote}
+
+These paths denote the raw dataset roots consumed directly by the two
+source-specific preprocessors; they are not locations for CliniCause-derived
+outputs. To keep protected data outside the repository, supply absolute paths:
+
+\begin{quote}\small
+\begin{verbatim}
+export PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012
+export MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii
+\end{verbatim}
+\end{quote}
+
+The launcher accepts absolute paths. It resolves relative values, including
+the defaults, from the CliniCause repository root rather than from the caller's
+current directory.
+
+\section{Constructing the reusable datasets}
+
+From the repository root and the activated environment, run:
+
+\begin{quote}\small
+\begin{verbatim}
+STAGES=dataset-extraction bash run_clinicause.sh
+\end{verbatim}
+\end{quote}
+
+The default dataset selector is \texttt{both}. This preset executes the
+implemented preprocessing, deterministic tagging, tree generation, STraTS input
+preparation and model stages, prediction collection and normalization, then
+terminates the causal program at graph construction and deterministic majority
+vote. Its terminal resource artifacts are the dataset-specific causal graph
+and the aggregated latent-tag table, accompanied by a run summary. Thus the
+preset reconstructs the reusable resource through the implemented aggregation
+boundary; it does not run the later causal estimators.
+
+By default, output is isolated below \path{runs/<run-id>/}, in separate
+\texttt{physionet/} and \texttt{mimic/} children, with coordinator metadata
+under the same run root. Dataset manifests, resolved configurations, stage logs, provenance
+sidecars, cohort fingerprints, artifact hashes, and per-stage receipts record
+and validate the current execution. A generated run identifier is used unless
+\texttt{RUN\_ID} is set.
+
+External raw-data paths can be applied to this command without copying the
+records into the checkout:
+
+\begin{quote}\small
+\begin{verbatim}
+PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012 \
+MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii \
+STAGES=dataset-extraction \
+bash run_clinicause.sh
+\end{verbatim}
+\end{quote}
+
+\section{Running the complete pipeline}
+
+The canonical complete run is:
+
+\begin{quote}\small
+\begin{verbatim}
+STAGES=all bash run_clinicause.sh
+\end{verbatim}
+\end{quote}
+
+This retains the full integrated downstream predictive and causal workflow
+rather than stopping at the dataset-construction boundary. It is
+computationally heavier, and the temporal-model stages may require suitable
+accelerator resources. Optional launcher controls include
+\texttt{DATASET=physionet} or \texttt{DATASET=mimic} for a single source,
+\texttt{OUTPUT\_ROOT}, \texttt{RUN\_ID}, the two raw-data path variables,
+\texttt{STRATS\_MAX\_CONCURRENT}, and \texttt{PYTHON\_BIN}; the two commands
+above remain the canonical interfaces.
+
+\section{Reproducibility boundary and limitations}
+
+Three claims must remain distinct. First, the current implementation is
+reproducible at the level of repository composition, one dependency
+interface, explicit launcher controls, dataset-isolated outputs, and validated
+artifact contracts. Second, an authorized user can reconstruct the derived
+resources from appropriately obtained raw inputs without CliniCause
+redistributing those inputs. Third, neither achievement is automatically an
+exact historical reproduction of the archived thesis results. The available
+archive and compact reproducibility package provide checked result tables,
+manifests, checksums, and partial run lineage, but do not recover every producing
+revision, numbered configuration, split, checkpoint-to-export link, raw/processed
+manifest, or hardware and software detail. Runtime can also vary across
+systems. Finally, software reproducibility does not establish clinical
+construct validity or causal identification; those remain separate scientific
+and governance questions.
