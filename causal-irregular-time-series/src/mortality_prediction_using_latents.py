@@ -1,0 +1,539 @@
+import argparse
+import os
+import pickle
+import sys
+from pathlib import Path
+
+if "--validate-config-only" in sys.argv:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from dataset_config import maybe_run_validate_config_only
+
+    maybe_run_validate_config_only(
+        "src/mortality_prediction_using_latents.py",
+        default_dataset="physionet",
+    )
+
+import numpy as np
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import roc_auc_score, average_precision_score, f1_score, accuracy_score
+from sklearn.linear_model import LogisticRegression
+
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+from runtime_determinism import (
+    configure_deterministic_runtime,
+    resolve_device_request,
+    select_torch_device,
+)
+
+from dataset_config import (
+    get_config_scalar,
+    load_dataset_config,
+    resolve_config_seed,
+)
+from preprocess_mimic_iii_large_contract import (
+    assert_exact_id_cohort,
+    canonicalize_binary_mortality_series,
+    canonicalize_cohort_id_series,
+    canonicalize_mimic_id_series,
+    canonicalize_unique_id_frame,
+)
+
+
+DATASET_MODEL = "physionet"
+latent_tags_csv_path = "../../data/predicted_latent_tags_230326_absolute_tags.csv"
+physionet_ts_oc_ids_pkl_path = '../../data/processed/physionet2012_ts_oc_ids.pkl'
+results_txt_path = "predicted_230326_mortality_prediction_results.txt"
+OUTCOME_COL = "in_hospital_mortality"
+SEED = 42
+
+# =========================
+# 1) Load & merge data
+# =========================
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Train mortality predictors from latent clinical tags."
+    )
+    parser.add_argument(
+        "--model",
+        choices=["physionet", "mimic"],
+        default=DATASET_MODEL,
+        help=f"Dataset selector for path defaults. Default: {DATASET_MODEL}",
+    )
+    parser.add_argument(
+        "--dataset-config-csv",
+        default=None,
+        help=(
+            "Path to the dataset global-variables CSV. If omitted, use the default "
+            "config for --model."
+        ),
+    )
+    parser.add_argument("--latent-tags-path", default=None)
+    parser.add_argument(
+        "--dataset-pkl-path",
+        "--physionet-pkl-path",
+        dest="dataset_pkl_path",
+        default=None,
+        help="Path to the processed dataset pickle. --physionet-pkl-path is a deprecated alias.",
+    )
+    parser.add_argument("--results-txt-path", default=None)
+    parser.add_argument(
+        "--device",
+        choices=["auto", "cpu", "cuda"],
+        default=None,
+        help=(
+            "MLP device request. Resolution: CLI, then "
+            "CLINICAUSE_MORTALITY_DEVICE, then auto."
+        ),
+    )
+    parser.add_argument(
+        "--validate-config-only",
+        action="store_true",
+        help="Resolve dataset config values and exit without loading data.",
+    )
+    return parser.parse_args()
+
+
+def resolve_runtime_path(cli_value: str | None, default_value: str, field_name: str) -> str:
+    raw_value = cli_value if cli_value is not None else default_value
+    raw_value = raw_value.strip()
+    if not raw_value:
+        raise ValueError(f"{field_name} is empty. Provide a non-empty path.")
+
+    resolved_path = os.path.abspath(os.path.expanduser(raw_value))
+    if not os.path.exists(resolved_path):
+        raise FileNotFoundError(f"{field_name} does not exist: {resolved_path}")
+    if not os.path.isfile(resolved_path):
+        raise FileNotFoundError(f"{field_name} is not a file: {resolved_path}")
+    return resolved_path
+
+
+def resolve_output_path(
+    cli_value: str | None,
+    default_value: str | None,
+    field_name: str,
+) -> str:
+    raw_value = cli_value if cli_value is not None else default_value
+    if raw_value is None:
+        raise ValueError(f"{field_name} is not configured. Provide an explicit output path.")
+    raw_value = raw_value.strip()
+    if not raw_value:
+        raise ValueError(f"{field_name} is empty. Provide a non-empty path.")
+    return os.path.abspath(os.path.expanduser(raw_value))
+
+
+def load_latents_and_outcomes(latent_tags_csv_path: str, physionet_ts_oc_ids_pkl_path: str) -> pd.DataFrame:
+    print(f"[1/5] Loading latent tags from: {latent_tags_csv_path}")
+    # latent tags
+    latent_df = pd.read_csv(
+        latent_tags_csv_path,
+        dtype={"ts_id": "string", "icustay_id": "string"},
+    )
+    print(f"      Loaded latent tags: {latent_df.shape[0]:,} rows, {latent_df.shape[1]} columns")
+    if "ts_id" in latent_df.columns:
+        latent_df = latent_df.copy()
+    elif DATASET_MODEL == "mimic" and "icustay_id" in latent_df.columns:
+        latent_df = latent_df.rename(columns={"icustay_id": "ts_id"}).copy()
+    else:
+        raise ValueError(
+            "Latent tags CSV must contain 'ts_id', or contain 'icustay_id' when "
+            f"--model mimic is used. Source: {latent_tags_csv_path}"
+        )
+    latent_df = canonicalize_unique_id_frame(
+        latent_df,
+        frame_name="latent tags",
+    )
+
+    print(f"[2/5] Loading processed outcomes from: {physionet_ts_oc_ids_pkl_path}")
+    # outcomes (from your preprocess pickle)
+    with open(physionet_ts_oc_ids_pkl_path, "rb") as f:
+        ts, oc, ts_ids = pickle.load(f)
+    print(f"      Loaded processed pickle: ts rows={len(ts):,}, oc rows={len(oc):,}, patients={len(ts_ids):,}")
+
+    ts = ts.copy()
+    ts["ts_id"] = canonicalize_mimic_id_series(
+        ts["ts_id"],
+        field_name="processed ts.ts_id",
+    )
+    oc = canonicalize_unique_id_frame(
+        oc,
+        frame_name="processed outcomes",
+    )
+    processed_ids = canonicalize_cohort_id_series(
+        ts_ids,
+        cohort_name="processed ts_ids",
+    )
+    assert_exact_id_cohort(
+        processed_ids,
+        pd.Series(ts["ts_id"].unique(), dtype="object"),
+        reference_name="processed ts_ids",
+        candidate_name="processed ts",
+    )
+    assert_exact_id_cohort(
+        processed_ids,
+        oc["ts_id"],
+        reference_name="processed ts_ids",
+        candidate_name="processed outcomes",
+    )
+    assert_exact_id_cohort(
+        processed_ids,
+        latent_df["ts_id"],
+        reference_name="processed ts_ids",
+        candidate_name="latent tags",
+    )
+
+    # keep only what we need
+    if OUTCOME_COL not in oc.columns:
+        raise ValueError(
+            f"Processed pickle is missing outcome column '{OUTCOME_COL}'. "
+            f"Available oc columns: {list(oc.columns)}"
+        )
+    oc_small = oc[["ts_id", OUTCOME_COL]].copy()
+    oc_small[OUTCOME_COL] = canonicalize_binary_mortality_series(
+        oc_small[OUTCOME_COL],
+        field_name=f"processed outcomes.{OUTCOME_COL}",
+    )
+    if OUTCOME_COL in latent_df.columns:
+        latent_df = latent_df.drop(columns=[OUTCOME_COL])
+
+    print("[3/5] Merging latent tags with outcome labels")
+    df = latent_df.merge(
+        oc_small,
+        on="ts_id",
+        how="inner",
+        validate="one_to_one",
+    )
+    if len(df) != len(latent_df):
+        raise ValueError(
+            "Latent/outcome merge changed the validated cohort row count."
+        )
+
+    # sanity
+    if df[OUTCOME_COL].isna().any():
+        raise ValueError(
+            "Latent/outcome merge produced a missing mortality outcome."
+        )
+
+    df[OUTCOME_COL] = canonicalize_binary_mortality_series(
+        df[OUTCOME_COL],
+        field_name=OUTCOME_COL,
+    )
+    print(f"      Finished merge: {len(df):,} patients retained")
+    return df
+
+
+def get_feature_columns(df: pd.DataFrame):
+    # all columns except id + target
+    return [c for c in df.columns if c not in ["ts_id", OUTCOME_COL]]
+
+
+# =========================
+# 2) Metrics helper
+# =========================
+
+def evaluate_probs(y_true: np.ndarray, y_prob: np.ndarray, threshold: float = 0.5) -> dict:
+    y_pred = (y_prob >= threshold).astype(int)
+    return {
+        "AUROC": roc_auc_score(y_true, y_prob),
+        "AUPRC": average_precision_score(y_true, y_prob),
+        "Accuracy": accuracy_score(y_true, y_pred),
+        "F1": f1_score(y_true, y_pred),
+        "PosRate_true": float(y_true.mean()),
+        "PosRate_pred": float(y_pred.mean()),
+    }
+
+
+# =========================
+# 3) Baseline: Logistic Regression
+# =========================
+
+def train_logreg(X_train, y_train, X_val, y_val):
+    print("[4/5] Training Logistic Regression baseline")
+    # handle imbalance automatically
+    clf = LogisticRegression(
+        max_iter=2000,
+        class_weight="balanced",
+        solver="lbfgs",
+    )
+    clf.fit(X_train, y_train)
+    val_prob = clf.predict_proba(X_val)[:, 1]
+    return clf, evaluate_probs(y_val, val_prob)
+
+
+# =========================
+# 4) DL: PyTorch MLP
+# =========================
+
+class TabDataset(Dataset):
+    def __init__(self, X, y):
+        self.X = torch.tensor(X, dtype=torch.float32)
+        self.y = torch.tensor(y, dtype=torch.float32)
+
+    def __len__(self):
+        return self.X.shape[0]
+
+    def __getitem__(self, idx):
+        return self.X[idx], self.y[idx]
+
+
+class MLP(nn.Module):
+    def __init__(self, in_dim: int, hidden: int = 32, dropout: float = 0.1):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_dim, hidden),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden, 1),  # logits
+        )
+
+    def forward(self, x):
+        return self.net(x).squeeze(-1)
+
+
+@torch.no_grad()
+def predict_probs(model, loader, device):
+    model.eval()
+    probs = []
+    ys = []
+    for Xb, yb in loader:
+        Xb = Xb.to(device)
+        logits = model(Xb)
+        pb = torch.sigmoid(logits).cpu().numpy()
+        probs.append(pb)
+        ys.append(yb.numpy())
+    return np.concatenate(ys), np.concatenate(probs)
+
+
+def train_mlp(
+    X_train,
+    y_train,
+    X_val,
+    y_val,
+    seed=42,
+    epochs=50,
+    batch_size=256,
+    lr=1e-3,
+    device_request="auto",
+):
+    device = select_torch_device(device_request, torch_module=torch)
+    configure_deterministic_runtime(
+        seed,
+        torch_module=torch,
+        seed_cuda=device == "cuda",
+    )
+    print(
+        f"[5/5] Training MLP on device={device} | epochs={epochs} | "
+        f"batch_size={batch_size} | train_rows={len(y_train):,} | val_rows={len(y_val):,}"
+    )
+
+    train_ds = TabDataset(X_train, y_train)
+    val_ds = TabDataset(X_val, y_val)
+
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True)
+    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False)
+
+    model = MLP(in_dim=X_train.shape[1], hidden=32, dropout=0.1).to(device)
+
+    # class imbalance: pos_weight = (#neg / #pos)
+    pos = y_train.sum()
+    neg = len(y_train) - pos
+    pos_weight = torch.tensor([neg / max(pos, 1.0)], dtype=torch.float32).to(device)
+
+    criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
+
+    best_val_auroc = -1.0
+    best_state = None
+
+    for ep in range(1, epochs + 1):
+        model.train()
+        for Xb, yb in train_loader:
+            Xb = Xb.to(device)
+            yb = yb.to(device)
+
+            optimizer.zero_grad()
+            logits = model(Xb)
+            loss = criterion(logits, yb)
+            loss.backward()
+            optimizer.step()
+
+        # validate
+        yv_true, yv_prob = predict_probs(model, val_loader, device)
+        val_metrics = evaluate_probs(yv_true, yv_prob)
+
+        if val_metrics["AUROC"] > best_val_auroc:
+            best_val_auroc = val_metrics["AUROC"]
+            best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}
+
+        if ep % 10 == 0 or ep == 1:
+            print(f"[MLP] epoch {ep:03d} | val AUROC={val_metrics['AUROC']:.4f} | AUPRC={val_metrics['AUPRC']:.4f} | F1={val_metrics['F1']:.4f}")
+
+    # load best
+    if best_state is not None:
+        model.load_state_dict(best_state)
+
+    # final val metrics (best model)
+    yv_true, yv_prob = predict_probs(model, val_loader, device)
+    return model, evaluate_probs(yv_true, yv_prob), device
+
+
+# =========================
+# 5) End-to-end runner
+# =========================
+
+def run_mortality_from_latents(
+    latent_tags_csv_path: str,
+    physionet_ts_oc_ids_pkl_path: str,
+    results_txt_path: str,
+    test_size: float = 0.2,
+    val_size: float = 0.2,
+    seed: int = 42,
+    device_request: str = "auto",
+):
+    print("=== Starting mortality prediction from latent tags ===")
+    df = load_latents_and_outcomes(latent_tags_csv_path, physionet_ts_oc_ids_pkl_path)
+    feat_cols = get_feature_columns(df)
+
+    X = df[feat_cols].astype(float).values
+    y = df[OUTCOME_COL].values.astype(int)
+
+    # split: train / temp
+    X_train, X_temp, y_train, y_temp = train_test_split(
+        X, y, test_size=test_size, random_state=seed, stratify=y
+    )
+
+    # split temp into val/test (val_size is fraction of TRAIN, so convert)
+    # Here: val is val_size of the original dataset portion that remains after train split
+    X_val, X_test, y_val, y_test = train_test_split(
+        X_temp, y_temp, test_size=0.5, random_state=seed, stratify=y_temp
+    )
+
+    # scale features (helpful for logreg & MLP)
+    scaler = StandardScaler()
+    X_train_s = scaler.fit_transform(X_train)
+    X_val_s = scaler.transform(X_val)
+    X_test_s = scaler.transform(X_test)
+
+    print(f"Data: N={len(df):,} | features={len(feat_cols)} | mortality_rate={y.mean():.3f}")
+    print(f"Split: train={len(y_train):,} val={len(y_val):,} test={len(y_test):,}")
+
+    # --- Baseline ---
+    logreg, val_metrics_lr = train_logreg(X_train_s, y_train, X_val_s, y_val)
+    test_prob_lr = logreg.predict_proba(X_test_s)[:, 1]
+    test_metrics_lr = evaluate_probs(y_test, test_prob_lr)
+
+    print("\n[LogReg] VAL:", val_metrics_lr)
+    print("[LogReg] TEST:", test_metrics_lr)
+
+    # --- MLP ---
+    mlp, val_metrics_mlp, device = train_mlp(
+        X_train_s,
+        y_train,
+        X_val_s,
+        y_val,
+        seed=seed,
+        device_request=device_request,
+    )
+    test_loader = DataLoader(TabDataset(X_test_s, y_test), batch_size=512, shuffle=False)
+    yt_true, yt_prob = predict_probs(mlp, test_loader, device)
+    test_metrics_mlp = evaluate_probs(yt_true, yt_prob)
+
+    print("\n[MLP]   VAL:", val_metrics_mlp)
+    print("[MLP]   TEST:", test_metrics_mlp)
+
+        # =========================
+    # Save results to TXT
+    # =========================
+
+    results_dir = os.path.dirname(results_txt_path)
+    if results_dir:
+        os.makedirs(results_dir, exist_ok=True)
+
+    print(f"[save] Writing results summary to: {results_txt_path}")
+    with open(results_txt_path, "w") as f:
+        f.write("=== Mortality Prediction From Latent Variables ===\n\n")
+
+        f.write(f"Dataset size: {len(df)} patients\n")
+        f.write(f"Mortality rate: {y.mean():.4f}\n")
+        f.write(f"Number of latent features: {len(feat_cols)}\n\n")
+
+        f.write("----- Logistic Regression -----\n")
+        f.write(f"Validation metrics:\n{val_metrics_lr}\n\n")
+        f.write(f"Test metrics:\n{test_metrics_lr}\n\n")
+
+        f.write("----- MLP (Deep Learning) -----\n")
+        f.write(f"Validation metrics:\n{val_metrics_mlp}\n\n")
+        f.write(f"Test metrics:\n{test_metrics_mlp}\n\n")
+
+    print(f"\nResults saved to: {results_txt_path}")
+
+    return {
+        "df": df,
+        "feature_cols": feat_cols,
+        "scaler": scaler,
+        "logreg": logreg,
+        "mlp": mlp,
+        "metrics": {
+            "logreg_val": val_metrics_lr,
+            "logreg_test": test_metrics_lr,
+            "mlp_val": val_metrics_mlp,
+            "mlp_test": test_metrics_mlp,
+        },
+    }
+
+
+def main():
+    global DATASET_MODEL
+    global OUTCOME_COL
+    args = parse_args()
+    DATASET_MODEL = args.model
+    config = load_dataset_config(DATASET_MODEL, args.dataset_config_csv)
+    OUTCOME_COL = str(get_config_scalar(config, "OUTCOME_COL", OUTCOME_COL))
+    seed = resolve_config_seed(config, SEED)
+    device_request, device_source = resolve_device_request(
+        args.device,
+        get_config_scalar(config, "MORTALITY_DEVICE", None),
+        environ=os.environ,
+    )
+
+    latent_path = resolve_runtime_path(
+        args.latent_tags_path,
+        latent_tags_csv_path,
+        "LATENT_TAGS_PATH",
+    )
+    physionet_pkl_path = resolve_runtime_path(
+        args.dataset_pkl_path,
+        physionet_ts_oc_ids_pkl_path,
+        "DATASET_PKL_PATH",
+    )
+    results_path = resolve_output_path(
+        args.results_txt_path,
+        results_txt_path,
+        "RESULTS_TXT_PATH",
+    )
+    print(
+        "Runtime configuration: "
+        f"model={DATASET_MODEL} | latent_tags_path={latent_path} | "
+        f"processed_pkl_path={physionet_pkl_path} | results_txt_path={results_path} | "
+        f"mortality_device_request={device_request} | device_source={device_source}"
+    )
+    return run_mortality_from_latents(
+        latent_path,
+        physionet_pkl_path,
+        results_path,
+        seed=seed,
+        device_request=device_request,
+    )
+
+
+if __name__ == "__main__":
+    main()
