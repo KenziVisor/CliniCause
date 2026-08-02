@@ -1,646 +1,778 @@
-Task: Update the thesis and AAAI paper reproducibility instructions for the current CliniCause launcher
+You are performing Step 1 of the approved CliniCause thesis–paper story-alignment mission.
 
-Recommended model: strongest available Codex coding/reasoning model
-Reasoning effort: high
+MODEL AND EFFORT
+- Use GPT-5.6.
+- Use Extra High reasoning.
+- This is a careful read-only scientific and repository audit.
+- Do not begin any thesis rewrite or conceptual edit in this step.
 
-Repository: KenziVisor/CliniCause
-Expected task baseline when this prompt was prepared:
-0fe0649f9abc2959eb9653a57379e555d7143b37
+PRIMARY PLAN
 
-Work from the actual current HEAD. Do not reset or rewrite later commits. If HEAD is
-newer than the expected baseline, inspect and classify the intervening commits before
-editing.
+First read the complete canonical plan:
 
-OBJECTIVE
+thesis-writing/THESIS_TESTBED_STORY_ALIGNMENT_PLAN.md
 
-Revise the reproducibility material in both the thesis and AAAI paper package so that
-a new authorized user can understand, from a fresh machine, how to:
+Treat that file as the controlling instruction for this mission. Follow its evidence hierarchy, protected-file rules, terminology policy, five-step workflow, report requirements, and independent-review gates.
 
-1. clone CliniCause together with both Git submodules;
-2. recover correctly if the repository was cloned without submodules;
-3. create and activate a Conda environment using Python 3.10;
-4. install the complete project dependencies;
-5. obtain the restricted raw ICU datasets through the appropriate PhysioNet access
-   process;
-6. place the raw datasets under the repository's default data locations, or supply
-   external raw-data locations through the launcher environment variables;
-7. construct the CliniCause causal-analysis datasets from the authorized raw data;
-8. run the complete integrated pipeline through the canonical shell launcher.
+MISSION
 
-The text should be practical, positive, technically precise, and evidence-bounded.
-Present the implemented workflow as a meaningful reproducibility achievement while
-retaining the genuine limitations around restricted data access and incomplete
-historical producing lineage.
+The finished paper and current thesis describe the same CliniCause project but prioritize different scientific stories.
 
-Do not merely add commands. Explain briefly what each phase achieves and distinguish:
+The finished paper’s main idea is that CliniCause constructs clinically grounded observational causal-analysis testbeds from source-observed irregular ICU records without generating patient records, proxy-exposure assignments, or mortality outcomes. It shifts researcher intervention from the data-generating mechanism to an explicit representation layer and evaluates the resulting resources through converging evidence rather than known causal ground truth.
 
-- current implementation reproducibility;
-- reconstruction from authorized raw inputs;
-- exact historical reproduction of the archived thesis results.
+The current thesis instead primarily emphasizes end-to-end integration, data contracts, traceability, and evidence tracking.
 
-MANDATORY BASELINE INSPECTION
+The thesis is already detailed and scientifically cautious. It must not be rewritten from scratch. The eventual revision will make observational testbed construction the primary contribution while preserving integration and evidence tracking as the enabling machinery.
 
-Before editing, run and record:
+Your task in this step is to inspect and report. Do not edit thesis prose.
+
+REPOSITORY STARTUP
+
+Work from the CliniCause repository root.
+
+Before inspecting content, record:
 
 git status --short
 git branch --show-current
 git rev-parse HEAD
 git log -10 --oneline --decorate
 
-Read all applicable AGENTS.md, README.md, and local instructions before editing.
+Read any applicable local instruction files, including AGENTS.md, README.md, or equivalent files governing the repository or thesis-writing directory.
 
-Inspect at minimum:
+Do not reset, clean, stash, normalize, stage, commit, or push anything.
 
-- .gitmodules
-- run_clinicause.sh
-- router.py
-- requirements-full.txt
-- requirements-router.txt
-- causal-irregular-time-series/requirements.txt
-- STraTS/requirements.txt
-- the preprocessing entry points for both datasets
-- thesis-writing/thesis/appendices/appendices.tex
-- thesis-writing/thesis/main.tex
-- thesis-writing/thesis/README.md
-- thesis-writing/paper-aaai/paper.tex
-- thesis-writing/paper-aaai/supplement/technical_appendix.tex
-- thesis-writing/paper-aaai/ReproducibilityChecklist.tex or the actual checklist
-  location, if present
-- existing paper build instructions and reports
-- existing reproducibility and provenance reports under thesis-writing/reproducibility/
-  and thesis-writing/logs/
-
-Confirm the exact raw-data directory contracts from source before describing their
-internal contents. Do not invent expected filenames, extracted layouts, credentials,
-or download commands.
-
-PHASE 1 — CREATE ONE UNIVERSAL ROOT REQUIREMENTS FILE
-
-Complete this phase before editing the thesis or paper.
-
-Objective:
+Do not alter pre-existing dirty or untracked files.
 
-Create one canonical dependency installation file at the CliniCause repository root:
+FOCUSED SOURCE SCOPE
 
-requirements.txt
+The working directory contains many files. Focus first on the following mission-critical sources.
 
-After this phase, `requirements.txt` must be the only requirements file owned by the
-top-level CliniCause repository. Remove obsolete top-level alternatives such as:
+ACTIVE THESIS
 
-- requirements-full.txt
-- requirements-router.txt
-- any other root-level `requirements*.txt` file whose role is superseded by the new
-  requirements.txt
+thesis-writing/thesis/
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/main.pdf
+thesis-writing/thesis/frontmatter/
+thesis-writing/thesis/chapters/
+thesis-writing/thesis/figures/
+thesis-writing/thesis/appendices/
+thesis-writing/thesis/README.md
 
-Scope boundary:
+FINISHED PAPER AUTHORITIES
 
-- This cleanup applies only to requirements files owned by the parent CliniCause
-  repository.
-- Do not edit, rename, move, delete, normalize, or otherwise modify any file inside:
-  - STraTS/
-  - causal-irregular-time-series/
-- In particular, preserve:
-  - STraTS/requirements.txt
-  - causal-irregular-time-series/requirements.txt
-  exactly as they are.
+thesis-writing/CausalDataGeneration.pdf
+thesis-writing/aaai27-submission.tex
+thesis-writing/supp.pdf
 
-Mandatory inspection before consolidation:
+OVERLEAF PROJECT COPY — READ WITH CAUTION
 
-1. Enumerate all requirements files while distinguishing parent-repository files from
-   submodule files:
+thesis-writing/paper-aaai/aaai27-submission.tex
+thesis-writing/paper-aaai/supplementary1.tex
+thesis-writing/paper-aaai/references.bib
+thesis-writing/paper-aaai/figures/
+thesis-writing/paper-aaai/paper_evidence_map.md
+thesis-writing/paper-aaai/reports/
+thesis-writing/paper-aaai/evidence/
 
-   find . -name 'requirements*.txt' -print
+THESIS BIBLIOGRAPHY AND SUPPORTING EVIDENCE
 
-2. Read:
-   - requirements-full.txt
-   - requirements-router.txt
-   - every other parent-owned root requirements file, if present
-   - STraTS/requirements.txt, read-only
-   - causal-irregular-time-series/requirements.txt, read-only
+thesis-writing/literature/metadata/references.bib
+thesis-writing/results/
+thesis-writing/reproducibility/
+thesis-writing/logs/
+thesis-writing/audit/
+thesis-writing/planning/
 
-3. Search the parent repository for references to the old root filenames:
+Do not broadly inspect unrelated code, datasets, historical project folders, or runtime artifacts unless a specific thesis claim cannot be resolved from the focused material above.
 
-   git grep -n \
-     -e 'requirements-full\.txt' \
-     -e 'requirements-router\.txt' \
-     -e 'pip install.*requirements'
+SOURCES TO EXCLUDE AS AUTHORITIES
 
-4. Inspect router.py and parent-level Python imports to determine the dependencies
-   specific to the parent orchestration layer.
+Explicitly ignore these during the scientific alignment analysis:
 
-Required implementation:
+thesis-writing/ignore-paper-aaai/
 
-Create root `requirements.txt` as the single supported installation entry point.
+Also treat the following as superseded older paper artifacts:
 
-The preferred design is:
+thesis-writing/paper-aaai/paper.tex
+thesis-writing/paper-aaai/paper.pdf
 
-- place all parent/router-specific package requirements directly in requirements.txt;
-- include the unchanged submodule requirement files using pip recursive includes:
+You may mention them in the report as superseded artifacts that must not control later edits, but do not use their story, title, abstract, or framing as the target.
 
-  -r causal-irregular-time-series/requirements.txt
-  -r STraTS/requirements.txt
+Do not use the AAAI author-kit files under:
 
-This is considered a universal root requirements file because:
+thesis-writing/paper-aaai/AuthorKit27/
 
-- the user runs one installation command;
-- it installs the parent router dependencies;
-- it recursively installs both submodules' dependencies;
-- the submodules retain their own independently maintained dependency declarations;
-- no duplicate copy of all submodule dependencies needs to be maintained at the
-  parent level.
+as scientific evidence.
 
-Use relative paths from the repository root.
+READ-ONLY RULE
 
-Do not flatten or copy all submodule dependencies into the root file unless recursive
-includes are demonstrably incompatible with the current dependency specifications.
-If flattening becomes necessary, explain why in the evidence report and still do not
-modify the submodule files.
+You are not authorized to edit:
 
-Consolidation rules:
+- any thesis prose;
+- any thesis figure;
+- any bibliography;
+- any paper source;
+- any paper PDF;
+- any paper figure;
+- any existing report;
+- any code;
+- any result artifact.
 
-- Preserve every actual dependency required by the parent and both submodules.
-- Do not silently drop packages.
-- Do not invent version pins.
-- Preserve existing version constraints unless a concrete incompatibility requires a
-  change.
-- Detect duplicate or conflicting declarations.
-- Where the same dependency appears with compatible constraints, let pip consume the
-  declarations normally or consolidate only when equivalence is clear.
-- Where constraints conflict, do not guess. Record the conflict and mark the task
-  blocked unless the repository already establishes the authoritative constraint.
-- Do not use `pip freeze` as the source of requirements.
-- Do not convert the file into an environment lock file.
-- Do not add platform-specific packages unless already supported by repository
-  evidence.
-- Do not install dependencies during this task.
+The only permitted repository write in this step is the new Step 1 report:
 
-Required final root layout:
+thesis-writing/logs/testbed_story_alignment_step_1_audit.md
 
-requirements.txt
+Do not create temporary audit files inside tracked repository paths. Use /tmp for temporary hashes, rendered pages, extracted text, or comparison files.
 
-must exist, and the superseded parent-owned root requirements files must be deleted.
+PAPER PROTECTION BASELINE
 
-Expected user installation command:
+Before any substantive inspection, compute and record SHA-256 hashes for:
 
-python -m pip install -r requirements.txt
+thesis-writing/CausalDataGeneration.pdf
+thesis-writing/aaai27-submission.tex
+thesis-writing/supp.pdf
 
-Repository-reference updates:
+Also create a deterministic hash manifest for the entire paper-aaai tree:
 
-Update active parent-repository documentation or scripts that explicitly direct users
-to install:
+find thesis-writing/paper-aaai -type f -print0 \
+  | sort -z \
+  | xargs -0 sha256sum \
+  > /tmp/testbed_alignment_paper_aaai_hashes_before.txt
 
-- requirements-full.txt
-- requirements-router.txt
+At the end of the task, repeat the same commands and compare the results. The protected paper files and paper-aaai tree must remain unchanged.
 
-so they refer to:
+SOURCE-AUTHORITY CHECK
 
-requirements.txt
+Establish the relationship among:
 
-However, keep this task narrow:
+thesis-writing/CausalDataGeneration.pdf
+thesis-writing/aaai27-submission.tex
+thesis-writing/paper-aaai/aaai27-submission.tex
 
-- update only active user-facing setup references needed to prevent broken
-  instructions;
-- do not rewrite historical evidence reports merely because they mention the old
-  filenames as historical facts;
-- do not modify copied archival documentation unless it is an active user guide;
-- do not edit anything inside either submodule.
+Determine whether the two TeX sources are currently byte-identical or substantively identical. Do not assume they match only because they matched in an earlier inspection.
 
-Phase 1 validation:
+Report:
 
-1. Confirm the new file exists:
+- file hashes;
+- whether the visible finished PDF corresponds to the final source story;
+- any meaningful source differences;
+- any duplicate or superseded manuscript artifacts;
+- which source should control later prose adaptation;
+- which source should control final visible wording and figures.
 
-   test -f requirements.txt
+Use the finished paper PDF as the principal authority for the paper’s final visible scientific story.
 
-2. Confirm the obsolete parent-owned files are absent.
+Use the matching final TeX source for exact section structure, equations, figure labels, citation keys, and reusable technical wording.
 
-3. Confirm submodule files are byte-for-byte unchanged:
+THESIS INSPECTION
 
-   git -C STraTS status --short
-   git -C causal-irregular-time-series status --short
+Read the complete active thesis source and rendered PDF.
 
-   Both submodule worktrees must show no changes caused by this task.
+At minimum inspect:
 
-4. Confirm the recursive includes resolve to existing files.
+thesis-writing/thesis/frontmatter/administrative_metadata.tex
+thesis-writing/thesis/frontmatter/title_pages.tex
+thesis-writing/thesis/frontmatter/abstract_primary.tex
+thesis-writing/thesis/frontmatter/abstract_secondary.tex
+thesis-writing/thesis/frontmatter/keywords.tex
+thesis-writing/thesis/frontmatter/nomenclature.tex
 
-5. Parse the root dependency graph without installing packages. Use a safe static
-   method appropriate to pip requirement syntax.
-
-6. Search for stale active installation instructions:
-
-   git grep -n \
-     -e 'requirements-full\.txt' \
-     -e 'requirements-router\.txt'
-
-Classify any remaining occurrence as:
-
-- historical and intentionally preserved;
-- generated or archival;
-- active and requiring correction.
-
-Do not begin the thesis or paper edits until Phase 1 passes.
-
-AUTHORITATIVE IMPLEMENTATION INTERFACE
-
-Use run_clinicause.sh as the only documented top-level launcher.
-
-Do not recommend run_clinicause_shell.sh.
-
-The two required user-facing launcher commands are:
-
-STAGES=dataset-extraction bash run_clinicause.sh
-
-and:
-
-STAGES=all bash run_clinicause.sh
-
-Explain them accurately:
-
-- `dataset-extraction` constructs the dataset/resource pipeline through the implemented
-  dataset-construction and aggregation boundary. Confirm the exact terminal stage from
-  router.py and describe it precisely.
-- `all` runs the complete integrated pipeline.
-- The default dataset selection is `both`, subject to confirmation from the current
-  script.
-- Dataset-specific runs may be shown as optional examples only if confirmed by the
-  current script, using `DATASET=physionet` or `DATASET=mimic`.
-
-DEPENDENCY COMMAND
-
-The current root umbrella dependency file is requirements-full.txt. It includes:
-
-- requirements-router.txt
-- causal-irregular-time-series/requirements.txt
-- STraTS/requirements.txt
-
-Therefore, unless the current checkout contains a newly added root requirements.txt
-with the same umbrella role, document:
-
-python -m pip install -r requirements-full.txt
-
-Do not write `pip install -r requirements.txt` when that file does not exist.
-
-Do not rename or create dependency files in this task. If the local repository differs
-from the expected state, document the actual supported root installation command and
-explain the difference in the evidence report.
-
-REQUIRED FRESH-START COMMAND SEQUENCE
-
-The detailed thesis instructions and detailed paper supplement instructions must show
-a coherent sequence equivalent to the following, adjusted only where current source
-inspection proves a correction is necessary:
-
-git clone --recurse-submodules https://github.com/KenziVisor/CliniCause.git
-cd CliniCause
-
-Also explicitly include the recovery command for users who already cloned without
-submodules:
-
-git submodule update --init --recursive
-
-Explain that an ordinary clone may leave `STraTS/` and
-`causal-irregular-time-series/` absent or uninitialized and that the recursive
-submodule step is mandatory.
-
-Then show:
-
-conda create -n clinicause python=3.10 -y
-conda activate clinicause
-python -m pip install --upgrade pip
-python -m pip install -r requirements-full.txt
-
-Do not claim that this dependency declaration proves the exact historical environment
-that produced the archived thesis results. It is the supported setup interface for the
-current repository.
-
-RAW-DATA ACCESS AND LOCATION
-
-State clearly and professionally that:
-
-- MIMIC-III and PhysioNet 2012 are not redistributed with CliniCause.
-- Users must obtain authorized access through PhysioNet and comply with the applicable
-  credentialing, training, license, and data-use requirements.
-- Because the source records are access restricted, users reconstruct CliniCause from
-  their own authorized raw-data copies.
-- The pipeline does not bypass, automate, or weaken those access conditions.
-
-Document the default repository-relative locations exposed by run_clinicause.sh:
-
-data/physionet2012
-data/mimiciii
-
-Before finalizing the prose, inspect the preprocessing code and confirm what each path
-must point to. Describe the path as the raw dataset root expected by the implementation
-without inventing a specific extracted file hierarchy.
-
-Also document the supported external-location interface:
-
-export PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012
-export MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii
-
-STAGES=dataset-extraction bash run_clinicause.sh
-
-Alternatively, an inline form may be shown:
-
-PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012 \
-MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii \
-STAGES=dataset-extraction \
-bash run_clinicause.sh
-
-Make clear that relative paths are resolved from the CliniCause repository root and
-absolute paths are accepted, if that remains true in the current launcher.
-
-RUNNING THE WORKFLOW
-
-Include the following two primary use cases.
-
-A. Construct the reusable CliniCause datasets from authorized raw data:
-
-STAGES=dataset-extraction bash run_clinicause.sh
-
-Explain what artifacts this produces, where the run output is placed by default, and
-what validation/provenance records are created, but only based on current router
-behavior.
-
-B. Run the complete pipeline:
-
-STAGES=all bash run_clinicause.sh
-
-Explain that this includes the integrated downstream predictive and causal workflow.
-Mention that the complete run is computationally heavier and that temporal-model
-stages may require suitable accelerator resources. Do not state exact hardware or
-runtime requirements unless verified.
-
-Optionally document these confirmed launcher controls in a compact paragraph or table:
-
-- DATASET
-- OUTPUT_ROOT
-- RUN_ID
-- PHYSIONET_RAW_DATA_PATH
-- MIMIC_RAW_DATA_PATH
-- STRATS_MAX_CONCURRENT
-- PYTHON_BIN
-
-Do not let optional controls obscure the two canonical commands.
-
-THESIS EDIT
-
-Primary allowed thesis file:
+thesis-writing/thesis/chapters/01_introduction.tex
+thesis-writing/thesis/chapters/02_background_related_work.tex
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
+thesis-writing/thesis/chapters/04_data_preprocessing.tex
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
+thesis-writing/thesis/chapters/10_results.tex
+thesis-writing/thesis/chapters/11_discussion.tex
+thesis-writing/thesis/chapters/12_conclusions_future_work.tex
 
 thesis-writing/thesis/appendices/appendices.tex
 
-Expand the existing “Reproducibility and Evidence Boundary” appendix into a
-self-contained reproducibility appendix.
+Inspect the rendered PDF as a document, not only the raw source. Use extracted text, PDF rendering, page images, or other local tools as needed.
 
-Suggested structure:
+FINISHED PAPER INSPECTION
 
-1. Current reproducibility interface
-2. Repository and submodule setup
-3. Python 3.10 environment and dependencies
-4. Restricted raw-data access
-5. Default and external data locations
-6. Dataset construction command
-7. Complete-pipeline command
-8. Outputs, validation, and provenance
-9. Reproducibility boundary and limitations
+Read the complete finished paper and relevant supplementary sections.
 
-The thesis may use the exact public repository URL:
+Extract the final paper’s scientific hierarchy:
 
-https://github.com/KenziVisor/CliniCause.git
+1. causal-estimator evaluation problem;
+2. limitations of synthetic, semi-synthetic, RCT-derived, and empirically anchored answer-key designs;
+3. control-versus-observational-fidelity trade-off;
+4. representation-layer intervention;
+5. schema-only and literature-grounded LLM elicitation;
+6. deterministic instantiation on source-observed MIMIC-III and PhysioNet records;
+7. construction of two observational causal-analysis resources;
+8. converging-evidence evaluation;
+9. broad predictive and estimator agreement;
+10. retained discrepancies;
+11. omitted-variable sensitivity and estimator fragility;
+12. no known causal ground truth;
+13. complementarity with controlled causal benchmarks.
 
-Preserve the important existing distinction that the current launcher and dependency
-files define the supported current interface but do not establish the exact historical
-command, environment, source revisions, splits, checkpoints, or export lineage that
-produced every archived result.
+Do not silently import stronger claims from the paper when the thesis’s archived evidence or qualifications do not support them.
 
-Do not leave the appendix dominated by limitations. Begin with what is now available
-and usable, then close with a proportionate limitations paragraph.
+REQUIRED AUDIT PRODUCTS
 
-PAPER EDIT
+Your report must contain all of the following.
 
-Potentially allowed paper files:
+1. SOURCE AUTHORITY AND REPOSITORY BASELINE
 
-- thesis-writing/paper-aaai/paper.tex
-- thesis-writing/paper-aaai/supplement/technical_appendix.tex
+Record:
 
-The main AAAI paper has strict space constraints. Keep the main-paper addition compact:
-approximately one concise paragraph or a short subsection near the existing
-Dataset Validation and Provenance discussion or the limitations/reproducibility
-material.
+- branch;
+- current HEAD;
+- recent commits;
+- pre-existing dirty and untracked files;
+- applicable instruction files;
+- current thesis build entry point;
+- chapter include order;
+- active thesis bibliography path;
+- finished-paper authority;
+- matching paper source;
+- paper supplementary authority;
+- useful paper-aaai supporting paths;
+- superseded and ignored paths.
 
-The main paper should state that the repository provides:
+2. CURRENT THESIS STORY SUMMARY
 
-- a single top-level launcher;
-- a dedicated dataset-construction mode;
-- a complete-pipeline mode;
-- explicit submodule, environment, data-path, validation, and provenance interfaces;
-- reconstruction from authorized source data.
+Explain the current thesis’s main scientific story in a compact but precise form.
 
-Place the detailed scratch-to-run command guide in the technical appendix under an
-expanded section such as:
+Identify how the current thesis prioritizes:
 
-“Code Availability and Reproduction Workflow”
+- irregular ICU representation;
+- integration;
+- data contracts;
+- evidence tracking;
+- prediction;
+- aggregation;
+- DAG adjustment;
+- observational estimation;
+- provenance;
+- limitations.
 
-or:
+State what is already fully compatible with the paper’s testbed story.
 
-“Reproduction from Authorized Raw Data”
+State what conflicts only in hierarchy rather than factual substance.
 
-The technical appendix should contain the complete clone, submodule, Conda,
-dependency, data-placement, override, dataset-construction, and full-run commands.
+3. FINISHED PAPER STORY SUMMARY
 
-ANONYMITY REQUIREMENT
+Explain the finished paper’s main story in a compact but precise form.
 
-The paper is currently in anonymous-submission mode.
+Identify:
 
-Do not place:
+- the causal-evaluation problem;
+- the answer-key versus observational-fidelity trade-off;
+- representation-layer intervention;
+- the role of LLM elicitation;
+- deterministic instantiation;
+- the two resources;
+- the converging-evidence framework;
+- the key estimator-agreement and sensitivity conclusion;
+- the absence of known causal truth.
 
-https://github.com/KenziVisor/CliniCause.git
+4. PASSAGE-LEVEL THESIS STORY MAP
 
-or any other author-identifying URL in paper.tex or the anonymous supplement unless
-the repository already contains an explicitly approved review-safe/anonymized release
-URL.
+Locate every important thesis passage that currently makes integration, feasibility, pipeline connection, traceability, engineering, or evidence infrastructure the primary contribution.
 
-Search for an existing anonymous repository or artifact URL.
+Search all source files, not only Chapter 1.
 
-If one exists, use it.
+For every relevant passage, report:
 
-If none exists:
+- file;
+- section or subsection;
+- approximate line range;
+- short description of the current claim;
+- its current role;
+- the required action classification.
 
-- keep the exact public URL in the thesis only;
-- use the project's existing anonymous repository macro or neutral placeholder if one
-  exists;
-- otherwise use non-identifying prose in the main paper and record a human gate for
-  insertion of an anonymized repository URL;
-- do not invent an anonymous URL;
-- do not expose author identity;
-- report exactly what URL decision remains unresolved.
+Use exactly these classifications:
 
-The commands may use:
+- RETAIN UNCHANGED
+- RETAIN BUT SUBORDINATE
+- REFRAME
+- ADD PAPER-DERIVED CONTEXT
+- REMOVE ONLY IF REDUNDANT
 
-git clone --recurse-submodules <ANONYMIZED_REPOSITORY_URL>
+Do not propose wholesale removal merely because a passage reflects the old hierarchy.
 
-in the anonymous technical appendix only when a visible placeholder is compatible with
-the current paper workflow. If visible placeholders are prohibited by current project
-policy, keep the command sequence in source comments or the evidence report and mark
-the anonymous URL as a blocking human input.
+Pay special attention to:
 
-TONE AND CLAIM BOUNDARY
+- English title;
+- Hebrew title;
+- English abstract;
+- Hebrew abstract;
+- keywords;
+- Introduction motivation;
+- Thesis Gap and Objective;
+- main research question;
+- secondary research questions;
+- primary contribution statement;
+- Chapter 2 positioning;
+- Chapter 3 problem/resource definition;
+- chapter-opening and chapter-closing summaries;
+- Results synthesis;
+- Discussion research-question answers;
+- “strongest contribution” language;
+- Conclusion opening;
+- closing perspective;
+- appendix and reproducibility framing.
 
-Use an optimistic but accurate framing similar in substance to:
+5. CHAPTER-BY-CHAPTER INTERVENTION MAP
 
-“CliniCause now exposes a unified, submodule-aware execution interface that can
-reconstruct the analysis resources from authorized raw inputs and execute the
-integrated predictive and causal workflow.”
+For every thesis source file, classify the expected revision scale:
 
-Emphasize achieved capabilities:
+- NONE
+- SMALL
+- MEDIUM
+- MAJOR-BUT-LOCALIZED
 
-- one canonical launcher;
-- reproducible repository composition through pinned submodules;
-- one umbrella dependency installation;
-- explicit raw-data path contracts;
-- separate dataset-construction and complete-pipeline modes;
-- dataset-isolated execution;
-- validation, cohort, artifact, receipt, and provenance contracts;
-- the ability to rebuild derived causal-analysis resources without redistributing
-  restricted patient-level source data.
+For each file, explain:
 
-Retain limitations without sounding defeatist:
+- exact sections likely to change;
+- the target conceptual change;
+- content that must remain;
+- content that should become secondary;
+- new paper-derived context required;
+- likely citation needs;
+- risks.
 
-- raw source access remains restricted;
-- users must satisfy external data-use conditions;
-- full runs require appropriate compute;
-- software and hardware differences may affect runtime;
-- the current interface does not by itself recover every missing historical producing
-  revision, split, checkpoint, configuration, or environment detail;
-- current-code reproducibility is not automatically identical to exact historical
-  reproduction of archived results;
-- clinical validation and causal identification remain separate from software
-  reproducibility.
+Do not suggest changing the chapter structure unless a small section rename or insertion materially improves clarity.
 
-Do not repeat the same limitation paragraph in several places. State it once clearly
-in each deliverable at the appropriate level of detail.
+6. CONTRIBUTION-HIERARCHY MAP
 
-PROTECTED CONTENT
+Construct a clear before/after hierarchy.
 
-Do not change:
+CURRENT THESIS HIERARCHY:
+- primary contribution;
+- secondary methodological contributions;
+- empirical contributions;
+- evidence/provenance contribution;
+- limitations.
 
-- numerical results;
-- record counts;
+TARGET THESIS HIERARCHY:
+- primary: observational testbed construction and evaluation;
+- enabling: integration, data contracts, deterministic instantiation, and evidence tracking;
+- empirical: recoverability, estimator stability, discrepancies, literature corroboration, and sensitivity;
+- infrastructure: numerical traceability and provenance boundaries;
+- limitations: no known truth, no construct validation, no validated DAG, intervention ambiguity, confounding, support, and incomplete reproducibility.
+
+Identify every source file where this hierarchy must be expressed.
+
+7. RESEARCH-QUESTION RECOMMENDATION
+
+Propose:
+
+- one revised main research question;
+- a minimal revised set of secondary research questions;
+- a mapping from every current research question to:
+  - retain;
+  - merge;
+  - subordinate;
+  - rewrite.
+
+Do not expand the number of research questions unnecessarily.
+
+The main question must be testbed-first and must not imply known causal ground truth.
+
+8. TITLE RECOMMENDATION
+
+Assess the preferred English title:
+
+CliniCause: Constructing Clinically Grounded Observational Testbeds for Causal Analysis from Irregular ICU Time Series
+
+Report:
+
+- whether this title accurately covers the thesis;
+- whether “from Irregular ICU Time Series” should remain;
+- whether any shorter alternative would be stronger;
+- likely Hebrew-title implications;
+- all source files controlled by the title macro;
+- title-page and cover layout risks.
+
+Do not edit the title in this step.
+
+9. BENCHMARK AND TESTBED LITERATURE GAP
+
+Inspect the finished paper’s benchmark/testbed citations and the active thesis bibliography.
+
+Identify the citations needed to explain:
+
+- fully synthetic evaluation;
+- semi-synthetic evaluation;
+- IHDP;
+- ACIC;
+- Dragonnet or other ACIC users;
+- influence-function validation competition datasets;
+- observational sampling from randomized trials;
+- Jobs/LaLonde;
+- Credence;
+- any other paper example actually needed for the thesis framing.
+
+For every needed source, report:
+
+- paper citation key used by the final paper;
+- title and role;
+- whether an equivalent entry already exists in the thesis bibliography;
+- the thesis key if already present;
+- whether a new BibTeX entry will be needed in Step 2;
+- duplicate DOI/title risk.
+
+Do not add bibliography entries in this step.
+
+Do not perform new internet research.
+
+10. CONVERGING-EVIDENCE COVERAGE MATRIX
+
+Create a matrix comparing the finished paper with the current thesis for:
+
+- construct plausibility;
+- proxy recoverability;
+- mortality prediction;
+- DML sign agreement;
+- three-estimator sign agreement;
+- estimator rank agreement;
+- estimator magnitude agreement;
+- clinical-evidence corroboration;
+- matching;
+- overlap and empirical support;
+- permutation checks;
+- outcome downsampling;
+- omitted-variable sensitivity;
+- provenance and reproducibility.
+
+For each axis, report:
+
+- paper coverage;
+- thesis coverage;
+- thesis source location;
+- current evidential role;
+- missing content;
+- required later step;
+- overclaim risk.
+
+Clearly distinguish:
+
+- evidence supporting usefulness of a testbed;
+- evidence supporting the causal correctness of an estimate.
+
+The latter is not established.
+
+11. CLINICAL-EVIDENCE CORROBORATION MAP
+
+Inspect the finished supplementary material’s clinical-evidence comparison.
+
+Identify:
+
+- the closest numerical comparisons;
+- the largest discrepancies;
+- constructs with no sufficiently comparable numerical source;
+- differences in exposure definition;
+- differences in population;
+- differences in adjustment;
+- differences in mortality horizon;
+- which comparisons used matching, adjustment, unadjusted contrasts, TMLE, marginal structural models, or other designs;
+- which exact supplementary table and prose could support a concise thesis subsection.
+
+Recommend:
+
+- whether the thesis needs a new Results subsection;
+- whether it needs a compact table;
+- where the methodology belongs;
+- where the interpretation belongs;
+- what claims are prohibited.
+
+Do not copy the full supplementary table into the thesis by default. Recommend a compact, thesis-appropriate synthesis.
+
+12. FIGURE INTEGRATION MAP
+
+Inspect the finished paper PDF and the available paper figure files.
+
+At minimum inspect:
+
+thesis-writing/paper-aaai/figures/figure1_pipeline.pdf
+thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png
+thesis-writing/paper-aaai/figures/figure2_estimator_agreement.pdf
+thesis-writing/paper-aaai/figures/mimic_causal_dag.png
+thesis-writing/paper-aaai/figures/physionet_causal_dag.png
+
+Compare them with the active thesis figures.
+
+For each candidate figure, report:
+
+- source path;
+- SHA-256;
+- visible content;
+- relationship to a finished-paper figure number;
+- whether it is already represented in the thesis;
+- whether adding it would be redundant;
+- recommended thesis destination filename;
+- recommended chapter and exact section;
+- recommended caption focus;
+- recommended LaTeX label;
+- likely page and layout risks;
+- whether exact byte copying is sufficient;
+- whether PDF, PNG, or another format should be used;
+- whether figure text remains readable at thesis page width.
+
+The expected minimum later additions are:
+
+- the three-stage CliniCause pipeline figure;
+- the deterministic shock-proxy example.
+
+Independently assess whether the estimator-agreement figure should:
+
+- replace the current thesis agreement figure;
+- supplement it;
+- or remain unused.
+
+Do not duplicate the existing DAGs unless the paper copies materially correct or improve the active thesis figures.
+
+Do not copy any figure in this step.
+
+13. FROZEN-CONTENT INVENTORY
+
+Capture a baseline for later comparison.
+
+At minimum inventory:
+
+- English title;
+- Hebrew title;
+- English abstract;
+- Hebrew abstract;
+- English keywords;
+- Hebrew keywords;
+- main research question;
+- secondary research questions;
+- primary contribution paragraph;
+- conclusion’s strongest-contribution statement;
+- cohort counts;
 - exposure counts;
-- estimator findings;
-- prediction metrics;
-- figures;
-- tables;
-- captions unrelated to reproducibility;
-- causal or clinical interpretation;
-- bibliography entries unless a genuinely missing citation is required;
-- paper title, authorship, submission mode, or anonymity settings;
-- run_clinicause.sh;
-- router.py;
-- requirement files;
-- submodule pointers;
-- research code;
-- generated result artifacts;
-- AAAI style or author-kit files.
+- model list;
+- aggregation-source count and composition;
+- estimator list and hierarchy;
+- 19/19 and 18/19 sign-agreement claims;
+- PhysioNet shock exception;
+- predictive metric table values;
+- causal table values;
+- matching table values;
+- sensitivity/permutation status statements;
+- figure filenames and labels;
+- table labels;
+- citation keys;
+- cross-reference labels;
+- chapter and section headings.
 
-Do not run:
+The purpose is to detect accidental drift in later stages.
 
-- preprocessing;
-- model training;
-- inference;
-- causal estimation;
-- the complete pipeline;
-- Slurm jobs;
-- real-data commands;
-- dependency installation or environment mutation.
+Do not generate a massive unreadable dump. Summarize the baseline and point to machine-readable source locations where appropriate.
 
-This is a documentation and build-validation task only.
+14. TERMINOLOGY AUDIT
 
-ALLOWED FILES
+Search the current thesis for:
 
-Edit only as necessary:
+benchmark
+testbed
+resource
+ground truth
+causal truth
+validated
+validation
+causal effect
+treatment effect
+CATE
+agreement
+corroboration
+recoverability
+robust
+sensitivity
+LLM
+expert
+diagnosis
+clinical validation
+causal identification
 
-- thesis-writing/thesis/appendices/appendices.tex
-- thesis-writing/paper-aaai/paper.tex
-- thesis-writing/paper-aaai/supplement/technical_appendix.tex
-- one new evidence report under thesis-writing/logs/, named clearly for this task
+Report:
 
-Do not edit all three scientific files merely because they are allowed. Keep the
-main-paper change concise and put detailed commands in the thesis and supplement.
+- current usage patterns;
+- passages already safe;
+- passages that may become unsafe after testbed reframing;
+- terms that need standardized definitions;
+- proposed global wording rules for later stages.
 
-VALIDATION
+Pay special attention to the distinction between:
 
-Perform static command validation:
+- “observational testbed”;
+- “benchmark with known causal truth”;
+- “model-estimated CATE”;
+- “clinical-literature comparison”;
+- “proxy recoverability”;
+- “clinical validation.”
 
-1. Confirm every documented path and environment-variable name against
-   run_clinicause.sh and router.py.
-2. Confirm requirements-full.txt exists and includes the router and both submodule
-   requirement files.
-3. Confirm `.gitmodules` contains both expected submodules.
-4. Confirm the documentation contains:
-   - `git clone --recurse-submodules`
-   - `git submodule update --init --recursive`
-   - Python 3.10 Conda creation
-   - dependency installation
-   - both default raw-data paths
-   - both raw-data override variables
-   - `STAGES=dataset-extraction bash run_clinicause.sh`
-   - `STAGES=all bash run_clinicause.sh`
-5. Confirm no changed document recommends run_clinicause_shell.sh.
-6. Confirm no paper file exposes an identifying URL without explicit existing
-   authorization.
-7. Confirm no archived-result claim has been strengthened into an exact historical
-   rerun claim.
-8. Run:
-   bash -n run_clinicause.sh
-9. Run:
-   git diff --check
-10. Build the thesis using its existing canonical build command.
-11. Build the AAAI paper using its existing canonical build procedure.
-12. Build the technical appendix using its existing canonical build procedure.
-13. Inspect the changed PDF pages for:
-    - clipped command blocks;
-    - overfull lines caused by URLs or shell commands;
-    - unreadable code;
-    - broken references;
-    - undesirable page-count or float disruption.
+15. RISK REGISTER
 
-Do not install missing LaTeX tools. If the build environment is unavailable, report
-that honestly and perform all possible static checks.
+Create a risk register with severity, likelihood, affected files, mitigation, and responsible later step.
 
-EVIDENCE REPORT
+At minimum include:
+
+- accidental edit to the paper;
+- use of superseded `paper.tex`;
+- duplicate final-paper copies diverging;
+- broad thesis rewrite;
+- numerical drift;
+- bibliography duplication;
+- unsupported benchmark claims;
+- overstatement of clinical corroboration;
+- overstatement of estimator agreement;
+- loss of integration/provenance detail;
+- English/Hebrew abstract mismatch;
+- English/Hebrew title mismatch;
+- imported figure readability;
+- duplicated figures;
+- list-of-figures or cross-reference breakage;
+- page-layout regressions;
+- new raw URLs instead of bibliography entries;
+- accidental change in model or estimator hierarchy;
+- accidental implication that the resources have causal ground truth.
+
+16. RECOMMENDED STEP 2 EDIT BOUNDARY
+
+Based on the inspection, propose an exact allowed-file list for Step 2.
+
+The recommendation should be as narrow as possible but sufficient to reframe:
+
+- title;
+- Chapter 1;
+- relevant Chapter 2 positioning;
+- Chapter 3 resource definition;
+- pipeline figure;
+- required bibliography entries.
+
+State which files must remain frozen during Step 2.
+
+Do not perform Step 2.
+
+REPORT FORMAT
 
 Create:
 
-thesis-writing/logs/reproducibility_execution_guide_update.md
+thesis-writing/logs/testbed_story_alignment_step_1_audit.md
 
-The report must contain:
+Use this structure:
 
-- current HEAD and branch;
-- task baseline;
-- worktree status before editing;
-- instructions and files inspected;
-- exact files changed;
-- documented commands;
-- confirmation of the actual umbrella requirements filename;
-- confirmation of both submodules;
-- raw-data path contract findings;
-- paper anonymity decision;
-- static validation results;
-- thesis build result;
-- paper build result;
-- technical-appendix build result;
-- protected-content confirmation;
-- unresolved human gates;
-- final readiness decision.
+# Testbed Story Alignment — Step 1 Audit
 
-READINESS WORDING
+## 1. Baseline
+- current HEAD
+- branch
+- recent commits
+- pre-existing dirty/untracked files
+- local instructions read
 
-Use exactly one of:
+## 2. Scope and Source Authority
+- active thesis
+- finished paper
+- final source copies
+- supplement
+- bibliography
+- superseded and ignored material
+- sources actually inspected
 
-READY FOR AUTHOR REVIEW — REPRODUCIBILITY GUIDES UPDATED
+## 3. Current Thesis Story
 
-READY FOR AUTHOR REVIEW WITH ANONYMOUS-REPOSITORY URL GATE
+## 4. Finished Paper Story
 
-BLOCKED — <specific reason>
+## 5. Passage-Level Thesis Story Map
 
-Do not commit, stage, push, reset, clean, or modify submodule revisions.
+## 6. Chapter-by-Chapter Intervention Map
+
+## 7. Contribution-Hierarchy Map
+
+## 8. Research-Question Recommendation
+
+## 9. Title Recommendation
+
+## 10. Benchmark/Testbed Literature Gap
+
+## 11. Converging-Evidence Coverage Matrix
+
+## 12. Clinical-Evidence Corroboration Map
+
+## 13. Figure Integration Map
+
+## 14. Frozen-Content Inventory
+
+## 15. Terminology Audit
+
+## 16. Risk Register
+
+## 17. Recommended Step 2 Boundary
+
+## 18. Paper Protection Verification
+- protected hashes before
+- protected hashes after
+- paper-aaai tree comparison
+- changed protected-file count
+
+## 19. Git Diff and Worktree Verification
+- git diff --check
+- git diff --stat
+- git diff --name-only
+- final git status
+- confirmation that only the Step 1 report was created by this task
+
+## 20. Readiness
+
+End with exactly one of:
+
+READY FOR STEP 2
+
+or:
+
+BLOCKED BEFORE STEP 2
+
+If blocked, list exact reasons and exact information needed.
+
+VALIDATION AND FINAL CHECKS
+
+After writing the report, run:
+
+sha256sum \
+  thesis-writing/CausalDataGeneration.pdf \
+  thesis-writing/aaai27-submission.tex \
+  thesis-writing/supp.pdf
+
+find thesis-writing/paper-aaai -type f -print0 \
+  | sort -z \
+  | xargs -0 sha256sum \
+  > /tmp/testbed_alignment_paper_aaai_hashes_after.txt
+
+diff -u \
+  /tmp/testbed_alignment_paper_aaai_hashes_before.txt \
+  /tmp/testbed_alignment_paper_aaai_hashes_after.txt
+
+git diff --check
+git diff --stat
+git diff --name-only
+git status --short
+
+The only task-created repository change should be:
+
+thesis-writing/logs/testbed_story_alignment_step_1_audit.md
+
+Do not stage or commit it.
+
+STOP CONDITION
+
+Stop after the Step 1 report and final verification.
+
+Do not edit the thesis.
+Do not copy figures.
+Do not update the bibliography.
+Do not prepare or begin Step 2.
+Do not commit or push.
+
+The report will be independently reviewed against the actual repository diff, active thesis source, finished paper, and rendered documents before Step 2 is authorized.
