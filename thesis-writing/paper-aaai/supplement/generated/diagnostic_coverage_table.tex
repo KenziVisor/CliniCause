@@ -1,0 +1,11 @@
+\begin{table}[H] \centering \small
+\caption{Diagnostic coverage and provenance. Counts are generated from checked aggregate diagnostic records, not inferred from estimator names.}\label{tab:supp-diagnostic-coverage}
+\begin{tabular}{p{0.22\linewidth}p{0.68\linewidth}} \toprule Coverage family & Checked status / boundary\\ \midrule
+Estimator-native sensitivity & Archived DML records distinguish saved-training direct, recomputed/reconstructed, partial, and failed diagnostics; they are not collapsed.\\
+CausalPFN sensitivity & No equivalent archived CausalPFN sensitivity stage; unavailable by archived-stage design.\\
+Original-cohort sensitivity rows & CausalForestDML: FAILED=4; CausalForestDML: PARTIAL=15; LinearDML: FAILED=4; LinearDML: PARTIAL=15.\\
+Treatment permutations & Available only for archived non-PFN estimator stages; disruption diagnostic, not identification proof.\\
+Outcome permutations & Available only for archived non-PFN estimator stages; disruption diagnostic, not identification proof.\\
+Original-cohort permutation rows & CausalForestDML: outcome=19; CausalForestDML: treatment=19; LinearDML: outcome=19; LinearDML: treatment=19.\\
+\bottomrule \end{tabular}
+\end{table}
