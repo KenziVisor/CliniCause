@@ -1,12 +1,12 @@
-You are performing Step 2 of the approved CliniCause thesis–paper story-alignment mission.
+You are performing Step 3 of the approved CliniCause thesis–paper story-alignment mission.
 
 MODEL AND EFFORT
 - Use GPT-5.6.
-- Use Extra High reasoning.
-- This is a bounded scientific-writing and LaTeX-editing task.
-- Perform only Step 2.
-- Stop after the Step 2 report and validation.
-- Do not begin Step 3.
+- Use High reasoning.
+- This is a bounded scientific-writing, LaTeX-editing, figure-integration, and validation task.
+- Perform only Step 3.
+- Stop after the Step 3 report and validation.
+- Do not begin Step 4.
 
 CONTROLLING DOCUMENTS
 
@@ -14,82 +14,72 @@ Read these files completely before editing:
 
 thesis-writing/THESIS_TESTBED_STORY_ALIGNMENT_PLAN.md
 thesis-writing/logs/testbed_story_alignment_step_1_audit.md
+thesis-writing/logs/testbed_story_alignment_step_2_intellectual_reframe.md
 
-The canonical plan defines the overall mission.
+Also read the current active versions of:
 
-The Step 1 audit defines the verified repository-specific Step 2 boundary, including:
+thesis-writing/thesis/chapters/01_introduction.tex
+thesis-writing/thesis/chapters/02_background_related_work.tex
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
 
-- source authority;
-- exact allowed files;
-- the current thesis-to-paper story map;
-- missing bibliography entries;
-- figure provenance;
-- protected numerical and scientific content;
-- terminology;
-- known Step 4 evidence gates.
+These three chapters are read-only in Step 3. Read them to maintain continuity with the testbed-first intellectual hierarchy established in Step 2.
 
-Where the original plan and Step 1 audit differ about the pipeline figure, follow the Step 1 audit. The final paper’s actual Figure 1 is represented by:
+The canonical plan controls the overall mission.
 
-thesis-writing/true-figure-1.png
+The Step 1 audit controls repository-specific source authority, frozen content, figure provenance, and terminology boundaries.
 
-Do not use:
-
-thesis-writing/paper-aaai/figures/figure1_pipeline.pdf
-
-That file was verified to be an older integration-oriented diagram despite its filename.
+The Step 2 report controls the current post-reframe state, build procedure, protected-file baseline, and deferred issues.
 
 MISSION
 
-Reframe the thesis’s opening intellectual proposition so that its primary scientific idea matches the finished paper:
+Reframe Chapters 4–8 so that their detailed technical content is clearly presented as the construction and converging-evidence characterization of two dataset-specific observational causal-analysis testbeds.
 
-CliniCause constructs clinically grounded observational causal-analysis testbeds from source-observed irregular ICU records. It does not simulate patient records, treatment or exposure-assignment mechanisms, or mortality outcomes. Instead, it moves controlled researcher intervention to an explicit representation layer consisting of clinically motivated proxy states, deterministic operational rules, cohorts, causal graphs, adjustment assumptions, and provenance. The representation is instantiated separately on MIMIC-III and PhysioNet 2012 and evaluated through converging evidence rather than against known causal ground truth.
+Do not rewrite these chapters from scratch.
 
-The thesis’s existing integration, data-contract, prediction, aggregation, DAG, estimator, diagnostic, and provenance material remains valuable. It must become the enabling machinery that makes the testbeds explicit, auditable, and reusable.
+The current technical detail is an important thesis strength and must be preserved. The required change is primarily conceptual framing:
 
-This is not a rewrite from scratch.
+- preprocessing instantiates source-specific resource contracts;
+- proxy construction defines and deterministically instantiates the representation layer;
+- predictive modeling evaluates proxy recoverability;
+- aggregation provides one fixed analytical exposure interface;
+- DAGs and adjustment sets make representation-layer causal assumptions explicit;
+- matching and causal estimators characterize behavior under those assumptions;
+- robustness, sensitivity, support, clinical comparison, and provenance form non-equivalent converging-evidence axes.
 
-STEP 2 OBJECTIVES
+The chapters must remain explicit that:
 
-This step must:
-
-1. update the English and Hebrew thesis titles;
-2. reframe Chapter 1 around the causal-estimator evaluation problem and the observational-testbed contribution;
-3. add the controlled-to-observational evaluation spectrum to Chapter 2;
-4. reframe Chapter 3 as the definition and deterministic instantiation of two dataset-specific observational causal-analysis testbeds;
-5. add the verified final-paper pipeline figure to Chapter 1;
-6. add only the verified bibliography entries required for this framing;
-7. preserve every existing scientific boundary, implementation detail, estimator hierarchy, and numerical value;
-8. compile and visually inspect the changed document;
-9. save a detailed Step 2 report.
-
-This step must not modify the results, discussion, conclusions, abstracts, keywords, methods chapters, or paper.
+- patient records and mortality outcomes are source-observed;
+- proxy labels are deterministically derived analytical constructs;
+- model predictions are learned annotations of those proxy labels;
+- aggregation is algorithmic and is not clinical consensus;
+- DAGs and adjustment sets are project-specified assumptions;
+- causal estimators do not have access to known causal truth;
+- agreement, prediction, matching, permutation, and sensitivity do not establish clinical or causal correctness.
 
 EXPECTED BASELINE
 
 The expected committed baseline is:
 
-ea77b982d0ecd0ce99af63cd0315f71525e3a84b
+80b2169fcc0282ef12277e2a4fa88e0592fccaaf
 
 Work from the actual current HEAD.
 
-Do not reset or rewrite later work if HEAD differs. Inspect and report intervening commits before proceeding.
+If HEAD is newer, inspect and classify every intervening commit. Do not reset, overwrite, or silently reinterpret later work.
 
 REPOSITORY STARTUP
 
 Work from the CliniCause repository root.
 
-Run and record:
+Before editing, run and record:
 
 git status --short
 git branch --show-current
 git rev-parse HEAD
 git log -10 --oneline --decorate
 
-Read applicable local README or instruction files.
+Read applicable README, AGENTS.md, figure, table, thesis, literature, and reproducibility instructions.
 
 Preserve every pre-existing modified or untracked file.
-
-In particular, the Step 1 audit recorded pre-existing work under advisor evidence files and paper mortality-voter CSVs. The current worktree may differ after the user’s commit, so inspect actual status rather than assuming it is clean.
 
 Do not:
 
@@ -101,29 +91,32 @@ git add -A
 git commit
 git push
 
-Do not normalize unrelated line endings or repair unrelated whitespace.
+Do not repair unrelated whitespace, normalize line endings, remove generated artifacts broadly, or clean unrelated directories.
 
 SOURCE AUTHORITY
 
-Use this hierarchy:
+Use this scientific authority order:
 
 1. thesis-writing/CausalDataGeneration.pdf
-   - authority for the final visible paper story and figure numbering;
+   - authority for the final visible paper story and the final shock-proxy figure;
 
 2. thesis-writing/aaai27-submission.tex
-   - authority for final source wording, structure, citations, and inline Figure 1;
+   - authority for the finished paper’s method framing and figure references;
 
-3. thesis-writing/paper-aaai/aaai27-submission.tex
-   - byte-identical supporting copy, read-only;
+3. thesis-writing/supp.pdf
+   - authority for finished supplementary descriptions of proxy definitions, clinical comparisons, DAG documentation, and evaluation scope;
 
-4. thesis-writing/supp.pdf and paper-aaai/supplementary1.tex
-   - supporting evidence, but no Step 2 numerical imports are needed;
+4. thesis-writing/paper-aaai/aaai27-submission.tex
+   - byte-identical supporting final source, read-only;
 
-5. active thesis files under thesis-writing/thesis/
-   - authority for detailed implementation, qualifications, and chapter structure;
+5. thesis-writing/paper-aaai/supplementary1.tex
+   - supporting source for the finished supplement, read-only;
 
-6. thesis-writing/literature/metadata/references.bib
-   - active thesis bibliography.
+6. active thesis source under thesis-writing/thesis/
+   - authority for the detailed implemented workflow, exact rules, model descriptions, estimands, estimator hierarchy, diagnostics, and qualifications;
+
+7. checked thesis result and reproducibility material
+   - may be inspected to verify terminology or methodology, but Step 3 must not add new empirical results.
 
 Explicitly exclude as scientific authorities:
 
@@ -132,7 +125,9 @@ thesis-writing/paper-aaai/paper.pdf
 thesis-writing/ignore-paper-aaai/**
 thesis-writing/paper-aaai/AuthorKit27/**
 
-READ-ONLY PROTECTED MATERIAL
+Do not conduct internet research.
+
+PROTECTED MATERIAL
 
 Do not modify:
 
@@ -143,47 +138,71 @@ thesis-writing/paper-aaai/**
 thesis-writing/ignore-paper-aaai/**
 thesis-writing/true-figure-1.png
 
-Do not modify any code, result CSV, reproducibility artifact, existing table, or existing figure.
+Do not modify any code, dataset, result CSV, table source, reproducibility record, paper report, model artifact, existing paper figure, or existing thesis figure.
 
-PERMITTED FILES
+The only allowed operation involving a protected paper figure is reading and byte-for-byte copying the verified shock-proxy image to a new thesis-specific destination.
+
+PERMITTED SOURCE EDITS
 
 You may modify only:
 
-thesis-writing/thesis/frontmatter/administrative_metadata.tex
-thesis-writing/thesis/chapters/01_introduction.tex
-thesis-writing/thesis/chapters/02_background_related_work.tex
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/literature/metadata/references.bib
-
-You may create only:
-
-thesis-writing/thesis/figures/clinicause_testbed_pipeline.png
-thesis-writing/logs/testbed_story_alignment_step_2_intellectual_reframe.md
-
-No other repository source file may change.
-
-Do not modify:
-
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/abstract_primary.tex
-thesis-writing/thesis/frontmatter/abstract_secondary.tex
-thesis-writing/thesis/frontmatter/keywords.tex
-thesis-writing/thesis/frontmatter/nomenclature.tex
-thesis-writing/thesis/frontmatter/title_pages.tex
-thesis-writing/thesis/frontmatter/hebrew_cover.tex
 thesis-writing/thesis/chapters/04_data_preprocessing.tex
 thesis-writing/thesis/chapters/05_proxy_state_construction.tex
 thesis-writing/thesis/chapters/06_predictive_modeling.tex
 thesis-writing/thesis/chapters/07_causal_methodology.tex
 thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
+
+You may create only:
+
+thesis-writing/thesis/figures/clinicause_shock_proxy_example.png
+thesis-writing/logs/testbed_story_alignment_step_3_methodology_reframe.md
+
+After a complete successful validation, you may replace only the generated artifact:
+
+thesis-writing/thesis/main.pdf
+
+with the validated post-Step-3 PDF.
+
+No other repository file may change.
+
+READ-ONLY THESIS FILES
+
+Do not modify:
+
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/frontmatter/**
+thesis-writing/thesis/chapters/01_introduction.tex
+thesis-writing/thesis/chapters/02_background_related_work.tex
+thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
 thesis-writing/thesis/chapters/10_results.tex
 thesis-writing/thesis/chapters/11_discussion.tex
 thesis-writing/thesis/chapters/12_conclusions_future_work.tex
 thesis-writing/thesis/appendices/**
 thesis-writing/thesis/tables/**
-all existing thesis figures
+thesis-writing/thesis/figures/clinicause_testbed_pipeline.png
+all other existing thesis figures
 
-The abstracts and keywords remain integration-oriented after this step by design. They will be synchronized in Step 4. Record this expected temporary inconsistency in the Step 2 report; do not expand scope to repair it now.
+Do not update the abstracts, keywords, discussion, conclusions, results, or appendices in this step.
+
+STEP 3 MUST NOT ADD NEW EMPIRICAL RESULTS
+
+Do not add:
+
+- new prediction metrics;
+- new mortality-prediction values;
+- new estimator agreement values;
+- new rank correlations;
+- new RMSE values;
+- new clinical-literature effect comparisons;
+- new permutation counts;
+- new omitted-variable sensitivity thresholds or counts;
+- new matching results;
+- new cohort counts;
+- new effect estimates.
+
+You may describe evaluation methods and evidential roles conceptually.
+
+Numerical synthesis belongs to Step 4.
 
 PAPER PROTECTION BASELINE
 
@@ -193,879 +212,999 @@ thesis-writing/CausalDataGeneration.pdf
 thesis-writing/aaai27-submission.tex
 thesis-writing/supp.pdf
 thesis-writing/true-figure-1.png
+thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png
+thesis-writing/thesis/figures/clinicause_testbed_pipeline.png
 
-Create a complete deterministic paper-tree manifest:
+Create a deterministic protected-paper manifest:
 
 find thesis-writing/paper-aaai -type f -print0 \
   | sort -z \
   | xargs -0 sha256sum \
-  > /tmp/testbed_alignment_step2_paper_aaai_before.txt
+  > /tmp/testbed_alignment_step3_paper_aaai_before.txt
 
-Also save a baseline snapshot of the permitted existing files:
+Create a baseline hash file for every permitted existing source:
 
 sha256sum \
-  thesis-writing/thesis/frontmatter/administrative_metadata.tex \
-  thesis-writing/thesis/chapters/01_introduction.tex \
-  thesis-writing/thesis/chapters/02_background_related_work.tex \
-  thesis-writing/thesis/chapters/03_problem_definition_study_design.tex \
-  thesis-writing/literature/metadata/references.bib \
-  > /tmp/testbed_alignment_step2_allowed_before.sha256
+  thesis-writing/thesis/chapters/04_data_preprocessing.tex \
+  thesis-writing/thesis/chapters/05_proxy_state_construction.tex \
+  thesis-writing/thesis/chapters/06_predictive_modeling.tex \
+  thesis-writing/thesis/chapters/07_causal_methodology.tex \
+  thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex \
+  thesis-writing/thesis/main.pdf \
+  > /tmp/testbed_alignment_step3_allowed_before.sha256
 
-Record the current figure, table, label, citation-key, and numerical inventories needed to detect accidental drift.
+Record before-edit inventories for:
 
-SCIENTIFIC TARGET
+- chapter and section headings;
+- labels;
+- references;
+- citation keys;
+- figures;
+- tables;
+- all integers, decimals, percentages, thresholds, mathematical constants, and reported counts in Chapters 4–8;
+- proxy names;
+- model names;
+- estimator names;
+- DAG and adjustment-set descriptions.
 
-The revised opening must communicate this hierarchy.
+BASELINE PDF BUILD BEFORE EDITING
 
-PRIMARY CONTRIBUTION
+The tracked `thesis-writing/thesis/main.pdf` may not contain the Step 2 source changes because Step 2 validated its PDF out of tree.
 
-CliniCause provides a general representation-centered framework and two concrete, dataset-specific observational causal-analysis testbeds constructed from source-observed MIMIC-III and PhysioNet 2012 records.
+Before editing Chapters 4–8, build the current Step 2 source into a temporary directory and treat that PDF as the visual baseline for this task.
 
-ENABLING CONTRIBUTION
+Use the successful explicit XeLaTeX/Biber procedure recorded in the Step 2 report rather than assuming that `latexmk` alone invokes Biber correctly.
 
-The existing integrated workflow makes those testbeds inspectable through:
+Create a clean temporary build preserving all relative source paths. A valid sequence is:
 
-- schema-bounded LLM-assisted design proposals;
-- project selection and deterministic source encoding;
-- dataset-specific preprocessing and contracts;
-- rule-derived proxy instantiation;
-- four-model proxy prediction;
-- deterministic aggregation;
-- project-specified DAGs;
-- exposure-specific adjustment;
-- matching and heterogeneous-effect estimation;
-- diagnostics and provenance.
+xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BEFORE_DIR> main.tex
+biber --input-directory=<BEFORE_DIR> --output-directory=<BEFORE_DIR> main
+xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BEFORE_DIR> main.tex
+xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BEFORE_DIR> main.tex
 
-EMPIRICAL CONTRIBUTION
+Use a temporary copy of the necessary `thesis-writing` structure if required to preserve bibliography and figure paths.
 
-The resources are characterized through converging, non-equivalent evidence, including:
+Do not modify repository sources merely to make an out-of-tree build convenient.
 
-- construct plausibility;
-- proxy recoverability;
-- mortality-relevant predictive information;
-- estimator sign, rank, and magnitude agreement;
-- clinical-literature comparison;
-- matching and empirical support;
-- permutation disruption;
-- omitted-variable sensitivity;
-- population perturbation and provenance.
+Record:
 
-Do not add new Step 4 numerical claims here.
+- baseline PDF path;
+- page count;
+- SHA-256;
+- `qpdf --check` result;
+- citation/reference status;
+- existing warnings.
 
-BOUNDARY
+Do not proceed with editing if the Step 2 baseline source cannot be built successfully.
 
-The resources do not provide:
+TERMINOLOGY REQUIREMENT
 
-- known causal ground truth;
-- validated diagnoses;
-- validated causal graphs;
-- proof of estimator accuracy;
-- proof of causal identification;
-- treatment recommendations;
-- clinical deployment evidence.
+Use:
 
-TITLE EDIT
+- “source-observed records”;
+- “source-observed measurements and outcomes”;
+- “source-observed measurement, missingness, care-process, and support patterns”;
+- “observational data-generating and measurement processes remain unknown”;
+- “empirical proxy prevalence induced by fixed rules on source-observed data” where relevant.
 
-Update the centralized title macros in:
+Do not use the phrase:
 
-thesis-writing/thesis/frontmatter/administrative_metadata.tex
+source-observed mechanisms
 
-Use this English title:
+The causal and assignment mechanisms are not observed.
 
-CliniCause: Constructing Clinically Grounded Observational Testbeds for Causal Analysis from Irregular ICU Time Series
+Do not imply that a derived proxy exposure is itself source-recorded. The underlying measurements and outcomes are source-observed; the proxy exposure is representation-defined and deterministically instantiated.
 
-Use this Hebrew title:
+Use:
 
-\textenglish{CliniCause:} בניית סביבות מבחן תצפיתיות המעוגנות בידע קליני לניתוח סיבתי מתוך סדרות זמן לא־סדירות בטיפול נמרץ
+- “resource” for the constructed dataset/artifact package;
+- “testbed” for its methodological evaluation role;
+- “proxy recoverability” for prediction against rule-derived labels;
+- “model-estimated CATE” for estimator outputs;
+- “clinical-literature comparison” or “contextual corroboration” for external comparison.
 
-Preserve the existing macro structure and all author/supervisor metadata.
+Do not use:
 
-Do not edit title_pages.tex or hebrew_cover.tex.
+- ground-truth benchmark for CliniCause;
+- validated diagnosis;
+- validated DAG;
+- clinical consensus for the aggregate;
+- causal accuracy for estimator agreement;
+- clinical validation for proxy prediction;
+- robust without naming the exact comparison or perturbation.
 
-The Hebrew wording must remain scientifically equivalent to the English:
-
-- “observational” must remain explicit;
-- “testbeds” must not become benchmarks with known truth;
-- “clinically grounded” must remain tied to clinical knowledge;
-- “causal analysis” must not become an unconditional causal-effect claim;
-- “irregular ICU time series” must remain explicit.
-
-Inspect both rendered title pages and the Hebrew cover. Report any layout or language concern for later human review.
-
-CHAPTER 1 — INTELLECTUAL REFRAME
+CHAPTER 4 — DATA PREPROCESSING AS TESTBED INSTANTIATION
 
 Edit:
 
-thesis-writing/thesis/chapters/01_introduction.tex
+thesis-writing/thesis/chapters/04_data_preprocessing.tex
 
-Do not rewrite the chapter wholesale.
+Preserve all existing:
 
-Preserve useful existing material on:
-
-- irregular ICU measurements;
-- heterogeneous sampling;
-- missingness and care-process signals;
-- proxy-state interpretation;
-- prediction-versus-causal-analysis distinction;
-- source-specific datasets;
-- explicit interfaces;
-- design-time versus runtime LLM roles;
-- proxy, DAG, intervention, confounding, and deployment limitations;
-- estimator hierarchy;
-- evidence and provenance boundaries.
-
-Change the governing order and hierarchy.
-
-The revised Chapter 1 should proceed approximately as follows.
-
-A. CAUSAL-ESTIMATOR EVALUATION PROBLEM
-
-Open from the problem that causal estimators cannot be directly scored on factual observational outcomes because individual counterfactual outcomes are unobserved.
-
-Explain why evaluation commonly relies on:
-
-- synthetic settings;
-- semi-synthetic settings;
-- experimentally anchored or RCT-derived settings;
-- empirically anchored designs.
-
-State the central trade-off:
-
-Greater control makes a causal answer measurable, while greater observational fidelity makes the causal target less directly knowable.
-
-Do not present this as a simple superiority hierarchy.
-
-B. OBSERVATIONAL FIDELITY OF ICU RECORDS
-
-Then connect this problem to the existing irregular-ICU motivation.
-
-Explain that routine ICU records preserve difficult real processes that controlled evaluation may simplify or construct:
-
-- asynchronous measurement;
-- informative missingness;
-- clinical workflow;
-- empirical exposure prevalence;
-- empirical support;
-- cohort selection;
-- outcome recording;
-- cross-dataset heterogeneity.
-
-Preserve the current detailed argument that irregularity is not merely a sequence-model inconvenience.
-
-C. REPRESENTATION-LAYER INTERVENTION
-
-Introduce the paper’s core conceptual move.
-
-State that CliniCause shifts researcher intervention away from simulating the patient-level data-generating process and toward specifying an inspectable representation layer.
-
-The representation layer includes:
-
-- clinically motivated proxy constructs;
-- operational rules;
+- source descriptions;
 - cohort definitions;
-- covariates;
-- outcomes;
-- DAGs;
-- adjustment assumptions;
-- provenance.
+- identifier rules;
+- time-window definitions;
+- variable contracts;
+- preprocessing transformations;
+- missingness representations;
+- dataset-specific differences;
+- artifact schemas;
+- exclusions;
+- limitations;
+- provenance statements;
+- numerical values.
 
-Be precise:
+Do not alter code-level descriptions unless they are factually inconsistent with the current implementation evidence already used by the thesis.
 
-- CliniCause does instantiate proxy labels deterministically.
-- It does not simulate patient records, exposure-assignment mechanisms, or mortality outcomes.
-- Source-observed data are not claimed to be error-free or causally sufficient.
+Reframe only where necessary so that the chapter explains how preprocessing instantiates two separate source-specific testbed contracts.
 
-D. LLM ROLE
+The chapter should communicate:
 
-Retain and sharpen the design/runtime distinction.
+1. MIMIC-III and PhysioNet remain separate resources.
 
-State that the LLM received schema-level information and the mortality outcome, not patient records, empirical distributions, exposure prevalences, estimated effects, or execution access.
+2. Preprocessing does not generate synthetic patients or mortality outcomes.
 
-The LLM provided literature-grounded design proposals.
+3. Preprocessing selects, normalizes, aligns, summarizes, masks, imputes, or transforms source observations exactly as documented by the existing implementation.
 
-Project-selected rules and graphs were encoded as deterministic source.
+4. Do not claim that every raw missingness pattern or every raw event is preserved unchanged if the implemented pipeline transforms it.
 
-Do not call the LLM a medical expert, causal expert, or source of ground truth.
+5. Distinguish:
+   - source-observed events and outcomes;
+   - extraction choices;
+   - cohort restrictions;
+   - preprocessing transformations;
+   - analysis-ready representations;
+   - downstream derived labels.
 
-E. TWO TESTBEDS
+6. Explain that these choices are part of the explicit resource contract because they determine:
+   - which records enter;
+   - which measurements are available;
+   - how time is represented;
+   - how absence is encoded;
+   - which identifiers survive;
+   - which downstream constructs can be instantiated.
 
-State that the framework is instantiated separately on:
+7. Treat cross-dataset heterogeneity as a feature of having two observational testbeds, not as a preprocessing defect.
 
-- MIMIC-III;
-- PhysioNet 2012.
+8. Preserve the no-pooling policy.
 
-Do not call them pooled replicas of one resource.
+Prefer limited edits to:
 
-Explain that similarly named proxy constructs may differ in:
+- the chapter opening;
+- transition paragraphs;
+- chapter summary or closing interpretation.
 
-- measurement availability;
-- operational definition;
-- prevalence;
-- missingness;
-- support;
-- graph structure;
-- adjustment;
-- population.
+Do not rewrite technical subsections that are already correct.
 
-F. EVALUATION WITHOUT AN ANSWER KEY
+CHAPTER 5 — REPRESENTATION DESIGN AND DETERMINISTIC PROXY INSTANTIATION
 
-Explain that because the testbeds lack known causal truth, their usefulness is characterized through converging evidence rather than estimator error against a known effect.
+Edit:
 
-List the evidence dimensions conceptually, but do not import new gated numerical summaries.
+thesis-writing/thesis/chapters/05_proxy_state_construction.tex
 
-Emphasize that the dimensions are non-equivalent and answer different questions.
+Preserve every:
 
-G. OBJECTIVE
+- proxy name;
+- dataset assignment;
+- threshold;
+- inequality;
+- temporal rule;
+- missingness rule;
+- fallback rule;
+- feature requirement;
+- source-code authority statement;
+- aggregation definition;
+- numerical value;
+- table;
+- label;
+- cross-reference.
 
-Replace the current integration-first objective with a testbed-first objective.
+The chapter should make the following sequence explicit:
 
-A suitable governing formulation is:
+schema and literature
+→ LLM-assisted candidate representation
+→ project selection
+→ deterministic source encoding
+→ patient-level proxy instantiation from available observations
+→ optional model-generated proxy annotations
+→ fixed downstream aggregate where used
 
-The objective of this thesis is to construct and characterize clinically grounded observational causal-analysis testbeds from source-observed irregular ICU records through an evidence-tracked, representation-centered framework, while making the testbeds’ proxy definitions, data contracts, causal assumptions, analytical interfaces, diagnostics, provenance, and limitations explicit.
+Clarify:
 
-Adapt this wording to the thesis’s style rather than copying it mechanically.
+1. The LLM proposed designs but did not execute on patient records.
 
-H. MAIN RESEARCH QUESTION
+2. Active source code, not prompt text, defines the implemented proxy rule.
 
-Use this main research question, with only minor stylistic adjustment if required:
+3. Proxy labels are representation-defined analytical constructs.
 
-How can clinically grounded observational causal-analysis testbeds be constructed from source-observed irregular ICU records—without simulating patient records, treatment or exposure-assignment mechanisms, or outcomes—and what converging evidence can characterize their usefulness and limitations for evaluating causal estimators?
+4. A positive label means the encoded rule was satisfied by available evidence.
 
-Do not use the Step 1 wording “without generating exposure assignments” without qualification. The framework deterministically instantiates proxy labels. The intended distinction is from simulated assignment mechanisms and generated outcomes.
+5. A zero label means the rule did not fire on the available evidence.
 
-I. SECONDARY RESEARCH QUESTIONS
+6. A zero label does not establish clinical absence.
 
-Replace the current seven-question list with a compact five-question set:
+7. Missingness can prevent a clause from firing and can therefore affect the instantiated proxy.
 
-SRQ-1:
-How can clinically and literature-grounded representation designs be instantiated deterministically and separately in MIMIC-III and PhysioNet while retaining source-specific measurement and missingness processes?
+8. Rule-derived labels are not diagnoses, expert adjudication, or causal truth.
 
-SRQ-2:
-Which data contracts, normalization, aggregation, DAG, adjustment, and provenance mechanisms make the constructed resources explicit, auditable, and reusable?
+9. Similarly named proxies may differ across datasets.
 
-SRQ-3:
-How recoverable are the deterministic proxy labels from irregular time series, and what mortality-relevant predictive information is retained by the constructed proxy representations?
+10. The majority-vote aggregate is a deterministic analytical interface formed from:
+    - one rule-derived source;
+    - STraTS;
+    - GRU;
+    - GRU-D;
+    - TCN.
 
-SRQ-4:
-What converging evidence—including estimator sign, rank, and magnitude agreement, clinical-literature comparison, matching and support, permutation disruption, and omitted-variable sensitivity—characterizes each resource?
+11. The aggregate is not clinical consensus, five independent ground-truth labels, or a validated phenotype.
 
-SRQ-5:
-Which limitations prevent the resources from being interpreted as clinical validation, known causal truth, or proof of estimator correctness?
+Keep the aggregation material in this chapter, but subordinate it to representation instantiation rather than presenting aggregation as the primary scientific object.
 
-Preserve the current scientific questions by merging them into this smaller hierarchy. Do not silently drop normalization, aggregation, DAG adjustment, matching, sensitivity, permutation, or provenance.
+SHOCK-PROXY FIGURE
 
-J. CONTRIBUTIONS
+The finished paper’s visible shock example is stored under a stale filename:
 
-Rewrite the contribution hierarchy.
+thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png
 
-Primary:
+The Step 1 audit verified that it corresponds to the finished paper’s Figure 2.
 
-- representation-centered framework;
-- two dataset-specific observational causal-analysis testbeds;
-- source-observed records and outcomes;
-- explicit, replaceable representation assumptions;
-- converging characterization without known truth.
+Before copying:
 
-Enabling methodological contributions:
+1. inspect `thesis-writing/CausalDataGeneration.pdf` and confirm that this image matches the visible shock-proxy figure;
+2. inspect its current SHA-256;
+3. compare it to the Step 1 recorded hash:
 
-- schema-bounded LLM-assisted elicitation;
-- deterministic proxy and DAG source encoding;
-- dataset-specific contracts;
-- irregular-time-series proxy prediction;
-- deterministic aggregation;
-- DAG-guided adjustment;
-- matching, heterogeneous-effect estimation, diagnostics, and provenance.
+b7d7b3b5f1c52506442d847c99795d4f195f144cf19a7c61478225c64469f295
 
-Empirical contributions:
+If the current source hash differs or the image does not match the finished paper, stop and report the discrepancy. Do not substitute another image automatically.
 
-- checked cross-dataset proxy-recoverability comparison;
-- original-cohort analyses for 19 dataset-exposure combinations;
-- DML directional agreement in 19/19;
-- three-estimator directional agreement in 18/19;
-- PhysioNet shock as the retained exception;
-- supporting robustness and provenance evidence.
-
-Retain all qualifications around these facts.
-
-Do not add rank-correlation, RMSE, mortality-AUROC, clinical-comparison, permutation-count, or omitted-variable numerical claims in Step 2 unless they were already present in these files before the task.
-
-K. THESIS ORGANIZATION
-
-Update the chapter-organization paragraph so that Chapters 4–8 are described as constructing and characterizing the testbeds rather than merely implementing an integrated pipeline.
-
-Do not change the actual chapter include order.
-
-PIPELINE FIGURE
-
-Copy exact bytes:
+If verified, copy exact bytes:
 
 cp \
-  thesis-writing/true-figure-1.png \
-  thesis-writing/thesis/figures/clinicause_testbed_pipeline.png
+  thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png \
+  thesis-writing/thesis/figures/clinicause_shock_proxy_example.png
 
-Verify equal hashes.
+Do not crop, resize, recolor, recompress, annotate, sharpen, convert, or regenerate it.
 
-Do not resave, crop, resize, recolor, sharpen, convert, or regenerate the image.
+Verify source and destination hashes are identical.
 
-Insert it in Chapter 1 after the representation-layer/testbed proposition and before the detailed objective or research-question section, unless the actual prose flow strongly supports a nearby location.
-
-Use a standard thesis-width figure, likely:
-
-\includegraphics[width=\textwidth]{clinicause_testbed_pipeline.png}
-
-Adjust width only if the rendered labels are more readable at a slightly narrower placement.
+Insert the figure in Chapter 5 near the MIMIC-III shock operational definition or immediately after the design-to-instantiation explanation, choosing the location that best connects the figure to the exact rule.
 
 Use label:
 
-fig:clinicause-testbed-pipeline
+fig:clinicause-shock-proxy-example
 
-The caption must explain:
+Use a caption that states:
 
-- Design;
-- Instantiate;
-- Evaluate;
-- schema/literature-level LLM use;
-- deterministic patient-level instantiation;
-- source-observed records and outcomes;
-- converging-evidence evaluation;
-- absence of a known causal answer key.
+- it is an illustrative deterministic instantiation of the project-selected shock proxy;
+- observed-evidence clauses feed the encoded rule;
+- the label is derived from available observations;
+- a non-firing clause can reflect absent qualifying evidence;
+- proxy value zero does not prove absence of clinical shock;
+- the figure illustrates the representation contract rather than validating the clinical construct.
 
-Do not describe the figure as evidence of clinical validation, execution success, or causal identification.
+Reference the figure in the prose before or immediately after it.
 
-Reference the figure in the surrounding prose before or immediately after its placement.
+Use a width that makes every label legible at 100% PDF zoom.
 
-CHAPTER 2 — EVALUATION SPECTRUM AND RELATED WORK
+Do not introduce a new rule, threshold, or interpretation from the graphic if it is not already supported by the active thesis source.
 
-Edit:
-
-thesis-writing/thesis/chapters/02_background_related_work.tex
-
-Preserve the existing background on:
-
-- ICU data;
-- irregular time-series modeling;
-- missingness;
-- phenotyping;
-- weak supervision;
-- LLM-assisted design;
-- causal graphs;
-- double machine learning;
-- causal forests;
-- heterogeneous-effect estimation;
-- clinical causal-inference limitations.
-
-Add one focused subsection explaining the causal-estimator evaluation spectrum.
-
-The subsection should cover:
-
-1. Fully synthetic evaluation
-   - evaluator specifies covariates, assignment, potential outcomes, confounding, support, and heterogeneity;
-   - known causal truth;
-   - difficulty depends on chosen mechanism.
-
-2. Semi-synthetic evaluation
-   - empirical covariates may be retained;
-   - exposure assignments, outcomes, or both remain simulated;
-   - examples such as IHDP/ACIC may be discussed using verified citations.
-
-3. Experimentally or RCT-anchored evaluation
-   - real experimental information may provide an anchor;
-   - observational sampling or external comparison mechanisms still involve researcher-controlled construction.
-
-4. Empirically anchored generated evaluation
-   - more real structure may be retained;
-   - causal mechanisms remain user-specified or generated.
-
-5. Source-observed observational testbeds
-   - no known counterfactual answer key;
-   - real measurement, missingness, support, exposure prevalence, care processes, and outcomes;
-   - useful for studying estimator behavior and fragility under realistic conditions;
-   - cannot measure causal estimation error against truth.
-
-Present CliniCause as complementary to, not a replacement for, controlled benchmarks.
-
-A suitable synthesis is:
-
-Controlled benchmarks provide measurable causal accuracy under specified mechanisms; observational testbeds provide diagnostic realism under source-observed mechanisms whose causal truth remains unknown.
-
-Adapt the sentence to the thesis’s style.
-
-Do not overstate that controlled benchmarks are artificial or invalid.
-
-Do not call CliniCause a ground-truth benchmark.
-
-Update the chapter’s closing related-work synthesis so that the gap is:
-
-not merely integrating existing components, but constructing a reusable observational evaluation object in which representation decisions, patient-level instantiation, adjustment assumptions, estimator interfaces, diagnostics, and provenance are explicit.
-
-BIBLIOGRAPHY EDIT
+CHAPTER 6 — PREDICTIVE MODELING AS PROXY RECOVERABILITY
 
 Edit:
 
-thesis-writing/literature/metadata/references.bib
+thesis-writing/thesis/chapters/06_predictive_modeling.tex
 
-Add only the verified entries required by Chapter 2 and missing from the active thesis bibliography:
+Preserve all existing:
 
-shalit2017ite
-shi2019dragonnet
-alaa2019validating
-gentzel2021experimental
-parikh2022validating
+- architecture descriptions;
+- model scope;
+- STraTS details;
+- GRU details;
+- GRU-D details;
+- TCN details;
+- input representations;
+- splits;
+- loss functions;
+- training procedures;
+- thresholding;
+- metrics;
+- export formats;
+- numerical values;
+- dataset-specific conclusions;
+- limitations.
 
-Copy the bibliographic metadata from:
+Reframe the chapter so that its methodological role is proxy recoverability.
 
-thesis-writing/paper-aaai/references.bib
+State clearly:
 
-Before inserting each entry, search the active thesis bibliography by:
+1. The predictive target is the deterministic rule-derived proxy label.
 
-- citation key;
-- normalized title;
-- DOI;
-- author/year where needed.
+2. Predictive performance measures whether the rule-derived construct corresponds to learnable patterns in the irregular source-derived representation.
 
-Do not create duplicate records.
+3. Recoverability does not establish:
+   - clinical validity;
+   - diagnostic accuracy;
+   - causal validity;
+   - correctness of the proxy definition;
+   - correctness of the DAG;
+   - usefulness of an intervention.
 
-Preserve existing thesis citation keys when an equivalent record already exists.
+4. Dataset-specific differences in leading model performance support dataset-specific model choice and characterize the resources; they do not establish universal model superiority.
 
-Do not copy unrelated paper bibliography entries.
+5. Model outputs are learned annotations, not source-observed exposures.
 
-Do not add a Jobs/LaLonde entry unless a verified existing thesis or paper bibliography record is already present. The Step 1 audit found no dedicated final-paper citation key. Do not invent metadata and do not add a raw URL.
+6. Probability exports and thresholded binary labels have distinct roles.
 
-Do not conduct internet research.
+7. Prediction errors can propagate into the aggregate and downstream observational analysis.
 
-After editing, verify that every newly used citation key resolves and that all previously active citation keys remain present.
+8. The chapter should connect its outputs to the testbed contract defined in Chapter 3 and to the converging-evidence framework in Chapter 8.
 
-CHAPTER 3 — RESOURCE AND STUDY DEFINITION
+Prefer localized changes to the chapter introduction, interpretation paragraphs, and closing summary.
+
+Do not rewrite architecture subsections unnecessarily.
+
+CHAPTER 7 — CAUSAL REPRESENTATION, ADJUSTMENT, AND ESTIMATOR INTERFACES
 
 Edit:
 
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
+thesis-writing/thesis/chapters/07_causal_methodology.tex
 
-Preserve:
+Preserve all existing:
 
-- study units;
-- source-observed outcomes;
-- proxy-state definitions;
-- design-time versus execution-time separation;
-- predictive tasks;
-- aggregation;
-- observational estimands;
-- DAG assumptions;
-- adjustment logic;
+- DAG nodes;
+- DAG edges;
+- graph figures;
+- graph labels;
+- adjustment sets;
+- formulas;
+- estimands;
+- covariate lists;
+- treatment/exposure definitions;
+- estimator configurations;
+- matching method;
+- CausalForestDML description;
+- LinearDML description;
+- CausalPFN description;
+- uncertainty descriptions;
+- assumptions;
 - limitations;
-- no-pooling policy.
+- numerical values.
 
-Reframe the chapter around construction of two dataset-specific observational causal-analysis testbeds.
+Do not recopy or duplicate the MIMIC or PhysioNet DAG figures. The Step 1 audit established that the active thesis copies already match the relevant paper/support assets.
 
-Make explicit that each testbed includes or links:
+Reframe the chapter so that:
 
-- source-specific record identity;
-- source-observed longitudinal measurements;
-- observation/missingness information;
-- deterministic proxy-state representation;
-- model-generated proxy annotations where used;
-- fixed aggregation outputs where used;
-- source-observed in-hospital mortality;
-- observed covariates;
-- project-specified DAG;
-- exposure-specific adjustment sets;
-- analytical cohort definition;
-- provenance and evidence class.
+1. DAGs are explicit representation-layer assumptions included with each testbed.
 
-Explain which elements are:
+2. The DAGs are:
+   - project-specified;
+   - source-encoded;
+   - not learned from the study data;
+   - not validated edge by edge;
+   - not guaranteed complete.
 
-- source-observed;
-- representation-defined;
-- model-generated;
-- project-specified;
-- derived analytical outputs.
+3. Exposure-specific adjustment sets operationalize the project graphs.
 
-Do not imply that all components have the same evidential status.
+4. Graph transparency makes assumptions inspectable and replaceable; it does not make them correct.
 
-Explain the representation-layer intervention carefully:
+5. Proxy-state exposures often do not correspond to simple, well-specified interventions.
 
-- proxy definitions, cutoffs, temporal rules, cohort definitions, covariates, DAGs, and adjustment assumptions are explicit research choices;
-- patient records and outcomes remain source-observed;
-- proxy labels are deterministically instantiated from the selected rules;
-- causal truth remains unknown.
+6. Model-estimated CATE summaries remain conditional on:
+   - proxy measurement;
+   - temporal ordering;
+   - graph adequacy;
+   - observed adjustment;
+   - support;
+   - model specification;
+   - estimand definition.
 
-Retain the two datasets as separate testbeds.
+7. Matching is a secondary descriptive/support-oriented comparison and must not be upgraded to a definitive treatment-effect estimator.
 
-Do not imply that shared proxy names create identical constructs or common estimands.
+8. Preserve the estimator hierarchy exactly:
+   - CausalForestDML: primary;
+   - LinearDML: secondary comparator;
+   - CausalPFN: exploratory complementary estimator.
 
-Synchronize the chapter’s research-question statement with the revised Chapter 1 main question.
+9. Do not give CausalPFN diagnostic or provenance support that the archived evidence does not contain.
 
-Do not introduce new results.
+10. Agreement among estimators belongs to converging-evidence characterization, not causal accuracy.
 
-STYLE REQUIREMENTS
+Prefer localized changes to:
 
-Write in the current thesis’s formal academic style.
+- chapter opening;
+- DAG-role explanation;
+- transitions into adjustment;
+- estimator-role framing;
+- chapter conclusion.
 
-Preserve the thesis’s level of caution and detail.
+Do not modify mathematical definitions merely for rhetorical alignment.
 
-Prefer precise transitions over slogans.
+CHAPTER 8 — CONVERGING-EVIDENCE EVALUATION
 
-Avoid repeated promotional phrases.
+Edit:
 
-Use “testbed” and “resource” consistently:
+thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
 
-- “resource” for the constructed dataset/artifact package;
-- “testbed” for its methodological evaluation role.
+This chapter should become the methodological center for evaluating observational testbeds without a causal answer key.
 
-Use “benchmark” only when qualified.
+You may revise the visible chapter title and selected section headings if doing so improves precision. Keep the filename unchanged.
 
-Use “model-estimated CATE” rather than an unqualified “causal effect” where appropriate.
+A preferred chapter title is:
 
-Use “proxy recoverability,” not clinical accuracy.
+Converging-Evidence Evaluation, Robustness, and Sensitivity
 
-Use “clinical-literature comparison” or “contextual corroboration,” not causal validation.
+Use another closely equivalent title only if it better matches the existing internal structure.
 
-Use “source-observed” carefully; it does not mean error-free or causally sufficient.
+Avoid using unqualified “validation” for the whole resource.
 
-Do not call the LLM an expert.
+The chapter must explain that the evaluation axes are non-equivalent. They investigate different failure modes and cannot be added together as proof of truth.
 
-Do not claim that estimator agreement establishes accuracy.
+Organize the existing material around the following axes.
 
-Do not claim that representation design identifies the causal effect.
+1. CONSTRUCT PLAUSIBILITY
 
-Do not add unsupported external knowledge.
+Describe:
 
-PRESERVATION REQUIREMENTS
+- literature-grounded representation design;
+- bounded informal clinician consultation, where supported;
+- inspectability of rules and rationale.
 
-The following are scientifically frozen:
+State that there was no:
 
-- 26,845 MIMIC analysis records;
-- 7,993 PhysioNet analysis records;
-- 9 MIMIC exposures;
-- 10 PhysioNet exposures;
-- four predictive models;
-- one rule-derived plus four prediction-derived aggregation sources;
-- STraTS leading the archived MIMIC point metrics;
-- GRU-D leading the archived PhysioNet point metrics;
-- CausalForestDML as primary;
-- LinearDML as secondary;
-- CausalPFN as exploratory;
-- 19/19 DML sign agreement;
-- 18/19 all-estimator sign agreement;
-- PhysioNet shock as the exception;
-- no numerical pooling;
-- all proxy definitions and thresholds;
-- all DAG edges and adjustment sets;
-- all existing limitations;
-- all existing provenance qualifications.
+- blinded formal clinician-rating study;
+- chart adjudication;
+- inter-rater reliability analysis;
+- clinical construct validation.
 
-Do not modify any of these facts.
+Do not invent consultation details absent from the finished paper or thesis evidence.
 
-STEP 4 EVIDENCE GATES
+2. PROXY RECOVERABILITY
 
-Do not import or resolve these during Step 2:
+Reference Chapter 6.
 
-1. PhysioNet proxy-vector mortality prediction
-   - the finished paper and checked thesis artifacts currently reflect different numerical lineages;
-   - no PhysioNet mortality AUROC may be added in Step 2.
+Explain that predictive performance evaluates learnability of rule-derived labels, not clinical correctness.
 
-2. Unified omitted-variable sensitivity summaries
-   - the thesis evidence packet does not yet admit one unified numerical family;
-   - do not add the paper’s concise 1% or 12/19 statements in Step 2.
+3. MORTALITY-RELEVANT PREDICTIVE INFORMATION
 
-3. Clinical-literature numerical comparison
-   - methodology and results belong to Steps 3 and 4;
-   - Chapter 1 or 2 may mention this evaluation axis conceptually without adding values.
+Describe the methodological role of predicting mortality from proxy representations.
 
-4. New estimator rank or RMSE summaries
-   - do not add numerical summaries in Step 2 unless already present in the edited files.
+Do not add disputed or newly synthesized AUROC values.
 
-BUILD VALIDATION
+State that prognostic information is associational and does not establish causal relevance.
 
-Do not rebuild into the tracked thesis directory if doing so would modify tracked auxiliary files or the tracked main PDF outside the allowed scope.
+4. CROSS-ESTIMATOR STABILITY
 
-Preferred approach:
+Define distinct comparison dimensions:
 
-1. create a temporary build directory under /tmp;
-2. build the edited thesis into that directory using the active source tree and bibliography;
-3. preserve repository source paths;
-4. record the exact command.
+- sign agreement;
+- rank agreement;
+- magnitude agreement.
 
-Try an out-of-tree build such as:
+State that these dimensions are not interchangeable.
 
-mkdir -p /tmp/clinicause_thesis_step2_build
+Agreement means a pattern is not unique to one fitted estimator under the fixed representation and population. It does not establish estimator accuracy, estimand equivalence, identification, or truth.
 
-cd thesis-writing/thesis
+Do not add new rank, RMSE, or agreement numbers in Step 3.
 
-latexmk \
-  -xelatex \
-  -interaction=nonstopmode \
-  -halt-on-error \
-  -outdir=/tmp/clinicause_thesis_step2_build \
-  main.tex
+5. CLINICAL-LITERATURE COMPARISON
 
-If the out-of-tree build cannot resolve biber or relative resources, create a temporary copy under /tmp that preserves:
+Add a bounded methodology subsection based only on:
 
-- thesis-writing/thesis/;
-- thesis-writing/literature/metadata/references.bib;
-- all relative paths required by the build.
+thesis-writing/CausalDataGeneration.pdf
+thesis-writing/supp.pdf
+thesis-writing/paper-aaai/supplementary1.tex
 
-Do not solve a temporary-build problem by expanding the repository edit scope.
+Explain that the comparison extracts, where available:
 
-Validation must include:
+- represented clinical construct;
+- operational definition;
+- study population;
+- comparison group;
+- mortality horizon;
+- effect scale;
+- adjustment method;
+- reported mortality contrast;
+- major comparability limitations.
 
-- successful XeLaTeX/biber build;
-- no undefined citations;
-- no undefined references;
-- no duplicate labels;
-- no missing figure;
-- no missing glyphs;
-- no new fatal overfull boxes;
-- no unexpected page-orientation changes.
+Explain that external studies can differ in:
 
-Record nonfatal pre-existing warnings separately from task-created warnings.
+- clinical definition;
+- severity;
+- eligibility;
+- data source;
+- calendar period;
+- treatment context;
+- observation window;
+- mortality horizon;
+- matching or adjustment;
+- estimand;
+- support;
+- residual confounding.
 
-PDF REVIEW
+State that the comparison is:
 
-Compare the pre-edit:
+- contextual corroboration;
+- a way to identify broad compatibility and discrepancies;
+- not a meta-analysis;
+- not calibration against causal truth;
+- not external validation of the proxy;
+- not proof that a CliniCause estimate is correct.
 
-thesis-writing/thesis/main.pdf
+Do not add the numerical comparison table or numerical synthesis in Step 3. Those belong to Step 4.
 
-with the newly built temporary Step 2 PDF.
+6. MATCHING AND EMPIRICAL SUPPORT
 
-Determine:
+Preserve the current matching and support methods.
 
-- old and new page counts;
-- changed page ranges;
-- title-page changes;
-- Hebrew-cover changes;
-- table-of-contents changes;
-- list-of-figures changes;
-- Chapter 1 changes;
-- Chapter 2 changes;
-- Chapter 3 changes;
-- bibliography changes.
+Clarify that:
 
-Render every changed page at readable resolution, preferably at least 180–200 DPI.
+- matching availability and balance diagnostics reveal empirical support constraints;
+- matched outcome differences remain descriptive and estimator-dependent;
+- failure to find adequate matches is informative;
+- successful matching does not prove positivity or identification.
 
-Inspect changed pages individually, not only through a contact sheet.
+7. PERMUTATION OR DISRUPTION CHECKS
 
-At minimum inspect:
+Preserve the implemented treatment and outcome permutation methods.
 
-- English title page;
-- Hebrew title/cover page;
-- table of contents;
-- list of figures;
-- first page of Chapter 1;
-- every page containing the new pipeline figure;
-- every modified Chapter 1 page;
-- every modified Chapter 2 page;
-- every modified Chapter 3 page;
-- the bibliography pages containing new entries.
+Explain what disrupted-label or disrupted-outcome behavior tests.
 
-Check for:
+Do not describe permutation checks as causal validation or conventional inferential p-values unless the implementation and existing text explicitly support that interpretation.
 
-- clipping;
-- bad line breaks;
-- excessively long title wrapping;
-- unreadable figure text;
-- blurred figure;
-- broken Hebrew;
-- incorrect RTL ordering;
-- misplaced caption;
-- float placement far from first reference;
-- blank pages;
-- orphan headings;
-- overfull lines;
-- broken citations;
-- duplicate figure labels;
-- list-of-figures problems.
+A successful disruption response is a sanity check on pipeline behavior, not proof of correct causal estimation.
 
-FIGURE HASH VALIDATION
+8. OMITTED-VARIABLE SENSITIVITY
+
+Preserve the exact implemented sensitivity method and all existing qualifications.
+
+State that sensitivity analysis asks how conclusions change under a specified model of unobserved confounding.
+
+It does not:
+
+- establish the actual amount of confounding;
+- prove that no confounding exists below a threshold;
+- validate the DAG;
+- determine whether an estimate is true or false.
+
+Do not add the paper’s concise unified sensitivity numbers in Step 3.
+
+9. POPULATION PERTURBATION AND OUTCOME DOWNSAMPLING
+
+Preserve the original-versus-downsampled design.
+
+Explain that it studies population and outcome-prevalence dependence.
+
+Do not treat it as a replacement for external validation or as evidence that the original cohort is unbiased.
+
+10. PROVENANCE AND EVIDENCE ADMISSION
+
+Preserve and strengthen the distinction among:
+
+- current source behavior;
+- archived numerical artifacts;
+- checked result rows;
+- reconstructed summaries;
+- unresolved producing lineage;
+- full clean-checkout reproducibility.
+
+Explain that provenance controls what may be claimed from the testbed, but provenance quality does not itself establish clinical or causal validity.
+
+CHAPTER 8 EVALUATION-AXIS SUMMARY
+
+Add a concise synthesis paragraph, or a compact non-numerical table only if necessary, explaining for every axis:
+
+- what question it asks;
+- what evidence it supplies;
+- what it cannot establish.
+
+Prefer prose or a short structured description over a large new table.
+
+Do not add an evaluation score, total evidence score, or rank the testbeds.
+
+CHAPTER-LEVEL CONTINUITY
+
+Across Chapters 4–8:
+
+- preserve existing section labels whenever possible;
+- add new labels only for genuinely new sections;
+- preserve all existing cross-references;
+- update opening and closing paragraphs so each chapter’s role in the Design–Instantiate–Evaluate story is clear;
+- avoid repeating the full Chapter 1 argument in every chapter;
+- use short governing statements and precise transitions;
+- retain technical detail rather than replacing it with high-level paper prose.
+
+FROZEN SCIENTIFIC CONTENT
+
+The following must not change:
+
+- cohort definitions;
+- record counts;
+- proxy names;
+- proxy thresholds;
+- temporal rules;
+- missingness logic;
+- preprocessing transformations;
+- model scope;
+- model architecture facts;
+- dataset split facts;
+- metric values;
+- aggregation composition;
+- aggregation threshold;
+- DAG nodes and edges;
+- adjustment sets;
+- estimator formulas;
+- estimator hyperparameters;
+- estimator hierarchy;
+- matching method;
+- estimands;
+- sampling definitions;
+- sensitivity method;
+- permutation method;
+- support definitions;
+- result-admission rules;
+- provenance limitations.
+
+Any apparent need to change one of these is blocking and must be reported rather than silently repaired.
+
+POST-EDIT NUMERICAL AND STRUCTURAL AUDIT
+
+Compare the pre-edit and post-edit Chapters 4–8.
+
+Extract and compare:
+
+- all integers;
+- decimals;
+- percentages;
+- inequalities;
+- ranges;
+- variable names;
+- proxy names;
+- model names;
+- estimator names;
+- treatment/exposure names;
+- DAG edge descriptions;
+- adjustment-set content;
+- formula environments;
+- figure labels;
+- table labels;
+- citation keys;
+- cross-reference targets.
+
+Every difference must be categorized as:
+
+- intended prose framing;
+- new shock-figure reference;
+- intended heading/label addition;
+- formatting-only;
+- unexpected scientific drift.
+
+Unexpected scientific drift is blocking.
+
+SHOCK-FIGURE VALIDATION
+
+Verify exact equality:
+
+sha256sum \
+  thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png \
+  thesis-writing/thesis/figures/clinicause_shock_proxy_example.png
+
+The hashes must match.
 
 Verify:
 
-sha256sum \
-  thesis-writing/true-figure-1.png \
-  thesis-writing/thesis/figures/clinicause_testbed_pipeline.png
+- figure appears in the list of figures;
+- label resolves;
+- first prose reference is close to placement;
+- caption is accurate;
+- all text is readable at normal thesis page width;
+- image is not clipped or blurred;
+- it does not create an excessive blank area or isolated caption page.
 
-The two hashes must match exactly.
+POST-EDIT BUILD
+
+Build the complete post-Step-3 thesis into a new clean temporary directory using the explicit XeLaTeX/Biber sequence proven in Step 2.
+
+Do not rely solely on `latexmk` unless you independently verify that Biber ran.
+
+Required checks:
+
+- all XeLaTeX passes succeed;
+- Biber succeeds;
+- no undefined citations;
+- no undefined references;
+- no duplicate labels;
+- no missing figures;
+- no missing glyphs;
+- no new fatal or severe overfull boxes;
+- `qpdf --check` succeeds;
+- resulting PDF opens correctly;
+- page count is recorded;
+- SHA-256 is recorded.
+
+Compare the pre-edit Step 2 baseline PDF and post-edit Step 3 PDF.
+
+Use text extraction and page rendering to identify changed pages.
+
+Do not use OCR.
+
+TRACKED MAIN PDF
+
+Only after the post-edit PDF has passed every build and visual check, replace:
+
+thesis-writing/thesis/main.pdf
+
+with the validated post-Step-3 PDF.
+
+Copy only the PDF.
+
+Do not copy:
+
+- `.aux`;
+- `.bcf`;
+- `.bbl`;
+- `.blg`;
+- `.fdb_latexmk`;
+- `.fls`;
+- `.log`;
+- `.out`;
+- `.run.xml`;
+- `.toc`;
+- page renderings;
+- temporary comparison files.
+
+Record:
+
+- previous tracked `main.pdf` SHA-256 and page count;
+- Step 2 baseline temporary PDF SHA-256 and page count;
+- final Step 3 PDF SHA-256 and page count;
+- confirmation that tracked `main.pdf` equals the validated final PDF.
+
+VISUAL REVIEW
+
+Render every changed post-edit PDF page at no less than 180–200 DPI.
+
+Inspect changed pages individually.
+
+A contact sheet may be used only for navigation.
+
+At minimum inspect:
+
+- table of contents if the Chapter 8 title changed;
+- list of figures;
+- every changed page in Chapter 4;
+- every changed page in Chapter 5;
+- the shock-proxy figure page at 100% zoom;
+- every changed page in Chapter 6;
+- every changed page in Chapter 7;
+- every changed page in Chapter 8;
+- all pages affected by float movement;
+- bibliography pages if pagination moved them;
+- Hebrew cover and title pages for regressions caused by pagination or rebuild;
+- the pipeline figure page to confirm it remains intact.
+
+Check for:
+
+- clipped text;
+- unreadable figure labels;
+- low-resolution rendering;
+- wrong RTL behavior;
+- broken headings;
+- orphaned headings;
+- widowed captions;
+- excessive whitespace;
+- floats far from references;
+- duplicate figures;
+- broken list-of-figures entries;
+- unresolved references;
+- page-number anomalies;
+- accidental blank pages;
+- overfull boxes introduced by edited prose.
 
 PAPER PROTECTION VALIDATION
 
-At the end, recompute:
+After all edits and PDF generation, recompute:
 
 sha256sum \
   thesis-writing/CausalDataGeneration.pdf \
   thesis-writing/aaai27-submission.tex \
   thesis-writing/supp.pdf \
-  thesis-writing/true-figure-1.png
+  thesis-writing/true-figure-1.png \
+  thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png \
+  thesis-writing/thesis/figures/clinicause_testbed_pipeline.png
+
+Recreate:
 
 find thesis-writing/paper-aaai -type f -print0 \
   | sort -z \
   | xargs -0 sha256sum \
-  > /tmp/testbed_alignment_step2_paper_aaai_after.txt
+  > /tmp/testbed_alignment_step3_paper_aaai_after.txt
 
 Compare:
 
 diff -u \
-  /tmp/testbed_alignment_step2_paper_aaai_before.txt \
-  /tmp/testbed_alignment_step2_paper_aaai_after.txt
+  /tmp/testbed_alignment_step3_paper_aaai_before.txt \
+  /tmp/testbed_alignment_step3_paper_aaai_after.txt
 
-Any task-caused protected-file difference is blocking.
+Any task-caused change under the protected paper paths is blocking.
 
-DIFF VALIDATION
+GIT AND DIFF VALIDATION
 
-Run a task-scoped whitespace check:
+Run a task-scoped check:
 
 git diff --check -- \
-  thesis-writing/thesis/frontmatter/administrative_metadata.tex \
-  thesis-writing/thesis/chapters/01_introduction.tex \
-  thesis-writing/thesis/chapters/02_background_related_work.tex \
-  thesis-writing/thesis/chapters/03_problem_definition_study_design.tex \
-  thesis-writing/literature/metadata/references.bib \
-  thesis-writing/thesis/figures/clinicause_testbed_pipeline.png \
-  thesis-writing/logs/testbed_story_alignment_step_2_intellectual_reframe.md
+  thesis-writing/thesis/chapters/04_data_preprocessing.tex \
+  thesis-writing/thesis/chapters/05_proxy_state_construction.tex \
+  thesis-writing/thesis/chapters/06_predictive_modeling.tex \
+  thesis-writing/thesis/chapters/07_causal_methodology.tex \
+  thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex \
+  thesis-writing/thesis/figures/clinicause_shock_proxy_example.png \
+  thesis-writing/thesis/main.pdf \
+  thesis-writing/logs/testbed_story_alignment_step_3_methodology_reframe.md
 
-Also run the global command:
+Also run:
 
 git diff --check
-
-If the global command fails only because of documented pre-existing files, do not edit those files. Record the distinction.
-
-Run:
-
 git diff --stat
 git diff --name-only
 git status --short
 
-Inspect the complete diff of every task-modified text file.
+If the global whitespace check fails only because of documented pre-existing files, do not modify those files. Record the distinction.
 
-Confirm that no unexpected file changed.
+Inspect the full diff of every task-modified text file.
+
+Confirm no unexpected file changed.
 
 REPORT
 
 Create:
 
-thesis-writing/logs/testbed_story_alignment_step_2_intellectual_reframe.md
+thesis-writing/logs/testbed_story_alignment_step_3_methodology_reframe.md
 
 Use this structure:
 
-# Testbed Story Alignment — Step 2 Intellectual Reframe
+# Testbed Story Alignment — Step 3 Methodology Reframe
 
 ## 1. Baseline
-- current HEAD
 - expected baseline
+- actual HEAD
 - branch
 - recent commits
-- pre-existing modified/untracked files
-- local instructions read
+- pre-existing modified and untracked files
+- applicable instructions read
 
 ## 2. Scope and Source Authority
 - objective
 - permitted files
 - protected files
-- finished-paper sources consulted
-- thesis sources consulted
+- sources inspected
 - superseded sources excluded
+- files actually changed
 
-## 3. Before/After Intellectual Hierarchy
-- previous thesis hierarchy
-- revised hierarchy
-- integration material preserved
-- testbed contribution introduced
+## 3. Step 2 Baseline Build
+- commands
+- temporary build path
+- PDF path
+- page count
+- SHA-256
+- qpdf result
+- citations and references
+- pre-existing warnings
 
-## 4. Title Changes
-- previous English title
-- new English title
-- previous Hebrew title
-- new Hebrew title
-- translation rationale
-- title-page layout findings
+## 4. Chapter 4 Changes
+- framing changes
+- technical content preserved
+- source-observed versus transformed-data distinctions
+- no-pooling preservation
 
-## 5. Chapter 1 Changes
-- new opening logic
-- representation-layer framing
-- LLM role
-- objective
-- main research question
-- secondary research questions
-- contribution hierarchy
-- preserved material
-- removed material and why
+## 5. Chapter 5 Changes
+- representation-design hierarchy
+- deterministic instantiation language
+- missingness semantics
+- aggregation role
+- exact rules deliberately preserved
 
-## 6. Chapter 2 Changes
-- new evaluation-spectrum subsection
-- benchmark/testbed distinction
-- related-work repositioning
-- citations added
-- claims deliberately not added
-
-## 7. Chapter 3 Changes
-- resource/testbed definition
-- source-observed versus representation-defined components
-- deterministic instantiation
-- dataset separation
-- preserved estimand and limitation language
-
-## 8. Pipeline Figure
+## 6. Shock-Proxy Figure
+- finished-paper verification
 - source path
 - destination path
-- source SHA-256
-- destination SHA-256
+- expected source hash
+- actual source hash
+- destination hash
 - equality result
 - placement
 - caption
 - label
 - visual readability
-- confirmation that stale figure1_pipeline.pdf was not used
+- confirmation that source paper files remained unchanged
 
-## 9. Bibliography
-- entries added
-- duplicate checks
-- citation keys used
-- unresolved bibliography issues
-- confirmation that paper bibliography was unchanged
+## 7. Chapter 6 Changes
+- proxy-recoverability framing
+- preserved model details
+- clinical-validity boundary
+- export and aggregation boundaries
 
-## 10. Frozen-Content Verification
-- numerical comparison
-- cohort/exposure counts
-- model scope
-- aggregation scope
+## 8. Chapter 7 Changes
+- DAG role
+- adjustment-set role
 - estimator hierarchy
-- agreement claims
-- proxy/DAG/adjustment preservation
-- unexplained changes
+- matching role
+- preserved formulas and assumptions
+- no graph or estimator changes
 
-## 11. Expected Temporary Inconsistencies
-- abstracts remain integration-first until Step 4
-- keywords remain unchanged until Step 4
-- any terminology pending later synchronization
+## 9. Chapter 8 Changes
+- chapter title decision
+- converging-evidence structure
+- role and limit of every evaluation axis
+- clinical-literature comparison methodology
+- claims deliberately deferred to Step 4
+- unqualified validation language removed or bounded
 
-## 12. Build Validation
+## 10. Evaluation-Axis Coverage Matrix
+For each axis:
+- method;
+- source chapter;
+- evidential role;
+- prohibited inference;
+- later result location.
+
+## 11. Frozen-Content Verification
+- numeric-token comparison
+- proxy and threshold comparison
+- preprocessing-contract comparison
+- model comparison
+- aggregation comparison
+- DAG and adjustment-set comparison
+- estimator and estimand comparison
+- diagnostics comparison
+- labels and citations
+- unexplained differences
+
+## 12. Post-Edit Build
 - exact commands
-- output PDF path
-- build result
-- biber result
+- temporary build path
+- PDF path
+- page count
+- SHA-256
+- qpdf result
+- Biber result
 - citation/reference result
 - warnings
-- old and new page counts
+- comparison with Step 2 baseline
 
 ## 13. Visual Review
 - changed page ranges
-- pages rendered
-- title-page findings
-- Hebrew findings
-- pipeline-figure findings
-- Chapter 1 findings
-- Chapter 2 findings
-- Chapter 3 findings
-- bibliography findings
-- layout problems
+- rendered pages
+- Chapter 4 findings
+- Chapter 5 findings
+- shock-figure findings
+- Chapter 6 findings
+- Chapter 7 findings
+- Chapter 8 findings
+- table-of-contents findings
+- list-of-figures findings
+- float movement
+- title/Hebrew regression check
+- unresolved layout defects
 
-## 14. Paper Protection
+## 14. Tracked Main PDF
+- old tracked PDF hash and page count
+- Step 2 baseline temporary PDF hash and page count
+- final Step 3 PDF hash and page count
+- equality between validated final PDF and tracked main.pdf
+- confirmation that no auxiliary files were copied
+
+## 15. Paper Protection
 - hashes before
 - hashes after
 - paper-aaai tree comparison
 - changed protected-file count
+- pipeline figure preservation
+- shock source/copy equality
 
-## 15. Git Diff Summary
-- git diff --check for task scope
+## 16. Git Diff Summary
+- task-scoped git diff --check
 - global git diff --check
 - git diff --stat
 - changed file list
@@ -1073,51 +1212,76 @@ Use this structure:
 - final git status
 - confirmation that nothing was staged, committed, or pushed
 
-## 16. Deferred Issues
-- Step 3 dependencies
-- Step 4 numerical gates
-- human language/layout review items
+## 17. Deferred Issues
+- Step 4 empirical synthesis
+- disputed or gated numerical claims
+- abstracts and keywords
+- discussion and conclusions
+- any Step 5 terminology or layout item
+- Hebrew human-review item
 
-## 17. Readiness
+## 18. Readiness
 
 End with exactly one of:
 
-READY FOR STEP 3
+READY FOR STEP 4
 
 or:
 
-BLOCKED BEFORE STEP 3
+BLOCKED BEFORE STEP 4
 
-If blocked, list exact files, exact defects, and the minimum required repair.
+If blocked, list:
 
-Do not claim readiness if:
+- exact defect;
+- exact file;
+- exact page where relevant;
+- whether the problem is scientific, numerical, source-authority, build, visual, or protection related;
+- minimum repair required.
 
+READINESS IS BLOCKED IF
+
+Do not report `READY FOR STEP 4` if:
+
+- any proxy rule or threshold changed;
+- any preprocessing contract changed;
+- any model scope or metric changed;
+- aggregation composition changed;
+- any DAG edge or adjustment set changed;
+- estimator hierarchy changed;
+- any new empirical result was added;
+- the shock figure is not byte-identical to the verified source;
+- the shock figure is unreadable;
+- a paper file changed;
 - the build fails;
 - citations or references are unresolved;
-- the pipeline figure is unreadable;
-- Hebrew rendering is broken;
-- a protected paper file changed;
-- a frozen number or estimator role changed;
-- the story remains integration-first in Chapters 1–3;
-- CliniCause is described as having known causal truth;
-- unexpected files changed.
+- tracked main.pdf does not equal the validated final PDF;
+- unexpected repository files changed;
+- Chapters 4–8 remain predominantly pipeline-first rather than testbed-construction/evaluation-first;
+- predictive recoverability is described as clinical validation;
+- estimator agreement is described as causal accuracy;
+- clinical comparison is described as causal validation;
+- sensitivity is described as proof against confounding.
 
 STOP CONDITION
 
 Stop after:
 
-- the permitted Step 2 edits;
-- the temporary clean build;
-- full changed-page visual review;
-- the Step 2 report;
-- final paper-protection and Git-diff verification.
+- the bounded Chapter 4–8 edits;
+- exact shock-figure integration;
+- baseline and post-edit builds;
+- complete changed-page visual comparison;
+- replacement of tracked main.pdf with the validated post-Step-3 PDF;
+- Step 3 report;
+- final protected-file and Git verification.
 
-Do not edit Chapters 4–12.
-Do not edit abstracts or keywords.
-Do not add the shock figure.
-Do not add or replace the estimator-agreement figure.
-Do not add clinical-literature numerical results.
-Do not resolve the mortality-prediction discrepancy.
+Do not edit Chapters 1–3.
+Do not edit Chapters 10–12.
+Do not edit abstracts, keywords, or appendices.
+Do not add empirical synthesis.
+Do not add clinical-comparison numbers.
+Do not add mortality-prediction numbers.
+Do not add estimator rank or RMSE numbers.
 Do not add omitted-variable numerical summaries.
+Do not replace the estimator-agreement figure.
 Do not stage, commit, or push.
-Do not begin Step 3.
+Do not begin Step 4.
