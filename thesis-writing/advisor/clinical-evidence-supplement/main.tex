@@ -1,0 +1,210 @@
+\documentclass[10pt]{article}
+\usepackage[letterpaper,margin=0.72in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{pdflscape}
+\usepackage[table]{xcolor}
+\usepackage{xurl}
+\usepackage[colorlinks=true,allcolors=blue!45!black]{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+
+\hypersetup{
+  pdftitle={Clinical Evidence for the Construction of the CliniCause Representation},
+  pdfsubject={Supplementary Material},
+  pdfauthor={},
+  pdfkeywords={clinical evidence, proxy phenotypes, causal DAG}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\LTpre}{3pt}
+\setlength{\LTpost}{3pt}
+\renewcommand{\arraystretch}{1.12}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcommand{\status}[1]{\textbf{#1}}
+
+\title{\textbf{Clinical Evidence for the Construction of the CliniCause Representation}\\[4pt]
+\large Supplementary Material}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This standalone supplement documents the evidence trail for the deterministic proxy
+exposures and dataset-specific directed acyclic graphs (DAGs) used by CliniCause.
+It covers exactly 19 admitted proxy exposures (nine MIMIC-III and ten PhysioNet
+2012) and all 102 implemented graph edges (57 and 45, respectively). The tables
+separate preserved ChatGPT source provenance, current deterministic implementation,
+later independent verification, and post-construction corroboration. Missing evidence
+is reported explicitly. The document does not claim that every local threshold or
+directed edge is literature validated.
+\end{abstract}
+
+\section{Purpose and evidence boundary}
+
+The binary variables documented here are analytical proxy constructs, not
+chart-adjudicated diagnoses. They apply inspectable, deterministic rules to available
+measurements and care-process indicators. A positive tag therefore means that the
+implemented evidence rule fired; it does not establish that a clinician diagnosed the
+condition.
+
+The DAGs are similarly inspectable structural hypotheses. Their arrows encode the
+project's assumed ordering among background variables, proxy states, observations,
+care processes, measurement processes, and in-hospital mortality. They are neither
+learned causal truth nor a completed clinician-adjudicated graph.
+
+Four evidence layers are kept separate:
+\begin{enumerate}
+  \item \textbf{Original ChatGPT evidence}: a source receives this label only when a
+  preserved final response explicitly contains the source and the stated mapping.
+  \item \textbf{Current deterministic implementation}: establishes current names,
+  rules, modes, nodes, and edges, but not clinical validity or original provenance.
+  \item \textbf{Later independent verification}: locally available papers inspected
+  after construction. These sources are marked as new verification evidence and are
+  never relabeled as original ChatGPT sources.
+  \item \textbf{Post-construction corroboration}: later comparisons of estimated
+  mortality directions; these are excluded from construction evidence.
+\end{enumerate}
+
+PhysioNet rules use the default threshold dictionary and whole first-48-hour record
+summaries. MIMIC rules currently default to canonical-pickle input and use
+whole-record extrema/first values and any-flags, with explicit first-24-hour and
+rolling-six-hour urine summaries. Current-source inspection does not by itself prove
+the exact historical input artifact or source revision that produced every archived
+resource.
+
+\section{Evidence-status legend}
+
+\subsection*{Provenance labels}
+
+\begin{description}
+  \item[\status{Confirmed exact original ChatGPT mapping}] The final export places
+  the source with the named proxy rationale. This says nothing about whether the
+  source validates the exact local composite.
+  \item[\status{Confirmed family-level original ChatGPT source}] The final export
+  maps the source to a clinical or observation-process family, not an individual
+  final edge.
+  \item[\status{Source present; exact mapping not recoverable}] The source appears
+  in the final export, but proximity is insufficient to claim an exact mapping.
+  \item[\status{No original ChatGPT source found}] No proxy- or edge-specific source
+  was recovered from the preserved final response.
+\end{description}
+
+\subsection*{Verification labels}
+
+\begin{description}
+  \item[\status{Verified---supports stated claim}] The locally inspected full text
+  supports the bounded statement and a passage locator is recorded.
+  \item[\status{Verified---partially supports stated claim}] Only part of the
+  measurement/rule statement is supported.
+  \item[\status{Verified---supports broad construct, not exact cutoff}] The source
+  supports the construct or standard definition, but not the complete local score.
+  \item[\status{Verified---supports association, not directed causality}] The source
+  supports an association or predictive signal, not the direction of a graph arrow.
+  \item[\status{Not verified}] Full text was unavailable, no specific source was
+  mapped, or the source was not inspected.
+\end{description}
+
+Source identifiers beginning with \texttt{O\_} are preserved original-export sources.
+Identifiers beginning with \texttt{V\_} are
+\textbf{new independent-verification sources---not part of the original ChatGPT
+elicitation}. In particular, \texttt{O\_SOFA\_MSD},
+\texttt{O\_BERLIN\_MSD}, and \texttt{O\_KDIGO\_MSD} are the derivative web tables
+actually linked by the final MIMIC response; the corresponding original
+SOFA, Berlin, and KDIGO full texts were inspected later and carry separate
+\texttt{V\_} identifiers. \texttt{O\_SEPSIS3} is both an original-export paper and
+a locally inspected full text.
+
+\section{Proxy-definition evidence table}
+
+The following is one logical proxy-definition table, continued by dataset. Chronic
+baseline constructs are described in the graph but are not counted as admitted
+exposures. Each primary row is followed by its inputs, rule/window, independent
+support paraphrase, and qualification. Full clause-level audit data are retained in
+the accompanying CSV.
+
+\begin{landscape}
+\footnotesize
+\input{proxy_definition_rows.tex}
+\end{landscape}
+
+\begin{landscape}
+\section{DAG-edge evidence table}
+
+The machine-readable edge inventories are the structural authority. The tables below
+preserve exact node names and directions. A family-level source is not an edge-specific
+source. Most arrows therefore remain unverified as directed causal relationships even
+when a paper supports the associated construct, measurement, or mortality association.
+
+\subsection{MIMIC-III: 57 directed edges}
+
+\footnotesize
+\input{dag_edge_rows_mimic.tex}
+
+\clearpage
+\subsection{PhysioNet 2012: 45 directed edges}
+
+\footnotesize
+\input{dag_edge_rows_physionet.tex}
+\end{landscape}
+
+\section{Independent full-text verification}
+
+Eight locally available sources were inspected for this build. The original SOFA
+paper defines six ordinal organ-dysfunction domains and records daily worst values
+\citep{vincent1996sofa}. The Berlin definition combines timing, imaging, edema-origin,
+PEEP/CPAP, and oxygenation requirements \citep{berlin2012ards}. KDIGO defines AKI
+using timed creatinine changes and urine-output criteria \citep{kdigo2012aki}.
+Sepsis-3 defines sepsis as infection-related organ dysfunction and septic shock using
+vasopressor-dependent hypotension with lactate above 2 mmol/L
+\citep{singer2016sepsis3}. These full texts support broad clinical constructs or
+selected clauses, not the complete local Boolean composites.
+
+The ISTH DIC source uses platelet count, fibrin-related markers, prothrombin time, and
+fibrinogen in a specific algorithm \citep{taylor2001dic}; it does not validate the
+project's mixed hepatic/coagulation or hematologic scores. The electronic-phenotyping
+review supports explicit rule-based EHR phenotypes and the need for validation
+\citep{banda2018phenotyping}. The respiratory phenotyping paper supports
+time-ordered, rule-based phenotyping from structured ventilation records, not the
+CliniCause gas-threshold composite \citep{essay2020resp}. The missingness paper shows
+that care-generated observation patterns can be predictive \citep{lipton2016missing};
+predictive informativeness does not establish the direction of any dataset-specific
+DAG edge.
+
+\section{Evidence limitations}
+
+\begin{itemize}
+  \item Some final proxies have no exact paper-to-rule mapping in the preserved
+  ChatGPT exports; cardiac and metabolic proxies are the clearest cases.
+  \item No implemented DAG edge has a recovered edge-specific paper mapping.
+  Family-level sources are shown only as family-level sources.
+  \item Several papers support broad constructs or individual clauses but not the
+  project's local cutoffs, weights, sufficient conditions, or whole-record aggregation.
+  \item Associations between organ dysfunction, monitoring, or mortality do not
+  establish the direction of a causal arrow.
+  \item Several Phase 2 sources have metadata or stable URLs but no locally available
+  full text; these sources are not marked verified.
+  \item Current implementation inspection does not prove the exact historical input
+  artifact or source revision that produced every archived resource.
+  \item Sources discovered in Phase 2 are not original ChatGPT-supplied sources unless
+  a preserved final export independently establishes that attribution.
+  \item No complete formal clinician-adjudication and sign-off record is available.
+  \item These rules do not make the proxies diagnoses; the arrows do not make the DAG
+  causal ground truth; and the supplement does not make estimated effects
+  ground-truth causal effects.
+\end{itemize}
+
+\section{References}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,159 @@
+% Standalone summary of the two ChatGPT knowledge-design elicitation sessions.
+% This document deliberately does not reproduce prompt or response text.
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=28mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\hypersetup{
+  pdftitle={CliniCause Knowledge-Design Stage: ChatGPT Elicitation Summaries},
+  pdfauthor={CliniCause authors},
+  pdfsubject={Both sessions used ChatGPT 5.4 with extended reasoning},
+  pdfkeywords={CliniCause, ChatGPT 5.4, extended reasoning, MIMIC-III, PhysioNet, supplementary material},
+  colorlinks=true, linkcolor=black, urlcolor=blue
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\newcommand{\sourcepath}[1]{{\footnotesize\nolinkurl{#1}}}
+\newcommand{\mimichash}{{\scriptsize\ttfamily 56271465\allowbreak a73f6241\allowbreak 51ba36b1\allowbreak b4c4a07a\allowbreak d0e4271a\allowbreak 9bb73042\allowbreak 56ede415\allowbreak 5afbf79a}}
+\newcommand{\physionethash}{{\scriptsize\ttfamily 933c864a\allowbreak 5c067976\allowbreak 4d579d46\allowbreak 17f5192c\allowbreak 7f1db0a5\allowbreak 3cd74e5b\allowbreak 0906b729\allowbreak 7d98cb67}}
+
+\begin{document}
+
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+  \centering
+  \vspace*{0.20\textheight}
+  {\LARGE\bfseries Supplementary Material\par}
+  \vspace{1.2cm}
+  {\huge\bfseries CliniCause Knowledge-Design Stage\par}
+  \vspace{0.35cm}
+  {\Large ChatGPT Elicitation Summaries\par}
+  \vfill
+  \begin{minipage}{0.84\textwidth}
+    \centering\large
+    \textbf{Model metadata: ChatGPT 5.4 with extended reasoning}\\[0.4em]
+    The same model setting was used for the MIMIC-III and PhysioNet sessions.
+  \end{minipage}
+  \vfill
+  {\large Standalone academic supplement\par}
+\end{titlepage}
+\hypersetup{pageanchor=true}
+\pagenumbering{arabic}
+
+\tableofcontents
+\clearpage
+
+\section{Purpose, scope, and handling of elicitation output}
+\textbf{Both elicitation sessions used ChatGPT 5.4 with extended reasoning.}
+
+The CliniCause knowledge-design stage used ChatGPT to propose clinically and
+causally motivated design candidates for two ICU datasets. The model received
+dataset schema/column names and the mortality outcome, but no patient rows,
+empirical distributions, prevalence values, or causal effect estimates. It was
+asked to propose proxy variables, clinical cutoffs, temporal and aggregation
+rules, supporting literature, and dataset-specific directed acyclic graph (DAG)
+relationships.
+
+The elicitation was an input to author review rather than an automated labeling
+or analysis step. The authors inspected the proposals and implemented the
+proposals they accepted. This supplement summarizes the records; it does not
+copy, quote, reproduce, correct, or complete any prompt or model response.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}lXX@{}}
+\toprule
+Session & Source record & Record scope summarized here \\
+\midrule
+MIMIC-III & \sourcepath{thesis-writing/prompts-and-documents/mimic-prompt-running.pdf} & Latent-variable causal design using the MIMIC-III schema and mortality outcome. \\
+PhysioNet & \sourcepath{thesis-writing/prompts-and-documents/physionet-prompt-running.pdf} & Latent-variable causal design using the PhysioNet ICU schema and in-hospital mortality outcome. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{MIMIC-III session summary}
+\textbf{Source-file provenance.} \sourcepath{thesis-writing/prompts-and-documents/mimic-prompt-running.pdf}\\
+\textbf{Source PDF title.} \emph{mimic-prompt-running - Latent Causal Model MIMIC-III}\\
+\textbf{Source length and checksum.} 44 pages; SHA-256 \mimichash.
+
+The MIMIC-III session established a staged workflow: audit the available
+tables/variables; identify background, measurement, care-process, and outcome
+variables; select latent clinical states; operationalize those states with
+binary proxy rules; and then specify a sparse causal DAG. The response treated
+observed laboratory values, vital signs, and charted measures primarily as
+manifestations of latent physiology rather than as a dense network of direct
+causes.
+
+The proposed design covered acute physiologic and organ-dysfunction domains,
+with attention to chronic baseline risk and global severity. It mapped observed
+measurements to candidate latent states, supplied implementable scoring or
+threshold-based proxy-label logic, and described missingness and measurement
+intensity as potentially informative care-process variables. It also included
+temporal safeguards against future information and outcome leakage, plus
+guidance on distinguishing confounders, mediators, and colliders for analyses
+of mortality.
+
+The session further supplied candidate latent-to-latent, latent-to-observation,
+and latent-to-mortality relationships; pseudocode and an edge-list-oriented
+implementation representation; and literature-oriented rationale for clinical
+constructs and causal assumptions. The record flags limitations where a latent
+state is weakly measured or where care actions and documentation can complicate
+interpretation.
+
+\section{PhysioNet session summary}
+\textbf{Source-file provenance.} \sourcepath{thesis-writing/prompts-and-documents/physionet-prompt-running.pdf}\\
+\textbf{Source PDF title.} \emph{physionet-prompt-running - Causal Model for ICU Data}\\
+\textbf{Source length and checksum.} 45 pages; SHA-256 \physionethash.
+
+The PhysioNet session used the same latent-variable causal-design framework,
+but adapted the operationalization to the variables available in that ICU
+dataset. It audited demographic, vital-sign, laboratory, and care-related
+fields; proposed candidate latent physiologic and organ-dysfunction states; and
+defined binary proxy-label rules with clinically motivated thresholds and
+aggregation over observed signals.
+
+The response explicitly emphasized the dataset's information limits: several
+clinical concepts cannot be directly identified when diagnoses, medications,
+procedures, microbiology, comorbidity coding, admission diagnosis, or clinician
+intent are absent. Accordingly, it presented states such as sepsis, shock, and
+cardiac injury as proxy constructs rather than directly observed ground truth.
+It also considered missingness and measurement intensity, temporal leakage,
+and the role of care processes when interpreting measurements.
+
+The proposed DAG separated background/case-mix factors, latent acute
+physiology, observed measurements, care or measurement processes, and
+in-hospital mortality. It included causal-analysis guidance on adjustment,
+mediators, and collider risk; code-oriented representations for implementation;
+and supporting clinical and causal literature directions. The session marked
+the limits of available evidence and treated proposed label rules as
+operational approximations for subsequent author review.
+
+\section{Record-integrity notes}
+The two source records are distinct PDFs with distinct titles, session links,
+page counts, and checksums. Their requested staged methodology is closely
+parallel, while the dataset audits and later operational details are
+dataset-specific. No duplicate source file was used in preparing this summary.
+
+Text extraction identifies a trailing blank page in each source record (page 44
+for MIMIC-III and page 45 for PhysioNet); this appears to be a source-export
+artifact, not missing prompt material. The source records themselves do not
+provide patient-level data, prevalence summaries, distributions, or causal
+effect estimates. Model-setting metadata is stated in this supplement as
+provided for the study: ChatGPT 5.4 with extended reasoning.
+
+\end{document}
