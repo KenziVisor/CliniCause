@@ -1,187 +1,135 @@
-You are performing Step 4 of the approved CliniCause thesis–paper story-alignment mission.
+You are performing Step 5, the final independent audit, citation consolidation, compression, and narrow repair of the CliniCause thesis.
 
-MODEL AND EFFORT
+MODEL AND REASONING MODE
+
 - Use GPT-5.6.
-- Use Extra High reasoning.
-- This is a bounded scientific-synthesis, evidence-verification, bilingual-writing, LaTeX-editing, bibliography, and PDF-validation task.
-- Perform only Step 4.
-- Stop after the Step 4 report and validation.
-- Do not begin Step 5.
+- Use Ultra reasoning.
+- Start this task in a new independent Codex thread.
+- Use the mode’s subagent utilities deliberately and efficiently.
+- Run independent audit tasks in parallel whenever their scopes do not overlap.
+- The lead agent is the only agent permitted to edit repository files.
+- Audit and verification subagents are read-only.
+- Subagents may write temporary reports only under `/tmp`.
+- Do not edit until the first audit wave is complete and the lead agent has produced a unified issue matrix, citation plan, and page-reduction plan.
+- Perform only Step 5.
+- Stop after the final Step 5 report and validation.
+- Do not stage, commit, or push.
 
-CONTROLLING DOCUMENTS
-
-Read these files completely before editing:
-
-thesis-writing/THESIS_TESTBED_STORY_ALIGNMENT_PLAN.md
-thesis-writing/logs/testbed_story_alignment_step_1_audit.md
-thesis-writing/logs/testbed_story_alignment_step_2_intellectual_reframe.md
-thesis-writing/logs/testbed_story_alignment_step_3_methodology_reframe.md
-
-Read the complete current active source of:
-
-thesis-writing/thesis/chapters/01_introduction.tex
-thesis-writing/thesis/chapters/02_background_related_work.tex
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
-thesis-writing/thesis/chapters/05_proxy_state_construction.tex
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
-thesis-writing/thesis/chapters/07_causal_methodology.tex
-thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
-thesis-writing/thesis/chapters/10_results.tex
-thesis-writing/thesis/chapters/11_discussion.tex
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
-
-Read the current front matter:
-
-thesis-writing/thesis/frontmatter/administrative_metadata.tex
-thesis-writing/thesis/frontmatter/abstract_primary.tex
-thesis-writing/thesis/frontmatter/abstract_secondary.tex
-thesis-writing/thesis/frontmatter/keywords.tex
-
-Chapters 1–8 and administrative metadata are context authorities but are read-only in Step 4.
-
-The canonical plan controls the overall mission.
-
-The Step 1 audit controls numerical gates, clinical-evidence comparison, source hierarchy, frozen content, and terminology.
-
-The Step 2 report controls the testbed-first title, research questions, introductory hierarchy, and evaluation-spectrum framing.
-
-The Step 3 report controls the construction/evaluation methodology, figure provenance, current build procedure, and the non-equivalent evaluation axes.
+If named subagent functionality is unavailable, perform the same work as clearly separated, isolated read-only audit passes before editing. Do not silently omit any audit role.
 
 MISSION
 
-Align the empirical synthesis, discussion, conclusions, abstracts, and keywords with the finished paper’s main scientific idea while preserving the thesis’s richer detail and stricter evidence boundaries.
+Independently audit the complete thesis after Steps 1–4, repair verified defects, reduce unnecessary citations and repetition, improve coherence and readability, and produce a high-quality final PDF for author–supervisor review.
 
-After Step 4, the thesis should consistently communicate:
+The current validated thesis is approximately:
+
+- 120 A4 pages;
+- 55 unique cited bibliography entries.
+
+The preferred final outcomes are:
+
+- approximately 100 pages;
+- preferably 96–108 total PDF pages;
+- preferably 32–38 unique cited bibliography entries;
+- normally no more than 40 unique cited entries.
+
+These are quality-guided targets, not rigid quotas.
+
+Do not reduce page count or citation count when doing so would:
+
+- remove necessary scientific detail;
+- weaken support for a material claim;
+- hide an important limitation;
+- remove a direct source for a numerical result;
+- make a table or figure difficult to read;
+- damage the Hebrew or English front matter;
+- violate university requirements;
+- create misleading clinical-literature selection;
+- obscure the reproducibility or causal boundaries.
+
+If further reduction would hurt scientific or visual quality, stop at the best defensible result and document why.
+
+The final thesis should consistently communicate:
 
 1. CliniCause constructs two dataset-specific observational causal-analysis testbeds from source-observed irregular ICU records.
 
-2. It does not simulate patient records, treatment or exposure-assignment mechanisms, or mortality outcomes.
+2. It does not simulate patient records, exposure-assignment mechanisms, treatment mechanisms, or mortality outcomes.
 
 3. Researcher intervention is concentrated in an explicit representation layer:
    - proxy constructs;
    - deterministic operational rules;
-   - cohort and preprocessing choices;
+   - preprocessing and cohort choices;
    - project-specified DAGs;
    - adjustment assumptions;
    - estimator interfaces;
    - provenance.
 
-4. Integration, data contracts, prediction, aggregation, DAG encoding, diagnostics, and evidence tracking are the enabling machinery that makes the testbeds inspectable and reusable.
+4. Integration, data contracts, prediction, aggregation, DAG encoding, diagnostics, and evidence tracking are enabling machinery that make the testbeds inspectable and reusable.
 
-5. Because the resources have no known causal answer key, they are characterized through converging, non-equivalent evidence rather than causal estimation error against truth.
+5. The resources contain no known causal answer key.
 
-6. Agreement, discrepancies, support limitations, and sensitivity are all useful testbed findings.
+6. Their usefulness is characterized through converging, non-equivalent evidence rather than estimator error against known truth.
 
-7. Broad agreement may coexist with fragility, model dependence, proxy uncertainty, and unmeasured-confounding risk.
+7. Agreement, discrepancy, support limitations, population sensitivity, and omitted-confounding sensitivity are all legitimate testbed findings.
 
 8. CliniCause complements controlled benchmarks. It does not replace them or establish estimator accuracy.
 
-This is not a rewrite from scratch.
-
 EXPECTED BASELINE
 
-The expected committed baseline is:
+Expected committed baseline:
 
-92a06b2dd0aea5dc343e09de98d3e5ad50c2505d
+eba841dbcb7fc63f89f903e6b94a5be0f46f0f65
 
-Work from the actual current HEAD.
+Expected commit message:
 
-If HEAD differs, inspect and classify every intervening commit. Do not reset, discard, or silently overwrite later work.
+edit thesis step 4
 
-REPOSITORY STARTUP
+Work from the actual current `HEAD`.
 
-Work from the CliniCause repository root.
+If `HEAD` differs:
 
-Before editing, run and record:
+1. inspect every intervening commit;
+2. classify its relationship to this task;
+3. do not reset or discard later work;
+4. stop if the new state cannot be reconciled safely.
 
-git status --short
-git branch --show-current
-git rev-parse HEAD
-git log -10 --oneline --decorate
+CONTROLLING DOCUMENTS
 
-Read applicable repository, thesis, front-matter, figure, table, literature, results, and reproducibility instructions.
+Read these completely before delegating or editing:
 
-Preserve every pre-existing modified and untracked file.
+thesis-writing/THESIS_TESTBED_STORY_ALIGNMENT_PLAN.md
 
-Do not:
+thesis-writing/logs/testbed_story_alignment_step_1_audit.md
+thesis-writing/logs/testbed_story_alignment_step_2_intellectual_reframe.md
+thesis-writing/logs/testbed_story_alignment_step_3_methodology_reframe.md
+thesis-writing/logs/testbed_story_alignment_step_4_evidence_synthesis.md
+thesis-writing/logs/testbed_story_alignment_step_4_derived_statistics.csv
 
-git reset --hard
-git clean -fd
-git stash
-git add .
-git add -A
-git commit
-git push
+Read the complete active thesis source:
 
-Do not normalize unrelated line endings, repair unrelated whitespace, clean unrelated artifacts, or edit user-owned dirty CSVs.
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/frontmatter/**
+thesis-writing/thesis/chapters/**
+thesis-writing/thesis/appendices/**
+thesis-writing/thesis/tables/**
+thesis-writing/thesis/figures/README.md
+thesis-writing/thesis/main.pdf
 
-SOURCE AUTHORITY
+Read all applicable local instructions, including:
 
-Use this hierarchy.
+thesis-writing/general-instructions.pdf
+the BGU thesis requirements map
+the university abstract requirements
+all applicable repository, thesis, bibliography, figures, tables, results, and reproducibility README or instruction files
 
-1. FINISHED VISIBLE PAPER
+Read the following only as protected scientific authorities:
 
 thesis-writing/CausalDataGeneration.pdf
-
-This controls:
-
-- the public contribution hierarchy;
-- final paper claims;
-- final terminology;
-- the intended relationship between controlled benchmarks and observational testbeds;
-- the paper’s qualitative synthesis.
-
-2. FINAL PAPER SOURCE
-
 thesis-writing/aaai27-submission.tex
-
-This controls:
-
-- exact paper table values;
-- exact estimator-agreement summaries;
-- exact paper citation keys;
-- precise paper language;
-- figure and table definitions.
-
-3. FINISHED SUPPLEMENT
-
 thesis-writing/supp.pdf
-thesis-writing/paper-aaai/supplementary1.tex
-
-These control:
-
-- clinical-literature comparisons;
-- comparison-study methods and qualifications;
-- supplementary proxy and DAG documentation;
-- final-paper sensitivity and diagnostic descriptions.
-
-4. ACTIVE THESIS AND CHECKED THESIS EVIDENCE
-
-The active thesis and checked thesis result/evidence files control:
-
-- existing detailed numerical tables;
-- estimator hierarchy;
-- source status;
-- result admission;
-- model and cohort details;
-- provenance qualifications;
-- cases where a checked thesis artifact conflicts with a paper summary.
-
-5. PAPER-AAAI SUPPORTING MATERIAL
-
-Focused read-only use is allowed for:
-
 thesis-writing/paper-aaai/aaai27-submission.tex
-thesis-writing/paper-aaai/references.bib
 thesis-writing/paper-aaai/supplementary1.tex
-thesis-writing/paper-aaai/evidence/
-thesis-writing/paper-aaai/reports/
-thesis-writing/paper-aaai/paper_evidence_map.md
-
-Do not let superseded material control the edit.
-
-EXCLUDED AUTHORITIES
+thesis-writing/paper-aaai/references.bib
 
 Do not use as scientific authority:
 
@@ -191,6 +139,31 @@ thesis-writing/ignore-paper-aaai/**
 thesis-writing/paper-aaai/AuthorKit27/**
 
 Do not conduct internet research.
+
+REPOSITORY STARTUP
+
+Work from the CliniCause repository root.
+
+Before any build or delegation, run and record:
+
+git status --short
+git branch --show-current
+git rev-parse HEAD
+git log -10 --oneline --decorate
+
+Preserve all pre-existing modified and untracked files.
+
+Do not run:
+
+git reset --hard
+git clean -fd
+git stash
+git add .
+git add -A
+git commit
+git push
+
+Do not normalize, reformat, revert, or repair unrelated files.
 
 PROTECTED MATERIAL
 
@@ -207,72 +180,30 @@ Do not modify:
 
 - code;
 - datasets;
+- raw or processed artifacts;
 - result CSVs;
-- checked evidence tables;
-- paper figures;
-- existing thesis figures;
-- table-source evidence;
+- checked evidence CSVs;
 - reproducibility records;
-- earlier alignment reports;
-- Chapters 1–8;
-- appendices.
+- previous Step 1–4 reports;
+- Step 4 derived-statistics CSV;
+- existing figure image or PDF bytes;
+- paper sources;
+- supplement sources.
 
-PERMITTED SOURCE EDITS
+Administrative values are frozen unless an exact authoritative local source proves a correction.
 
-You may modify only:
+Do not invent:
 
-thesis-writing/thesis/chapters/10_results.tex
-thesis-writing/thesis/chapters/11_discussion.tex
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
-thesis-writing/thesis/frontmatter/abstract_primary.tex
-thesis-writing/thesis/frontmatter/abstract_secondary.tex
-thesis-writing/thesis/frontmatter/keywords.tex
-thesis-writing/literature/metadata/references.bib
+- degree information;
+- department information;
+- approval dates;
+- submission dates;
+- supervisor details;
+- signatures;
+- ethics wording;
+- institutional statements.
 
-You may create:
-
-thesis-writing/logs/testbed_story_alignment_step_4_evidence_synthesis.md
-
-You may also create one optional machine-readable calculation record if new rank/RMSE/correlation summaries are successfully reproduced:
-
-thesis-writing/logs/testbed_story_alignment_step_4_derived_statistics.csv
-
-Do not create that CSV if no new derived statistic is admitted.
-
-After complete validation, you may replace:
-
-thesis-writing/thesis/main.pdf
-
-with the validated final Step 4 PDF.
-
-No other repository file may change.
-
-READ-ONLY THESIS FILES
-
-Do not modify:
-
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/administrative_metadata.tex
-thesis-writing/thesis/frontmatter/title_pages.tex
-thesis-writing/thesis/frontmatter/hebrew_cover.tex
-thesis-writing/thesis/frontmatter/nomenclature.tex
-thesis-writing/thesis/chapters/01_introduction.tex
-thesis-writing/thesis/chapters/02_background_related_work.tex
-thesis-writing/thesis/chapters/03_problem_definition_study_design.tex
-thesis-writing/thesis/chapters/04_data_preprocessing.tex
-thesis-writing/thesis/chapters/05_proxy_state_construction.tex
-thesis-writing/thesis/chapters/06_predictive_modeling.tex
-thesis-writing/thesis/chapters/07_causal_methodology.tex
-thesis-writing/thesis/chapters/08_robustness_sensitivity_validation.tex
-thesis-writing/thesis/appendices/**
-thesis-writing/thesis/tables/**
-thesis-writing/thesis/figures/**
-
-Do not fix the Chapter 2 phrase “source-observed mechanisms” in this step. Record it as a mandatory Step 5 terminology check.
-
-The Step 3 report also mentions a possible Chapter 1 occurrence of “MIMIC-IV.” Verify whether that occurrence actually exists, but do not edit Chapter 1. Record the exact finding for Step 5 rather than assuming the report is correct.
-
-PAPER PROTECTION BASELINE
+BASELINE PROTECTION
 
 Before editing, record SHA-256 hashes for:
 
@@ -284,940 +215,1094 @@ thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png
 thesis-writing/thesis/figures/clinicause_testbed_pipeline.png
 thesis-writing/thesis/figures/clinicause_shock_proxy_example.png
 thesis-writing/thesis/main.pdf
+thesis-writing/logs/testbed_story_alignment_step_4_derived_statistics.csv
 
-Create a complete paper-tree manifest:
+Create a complete protected-paper manifest:
 
 find thesis-writing/paper-aaai -type f -print0 \
   | sort -z \
   | xargs -0 sha256sum \
-  > /tmp/testbed_alignment_step4_paper_aaai_before.txt
+  > /tmp/testbed_alignment_step5_paper_before.txt
 
-Record baseline hashes for every permitted existing text source:
+Create a complete baseline hash list for all active thesis TeX, bibliography, and table source files.
 
-sha256sum \
-  thesis-writing/thesis/chapters/10_results.tex \
-  thesis-writing/thesis/chapters/11_discussion.tex \
-  thesis-writing/thesis/chapters/12_conclusions_future_work.tex \
-  thesis-writing/thesis/frontmatter/abstract_primary.tex \
-  thesis-writing/thesis/frontmatter/abstract_secondary.tex \
-  thesis-writing/thesis/frontmatter/keywords.tex \
-  thesis-writing/literature/metadata/references.bib \
-  thesis-writing/thesis/main.pdf \
-  > /tmp/testbed_alignment_step4_allowed_before.sha256
+BASELINE BUILD
 
-BASELINE BUILD BEFORE EDITING
-
-Build the current committed Step 3 source before editing.
-
-Use the explicit XeLaTeX/Biber sequence that succeeded in Steps 2 and 3:
-
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BEFORE_DIR> main.tex
-biber --input-directory=<BEFORE_DIR> --output-directory=<BEFORE_DIR> main
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BEFORE_DIR> main.tex
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BEFORE_DIR> main.tex
+Build the committed Step 4 thesis once before launching audit subagents.
 
 Run from:
 
 thesis-writing/thesis
 
-Use `/tmp` for all build and page-rendering artifacts.
+Use a clean temporary directory.
+
+Use the explicit build sequence:
+
+xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BASELINE_DIR> main.tex
+biber --input-directory=<BASELINE_DIR> --output-directory=<BASELINE_DIR> main
+xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BASELINE_DIR> main.tex
+xelatex -interaction=nonstopmode -halt-on-error -output-directory=<BASELINE_DIR> main.tex
 
 Record:
 
+- exact commands;
 - build path;
 - PDF path;
 - page count;
-- SHA-256;
-- qpdf result;
-- citation/reference status;
+- PDF SHA-256;
+- extracted-text SHA-256;
+- `qpdf --check` result;
+- Biber cited-key count;
+- citation-command occurrence count;
+- bibliography page count;
 - warnings;
-- equality or inequality with tracked `thesis-writing/thesis/main.pdf`.
+- undefined citations;
+- undefined references;
+- duplicate labels;
+- missing glyphs;
+- missing figures;
+- Type 3 fonts;
+- equality with tracked `main.pdf`.
 
-The freshly built baseline PDF must be byte-identical to the tracked Step 3 `main.pdf`, unless a deterministic build difference is fully explained.
+PDF generation may be nondeterministic because of metadata and font-subset prefixes.
 
-If the source does not build or the tracked PDF unexpectedly does not correspond to the committed source, stop and report the discrepancy before editing.
+If the rebuilt PDF is not byte-identical to tracked `main.pdf`:
 
-NUMERICAL ADMISSION POLICY
+1. compare extracted text;
+2. compare page count and dimensions;
+3. render all pages at a common resolution;
+4. compare rendered pixels;
+5. proceed only if the difference is fully explained as nondeterministic packaging.
 
-Do not treat every paper number as automatically admissible.
+Render every baseline page once at 200 dpi under `/tmp`.
 
-The finished paper defines the target story, but conflicting checked thesis evidence controls whether a numerical claim can enter the thesis.
+Extract baseline PDF text once.
 
-Every newly introduced number must be classified as one of:
+All subagents must reuse these artifacts instead of rebuilding independently.
 
-1. already present in the active thesis;
-2. directly copied from a final-paper or supplement table and independently matched to checked thesis evidence;
-3. newly derived from admitted original-cohort rows with a saved reproducible calculation;
-4. external clinical-literature value copied from the finished supplement with its citation, design, scale, and comparability qualification;
-5. withheld because of unresolved lineage.
+BASELINE PAGE AND CITATION INVENTORIES
 
-Every new number must be listed in the Step 4 report with:
+Before launching subagents, produce:
 
-- source path;
-- table/row or calculation;
-- population;
-- estimator/model;
-- sampling condition;
-- units;
-- rounding;
-- qualification.
+1. A page budget containing:
+   - front matter;
+   - every chapter;
+   - appendices;
+   - bibliography;
+   - Hebrew cover;
+   - total pages.
 
-Do not change an existing admitted thesis table value merely to match a paper summary.
+2. A citation inventory containing:
+   - all 55 baseline cited keys;
+   - citation occurrences by chapter;
+   - unique cited-key count by chapter;
+   - every citation cluster with three or more keys;
+   - entries cited only once;
+   - uncited entries in the bibliography file;
+   - duplicate or near-duplicate titles;
+   - duplicate DOIs;
+   - bibliography page count.
+
+FIRST-WAVE PARALLEL SUBAGENTS
 
-SPECIAL NUMERICAL GATES
+Launch the following six read-only subagents in parallel.
 
-A. PHYSIONET MORTALITY PREDICTION — BLOCKED
+No subagent may edit repository files.
 
-The Step 1 audit found a conflict:
-
-- the paper reports PhysioNet proxy-vector mortality AUROC near 0.776/0.778;
-- the checked thesis source records values around 0.736–0.740 on 7,993 records;
-- the voter/cohort lineage differs.
-
-Do not insert any PhysioNet mortality-prediction AUROC.
-
-Do not average, choose, reconcile, or silently prefer one lineage.
-
-State explicitly in the report that this result remains withheld.
-
-B. MIMIC MORTALITY PREDICTION — CONDITIONAL
-
-The paper and checked thesis evidence reportedly align around:
-
-- logistic regression AUROC approximately 0.826;
-- MLP AUROC approximately 0.831.
-
-Before inserting:
-
-- locate the exact checked source;
-- verify population, representation, split, target, model, and exact values;
-- verify consistency with the finished paper;
-- record the authoritative path and row.
-
-If verified, a short MIMIC-only result may be added with an explicit statement that the analogous PhysioNet number is withheld because of unresolved lineage.
-
-Do not put this asymmetric mortality result in either abstract.
-
-If exact verification fails, add no mortality-prediction number and describe the axis only methodologically.
-
-C. OMITTED-VARIABLE SENSITIVITY — NO UNIFIED NUMERICAL CLAIM
-
-Do not import:
-
-- the paper’s approximate 1% crossing statement;
-- the paper’s 12/19 at 5%-by-5% statement;
-- any unified count treating native, reconstructed, partial, failed, and unavailable rows as one numerical family.
-
-The current checked thesis evidence preserves heterogeneous provenance and does not admit one unified numerical family.
-
-You may state only a bounded qualitative conclusion supported by the sources, such as:
-
-Available DML sensitivity evidence shows that broad estimator agreement can coexist with fragility under specified omitted-confounding scenarios, but the archived evidence classes do not support one unified numerical threshold or exposure count.
-
-Do not use “modest,” “several,” or an exact count unless the exact scenario calculation, inputs, and lineage are independently reproduced and admitted. Under the present gate, assume they are not admitted.
-
-D. PERMUTATION SUMMARY — CONDITIONAL
-
-The Step 1 audit reports that a checked CSV reproduces:
-
-- 36/36 MIMIC DML comparisons;
-- 34/40 PhysioNet DML comparisons;
-
-at the paper’s specified `|z| > 2` disruption threshold.
-
-Before insertion:
-
-- locate the exact checked CSV;
-- determine exactly what one comparison represents;
-- verify the dataset, estimator, exposure, sampling, treatment/outcome-permutation structure, denominator, and threshold;
-- reproduce the counts independently;
-- preserve the distinction between a disruption diagnostic and an inferential p-value.
-
-If fully verified, add the counts to the Results diagnostic synthesis.
-
-If the unit or denominator cannot be established exactly, retain the current availability-only language and do not add the counts.
-
-E. RANK AND MAGNITUDE AGREEMENT — CONDITIONAL DERIVATION
-
-The finished paper reports:
-
-- MIMIC within-resource pairwise Spearman rank agreement approximately 0.983–1.000;
-- PhysioNet approximately 0.794–0.964;
-- pairwise estimator RMSE approximately 1.08–2.57 percentage points;
-- shared-construct cross-resource rank correlation approximately 0.533.
-
-Do not copy these values without reproduction.
-
-Required procedure:
-
-1. Locate the admitted full-precision original-cohort values for:
-   - CausalForestDML;
-   - LinearDML;
-   - CausalPFN.
-
-2. Do not derive final statistics from the rounded three-decimal LaTeX display values when a full-precision checked source exists.
-
-3. Reproduce the exact calculation used by the paper:
-   - pairwise Spearman rank correlation within each dataset;
-   - pairwise RMSE on the model-estimated mean-CATE scale, reported in percentage points;
-   - shared-construct cross-resource mapping and correlation.
-
-4. Verify:
-   - exposure ordering;
-   - shared-construct mapping;
-   - inclusion/exclusion of shock;
-   - use of original cohorts only;
-   - no pooling of effects;
-   - exact formula and rounding.
-
-5. Compare every reproduced value with the final paper.
-
-6. If all values match within a justified numerical tolerance:
-   - save the calculations in `testbed_story_alignment_step_4_derived_statistics.csv`;
-   - add a compact Results table or paragraph distinguishing sign, rank, and magnitude.
-
-7. If any value cannot be reproduced:
-   - do not insert that statistic;
-   - report the discrepancy;
-   - retain the existing exposure-level comparison and sign-agreement results.
-
-The optional CSV should include at least:
-
-dataset
-comparison
-metric
-value
-units
-population
-source_path
-source_columns
-formula
-rounding
-paper_value
-difference
-admitted
-
-Do not call rank or RMSE agreement estimator accuracy.
-
-F. CLINICAL-LITERATURE COMPARISON — PERMITTED WITH STRICT QUALIFICATION
-
-Use only the finished supplement and its verified references.
-
-Do not independently search for more papers.
-
-Do not replace supplement values with general knowledge.
-
-CHAPTER 10 — RESULTS REFRAME AND SYNTHESIS
-
-Edit:
-
-thesis-writing/thesis/chapters/10_results.tex
-
-Preserve every existing:
-
-- admitted table row;
-- cohort count;
-- proxy count;
-- exposure prevalence;
-- CausalForestDML value;
-- LinearDML value;
-- CausalPFN value;
-- matching value;
-- downsampling value;
-- diagnostic status;
+Each subagent must return:
+
+- exact file and line, or exact PDF page;
+- severity: blocker, major, moderate, or minor;
+- proposed repair;
+- scientific or layout risk;
+- estimated page saving where applicable;
+- estimated citation saving where applicable;
+- confidence;
+- items deliberately left unchanged.
+
+Save every full subagent report under `/tmp`.
+
+SUBAGENT A — SCIENTIFIC STORY AND CAUSAL-LANGUAGE AUDIT
+
+Scope:
+
+- both abstracts;
+- keywords;
+- Chapters 1–3;
+- Results;
+- Discussion;
+- Conclusions;
+- cross-chapter research-question alignment.
+
+Audit:
+
+- testbed-first contribution hierarchy;
+- consistency of the main research question and five SRQs;
+- controlled-benchmark complementarity;
+- source-observed versus representation-defined terminology;
+- proxy, prediction, aggregate, DAG, estimator, and clinical boundaries;
+- remaining integration-first framing;
+- repeated contribution statements;
+- overstatement of agreement, robustness, validation, accuracy, or causality;
+- repeated limitations that can be consolidated without weakening them.
+
+Mandatory checks:
+
+1. Find the Chapter 2 phrase:
+
+source-observed mechanisms
+
+Recommend a context-accurate replacement using language such as:
+
+source-observed measurements, missingness patterns, care processes, empirical support, and outcomes
+
+2. Confirm whether Chapter 1 contains any occurrence of:
+
+MIMIC-IV
+
+The Step 4 report states that there are zero occurrences. Verify independently.
+
+3. Locate every potentially problematic unqualified use of:
+
+- causal effect;
+- treatment effect;
+- effect;
+- validated;
+- validation;
+- ground truth;
+- clinical consensus;
+- expert;
+- benchmark;
+- robust;
+- robustness;
+- identification;
+- identifiable;
+- accuracy;
+- correct;
+- causal truth.
+
+Distinguish legitimate technical use from overclaiming.
+
+4. Identify exact or near-exact repetitions of:
+   - the testbed definition;
+   - the LLM design-time/runtime distinction;
+   - the no-ground-truth boundary;
+   - the estimator-agreement qualification;
+   - the no-pooling argument;
+   - the clinical-validation limitation.
+
+SUBAGENT B — NUMERICAL AND EVIDENCE-INTEGRITY AUDIT
+
+Scope:
+
+- Chapters 6–12;
+- abstracts;
+- keywords where numerical claims occur;
+- all tables and figure captions;
+- Step 4 derived-statistics CSV;
+- checked result/evidence files;
+- finished paper;
+- finished supplement.
+
+Verify independently:
+
+- 26,845 MIMIC original causal-analysis records;
+- 7,993 PhysioNet original causal-analysis records;
+- 9 MIMIC exposures;
+- 10 PhysioNet exposures;
+- predictive table values;
+- AUROC range 0.867–0.918;
+- STraTS leading MIMIC archived metrics;
+- GRU-D leading PhysioNet archived metrics;
+- admitted MIMIC mortality values;
+- withheld PhysioNet mortality values;
+- every CausalForestDML value;
+- every LinearDML value;
+- every CausalPFN value;
+- matching values;
+- downsampled values;
+- 19/19 Forest–Linear direction agreement;
+- 18/19 all-three agreement;
+- PhysioNet shock exception;
+- rank-correlation ranges;
+- RMSE ranges;
+- cross-resource rho;
+- permutation counts;
+- exact meaning and unit of `|z|>2`;
+- clinical-comparison ranges and citations;
+- omitted-variable sensitivity wording;
 - estimator hierarchy;
-- existing figure;
-- label;
-- table;
-- numerical qualification.
-
-Do not remove PhysioNet shock.
-
-Do not pool the datasets.
-
-Do not replace the current direction-agreement figure with `paper-aaai/figures/figure2_estimator_agreement.pdf`. That asset is not a visible final-paper figure and is not required for the approved minimum figure integration.
-
-Retain the current ranking and direction-agreement figures unless an actual build defect requires a narrow placement repair.
-
-RESULTS OPENING
-
-Reframe the opening so that Chapter 10 reports characterization of two observational causal-analysis testbeds rather than merely outputs admitted from a pipeline.
-
-The opening hierarchy should be:
-
-1. two separately instantiated resources;
-2. construct plausibility;
-3. proxy recoverability;
-4. mortality-relevant information where admitted;
-5. primary forest estimates;
-6. estimator sign/rank/magnitude stability;
-7. clinical-literature comparison;
-8. matching/support;
-9. permutation and sensitivity diagnostics;
-10. provenance boundaries.
-
-State that these dimensions are non-equivalent.
-
-ANALYSIS-POPULATION COUNTS
-
-Retain:
-
-- MIMIC-III: 26,845 original causal-analysis records;
-- PhysioNet 2012: 7,993;
-- 9 analyzed MIMIC proxy exposures;
-- 10 analyzed PhysioNet proxy exposures;
 - no pooling.
 
-Clarify that these are the two instantiated testbed populations and not raw-source cohort totals.
+Do not rerun experiments.
 
-CONSTRUCT PLAUSIBILITY RESULT
+Reproduce only arithmetic summaries required to verify Step 4.
 
-Add a short qualitative subsection before or near predictive performance.
+Any unexplained numerical drift is blocking.
 
-State:
+SUBAGENT C — REDUNDANCY AND PAGE-BUDGET AUDIT
 
-- proxy rationales and rules are inspectable;
-- the finished study reports bounded informal ICU-clinician feedback;
-- there was no blinded formal clinician-rating study;
-- there was no chart adjudication;
-- there was no inter-rater reliability analysis;
-- there was no clinician-only, literature-only, or alternative-LLM controlled comparison.
+Scope:
 
-Do not invent ratings, reviewer counts, agreement scores, or clinical endorsements.
+- complete thesis source;
+- baseline extracted PDF text;
+- baseline page images;
+- chapter/page boundaries.
 
-Call this construct plausibility, not construct validation.
+Produce a ranked compression plan.
 
-PROXY RECOVERABILITY
+For every candidate reduction, report:
 
-Retain the existing predictive table.
+- duplicated or low-value material;
+- authoritative location that should remain;
+- later repetition that can be shortened or replaced by a cross-reference;
+- estimated pages saved;
+- scientific risk;
+- citation consequences;
+- confidence.
 
-Reframe its result as proxy recoverability.
+Prioritize:
 
-The admitted AUROC range across the current table is approximately 0.867–0.918.
+1. repeated definitions of observational testbeds;
 
-Verify exact min and max from the active table before mentioning the range.
+2. repeated descriptions of:
+   - preprocessing contracts;
+   - rule-to-label handoffs;
+   - prediction export;
+   - aggregation;
+   - DAG and adjustment interfaces;
 
-State:
+3. repeated LLM design-time/runtime distinctions;
 
-- STraTS leads the archived MIMIC metrics;
-- GRU-D leads the archived PhysioNet metrics;
-- recoverability differs by dataset;
-- no universal model ordering is established;
-- learnability is not clinical validity.
+4. repeated proxy, DAG, causal, and clinical caveats;
 
-MORTALITY-RELEVANT PREDICTIVE INFORMATION
+5. repeated estimator-agreement interpretations;
 
-Add a subsection only if it can be written honestly under the numerical gates.
+6. repeated provenance limitations;
 
-Preferred treatment:
+7. repeated limitations across Chapters 8, 10, 11, and 12;
 
-- explain the role of predicting source-observed mortality from proxy representations;
-- report verified MIMIC values only if the conditional gate passes;
-- explicitly withhold the PhysioNet numerical result because the checked lineage conflicts with the paper lineage;
-- do not treat the MIMIC result as causal evidence.
+8. chapter introductions and conclusions that restate adjacent chapters;
 
-Do not allow this subsection to imply equivalent cross-resource evidence when only one numerical lineage is admitted.
+9. citation-heavy background paragraphs that repeat the same field-level point;
 
-PRIMARY CAUSALFORESTDML RESULTS
+10. tables or figures that duplicate the same information;
 
-Retain the existing MIMIC and PhysioNet tables, rankings, adjustment codes, and qualifications.
+11. inefficient float placement and avoidable whitespace;
 
-Reframe their role:
+12. bibliography length caused by redundant sources.
 
-- they are the primary estimator view within each testbed;
-- they provide patterns for comparison;
-- they are not ground truth;
-- exposure rankings do not define intervention priorities.
+Do not recommend deleting:
 
-Keep PhysioNet shock negative and visible.
+- unique methods;
+- unique numerical evidence;
+- unique proxy definitions;
+- unique assumptions;
+- essential limitations;
+- required front matter;
+- direct clinical-comparison sources;
+- primary implemented-method sources.
 
-MATCHING
+Moving material to an appendix does not count as page reduction unless duplicate content is actually removed or materially consolidated.
 
-Retain the existing matching table and failure statuses.
+SUBAGENT D — LATEX, LAYOUT, AND VISUAL AUDIT
 
-Matching belongs to support characterization.
+Scope:
 
-Do not present its 14/15 directional agreement as independent causal confirmation.
+- `main.tex`;
+- all active thesis TeX;
+- baseline build logs;
+- every baseline page image.
 
-LINEARDML AND CAUSALPFN
+Audit:
 
-Retain the exposure-level comparison tables and current hierarchy.
-
-Add a compact synthesis that distinguishes:
-
-- sign agreement;
-- rank agreement, only if reproduced;
-- magnitude agreement, only if reproduced;
-- non-equivalent diagnostics;
-- PhysioNet shock as the central exception.
-
-Required frozen sign facts:
-
-- CausalForestDML and LinearDML: 19/19 directional agreement;
-- all three estimators: 18/19;
-- sole all-three exception: PhysioNet shock.
-
-Do not use “unanimous validation,” “correct direction,” or “voting.”
-
-CROSS-RESOURCE COMPARISON
-
-Retain the no-pooling argument.
-
-If the shared-construct correlation is reproduced and admitted:
-
-- report it as contextual resource dependence;
-- define the construct mapping;
-- state that approximately 0.533 represents moderate rank correspondence, not failed replication or biological inconsistency.
-
-If not reproduced, retain the existing qualitative comparison only.
-
-CLINICAL-LITERATURE COMPARISON
-
-Add one concise Results subsection and one compact table.
-
-Use the finished supplement as the sole comparison authority.
-
-The table should be thesis-appropriate rather than a reproduction of the full supplementary table.
-
-It should include enough detail to preserve non-equivalence, for example:
-
-- CliniCause proxy family;
-- CliniCause estimator range or principal result;
-- nearest published comparator;
-- comparator method/horizon;
-- interpretation and principal limitation.
-
-Important:
-
-- Any CliniCause “range” spanning Forest, Linear, and PFN is a range across fitted estimators, not a confidence interval.
-- Say this in the caption and prose.
-- Do not merge MIMIC and PhysioNet into one causal estimate.
-- Do not describe an external study as a ground-truth effect.
-- Include citations for every external comparator.
-- Add only verified missing bibliography entries.
-
-The synthesis must cover:
-
-1. broadly overlapping or compatible context:
-   - renal/AKI;
-   - hepatic/bilirubin;
-   - cardiac injury;
-   - at least part of inflammation/sepsis.
-
-2. important discrepancies:
-   - shock, especially PhysioNet;
-   - coagulation/hematologic;
-   - respiratory failure;
-   - neurologic dysfunction;
-   - metabolic derangement.
-
-3. global severity:
-   - no defensible directly comparable numerical reference.
-
-Use wording such as:
-
-- broadly compatible;
-- overlapping in magnitude;
-- discrepant;
-- not directly comparable;
-- no defensible numerical comparator.
-
-Do not diagnose why a discrepancy occurred.
-
-Do not say:
-
-- clinically validated;
-- confirmed;
-- calibrated;
-- reproduced the true effect;
-- matched clinical truth.
-
-PERMUTATION, SUPPORT, AND SENSITIVITY
-
-Retain outcome-downsampling as a secondary robustness population.
-
-Add verified permutation counts only if the gate passes.
-
-For sensitivity:
-
-- do not create one unified numerical table;
-- preserve partial, reconstructed, native, failed, skipped, and unavailable statuses;
-- state that agreement and fragility can coexist;
-- avoid unsupported exact thresholds and counts.
-
-End the Results chapter with a concise converging-evidence synthesis:
-
-- constructs are inspectable but not clinically validated;
-- labels are recoverable;
-- estimator signs are broadly stable;
-- rank/magnitude stability is bounded where admitted;
-- clinical comparison shows both overlap and discrepancy;
-- support failures and PhysioNet shock remain visible;
-- sensitivity and provenance prevent agreement from being interpreted as truth.
-
-CHAPTER 11 — DISCUSSION
-
-Edit:
-
-thesis-writing/thesis/chapters/11_discussion.tex
-
-The current main-question answer and SRQ organization are obsolete because they still reflect the earlier seven-question integration-first framework.
-
-Reorganize the “Answering the Research Questions” section to match the current Chapter 1 main question and five SRQs.
-
-MAIN RESEARCH QUESTION
-
-Use the current Chapter 1 question exactly or with only punctuation-level adaptation:
-
-How can clinically grounded observational causal-analysis testbeds be constructed from source-observed irregular ICU records—without simulating patient records, treatment or exposure-assignment mechanisms, or outcomes—and what converging evidence can characterize their usefulness and limitations for evaluating causal estimators?
-
-Answer it testbed-first.
-
-The answer should explain:
-
-- two resources were constructed separately;
-- source-observed measurements and mortality were retained through explicit preprocessing contracts;
-- representation choices were explicit and deterministic;
-- the LLM’s role was design-time and schema-bounded;
-- integration and evidence tracking enabled inspection;
-- usefulness was characterized without a causal answer key;
-- discrepancies and fragility are findings rather than failures to be hidden.
-
-Do not call the primary result merely “feasibility and integration.”
-
-SRQ-1 — REPRESENTATION INSTANTIATION
-
-Discuss:
-
-- schema/literature-based design;
-- project selection;
-- deterministic proxy instantiation;
-- dataset-specific measurement/missingness;
-- no cross-dataset construct equivalence;
-- no clinical validation.
-
-SRQ-2 — CONTRACTS, AGGREGATION, DAG, AND PROVENANCE
-
-Preserve existing valuable discussion of:
-
-- causal versus split-aware contracts;
-- ID normalization;
-- one-rule/four-model aggregation;
-- source-coded DAGs;
-- adjustment sets;
-- provenance.
-
-Make these enabling mechanisms for testbed integrity, not the primary intellectual object.
-
-SRQ-3 — RECOVERABILITY AND MORTALITY INFORMATION
-
-Discuss:
-
-- STraTS leading MIMIC;
-- GRU-D leading PhysioNet;
-- dataset dependence;
-- learnability versus clinical validity;
-- mortality-relevant information only at the evidence level admitted in Chapter 10;
-- the withheld PhysioNet mortality number, if discussed, as a provenance limitation rather than a result to reconcile rhetorically.
-
-SRQ-4 — CONVERGING EVIDENCE
-
-Organize this answer around:
-
-- primary forest patterns;
-- DML 19/19 sign agreement;
-- all-three 18/19 agreement;
-- rank/magnitude evidence only if admitted;
-- clinical-literature compatibility and discrepancy;
-- matching/support limitations;
-- permutation;
-- outcome perturbation;
-- omitted-variable sensitivity;
-- PhysioNet shock.
-
-Central interpretation:
-
-Agreement shows that a pattern is not unique to one fitted estimator under one fixed representation and population. Disagreement and sensitivity show why agreement is insufficient. Their coexistence is part of the diagnostic value of an observational testbed.
-
-Do not call agreement accuracy.
-
-PHYSIONET SHOCK
-
-Keep PhysioNet shock central.
-
-State that:
-
-- DML estimates are negative;
-- PFN is slightly positive;
-- matching is positive;
-- external clinical comparison is not commensurate;
-- this combination warns about representation, support, estimator, and population dependence;
-- no estimator vote resolves it;
-- no protective clinical effect should be inferred.
-
-SRQ-5 — LIMITATIONS
-
-Retain and consolidate the current limitations:
-
-- no known causal truth;
-- proxy construct uncertainty;
-- no chart adjudication;
-- no validated graph;
-- no well-defined intervention for many proxy states;
-- temporal ambiguity;
-- incomplete overlap/balance evidence;
-- unmeasured confounding;
-- estimator dependence;
-- dataset heterogeneity;
-- incomplete provenance;
-- no treatment recommendations;
-- no deployment evidence.
-
-RELATIONSHIP TO PRIOR WORK
-
-Rewrite the current statement that “the contribution lies in connecting layers.”
-
-Use a hierarchy such as:
-
-The primary contribution is the construction and characterization of two observational causal-analysis testbeds. The integration of representation design, deterministic instantiation, prediction, aggregation, DAG adjustment, estimator interfaces, diagnostics, and provenance is the mechanism that makes those testbeds inspectable and reusable.
-
-Position CliniCause as complementary to controlled benchmarks.
-
-Explain:
-
-- controlled benchmarks measure error against a specified answer;
-- observational testbeds preserve realistic measurement, missingness, support, care-process, and outcome conditions;
-- observational testbeds cannot measure causal error against truth;
-- both evaluation modes are needed.
-
-CLINICAL-LITERATURE INTERPRETATION
-
-Interpret overlap and discrepancy symmetrically.
-
-Do not cherry-pick only compatible results.
-
-State explicitly:
-
-- external studies differ in construct, severity, population, adjustment, and horizon;
-- agreement is contextual corroboration;
-- discrepancy may reveal representation or transport challenges but does not identify their cause;
-- no external study is a fully commensurate ground-truth estimate for a CliniCause proxy.
-
-SENSITIVITY AS A CENTRAL FINDING
-
-Elevate the qualitative conclusion that broad agreement can coexist with confounding fragility.
-
-Under the current numerical gate:
-
-- do not report 1% or 12/19;
-- do not call the evidence a unified threshold analysis;
-- preserve evidence-class distinctions;
-- state that sensitivity prevents estimator convergence from being treated as closure.
-
-PRESERVE LIMITATIONS
-
-Do not shorten or weaken the existing threats-to-validity material.
-
-Remove only genuine repetition after the five-SRQ reorganization.
-
-CHAPTER 12 — CONCLUSIONS AND FUTURE WORK
-
-Edit:
-
-thesis-writing/thesis/chapters/12_conclusions_future_work.tex
-
-SUMMARY
-
-Begin with construction of two observational causal-analysis testbeds, not with an integrated workflow.
-
-State that:
-
-- MIMIC-III and PhysioNet were instantiated separately;
-- source-observed records and mortality were retained;
-- representation choices were made explicit;
-- the resources were characterized through non-equivalent evidence.
-
-STRONGEST CONTRIBUTION
-
-Replace the current “strongest contribution is the integrated connection” statement.
-
-The strongest contribution should be:
-
-- a representation-centered framework for constructing observational testbeds;
-- two concrete ICU instantiations;
-- explicit assumptions and provenance;
-- converging-evidence characterization without known causal truth.
-
-Integration remains an enabling contribution.
-
-MAIN FINDINGS
-
-Preserve:
-
-- STraTS leading MIMIC;
-- GRU-D leading PhysioNet;
-- Forest/Linear 19/19 directional agreement;
-- all-three 18/19;
-- PhysioNet shock exception;
-- no pooling;
-- estimator hierarchy.
-
-Add only admitted rank, magnitude, clinical-comparison, permutation, mortality, or sensitivity findings.
-
-CENTRAL CONCLUSION
-
-The conclusion should explain:
-
-- agreement is useful but not sufficient;
-- discrepancies and sensitivity are diagnostically valuable;
-- realistic observational resources can reveal behavior hidden by answer-key benchmarks;
-- these resources complement rather than replace controlled benchmarks;
-- no clinical or causal truth is established.
-
-FUTURE WORK
-
-Retain existing detailed priorities.
-
-Ensure future work includes:
-
-- blinded multi-clinician review;
-- chart adjudication;
-- clinician-only versus LLM-assisted versus hybrid design comparison;
-- alternative LLMs and prompt sensitivity;
-- target-trial alignment;
-- graph alternatives and edge review;
-- overlap and balance;
-- formal measurement-error analysis;
-- reproducible per-run manifests;
-- temporal/external/prospective cohorts;
-- additional held-out observational testbeds;
-- fairness, governance, and safety;
-- no deployment before validation.
-
-CLOSING PERSPECTIVE
-
-Do not end by saying integration itself is the principal object of evidence.
-
-End with a testbed-centered statement:
-
-Transparent representation and provenance make realistic observational testbeds inspectable. Their value lies not in supplying causal truth, but in exposing estimator stability, disagreement, support limitations, and sensitivity under source-observed clinical conditions.
-
-ABSTRACT — ENGLISH
-
-Edit:
-
-thesis-writing/thesis/frontmatter/abstract_primary.tex
-
-Rewrite the abstract completely but conservatively.
-
-It should be approximately four compact paragraphs:
-
-1. PROBLEM AND CONTRIBUTION
-   - causal estimators lack observed counterfactual answer keys;
-   - controlled benchmarks trade realism for known answers;
-   - CliniCause constructs complementary observational testbeds.
-
-2. CONSTRUCTION
-   - design-time schema/literature LLM assistance;
-   - project-selected deterministic rules and graphs;
-   - no patient-record LLM access;
-   - separate MIMIC and PhysioNet resources;
-   - 26,845/9 and 7,993/10 if space permits;
-   - four predictive models and three estimators;
-   - no pooling.
-
-3. RESULTS
-   - proxy recoverability range or dataset leaders;
-   - 19/19 DML direction agreement;
-   - 18/19 all-estimator direction agreement;
-   - PhysioNet shock exception;
-   - clinical comparison shows overlap and discrepancies;
-   - agreement coexists with sensitivity/support limitations.
-   - Do not include disputed mortality or sensitivity numbers.
-
-4. BOUNDARY AND CONTRIBUTION
-   - no known causal ground truth;
-   - no clinical validation;
-   - no treatment recommendation;
-   - integration and provenance make the testbeds inspectable;
-   - complementary role relative to controlled benchmarks.
-
-The abstract must be citation-free.
-
-Use “model-estimated” when referring to causal outputs.
-
-Do not use “causal effects were positive” without qualification.
-
-ABSTRACT — HEBREW
-
-Edit:
-
-thesis-writing/thesis/frontmatter/abstract_secondary.tex
-
-Produce an idiomatic Hebrew abstract that is scientifically equivalent to the final English abstract.
-
-Preserve the existing RTL/English command structure.
-
-Requirements:
-
-- same four-paragraph scientific order;
-- same datasets and counts;
-- same estimator hierarchy;
-- same 19/19 and 18/19 results;
-- same PhysioNet shock exception;
-- same no-ground-truth and no-clinical-validation boundary;
-- same controlled-benchmark complementarity;
-- no extra claim present only in one language;
-- no omitted limitation present only in one language.
-
-Use consistent Hebrew terminology for:
+- overfull and underfull boxes;
+- float placement;
+- isolated figures or tables;
+- blank or nearly blank pages;
+- chapter-start whitespace;
+- longtable page breaks;
+- landscape pages;
+- table continuation headings;
+- caption length;
+- table column widths;
+- local font sizes;
+- figure readability;
+- title wrapping;
+- abstracts;
+- table of contents;
+- list of figures;
+- list of tables;
+- page numbering;
+- bibliography layout;
+- Hebrew RTL;
+- font embedding;
+- cross-references and labels.
+
+Identify legitimate local layout changes that may save pages.
+
+Do not recommend:
+
+- changing university margins;
+- changing A4 paper size;
+- reducing the base thesis font;
+- globally reducing line spacing;
+- negative vertical spacing;
+- globally shrinking bibliography text;
+- hiding content;
+- unreadably shrinking tables;
+- unreadably shrinking figures;
+- removing required blank verso pages where institutionally required.
+
+SUBAGENT E — HEBREW AND ADMINISTRATIVE AUDIT
+
+Scope:
+
+- Hebrew title;
+- Hebrew abstract;
+- Hebrew keywords;
+- Hebrew cover;
+- English equivalents;
+- title metadata;
+- page ordering;
+- local university requirements.
+
+Audit:
+
+- scientific equivalence;
+- idiomatic academic Hebrew;
+- awkward literal translations;
+- terminology consistency;
+- punctuation and RTL behavior;
+- embedded English names;
+- title equivalence;
+- abstract length;
+- required page order;
+- unresolved placeholders;
+- author, supervisor, degree, department, dates, and signatures.
+
+Pay particular attention to Hebrew terminology for:
 
 - observational testbed;
-- source-observed records;
+- causal answer key;
 - representation layer;
 - proxy state;
-- causal answer key;
+- proxy exposure;
 - model-estimated contrast;
 - omitted confounding;
-- clinical validation.
+- diagnostics;
+- provenance;
+- source-observed records.
 
-Do not translate “testbed” into a term implying a benchmark with known truth.
+Do not invent administrative values.
 
-The Hebrew remains subject to final human language review, but it must compile and read coherently.
+Do not claim native-human Hebrew approval.
 
-KEYWORDS
+Mark every issue requiring:
 
-Edit:
+- native-speaker review;
+- supervisor approval;
+- departmental confirmation;
+- institutional confirmation.
 
-thesis-writing/thesis/frontmatter/keywords.tex
+SUBAGENT F — CITATION MINIMIZATION, BIBLIOGRAPHY, AND SOURCE-AUTHORITY AUDIT
 
-Update both languages consistently.
+Scope:
 
-Include a focused set covering:
+- every active `\cite`, `\parencite`, `\textcite`, and related citation command;
+- active bibliography;
+- all citation clusters;
+- Background and Related Work;
+- proxy-rule citations;
+- predictive-model citations;
+- causal-method citations;
+- sensitivity and overlap citations;
+- clinical-literature comparison;
+- final paper and supplement references;
+- source hierarchy.
 
-- observational causal-analysis testbeds;
-- causal-estimator evaluation;
-- representation-layer construction;
-- irregular ICU time series;
-- proxy states;
-- causal machine learning;
-- double machine learning;
-- causal forests;
-- omitted-variable sensitivity;
-- MIMIC-III;
-- PhysioNet 2012.
+Baseline:
 
-Retain relevant concepts such as LLM-assisted knowledge elicitation, but do not let LLM terminology dominate the keyword list.
+- 55 unique cited bibliography entries.
 
-Avoid an excessively long keyword list.
+Preferred final target:
 
-BIBLIOGRAPHY
+- 32–38 unique cited entries.
 
-Edit:
+Normal ceiling:
 
+- 40 unique cited entries.
+
+Exceeding 40 is permitted only when the lead demonstrates, entry by entry, that further removal would:
+
+- leave a material claim unsupported;
+- remove a necessary primary implemented-method source;
+- remove a dataset authority;
+- misrepresent the clinical comparison;
+- remove a direct numerical source;
+- weaken a major causal or statistical limitation.
+
+The citation count refers to unique entries emitted by Biber, not the number of citation commands.
+
+CLASSIFY EVERY BASELINE CITED ENTRY
+
+Classify each of the 55 cited entries into one role:
+
+1. dataset or source-resource authority;
+
+2. primary implemented-method authority;
+
+3. foundational causal or statistical method;
+
+4. direct benchmark/testbed comparison;
+
+5. direct clinical comparator used numerically;
+
+6. direct proxy-rule or clinical-construct authority;
+
+7. high-value review that can replace several background citations;
+
+8. contextual but nonessential;
+
+9. redundant with a stronger retained source;
+
+10. tangential or unsupported by the surrounding claim.
+
+CITATION-PRUNING PRINCIPLES
+
+1. Prefer primary sources for methods actually implemented.
+
+2. Prefer one authoritative review for a broad background point instead of several overlapping reviews and examples.
+
+3. Retain separate sources only when they support meaningfully distinct claims.
+
+4. Citation clusters should normally contain one or two references.
+
+5. Every cluster of three or more references requires a documented justification.
+
+6. Remove papers cited only to demonstrate that a broad field exists when one retained review supports that point.
+
+7. Remove model papers for methods not implemented, not evaluated, and not necessary to define the benchmark spectrum.
+
+8. Preserve primary dataset references for:
+   - MIMIC-III;
+   - PhysioNet 2012.
+
+9. Preserve the primary sources for the implemented predictive families at their authoritative first description:
+   - STraTS;
+   - GRU;
+   - GRU-D;
+   - TCN.
+
+   Repeated later mentions normally do not require repeated citations.
+
+10. Preserve the minimum defensible sources for:
+    - double machine learning;
+    - causal forests or generalized random forests;
+    - the EconML implementation interface where implementation-specific support is claimed;
+    - DAG and backdoor reasoning;
+    - intervention-definition limitations;
+    - target-trial reasoning where used;
+    - overlap and support;
+    - omitted-variable sensitivity.
+
+11. Remove overlapping reviews or examples when a retained primary or authoritative review supports the same local statement.
+
+12. Retain weak-supervision and electronic-phenotyping references only where they clarify the actual representation design.
+
+13. For LLM-assisted design, retain only the minimum sources needed to establish:
+    - a bounded medical-knowledge precedent;
+    - proposal-level use of LLMs for causal-graph priors where discussed.
+
+14. Do not retain general LLM references unrelated to the implemented design role.
+
+15. Do not retain a source merely because it appears in the final paper or supplement.
+
+16. Retain it only when the active thesis still uses the evidence it supplies.
+
+17. Do not conduct internet research or add replacement literature outside the approved local corpus.
+
+CLINICAL-COMPARISON CITATION RULES
+
+Clinical-comparison pruning must preserve scientific balance.
+
+- Retain at least one verified direct source for every external numerical comparator remaining in the Results table.
+- Every retained external number must retain its direct citation.
+- Prefer the closest or methodologically strongest comparator for each construct.
+- Retain multiple comparators for one construct only when they materially:
+  - establish a relevant range;
+  - expose heterogeneity;
+  - prevent misleading interpretation;
+  - preserve both compatible and discrepant evidence.
+- When several studies do not change the interpretation, retain the most defensible representative comparator and simplify the table and prose.
+- Do not remove only discrepant studies while retaining compatible studies.
+- Do not select references to make CliniCause appear more clinically concordant.
+- Global severity may continue to state that no defensible numerical comparator was retained.
+- Do not retain an uncited numerical range after removing its studies.
+- Do not replace a removed direct numerical citation with a general review.
+
+A source may be removed only after every dependent sentence has been:
+
+- supported by another retained source;
+- narrowed to what the retained source supports;
+- rewritten as an explicit local study finding that requires no external source;
+- or removed as nonessential repetition.
+
+SUBAGENT F OUTPUT
+
+Produce a citation-retention matrix with one row per baseline cited key:
+
+- citation key;
+- title;
+- all current chapter locations;
+- role classification;
+- claims supported;
+- primary or secondary source;
+- overlap with other entries;
+- retain, merge, or remove;
+- replacement citation where applicable;
+- required prose change;
+- clinical-comparison dependency;
+- scientific risk of removal;
+- confidence.
+
+Also produce:
+
+- the minimum defensible cited-key set;
+- the preferred cited-key set;
+- optional entries linked to optional passages;
+- expected final unique cited-key count;
+- expected citation-command reduction;
+- expected bibliography-page reduction;
+- all citation clusters still requiring three or more keys.
+
+LEAD SYNTHESIS BEFORE EDITING
+
+After all six first-wave reports return, the lead must create under `/tmp`:
+
+1. A unified issue matrix containing:
+   - issue ID;
+   - source agent;
+   - severity;
+   - exact file and line/page;
+   - proposed repair;
+   - page-saving estimate;
+   - citation-saving estimate;
+   - scientific risk;
+   - decision: accept, reject, or defer;
+   - rationale.
+
+2. A chapter-level page budget:
+   - baseline pages;
+   - target pages;
+   - maximum safe expected reduction.
+
+3. A citation-retention matrix:
+   - baseline 55 keys;
+   - preferred retained set;
+   - removed set;
+   - uncertain set;
+   - target final count;
+   - supporting rationale.
+
+4. A two-pass compression plan:
+   - first-pass high-confidence repairs;
+   - optional second-pass high-confidence repairs if the PDF remains above 108 pages.
+
+Resolve disagreements among subagents before editing.
+
+Do not edit until all four lead documents exist.
+
+EDITING AUTHORITY
+
+The lead may make narrow edits only to active thesis source files under:
+
+thesis-writing/thesis/main.tex
+thesis-writing/thesis/frontmatter/**
+thesis-writing/thesis/chapters/**
+thesis-writing/thesis/appendices/**
 thesis-writing/literature/metadata/references.bib
 
-Only if required by the clinical-literature comparison.
+The lead may create only:
 
-For every external comparator citation:
+thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md
 
-1. identify the citation key in the final supplement;
-2. search the thesis bibliography by key, normalized title, DOI, and author/year;
-3. reuse an existing thesis entry when equivalent;
-4. otherwise copy the verified entry from `paper-aaai/references.bib`;
-5. preserve verified bibliographic metadata;
-6. avoid duplicate title or DOI records;
-7. cite every added entry in the thesis;
-8. do not add unrelated entries.
+After final validation, the lead may replace:
 
-Do not use raw URLs when a bibliography entry exists.
+thesis-writing/thesis/main.pdf
 
-Do not conduct internet research.
+Do not create permanent intermediate audit files in the repository.
 
-NO NEW FIGURES
+SCIENTIFIC FREEZE
 
-Do not add, replace, regenerate, or delete any figure in Step 4.
+Preserve all established facts and boundaries, including:
 
-In particular:
+- MIMIC-III: 26,845 original causal-analysis records;
+- PhysioNet: 7,993 original causal-analysis records;
+- 9 MIMIC analyzed exposures;
+- 10 PhysioNet analyzed exposures;
+- four predictive models;
+- one rule-derived plus four predicted aggregation sources;
+- STraTS leading archived MIMIC predictive metrics;
+- GRU-D leading archived PhysioNet predictive metrics;
+- CausalForestDML primary;
+- LinearDML secondary;
+- CausalPFN exploratory;
+- 19/19 Forest–Linear directional agreement;
+- 18/19 all-three directional agreement;
+- PhysioNet shock as the sole all-three sign exception;
+- admitted rank-correlation ranges;
+- admitted RMSE ranges;
+- admitted cross-resource rho;
+- admitted permutation counts;
+- exact interpretation of `|z|>2` as a heuristic disruption threshold;
+- no cross-dataset pooling;
+- all proxy definitions and thresholds;
+- all DAG nodes and edges;
+- all adjustment sets;
+- all matching definitions;
+- all sampling definitions;
+- all existing clinical and causal limitations;
+- withheld PhysioNet mortality AUROC;
+- absence of a unified omitted-variable numerical claim.
 
-- retain the pipeline figure;
-- retain the shock-proxy figure;
-- retain both DAGs;
-- retain the current estimator-direction figure;
-- retain both forest-ranking figures.
+Do not change any result to improve prose, citation count, or page count.
 
-Use prose and a compact table for new synthesis.
+COMPRESSION POLICY
 
-FROZEN-CONTENT VERIFICATION
+Preferred final page range:
 
-Before editing, inventory all existing numerical tokens, labels, references, table rows, figure references, citation keys, and section headings in every permitted file.
+96–108 total A4 PDF pages.
 
-After editing, compare them.
+Acceptable quality-override range:
 
-Existing Results values may not change.
+up to approximately 112 pages when every remaining section is necessary.
 
-Every numerical difference must be classified as:
+Apply reductions in this order:
 
-- existing number repeated in newly aligned prose/front matter;
-- independently reproduced derived statistic;
-- verified external clinical comparator;
-- verified permutation count;
-- verified MIMIC mortality result;
-- administrative pagination/build change;
+1. remove exact or near-exact repetition;
+
+2. retain the full explanation at its first or most authoritative location;
+
+3. replace later repetition with concise cross-references;
+
+4. combine overlapping paragraphs;
+
+5. shorten chapter previews and summaries that duplicate adjacent chapters;
+
+6. consolidate repeated caveats while preserving them at every location where a reader could otherwise overinterpret a result;
+
+7. consolidate repeated provenance language;
+
+8. consolidate repeated LLM design-time/runtime language;
+
+9. reduce citation-heavy background examples to the minimum authoritative set;
+
+10. merge redundant small tables when every datum and qualification remains readable;
+
+11. improve float placement;
+
+12. remove avoidable whitespace;
+
+13. use local table spacing or `\small`/`\footnotesize` only when comfortably readable;
+
+14. remove bibliography entries that become uncited.
+
+Do not:
+
+- alter margins;
+- change paper size;
+- reduce the base font;
+- globally reduce line spacing;
+- use negative vertical spacing;
+- hide text;
+- reduce bibliography typography merely to save pages;
+- shrink tables below comfortable readability;
+- shrink figures below comfortable readability;
+- remove unique limitations;
+- remove unique methods;
+- remove direct sources for numerical claims;
+- remove required institutional pages.
+
+Never remove solely for page count:
+
+- the pipeline figure;
+- the shock-proxy figure;
+- either DAG;
+- unique proxy-rule details;
+- unique estimator values;
+- the clinical-literature comparison;
+- essential limitations;
+- required university front or back matter.
+
+The Forest ranking figures, direction-agreement figure, and large result tables may be reconsidered only when Subagent C proves that:
+
+- the information is duplicated elsewhere;
+- no unique datum or qualification is lost;
+- removal materially improves length or readability;
+- all cross-references and interpretive context are repaired.
+
+Do not force the thesis into the target band through formatting tricks.
+
+CITATION-PRUNING EXECUTION
+
+The lead must review Subagent F’s retention matrix before changing any citation.
+
+For every removed citation:
+
+1. locate every citation occurrence;
+
+2. inspect the complete surrounding claim;
+
+3. confirm that a retained source supports the revised wording;
+
+4. narrow or remove unsupported details;
+
+5. remove the bibliography entry only after no active citation remains;
+
+6. verify that no clinical-comparison number lost its direct source;
+
+7. record the decision in the Step 5 report.
+
+Do not perform blind global key deletion.
+
+Do not globally replace one citation key with another without inspecting every context.
+
+When several citations support one sentence:
+
+- identify the most direct source;
+- retain additional sources only for distinct evidence;
+- split the sentence if separate claims require separate sources;
+- avoid bundles that obscure which source supports which claim.
+
+CHAPTER-SPECIFIC CITATION REVIEW TARGETS
+
+These are review targets, not rigid quotas.
+
+- Introduction: approximately 8–12 unique sources.
+- Background and Related Work: approximately 15–22 unique sources, including sources reused elsewhere.
+- Methods Chapters 4–8: approximately 12–18 unique sources in total, heavily overlapping with Introduction and Background.
+- Results: only direct clinical-comparison sources and citations needed for a specific method interpretation.
+- Discussion and Conclusions: predominantly reuse already introduced sources.
+- Entire thesis: preferably 32–38 unique cited entries and normally no more than 40.
+
+A source cited in several chapters counts once toward the total.
+
+CORRECTION PRIORITIES
+
+In addition to compression and citation pruning, repair:
+
+1. the Chapter 2 phrase `source-observed mechanisms`;
+
+2. any remaining integration-first framing;
+
+3. any obsolete seven-SRQ references;
+
+4. inconsistent terminology involving:
+   - testbed;
+   - resource;
+   - representation layer;
+   - proxy state;
+   - proxy exposure;
+   - source-observed;
+   - model-generated;
+   - rule-derived;
+   - project-specified;
+   - model-estimated CATE;
+   - clinical-literature comparison;
+   - contextual corroboration;
+
+5. repeated limitations that can be consolidated safely;
+
+6. Hebrew phrasing identified as awkward while preserving scientific equivalence;
+
+7. correctable overfull boxes;
+
+8. avoidable float defects;
+
+9. malformed, duplicate, or uncited bibliography entries;
+
+10. unsupported citation clusters.
+
+Do not weaken causal or clinical qualifications for concision.
+
+FIRST EDITING PASS
+
+Perform one coordinated high-confidence edit pass covering:
+
+- scientific terminology;
+- research-question consistency;
+- citation consolidation;
+- bibliography pruning;
+- repetition removal;
+- local layout repairs;
+- Hebrew language repairs;
+- bibliography defects.
+
+Do not mix speculative rewrites into this pass.
+
+POST-FIRST-PASS FROZEN-CONTENT AUDIT
+
+Compare complete pre-edit and post-edit source.
+
+Verify:
+
+- every Results table value;
+- every Results row;
+- every formula;
+- every proxy threshold;
+- every model name;
+- every estimator name;
+- every DAG statement;
+- every adjustment set;
+- every clinical numerical comparator;
+- every direct numerical citation;
+- every abstract number;
+- every conclusion number;
+- every label and reference;
+- every appendix fact.
+
+Classify every numerical difference as:
+
+- relocation or repeated use of an existing value;
+- deletion of duplicated prose;
+- formatting-only;
 - unexpected drift.
 
 Unexpected drift is blocking.
 
-Verify that the following remain unchanged:
+FIRST POST-EDIT BUILD
 
-- 26,845 MIMIC records;
-- 7,993 PhysioNet records;
-- 9 MIMIC exposures;
-- 10 PhysioNet exposures;
-- predictive table values;
-- all Forest values;
-- all Linear values;
-- all PFN values;
-- matching values;
-- outcome-downsampled values;
-- estimator hierarchy;
-- aggregation composition;
-- proxy names;
-- adjustment codes;
-- no-pooling policy;
-- PhysioNet shock exception.
+Build in a new clean temporary directory using the same explicit XeLaTeX/Biber sequence.
 
-POST-EDIT BUILD
+Record:
 
-Build the complete thesis into a new clean temporary directory using the explicit sequence:
+- total page count;
+- page count by component;
+- page reduction;
+- cited-key count;
+- citation-command count;
+- bibliography pages;
+- build warnings;
+- citation/reference status;
+- qpdf result;
+- font status.
 
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<AFTER_DIR> main.tex
-biber --input-directory=<AFTER_DIR> --output-directory=<AFTER_DIR> main
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<AFTER_DIR> main.tex
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<AFTER_DIR> main.tex
+SECOND COMPRESSION PASS
+
+Perform a second compression pass only if:
+
+- the total remains above 108 pages;
+- safe high-confidence candidates remain;
+- citation count remains above 40 without necessity;
+- no first-pass blocker exists.
+
+The second pass may use only candidates already approved in the lead’s issue matrix.
+
+Do not perform more than two compression passes.
+
+Stop compression when no safe candidate remains.
+
+If the final PDF remains above the preferred page range, document:
+
+- final page count;
+- all rejected reduction candidates;
+- the scientific or readability cost of each;
+- why quality took priority over length.
+
+If the final cited-key count exceeds 40, document entry by entry why every key above the ceiling is indispensable.
+
+POST-EDIT CITATION VALIDATION
+
+Generate and compare:
+
+- baseline unique cited-key count: 55;
+- final unique cited-key count;
+- percentage reduction;
+- baseline and final citation-command occurrence counts;
+- cited keys by chapter;
+- retained keys;
+- removed keys;
+- added keys, which should normally be zero;
+- bibliography pages before and after;
+- all citation clusters of three or more keys;
+- entries cited only once;
+- uncited bibliography entries;
+- duplicate title checks;
+- duplicate DOI checks.
+
+Verify:
+
+- every citation key resolves;
+- every emitted bibliography entry is cited;
+- every retained citation supports its local claim;
+- every implemented model retains an appropriate primary source;
+- both datasets retain their primary references;
+- every clinical numerical comparator retains its direct source;
+- no removed source leaves an unsupported broader claim;
+- no source points to a superseded paper draft;
+- no selective removal favors only clinically compatible comparisons;
+- Biber emits no more than 40 entries unless a complete quality exception is documented.
+
+FINAL BUILD
+
+Build from a new clean temporary directory.
 
 Required checks:
 
 - XeLaTeX succeeds;
 - Biber succeeds;
-- qpdf check succeeds;
-- no undefined citations;
-- no undefined references;
-- no duplicate labels;
-- no missing glyphs;
-- no unresolved rerun request;
+- `qpdf --check` succeeds;
+- no undefined citation;
+- no undefined reference;
+- no duplicate label;
 - no missing figure;
+- no missing glyph;
+- no unresolved rerun request;
+- no Type 3 font;
+- all pages are A4;
 - no new severe overfull box;
-- exact page count recorded;
-- SHA-256 recorded.
+- no new severe underfull layout defect;
+- page count recorded;
+- PDF SHA-256 recorded;
+- extracted-text SHA-256 recorded;
+- final cited-key count recorded;
+- final bibliography page count recorded.
 
-Compare the baseline and post-edit PDFs.
+FINAL VISUAL REVIEW
+
+Render every final page at 200 dpi.
+
+Inspect every changed page individually.
+
+Also inspect these pages even when their source did not change:
+
+- English title page;
+- Hebrew title or cover;
+- Hebrew abstract;
+- English abstract;
+- keywords;
+- table of contents;
+- list of figures;
+- list of tables;
+- pipeline figure;
+- shock figure;
+- both DAGs;
+- every landscape table;
+- every Results figure and table;
+- clinical-comparison table;
+- bibliography;
+- final Hebrew cover.
+
+Use a contact sheet only for navigation.
+
+Check:
+
+- clipping;
+- unreadable text;
+- table column crowding;
+- broken longtable headings;
+- float displacement;
+- blank pages;
+- nearly blank pages;
+- orphan headings;
+- widows;
+- excessive whitespace;
+- caption placement;
+- RTL ordering;
+- English names inside Hebrew;
+- page-number anomalies;
+- bibliography wrapping;
+- figure-list consistency;
+- citation rendering;
+- DOI and URL wrapping.
+
+SECOND-WAVE INDEPENDENT VERIFIERS
+
+After the lead finishes editing and the final PDF exists, launch three fresh read-only verifier subagents.
+
+They must independently inspect the final state.
+
+Do not provide the first-wave conclusions as facts that must be accepted.
+
+VERIFIER 1 — SCIENCE AND NUMBERS
+
+Independently inspect the final diff and verify:
+
+- testbed-first contribution hierarchy;
+- main RQ and five SRQs;
+- causal and clinical language;
+- every changed numerical statement;
+- every frozen fact;
+- estimator hierarchy;
+- no pooling;
+- PhysioNet shock;
+- withheld PhysioNet mortality result;
+- no unified omitted-variable number;
+- no accidental strengthening of claims;
+- no scientific loss caused by compression.
+
+Any unexplained numerical or scientific drift is a blocker.
+
+VERIFIER 2 — PDF AND LATEX RELEASE
+
+Independently inspect:
+
+- final build log;
+- final PDF;
+- every changed rendered page;
+- page count;
+- component page budget;
+- float placement;
+- table readability;
+- figure readability;
+- citations and references;
+- warnings;
+- fonts;
+- page dimensions;
+- tracked-PDF equality.
+
+A page count above the preferred range is not a blocker when no further safe reduction exists.
+
+VERIFIER 3 — BILINGUAL, CITATIONS, BIBLIOGRAPHY, AND ADMINISTRATION
+
+Independently inspect:
+
+- English/Hebrew abstract equivalence;
+- Hebrew language and rendering;
+- keywords;
+- title and cover;
+- required page order;
+- unresolved administrative items;
+- final cited-key set;
+- all removed citation decisions;
+- all dataset references;
+- all primary implemented-method references;
+- all benchmark-spectrum citations;
+- all clinical-comparison citations;
+- all citation clusters of three or more;
+- all claims changed from multiple citations to one;
+- duplicate and uncited bibliography entries.
+
+Verifier 3 must report a blocker if:
+
+- a retained claim is unsupported;
+- a numerical comparator lacks its direct source;
+- citation pruning selectively removed discrepant clinical evidence;
+- an implemented method lacks an appropriate primary citation;
+- a dataset lacks its primary citation;
+- a removed source supplied a distinct limitation that disappeared;
+- a secondary source replaced a necessary available primary source without justification;
+- the final cited-key count exceeds 40 without an entry-by-entry quality justification;
+- bibliography reduction was achieved through unreadable formatting.
+
+The lead must resolve every verifier blocker before readiness.
 
 TRACKED MAIN PDF
 
-Only after the post-edit PDF passes all validation:
+Only after all final checks and verifier gates pass:
 
-copy the validated PDF to:
+copy the validated final PDF to:
 
 thesis-writing/thesis/main.pdf
 
@@ -1226,377 +1311,347 @@ Verify byte equality between:
 - validated temporary PDF;
 - tracked `main.pdf`.
 
-Do not copy any build auxiliary into the repository.
+Do not copy build auxiliary files.
 
-VISUAL REVIEW
+PAPER AND EVIDENCE PROTECTION
 
-Render all post-edit pages at 200 dpi or greater.
+Recompute all protected hashes.
 
-Inspect individually:
-
-- English title page;
-- English abstract;
-- Hebrew abstract;
-- keywords;
-- table of contents;
-- list of figures;
-- every changed Results page;
-- every new clinical-comparison table page;
-- every changed Discussion page;
-- every changed Conclusions page;
-- every changed bibliography page;
-- Hebrew cover;
-- any page affected by float or pagination movement;
-- pipeline and shock figure pages for regression;
-- both DAG pages for regression.
-
-A contact sheet may be used only for navigation.
-
-Check:
-
-- title wrapping;
-- abstract overflow;
-- RTL ordering;
-- English model names inside Hebrew;
-- missing Hebrew glyphs;
-- table clipping;
-- clinical-comparison table readability;
-- caption placement;
-- orphan headings;
-- isolated table or figure pages;
-- excessive whitespace;
-- broken citations;
-- incorrect list-of-figures entries;
-- page-number anomalies;
-- unintended blank pages;
-- new overfull boxes.
-
-ABSTRACT EQUIVALENCE AUDIT
-
-Create a claim-by-claim matrix in the Step 4 report.
-
-For every English abstract claim, identify the corresponding Hebrew sentence.
-
-Verify equivalence for:
-
-- problem;
-- construction;
-- LLM role;
-- datasets;
-- counts;
-- models;
-- estimators;
-- sign agreement;
-- shock exception;
-- sensitivity/support boundary;
-- absence of causal truth;
-- absence of clinical validation;
-- contribution.
-
-Any substantive mismatch is blocking.
-
-PAPER PROTECTION VALIDATION
-
-After all work, recompute:
-
-sha256sum \
-  thesis-writing/CausalDataGeneration.pdf \
-  thesis-writing/aaai27-submission.tex \
-  thesis-writing/supp.pdf \
-  thesis-writing/true-figure-1.png \
-  thesis-writing/paper-aaai/figures/figure3_shock_proxy_example.png \
-  thesis-writing/thesis/figures/clinicause_testbed_pipeline.png \
-  thesis-writing/thesis/figures/clinicause_shock_proxy_example.png
-
-Recreate:
+Create:
 
 find thesis-writing/paper-aaai -type f -print0 \
   | sort -z \
   | xargs -0 sha256sum \
-  > /tmp/testbed_alignment_step4_paper_aaai_after.txt
+  > /tmp/testbed_alignment_step5_paper_after.txt
 
 Compare:
 
 diff -u \
-  /tmp/testbed_alignment_step4_paper_aaai_before.txt \
-  /tmp/testbed_alignment_step4_paper_aaai_after.txt
+  /tmp/testbed_alignment_step5_paper_before.txt \
+  /tmp/testbed_alignment_step5_paper_after.txt
 
-Any task-caused protected-file change is blocking.
+Any task-caused paper-tree change is blocking.
 
-GIT AND DIFF VALIDATION
+Verify that these remain unchanged:
 
-Run a task-scoped check:
+- finished paper;
+- final paper source;
+- supplement;
+- paper-aaai tree;
+- Step 4 derived-statistics CSV;
+- checked result and evidence files;
+- existing figure bytes.
 
-git diff --check -- \
-  thesis-writing/thesis/chapters/10_results.tex \
-  thesis-writing/thesis/chapters/11_discussion.tex \
-  thesis-writing/thesis/chapters/12_conclusions_future_work.tex \
-  thesis-writing/thesis/frontmatter/abstract_primary.tex \
-  thesis-writing/thesis/frontmatter/abstract_secondary.tex \
-  thesis-writing/thesis/frontmatter/keywords.tex \
-  thesis-writing/literature/metadata/references.bib \
-  thesis-writing/logs/testbed_story_alignment_step_4_evidence_synthesis.md \
-  thesis-writing/logs/testbed_story_alignment_step_4_derived_statistics.csv \
-  thesis-writing/thesis/main.pdf
+GIT VALIDATION
 
-If the optional CSV does not exist, omit it from the command.
-
-Also run:
+Run:
 
 git diff --check
 git diff --stat
 git diff --name-only
 git status --short
+git diff --cached --name-only
 
-If the global check fails only because of documented pre-existing files, do not edit them. Record the distinction.
+Run a task-scoped `git diff --check` over every Step 5 modified or created file.
 
-Inspect the complete diff of every changed text file.
+Inspect the complete final text diff.
 
-REPORT
+Confirm:
+
+- no unexpected file changed;
+- all pre-existing user-owned changes remain preserved;
+- nothing was staged;
+- nothing was committed;
+- nothing was pushed.
+
+FINAL REPORT
 
 Create:
 
-thesis-writing/logs/testbed_story_alignment_step_4_evidence_synthesis.md
+thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md
 
 Use this structure:
 
-# Testbed Story Alignment — Step 4 Evidence Synthesis
+# Testbed Story Alignment — Step 5 Independent Audit and Final Repair
 
 ## 1. Baseline
-- expected baseline
-- actual HEAD
+- expected and actual HEAD
 - branch
-- recent commits
-- pre-existing modified/untracked files
-- applicable instructions read
+- worktree status
+- protected hashes
+- baseline build
+- baseline page count
+- baseline chapter/page budget
+- baseline cited-key count
+- baseline citation-command count
+- baseline bibliography pages
+- baseline warnings
 
-## 2. Scope and Source Authority
-- objective
-- permitted files
-- protected files
-- finished-paper sources
-- thesis evidence sources
-- excluded sources
-- files actually changed
+## 2. Ultra and Subagent Execution
+- first-wave subagents
+- scope of each
+- temporary reports
+- parallelization used
+- disagreements
+- lead resolutions
+- second-wave verifiers
+- unavailable utility fallbacks, if any
 
-## 3. Baseline Build
-- commands
-- path
-- page count
-- SHA-256
-- tracked-PDF equality
-- citations/references
-- warnings
-- qpdf result
+## 3. Independent Findings
+- blockers
+- major findings
+- moderate findings
+- minor findings
+- false alarms
+- deliberately deferred issues
 
-## 4. Numerical Admission Decisions
-For every candidate:
-- admitted or withheld
-- exact source
-- reason
-- conflict status
-- population
-- unit
-- qualification
-
-Include:
-- MIMIC mortality prediction
-- PhysioNet mortality prediction
-- rank correlations
-- RMSE
-- cross-resource correlation
-- permutation counts
-- omitted-variable sensitivity
-- clinical-comparison values
-
-## 5. Derived-Statistics Reproduction
-- exact input paths
-- exact rows and columns
-- formula
-- script or command
-- full-precision versus displayed values
-- paper comparison
-- tolerance
-- admitted results
-- optional CSV path and hash
-
-## 6. Results Chapter Changes
-- new hierarchy
-- construct plausibility
-- proxy recoverability
-- mortality information
-- estimator synthesis
-- clinical comparison
-- diagnostics/sensitivity
-- provenance boundary
-- old content preserved
-
-## 7. Clinical-Literature Comparison
-For every included row:
-- proxy family
-- CliniCause quantity
-- estimator/population
-- published comparator
-- study design
-- mortality horizon
-- citation
-- comparability limitation
-- interpretation
-
-## 8. Discussion Changes
-- new main-RQ answer
-- five-SRQ mapping
-- testbed contribution
-- integration material preserved
-- estimator agreement interpretation
-- PhysioNet shock
-- clinical comparison
-- sensitivity and fragility
-- limitations preserved
-
-## 9. Conclusions Changes
-- new strongest-contribution statement
-- main findings
+## 4. Scientific Coherence Audit
+- contribution hierarchy
+- main RQ
+- five SRQs
 - controlled-benchmark complementarity
-- closing perspective
-- future-work changes
+- terminology
+- causal-language findings
+- Chapter 2 correction
+- exact MIMIC-IV search result
+- remaining repetition
 
-## 10. Abstracts and Keywords
-- final English abstract claims
-- final Hebrew abstract claims
-- equivalence matrix
-- keyword changes
-- Hebrew terms selected
-- human-review items
+## 5. Numerical and Evidence Audit
+- cohort counts
+- exposure counts
+- predictive metrics
+- mortality gate
+- Forest values
+- Linear values
+- PFN values
+- matching
+- downsampling
+- sign agreement
+- rank/RMSE/correlation verification
+- permutation interpretation
+- clinical comparison
+- omitted-variable sensitivity gate
+- unexplained differences
 
-## 11. Bibliography
-- entries added
-- keys reused
-- duplicate-title/DOI checks
-- citations resolving
-- confirmation paper bibliography unchanged
+## 6. Compression Plan and Execution
+For every accepted and rejected candidate:
+- original location
+- proposed action
+- decision
+- final action
+- page saving
+- scientific risk
+- citation consequence
+- rationale
 
-## 12. Frozen-Content Verification
-- existing numerical-token comparison
-- table-row comparison
-- figure/reference comparison
+## 7. Page Budget
+- before/after front matter
+- before/after every chapter
+- before/after appendices
+- before/after bibliography
+- before/after cover
+- total reduction
+- preferred-band result
+- quality-override explanation when outside 96–108 pages
+
+## 8. Citation Reduction
+- baseline unique cited entries: 55
+- final unique cited entries
+- percentage reduction
+- baseline and final citation-command counts
+- bibliography pages before and after
+- retained keys grouped by scientific role
+- removed keys with one-sentence rationale per key
+- added keys
+- citation clusters still containing three or more keys
+- entries cited only once
+- uncited-entry result
+- duplicate title/DOI result
+- confirmation that no supported claim or direct numerical source was lost
+- quality exception if final count exceeds 40
+
+## 9. Clinical-Comparison Citation Decisions
+For every construct:
+- original comparator citations
+- final comparator citations
+- retained numerical values
+- removed numerical values
+- prose or table revision
+- compatible/discrepant balance
+- noncommensurability qualification
+- confirmation that no cherry-picking was introduced
+
+## 10. Source Changes
+- file-by-file edit summary
+- repetition removed
+- material retained
+- tables or figures consolidated
+- cross-references introduced
+- no-loss justification
+
+## 11. Hebrew and Administrative Audit
+- title
+- abstract equivalence
+- keywords
+- terminology
+- RTL and rendering
+- language repairs
+- unresolved native-human review
+- unresolved institutional fields
+
+## 12. Bibliography and Source-Authority Audit
+- final cited-key count
+- primary versus secondary balance
+- dataset sources
+- implemented-method sources
+- benchmark/testbed sources
+- causal-method sources
+- clinical sources
+- malformed entries
+- uncited entries
+- duplicate titles or DOIs
+- superseded-source checks
+
+## 13. Frozen-Content Verification
+- tables
+- formulas
+- thresholds
+- DAGs
+- adjustment sets
+- estimators
+- figures
 - labels
-- citation keys
-- estimator hierarchy
-- counts
-- unexpected differences
+- citations
+- abstracts
+- conclusions
+- appendices
+- unexpected drift
 
-## 13. Post-Edit Build
+## 14. Final Build
 - exact commands
-- path
+- build path
 - page count
 - SHA-256
-- Biber result
+- extracted-text SHA-256
 - qpdf result
-- citations/references
+- Biber result
+- final cited-key count
+- citation/reference result
+- font result
 - warnings
-- comparison with baseline
 
-## 14. Visual Review
-- changed page ranges
-- English abstract
-- Hebrew abstract
-- keywords
-- Results
-- clinical-comparison table
-- Discussion
-- Conclusions
+## 15. Visual Review
+- all pages rendered
+- changed-page findings
+- front matter
+- Hebrew
+- figures
+- tables
+- clinical comparison
 - bibliography
-- title/cover regression
-- figure/DAG regression
-- layout defects
+- cover
+- remaining layout defects
 
-## 15. Tracked Main PDF
-- previous hash/page count
-- final hash/page count
-- temporary/tracked equality
-- confirmation no auxiliary files copied
+## 16. Independent Verification Wave
+- Verifier 1 findings
+- Verifier 2 findings
+- Verifier 3 findings
+- repairs made
+- unresolved concerns
+- final acceptance decision
 
-## 16. Paper Protection
-- hashes before/after
-- paper tree comparison
-- changed protected-file count
-- thesis figure preservation
+## 17. Tracked Main PDF
+- previous hash and pages
+- final hash and pages
+- equality with validated build
+- confirmation that no auxiliary files were copied
 
-## 17. Git Diff Summary
+## 18. Protection and Git Status
+- protected hashes
+- paper-tree comparison
+- evidence-source protection
+- Step 4 derived-statistics protection
 - task-scoped diff check
 - global diff check
-- diff stat
-- changed-file list
-- unexpected changes
+- changed files
+- unexpected files
 - final status
-- confirmation nothing staged, committed, or pushed
+- nothing staged
+- nothing committed
+- nothing pushed
 
-## 18. Deferred Step 5 Issues
-- Chapter 2 “source-observed mechanisms”
-- verification of alleged Chapter 1 “MIMIC-IV”
-- global terminology audit
-- final Hebrew human review
-- remaining layout warnings
-- administrative/submission metadata
-- any unresolved numerical gate
+## 19. Human Actions Before Submission
+- supervisor scientific approval
+- native academic-Hebrew review
+- authoritative administrative fields
+- ethics and governance wording
+- signatures and forms
+- institutional formatting or deposit checks
+- unresolved PhysioNet mortality lineage
+- unresolved unified omitted-variable sensitivity lineage
 
-## 19. Readiness
+## 20. Readiness
 
 End with exactly one of:
 
-READY FOR STEP 5
+READY FOR AUTHOR–SUPERVISOR REVIEW
 
 or:
 
-BLOCKED BEFORE STEP 5
+BLOCKED BEFORE AUTHOR REVIEW
 
-READINESS IS BLOCKED IF
+Do not end with:
 
-Do not report `READY FOR STEP 5` if:
+READY FOR SUBMISSION
 
-- any existing admitted result changed;
-- PhysioNet mortality AUROC was inserted;
-- unified omitted-variable sensitivity numbers were inserted without exact reconciliation;
-- a derived rank/RMSE/correlation statistic cannot be reproduced;
-- a clinical comparator lacks a verified citation or qualification;
-- a range across estimators is described as uncertainty;
-- PhysioNet shock is omitted or softened;
-- the estimator hierarchy changes;
-- datasets are pooled;
-- the Discussion still answers the old integration-first research question;
-- the Conclusion still calls integration the strongest contribution;
-- the English and Hebrew abstracts differ scientifically;
-- the build fails;
+READINESS BLOCKERS
+
+Report `BLOCKED BEFORE AUTHOR REVIEW` if:
+
+- the thesis does not build;
 - a citation or reference is unresolved;
-- a protected paper file changed;
-- tracked `main.pdf` differs from the validated PDF;
-- unexpected repository files changed.
+- a protected source changed;
+- an admitted result changed without authority;
+- the estimator hierarchy changed;
+- the datasets were pooled;
+- PhysioNet mortality AUROC was inserted;
+- unified omitted-variable numbers were inserted;
+- PhysioNet shock was hidden, omitted, or softened;
+- English and Hebrew abstracts are scientifically inconsistent;
+- a figure or table became unreadable;
+- required university structure was removed;
+- tracked `main.pdf` differs from the validated build;
+- an independent verifier reports an unresolved blocker;
+- an unexpected repository file changed;
+- an implemented method lacks its appropriate primary citation;
+- a dataset lacks its appropriate primary citation;
+- a retained numerical clinical comparator lacks a direct citation;
+- citation pruning created selective clinical corroboration;
+- an uncited bibliography entry remains in the emitted bibliography;
+- a cited key is unresolved;
+- a retained citation does not support its local claim;
+- more than 40 unique bibliography entries are emitted without an entry-by-entry quality justification;
+- bibliography reduction was achieved through unreadable formatting.
+
+The page target alone is not a blocker when the report demonstrates that remaining pages are necessary and further reduction would materially harm scientific quality or readability.
 
 STOP CONDITION
 
 Stop after:
 
-- bounded Results edits;
-- bounded Discussion reorganization;
-- bounded Conclusions reframe;
-- bilingual abstract rewrite;
-- keyword alignment;
-- verified bibliography additions;
-- optional reproduced-statistics CSV;
-- clean pre/post builds;
-- full changed-page visual review;
-- tracked main.pdf replacement;
-- Step 4 report;
-- paper-protection and Git verification.
+- baseline build and inventories;
+- first-wave parallel audit;
+- unified issue, citation, and page-budget plans;
+- one coordinated high-confidence edit pass;
+- at most one additional safe compression pass;
+- complete citation validation;
+- complete frozen-content verification;
+- clean final build;
+- all-page visual review;
+- second-wave independent verification;
+- tracked `main.pdf` replacement;
+- Step 5 report;
+- protection checks;
+- Git checks.
 
-Do not edit Chapters 1–8.
-Do not edit appendices.
-Do not edit title metadata.
-Do not add or replace figures.
-Do not resolve conflicting mortality evidence by preference.
-Do not import unified omitted-variable numbers.
-Do not conduct new experiments.
-Do not perform internet research.
 Do not stage, commit, or push.
-Do not begin Step 5.
