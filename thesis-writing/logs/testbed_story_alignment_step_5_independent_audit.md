@@ -1,6 +1,6 @@
 # Testbed Story Alignment — Step 5 Continuation Implementation and Final Audit
 
-Status on 2026-08-03: the continuation implementation, two permitted editing passes, clean build, complete 200-dpi page review, and crossed final verification were completed. The resulting 104-page candidate passes the scientific, citation, numerical-freeze, build, protection, Hebrew-rendering, table, and non-DAG figure checks, but it is **not promoted for author review** because two visual defects remain. The tracked 120-page `main.pdf` was therefore deliberately left unchanged.
+Status on 2026-08-03: the original continuation implementation, two permitted editing passes, clean build, complete 200-dpi page review, and crossed final verification were completed. Its then-blocked 104-page candidate is retained below as the historical audit record. A later, explicitly authorized narrow visual-repair continuation resolved the Conclusion spill, accepted the existing DAGs without change at the user's direction, and promoted the newly validated 103-page PDF; its final record is in Sections 24--25.
 
 Historical record: Part 1 of Step 5 intentionally stopped after the six-role baseline audit and lead planning, before any thesis-source edit, because the user asked for an early report of missing work. That fact is preserved here. This continuation began from the resulting commit and implemented the approved plan rather than repeating the six-role audit.
 
@@ -412,8 +412,18 @@ Even after the two visual blockers are repaired, human submission actions remain
 
 These are submission gates and do not authorize invented values.
 
-## 24. Final readiness
+## 24. Narrow visual-repair continuation
 
-The implementation substantially completed Step 5 and produced a scientifically sound, citation-complete, protected, 104-page candidate. It is not ready for author–supervisor review because the crossed layout verification found a nearly blank Conclusion spill page and unreadable/colliding DAG labels, and the tracked PDF therefore correctly remains the baseline artifact.
+The current working-copy prompt authorized only a repair of the Closing Perspective spill and a possible DAG re-render. The user then explicitly instructed: “do not fix the DAGs. it is ok.” Accordingly, Chapter 7 and both DAG assets were left unchanged; their established SHA-256 values remain `67d545d696b480136ee9ed58604d2cd56b406832e7b48d5a67b946f4837be7c2` (PhysioNet) and `79fa7209166d24a9056753ef785865eb87995b2a363c1b3b5a2bff657fe204d8` (MIMIC).
 
-BLOCKED BEFORE AUTHOR REVIEW
+The only thesis-source edit was a six-word reflow in `chapters/12_conclusions_future_work.tex`: “missingness patterns” became “missingness”. This preserves the source-recorded evidence boundary while keeping the complete sentence on the Closing Perspective page.
+
+A clean temporary build in `/tmp/clinicause-step5-visual.wVYrtZ` ran XeLaTeX, Biber, XeLaTeX, and XeLaTeX successfully. The resulting PDF has 103 A4 pages, SHA-256 `8043f76eafb809037f497d204c4fe1082fe0977e44b920fbd09fd76211a5777d`; `qpdf --check` passed; the final log has no undefined references/citations, missing figures, missing glyphs, duplicate labels, or severe overfull boxes. Physical pages 91--103 were rendered at 150 dpi and inspected; the Conclusion boundary was then inspected at 200 dpi on pages 93--95, with adjacent Appendix page 96. The nearly blank spill page is absent.
+
+The validated PDF was copied to `thesis-writing/thesis/main.pdf` and byte-equality was verified. No DAG, pipeline, graph-definition, scientific, citation, numerical, Hebrew, bibliography, paper, or supplement source changed in this continuation.
+
+## 25. Final readiness
+
+The narrow visual repair is complete, the user accepted the existing DAG presentation without change, and the tracked PDF is the validated build artifact.
+
+READY FOR AUTHOR–SUPERVISOR REVIEW

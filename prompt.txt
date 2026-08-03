@@ -1,843 +1,96 @@
-You are continuing Step 5 of the CliniCause thesis after an intentional early stop.
+Continue Step 5 from commit:
 
-Use GPT-5.6 with Ultra reasoning.
+6101dbd1eed17aa066d3bc584c5183f05a2b241f
 
-This is a continuation, not a restart.
-
-Do not repeat the complete six-agent baseline audit. The committed early-stop report already records that work.
-
-AGENT-EFFICIENCY RULE
-
-- Use at most two subagents total.
-- Never fill all four available agent slots.
-- No nested subagents.
-- The lead agent is the only agent permitted to edit repository files.
-- The two subagents must remain read-only.
-- Run the two subagents in parallel only where their scopes are genuinely independent.
-- Reuse the same two subagents for final cross-verification when possible.
-- If reusing them is unavailable, the lead performs the remaining verification directly rather than spawning more agents.
-
-MISSION
-
-Complete the unfinished implementation and validation portions of Step 5:
-
-1. repair verified scientific and terminology defects;
-2. consolidate the bibliography from 55 cited entries toward the reviewed 38-key plan;
-3. remove repetition and improve page efficiency;
-4. aim for approximately 100 pages without damaging quality;
-5. repair identified layout and Hebrew issues;
-6. rebuild and inspect the complete thesis;
-7. perform independent final verification;
-8. update the existing Step 5 report into the final complete report;
-9. replace tracked `main.pdf` only with the fully validated final build.
-
-Quality has priority over exact length.
-
-Preferred final outcomes:
-
-- approximately 96–108 A4 pages;
-- approximately 32–38 unique cited entries;
-- normally no more than 40 cited entries.
-
-A final length of approximately 109–112 pages is acceptable when further reduction would harm scientific completeness, readability, figure quality, Hebrew quality, or institutional structure.
-
-Do not force the target through formatting tricks.
-
-CONTINUATION BASELINE
-
-Expected current HEAD:
-
-3666b39ba21cea53f77f446d028a56b2395bde64
-
-Expected commit message:
-
-edit thesis step 5 part 1
-
-Previous scientific baseline:
-
-eba841dbcb7fc63f89f903e6b94a5be0f46f0f65
-
-Expected committed Step 5 continuation state:
-
-- `prompt.txt` changed;
-- `thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md` added;
-- no active thesis source changed;
-- no bibliography changed;
-- no figure changed;
-- no tracked thesis PDF changed.
-
-Expected tracked thesis PDF:
-
-- 120 A4 pages;
-- SHA-256:
-  `6f25ac51acdcc091518371dcf46d73b43d0e2e4634f3da19e9458ba133c88020`
-
-Expected Step 4 derived-statistics hash:
-
-`c2efb00f64d901fe1635221ee032155900b7f7ac369ecf0facb56358d88c7aea`
-
-The early-stop report records:
-
-- 55 emitted cited keys;
-- 94 citation commands;
-- 137 cited-key appearances;
-- 62 raw bibliography entries;
-- 6 bibliography pages;
-- complete baseline build success;
-- complete baseline 200-dpi page inspection;
-- completed audit and planning;
-- no thesis-source edits.
-
-CONTROLLING DOCUMENTS
-
-Read completely before editing:
-
-prompt.txt
-
-thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md
-
-thesis-writing/THESIS_TESTBED_STORY_ALIGNMENT_PLAN.md
-
-thesis-writing/logs/testbed_story_alignment_step_1_audit.md
-thesis-writing/logs/testbed_story_alignment_step_2_intellectual_reframe.md
-thesis-writing/logs/testbed_story_alignment_step_3_methodology_reframe.md
-thesis-writing/logs/testbed_story_alignment_step_4_evidence_synthesis.md
-thesis-writing/logs/testbed_story_alignment_step_4_derived_statistics.csv
-
-Read the complete current active thesis source:
-
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/**
-thesis-writing/thesis/chapters/**
-thesis-writing/thesis/appendices/**
-thesis-writing/literature/metadata/references.bib
-
-Read all applicable local thesis and university instructions.
-
-The early-stop report is the authoritative summary of the completed Step 5 audit and approved plan.
-
-The `/tmp` reports named in that document may no longer exist. Do not attempt to reconstruct all six original audits from scratch merely because those temporary files are absent.
-
-STARTUP AND CONTINUATION CHECK
-
-From the repository root, run:
-
-git status --short
-git branch --show-current
-git rev-parse HEAD
-git log -10 --oneline --decorate
-
-Verify the continuation boundary:
-
-git diff --name-only \
-  eba841dbcb7fc63f89f903e6b94a5be0f46f0f65 \
-  3666b39ba21cea53f77f446d028a56b2395bde64
-
-The expected result is only:
-
-prompt.txt
-thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md
-
-If active thesis source, bibliography, figures, results, or `main.pdf` differ from the recorded baseline, inspect and reconcile the difference before proceeding.
-
-Do not reset or discard later user work.
-
-Do not run:
-
-git reset --hard
-git clean -fd
-git stash
-git add .
-git add -A
-git commit
-git push
-
-Preserve all unrelated modified and untracked files.
-
-Do not edit `prompt.txt` during this continuation.
-
-BASELINE REUSE
-
-Do not repeat the full baseline build and all-page baseline render when all of the following hold:
-
-- HEAD is the expected continuation commit;
-- the continuation diff contains only the report and prompt;
-- tracked `main.pdf` has the expected hash;
-- active thesis source is unchanged from the Step 4 baseline;
-- the Step 4 derived-statistics file has the expected hash.
-
-When these checks pass, reuse the early-stop report’s verified baseline:
-
-- 120 pages;
-- page budget recorded in Section 7;
-- 55 emitted keys;
-- 94 citation commands;
-- 6 bibliography pages;
-- baseline warning inventory;
-- all-page visual findings.
-
-A final clean build and complete final-page render remain mandatory.
-
-PROTECTED MATERIAL
-
-Do not modify:
-
-thesis-writing/CausalDataGeneration.pdf
-thesis-writing/aaai27-submission.tex
-thesis-writing/supp.pdf
-thesis-writing/paper-aaai/**
-thesis-writing/ignore-paper-aaai/**
-thesis-writing/true-figure-1.png
-thesis-writing/logs/testbed_story_alignment_step_4_derived_statistics.csv
-
-Do not modify:
-
-- code;
-- datasets;
-- results;
-- checked evidence;
-- reproducibility records;
-- Steps 1–4 reports;
-- existing image or PDF figure bytes;
-- paper or supplement sources.
-
-Administrative values may change only when an exact authoritative local source proves the correction.
-
-Do not invent institutional or personal metadata.
-
-PERMITTED EDITS
-
-The lead may narrowly edit:
-
-thesis-writing/thesis/main.tex
-thesis-writing/thesis/frontmatter/**
-thesis-writing/thesis/chapters/**
-thesis-writing/thesis/appendices/**
-thesis-writing/literature/metadata/references.bib
-
-The lead must update the existing report:
-
-thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md
-
-Do not create a second Step 5 report.
-
-After complete validation, the lead may replace:
-
-thesis-writing/thesis/main.pdf
-
-Do not change figure bytes.
-
-TWO-SUBAGENT CONTINUATION AUDIT
-
-Launch exactly two read-only subagents in parallel.
-
-They are narrow confirmation agents, not replacements for the completed six-role audit.
-
-SUBAGENT 1 — CITATIONS, SCIENCE, AND NUMERICAL FREEZE
+Use Terra Medium. This is a narrow visual-repair task only.
 
 Read:
 
-- the early-stop report;
-- the current active thesis;
-- the bibliography;
-- Step 4 evidence and derived statistics;
-- checked local evidence needed to validate retained claims.
-
-Tasks:
-
-1. Confirm that the report’s proposed 38-key bibliography remains defensible in the current source.
-
-2. Treat the removal list in Section 8 as a candidate plan, not an instruction for blind deletion.
-
-3. For every proposed citation removal:
-   - find every active occurrence;
-   - identify the exact supported claim;
-   - verify the replacement source;
-   - identify the prose or number that must be removed or narrowed;
-   - reject removal when support would be weakened.
-
-4. Verify the balanced clinical-comparison pruning in Section 9:
-   - cardiac: remove 17.9 and Lorente-Ros only together;
-   - inflammation: remove 9.1/Jia and 8.9/Arbous only together;
-   - coagulation: remove 15.3/Anthon only together;
-   - respiratory: remove 10.2–21.0/Saha only together;
-   - retain at least one direct source for every remaining external number;
-   - retain both compatible and discrepant comparison families;
-   - do not introduce selective corroboration.
-
-5. Confirm that `balazadeh2025causalpfn` is a valid local primary citation and specify the exact first authoritative CausalPFN passage where it should be cited.
-
-6. Verify all frozen numbers and scientific boundaries affected by proposed edits:
-   - cohort and exposure counts;
-   - predictive metrics;
-   - MIMIC mortality result;
-   - withheld PhysioNet mortality result;
-   - estimator hierarchy;
-   - 19/19 and 18/19;
-   - PhysioNet shock;
-   - rank and RMSE summaries;
-   - cross-resource correlation;
-   - permutation counts and `|z|>2` interpretation;
-   - no unified omitted-variable number;
-   - no pooling.
-
-7. Return a concise final retention matrix:
-   - retain;
-   - remove;
-   - replacement;
-   - required prose edit;
-   - scientific risk;
-   - final expected cited-key count.
-
-SUBAGENT 2 — COMPRESSION, LAYOUT, AND HEBREW CONFIRMATION
-
-Read:
-
-- the early-stop report;
-- complete current thesis source;
-- the tracked baseline PDF;
-- applicable university instructions.
-
-Tasks:
-
-1. Confirm the report’s safe compression candidates and rank them by benefit and risk.
+thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md
 
-2. Focus on:
-   - repeated material in Chapters 1, 2, 8, 10, 11, and 12;
-   - chapter previews and conclusions that repeat adjacent chapters;
-   - Chapter 3 and Chapter 6 orphan tails;
-   - LoF and LoT spill pages;
-   - isolated Results direction figure;
-   - Appendix spill;
-   - repeated provenance and limitation language;
-   - local overfull boxes;
-   - bibliography acquisition-note clutter.
-
-3. Verify that all three Results figures should remain.
-
-4. Verify that:
-   - pipeline figure remains;
-   - shock figure remains;
-   - both DAGs remain;
-   - DAG placement should become landscape/readable rather than smaller.
-
-5. Propose exact high-confidence source changes with expected page saving.
-
-6. Review the planned Hebrew repairs:
-   - observational-testbed term;
-   - counterfactual sentence;
-   - omitted-confounding term;
-   - diagnostics;
-   - provenance;
-   - proxy exposure;
-   - contextual clinical-literature comparison;
-   - secondary comparator;
-   - RTL keyword heading.
-
-7. Distinguish:
-   - high-confidence repairs the lead can make;
-   - wording requiring native-Hebrew review;
-   - administrative items that must remain unresolved.
+Do not reopen the scientific rewrite, citation pruning, page compression, numerical results, Hebrew edits, or bibliography unless required by these two repairs.
 
-8. Return a concise first-pass target and optional second-pass list.
+TASK 1 — CONCLUSION SPILL
 
-LEAD SYNTHESIS
+Repair the final paragraph of:
 
-After both subagents return, the lead must create a compact continuation matrix under `/tmp` containing:
+thesis-writing/thesis/chapters/12_conclusions_future_work.tex
 
-- issue;
-- early-stop report section;
-- subagent confirmation;
-- accepted action;
-- rejected action;
-- affected file;
-- estimated page saving;
-- citation saving;
-- scientific risk.
+The current build creates a nearly blank page containing only the end of `outcomes.`
 
-Do not redo the six earlier reports.
+Reflow or narrowly shorten that paragraph so the word and sentence remain together without changing the scientific meaning or evidence boundaries.
 
-Resolve disagreements between the current source, early-stop report, and two new subagents before editing.
+TASK 2 — READABLE DAGS
 
-MANDATORY TERMINOLOGY CORRECTION
+The two DAGs in Chapter 7 remain unreadable because labels collide and are too small.
 
-The early-stop report contains a contradictory wording error.
-
-The phrase:
-
-`source-observed mechanisms`
-
-must not be retained or introduced.
-
-The actual required repair is to replace it with language that distinguishes source-recorded information from researcher-defined representation.
-
-Use context-appropriate wording such as:
-
-- source-observed measurements;
-- measurement availability and missingness patterns;
-- care-process traces;
-- covariates and outcomes;
-- empirical record structure.
-
-Representation-defined elements must remain distinct:
-
-- cohort restrictions;
-- proxy definitions;
-- proxy prevalence;
-- temporal cutoffs;
-- aggregation;
-- empirical support after representation construction;
-- DAGs and adjustment assumptions.
-
-Do not describe representation-induced cohort, proxy prevalence, or support as directly source-observed.
-
-Also verify and record:
+You are explicitly authorized to regenerate or replace the two thesis DAG figure files and edit their Chapter 7 LaTeX placement.
 
-- Chapter 1 contains zero occurrences of `MIMIC-IV`;
-- `five analytical tasks` is renamed where it could be confused with the five SRQs.
+Requirements:
 
-SCIENTIFIC FREEZE
+- preserve exactly the existing nodes and directed edges;
+- do not change the scientific graph content;
+- use the active graph source as authority;
+- make every label comfortably readable in the final PDF;
+- prefer clean vector or high-resolution output;
+- use landscape pages;
+- split a DAG into an overview plus readable detail panels only if one-page rendering cannot be made legible;
+- preserve clear captions stating that the graphs are project-specified, not learned or clinically validated;
+- do not edit pipeline code or graph definitions.
 
-Preserve all established scientific facts and limitations, including:
+Likely files:
 
-- MIMIC: 26,845 original causal-analysis records;
-- PhysioNet: 7,993;
-- 9 and 10 analyzed exposures;
-- four predictive models;
-- one rule-derived plus four predicted aggregation inputs;
-- STraTS leading MIMIC archived prediction metrics;
-- GRU-D leading PhysioNet;
-- CausalForestDML primary;
-- LinearDML secondary;
-- CausalPFN exploratory;
-- 19/19 Forest–Linear sign agreement;
-- 18/19 all-three sign agreement;
-- PhysioNet shock exception;
-- Step 4 rank, RMSE, and cross-resource statistics;
-- Step 4 permutation counts;
-- `|z|>2` as a heuristic disruption threshold, not a p-value;
-- no pooling;
-- all proxy thresholds;
-- all DAG content;
-- all adjustment sets;
-- matching and sampling definitions;
-- withheld PhysioNet mortality AUROC;
-- no unified omitted-variable-sensitivity number;
-- no clinical validation;
-- no causal answer key;
-- no treatment recommendation.
+thesis-writing/thesis/chapters/07_causal_methodology.tex
+thesis-writing/thesis/figures/physionet_causal_dag.*
+thesis-writing/thesis/figures/mimic_causal_dag.*
 
-Do not change an admitted result to save words, pages, or citations.
+Do not modify paper or supplement files.
 
-FIRST EDITING PASS
+VALIDATION
 
-Perform one coordinated high-confidence pass.
+After the repairs:
 
-The pass should implement:
+1. Build from a clean temporary directory using:
 
-1. Scientific terminology repairs.
+xelatex -interaction=nonstopmode -halt-on-error main.tex
+biber main
+xelatex -interaction=nonstopmode -halt-on-error main.tex
+xelatex -interaction=nonstopmode -halt-on-error main.tex
 
-2. CausalPFN primary citation:
-   - cite `balazadeh2025causalpfn`;
-   - preserve its exploratory status;
-   - explicitly retain unresolved implementation/version/checkpoint lineage.
+2. Verify:
+   - no undefined citations or references;
+   - no missing figures or glyphs;
+   - no duplicate labels;
+   - no severe overfull boxes;
+   - qpdf passes;
+   - all pages are A4;
+   - every DAG label is readable;
+   - no nearly blank Conclusion page remains;
+   - frozen numerical and scientific content did not change.
 
-3. Citation consolidation:
-   - target the reviewed 38-key set;
-   - inspect every occurrence before removal;
-   - remove or narrow dependent prose;
-   - remove external numbers together with their direct citations;
-   - remove uncited raw bibliography entries;
-   - clean publication-irrelevant acquisition/download `note` fields where this does not remove scientific metadata;
-   - retain DOI, venue, authors, title, and year;
-   - do not add outside literature.
+3. Render and visually inspect every page containing:
+   - either DAG;
+   - the Conclusion;
+   - adjacent pages affected by reflow.
 
-4. Compression:
-   - compress repeated Introduction, Background, Discussion, Results-synthesis, robustness, and Conclusion material;
-   - keep the canonical full explanation at the strongest location;
-   - use concise cross-references later;
-   - preserve all unique methods, results, assumptions, and limitations.
-
-5. Structural page repairs:
-   - shorten list-of-figures/list-of-tables captions where full long captions create spill pages, without weakening the captions printed beside figures/tables;
-   - repair the Chapter 3 and Chapter 6 orphan tails;
-   - repair the Appendix spill;
-   - place the Results direction figure normally when this removes an isolated float page without harming readability;
-   - preserve all three Results figures;
-   - preserve all required front and back matter.
-
-6. DAG readability:
-   - retain both DAGs;
-   - use landscape placement at readable width when verified to improve legibility;
-   - do not shrink them further;
-   - update references and list entries correctly.
-
-7. Hebrew repairs:
-   - implement only high-confidence linguistic and RTL changes;
-   - preserve exact scientific equivalence;
-   - do not claim native-speaker approval;
-   - leave institutional wording unresolved when authority is absent.
-
-8. Local layout repairs:
-   - repair overfull boxes using wording, column widths, safe line breaks, or local table design;
-   - do not change margins, base font, global line spacing, or paper size;
-   - do not use negative spacing tricks.
-
-CITATION TARGET
-
-Preferred final emitted count:
-
-38
-
-Acceptable range:
-
-32–40
-
-The report’s candidate removals are not automatic.
-
-For every removed key, document:
-
-- all former locations;
-- claim or number removed/narrowed;
-- retained replacement source;
-- why scientific support is unchanged.
-
-Retain at minimum:
-
-- MIMIC and PhysioNet primaries;
-- STraTS, GRU, GRU-D, and TCN primaries;
-- DML authority;
-- causal-forest authority;
-- EconML authority where implementation-specific;
-- DAG/backdoor authority;
-- target-trial/intervention authority where used;
-- overlap authority;
-- omitted-variable-sensitivity authority;
-- minimum bounded LLM/proxy authorities;
-- minimum benchmark-spectrum sources;
-- one direct citation for every retained external clinical number;
-- primary CausalPFN citation.
-
-Do not reduce citations through smaller bibliography typography.
-
-Do not remove only discrepant clinical evidence.
-
-FIRST BUILD
-
-Build after the coordinated edit using a clean temporary directory.
-
-Run from:
-
-thesis-writing/thesis
-
-Use:
-
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<PASS1_DIR> main.tex
-biber --input-directory=<PASS1_DIR> --output-directory=<PASS1_DIR> main
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<PASS1_DIR> main.tex
-xelatex -interaction=nonstopmode -halt-on-error -output-directory=<PASS1_DIR> main.tex
-
-Record:
-
-- page count;
-- component page budget;
-- emitted cited-key count;
-- citation-command count;
-- bibliography pages;
-- undefined citations/references;
-- warnings;
-- qpdf result;
-- font result.
-
-SECOND PASS
-
-Perform one additional pass only when:
-
-- the PDF remains above 108 pages and safe approved candidates remain; or
-- the bibliography remains above 40 entries without necessity; or
-- a verified layout defect remains.
-
-Use only candidates already approved in the continuation matrix.
-
-Do not perform more than two editing passes.
-
-Do not sacrifice quality to reach exactly 100 pages.
-
-When the final PDF remains above 108 pages, document why each remaining reduction candidate was rejected.
-
-FROZEN-CONTENT VERIFICATION
-
-Compare pre-edit and final source.
-
-Verify that no unintended change occurred to:
-
-- numerical tables;
-- formulas;
-- thresholds;
-- DAG scientific content;
-- adjustment sets;
-- estimator hierarchy;
-- model names;
-- clinical numbers that were intended to remain;
-- abstracts;
-- conclusions;
-- appendices;
-- labels;
-- cross-references;
-- figure bytes.
-
-Every removed external clinical number must correspond exactly to the removed direct citation described in the approved plan.
-
-Unexpected numerical drift is blocking.
-
-FINAL BUILD
-
-Build in a new clean temporary directory using the explicit XeLaTeX/Biber sequence.
-
-Required:
-
-- XeLaTeX success;
-- Biber success;
-- qpdf success;
-- no undefined citation;
-- no undefined reference;
-- no duplicate label;
-- no missing figure;
-- no missing glyph;
-- no unresolved rerun warning;
-- no Type 3 font;
-- A4 pages;
-- no new severe overfull or underfull defect;
-- final page count;
-- final cited-key count;
-- bibliography page count;
-- PDF SHA-256;
-- extracted-text SHA-256.
-
-FINAL VISUAL REVIEW
-
-Render every final page at 200 dpi.
-
-Inspect every page.
-
-Pay particular attention to:
-
-- title pages;
-- both abstracts;
-- keywords;
-- RTL heading changes;
-- ToC;
-- LoF;
-- LoT;
-- pipeline figure;
-- shock figure;
-- both landscape DAGs;
-- all longtables;
-- all Results figures;
-- clinical-comparison table;
-- compressed chapter boundaries;
-- Appendix;
-- bibliography;
-- Hebrew cover.
-
-Check:
-
-- clipping;
-- unreadable text;
-- float isolation;
-- continuation headers;
-- orphan headings;
-- widows;
-- blank or nearly blank pages;
-- caption placement;
-- page numbering;
-- list entries;
-- citation rendering;
-- DOI wrapping;
-- Hebrew/English ordering.
-
-TWO-SUBAGENT FINAL CROSS-VERIFICATION
-
-Reuse the same two subagents. Do not create additional agents.
-
-Cross the responsibilities to reduce confirmation bias:
-
-SUBAGENT 1 FINAL CHECK
-
-Previously focused on citations/science. It now verifies:
-
-- final PDF and layout;
-- page budget;
-- figure and table readability;
-- DAG readability;
-- all-page visual defects;
-- Hebrew rendering;
-- final tracked-PDF readiness.
-
-SUBAGENT 2 FINAL CHECK
-
-Previously focused on compression/layout/Hebrew. It now verifies:
-
-- final scientific diff;
-- numerical freeze;
-- citation support;
-- 38-key or other final bibliography;
-- clinical-comparison balance;
-- CausalPFN citation;
-- no causal overstatement;
-- no lost limitation;
-- withheld numerical gates.
-
-If reusing subagents is technically unavailable, the lead performs these two cross-checks as separate explicit verification passes. Do not spawn replacement agents beyond the two-subagent limit.
-
-Resolve every blocker before acceptance.
-
-TRACKED PDF
-
-Only after all gates pass:
-
-copy the validated final PDF to:
+4. Copy the validated PDF to:
 
 thesis-writing/thesis/main.pdf
 
-Verify byte identity between:
+Verify it is byte-identical to the validated build.
 
-- validated temporary final PDF;
-- tracked `main.pdf`.
-
-Do not copy auxiliary build files.
-
-FINAL REPORT
-
-Update:
+5. Update:
 
 thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md
 
-Transform it from an early-stop report into the complete final Step 5 report.
+Record the repairs, final page count, PDF hash, visual checks, and final readiness.
 
-Preserve a concise record that:
-
-- Part 1 stopped after audit and planning;
-- continuation began from commit `3666b39...`;
-- no active thesis source had changed before continuation.
-
-Replace incomplete “not produced” fields with actual final values.
-
-The final report must include:
-
-1. continuation baseline and hashes;
-2. two-subagent execution;
-3. accepted/rejected findings;
-4. scientific terminology repairs;
-5. Chapter 2 correction;
-6. exact `MIMIC-IV` search result;
-7. numerical freeze verification;
-8. page reductions by component;
-9. final page count;
-10. baseline 55 versus final cited-key count;
-11. every removed citation and rationale;
-12. every removed clinical number/source pair;
-13. retained citation roles;
-14. CausalPFN primary citation;
-15. Hebrew repairs and remaining human review;
-16. bibliography cleanup;
-17. build commands and results;
-18. all-page visual review;
-19. cross-verifier findings;
-20. tracked-PDF equality;
-21. protected-file checks;
-22. Git status;
-23. human actions before submission;
-24. final readiness.
-
-Do not delete the historical fact that Part 1 ended early.
-
-PROTECTION AND GIT VALIDATION
-
-Recompute protected hashes and the complete `paper-aaai` manifest.
-
-Verify unchanged:
-
-- paper;
-- paper source;
-- supplement;
-- paper tree;
-- Step 4 derived statistics;
-- checked evidence;
-- result files;
-- figure bytes.
-
-Run:
-
-git diff --check
-git diff --stat
-git diff --name-only
-git status --short
-git diff --cached --name-only
-
-Inspect the complete task diff.
-
-Confirm:
-
-- no unexpected files changed;
-- user-owned changes were preserved;
-- nothing staged;
-- nothing committed;
-- nothing pushed.
-
-READINESS
-
-End the updated report with exactly one of:
+End the report with exactly:
 
 READY FOR AUTHOR–SUPERVISOR REVIEW
 
-or:
+or, if either visual defect remains:
 
 BLOCKED BEFORE AUTHOR REVIEW
-
-Do not state:
-
-READY FOR SUBMISSION
-
-Block readiness if:
-
-- the thesis does not build;
-- a citation or reference is unresolved;
-- a protected source changed;
-- a frozen result drifted;
-- estimator hierarchy changed;
-- datasets were pooled;
-- PhysioNet mortality AUROC was inserted;
-- a unified omitted-variable number was inserted;
-- PhysioNet shock was hidden or softened;
-- English and Hebrew abstracts differ scientifically;
-- a table or figure became unreadable;
-- a retained clinical number lacks its direct citation;
-- citation pruning became selectively favorable;
-- CausalPFN remains without its primary citation;
-- more than 40 emitted entries remain without an entry-by-entry quality justification;
-- tracked `main.pdf` differs from the validated build;
-- either final cross-verification pass reports an unresolved blocker;
-- an unexpected repository file changed.
-
-The page-count target alone is not a blocker when further reduction would harm quality.
-
-STOP CONDITION
-
-Stop after:
-
-- continuation sanity checks;
-- two focused subagent confirmations;
-- lead synthesis;
-- one high-confidence editing pass;
-- at most one additional safe pass;
-- citation validation;
-- frozen-content verification;
-- clean final build;
-- complete all-page visual review;
-- two crossed final verification passes;
-- tracked `main.pdf` replacement;
-- final update of the existing Step 5 report;
-- protection and Git checks.
 
 Do not stage, commit, or push.
