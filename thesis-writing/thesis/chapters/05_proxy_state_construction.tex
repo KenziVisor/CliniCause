@@ -12,7 +12,7 @@ The chapter retains the scientific meaning of each proxy family and the active a
 
 Electronic phenotyping uses structured measurements, codes, and rules to construct analytical variables when direct adjudication is unavailable \cite{banda_2018_electronic_phenotyping}.  Here a \emph{proxy state} or \emph{proxy phenotype} is a binary construct summarizing available evidence for a clinically meaningful condition or physiologic pattern.  A \emph{rule-derived proxy label} is assigned by deterministic source rules; a \emph{predicted proxy label} is a supervised model estimate of that rule-derived label; and an \emph{aggregated predicted proxy-label representation} is the deterministic mixed-source vote used downstream.  A binary proxy-state tag is the realized 0/1 value for one \texttt{ts\_id} and proxy-state column.
 
-Repository names such as \texttt{latent}, \texttt{latent tag}, and \texttt{LAT\_*} remain stable implementation vocabulary, but they do not show that a hidden biological state was discovered.  The proxy layer converts selected designs into source-coded constructs, supplies multi-label prediction targets, and provides a common schema for aggregation, mortality analysis, matching, and CATE estimation.  No chart-adjudicated gold standard was found; missing measurements can prevent clauses from firing; thresholds approximate rather than reproduce complete clinical definitions; and dataset-specific states are not automatically construct-equivalent.  This project also does not implement the Snorkel generative label model \cite{ratner_et_al_2020_snorkel}.
+Repository names such as \texttt{latent}, \texttt{latent tag}, and \texttt{LAT\_*} remain stable implementation vocabulary, but they do not show that a hidden biological state was discovered.  The proxy layer converts selected designs into source-coded constructs, supplies multi-label prediction targets, and provides a common schema for aggregation, mortality analysis, matching, and CATE estimation.  No chart-adjudicated gold standard was found; missing measurements can prevent clauses from firing; thresholds approximate rather than reproduce complete clinical definitions; and dataset-specific states are not automatically construct-equivalent.  The later aggregate is a fixed vote, not a learned source-quality model.
 
 \subsection{LLM-Assisted Design of Proxy States, Rules, and DAGs}
 \label{subsec:clinical-proxy-state-construction:llm-assisted-elicitation}
@@ -21,21 +21,21 @@ The structured elicitation protocol requested a dataset audit, proxy-state ontol
 
 The outputs were proposals subsequently selected and encoded by the project, not clinical validation or executable authority.  The LLM did not inspect patient records at runtime, generate final labels, aggregate voters, select adjustment variables dynamically, or estimate effects.  Active tagger and graph source defines implemented behavior; prompts document design provenance.  Deterministic code then evaluates the encoded clauses against the available observations for each patient-level record.  The final outputs align at schema level with the eleven active PhysioNet states and ten active MIMIC states, but complete accepted/rejected decisions and line-level prompt-output-to-code correspondence have not been established.
 
-The full prompt inventory, version comparison, hashes, execution-metadata boundary, and prompt-to-source assessment are retained in \nolinkurl{thesis-writing/audit/llm_prompt_provenance_audit.md}.  Exact implemented proxy clauses and their citation status are retained in the active taggers and \nolinkurl{thesis-writing/logs/stage_4_9B_proxy_rule_citation_matrix.csv}.  These repository records form the technical evidence package; the main text below summarizes the constructs and behaviors needed to understand the method.
+The LLM prompt-provenance audit retains the prompt inventory, version comparison, hashes, execution-metadata boundary, and prompt-to-source assessment.  The active taggers and Step 4 proxy-rule citation matrix retain exact clauses and citation status.  These repository records form the technical evidence package; the main text below summarizes the constructs and behaviors needed to understand the method.
 
 Figure~\ref{fig:clinicause-shock-proxy-example} illustrates this design-to-instantiation distinction for the MIMIC-III shock rule.  Its observed-evidence clauses correspond to the active operational definition in Table~\ref{tab:mimic-proxy-definitions}; the figure does not define an additional rule.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{clinicause_shock_proxy_example.png}
-  \caption{Illustrative deterministic instantiation of the project-selected MIMIC-III shock proxy.  Observed-evidence clauses feed the encoded rule, and the patient-level label is derived from the available observations.  A non-firing clause can reflect absent qualifying evidence; proxy value zero therefore does not prove absence of clinical shock.  The figure illustrates the representation contract rather than validating the clinical construct.}
+  \caption[Deterministic instantiation of the MIMIC-III shock proxy.]{Illustrative deterministic instantiation of the project-selected MIMIC-III shock proxy.  Observed-evidence clauses feed the encoded rule, and the patient-level label is derived from the available observations.  A non-firing clause can reflect absent qualifying evidence; proxy value zero therefore does not prove absence of clinical shock.  The figure illustrates the representation contract rather than validating the clinical construct.}
   \label{fig:clinicause-shock-proxy-example}
 \end{figure}
 
 \section{PhysioNet Proxy-State Rules}
 \label{sec:clinical-proxy-state-construction:physionet-proxy-state-rules}
 
-The active PhysioNet tagger pivots the long event table by \texttt{ts\_id} and minute, computes per-record minima, maxima, means, first values, and last values, and applies one decision function per proxy column.  Its eleven-state ontology comprises chronic baseline risk, global severity, shock, respiratory failure, renal dysfunction, hepatic dysfunction, coagulation/hematologic dysfunction, inflammation/sepsis burden, neurologic dysfunction, cardiac injury/strain, and metabolic derangement.  The archived rule-derived CSV matches this schema and contains binary tags without duplicate normalized identifiers in the validated artifact; producing-command, input-hash, source-version, and threshold-mode provenance remain incomplete.
+The active PhysioNet tagger pivots the long event table by \texttt{ts\_id} and minute, computes per-record summaries, and applies one decision function per proxy column.  Its eleven-state ontology comprises chronic baseline risk, global severity, shock, respiratory failure, renal dysfunction, hepatic dysfunction, coagulation/hematologic dysfunction, inflammation/sepsis burden, neurologic dysfunction, cardiac injury/strain, and metabolic derangement.  The archived rule-derived CSV matches this schema and contains binary tags without duplicate normalized identifiers.  The producing command, input hash, source version, and threshold-mode provenance remain incomplete.
 
 Numeric comparisons contribute positive evidence only when a non-missing value exists, so missing measurements are not treated as normal or abnormal.  The active summarizer does not impose new time windows beyond the processed record.  Urine clauses require a compatible precomputed urine summary, and oxygenation uses an available PaO2/FiO2 summary or an approximation from component summaries.  Default source thresholds can be replaced by an explicit optimized-threshold file, but the archive does not establish that this option produced the final CSV.
 
@@ -46,7 +46,7 @@ Numeric comparisons contribute positive evidence only when a non-missing value e
 \sloppy
 \setlength{\tabcolsep}{3pt}
 \begin{longtable}{@{}L{0.19\linewidth}L{0.29\linewidth}L{0.32\linewidth}L{0.14\linewidth}@{}}
-\caption{Operational PhysioNet 2012 rule-derived proxy-state definitions.  Thresholds are active source defaults; the archive does not establish use of the optional optimized-threshold mode.}
+\caption[PhysioNet 2012 rule-derived proxy-state definitions.]{Operational PhysioNet 2012 rule-derived proxy-state definitions.  Thresholds are active source defaults; the archive does not establish use of the optional optimized-threshold mode.}
 \label{tab:physionet-proxy-definitions}\\
 \toprule
 Proxy state and construct & Operational evidence & Decision form & Principal boundary \\
@@ -73,7 +73,7 @@ Proxy state and construct & Operational evidence & Decision form & Principal bou
 \endgroup
 \end{landscape}
 
-The rules combine clinically recognizable evidence domains with project-specific Boolean or score thresholds.  Global severity aggregates several organ domains; shock combines hypotension, perfusion, urine, and acid-base evidence; respiratory failure combines oxygenation, ventilation, and respiratory-rate evidence; renal dysfunction combines creatinine, BUN, urine, electrolyte, and acid-base evidence; and the remaining families combine their named physiologic domains.  Table~\ref{tab:physionet-proxy-definitions} states the active operational definitions.  Sepsis-3, SOFA, KDIGO, ISTH DIC, ARDS, and respiratory-phenotyping sources provide limited conceptual grounding \cite{singer_2016_sepsis3,vincent_et_al_1996_sofa,kdigo_2012_acute_kidney_injury,taylor_et_al_2001_isth_dic,ranieri_et_al_2012_berlin_ards,essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping}.  The implementation is not a complete reproduction of those formal definitions, and the chronic, hepatic, cardiac, and metabolic clauses remain partly project specific.
+The rules combine clinically recognizable evidence domains with project-specific Boolean or score thresholds.  Global severity aggregates organ domains; shock combines hypotension, perfusion, urine, and acid-base evidence; and the remaining families combine their named physiologic domains.  Table~\ref{tab:physionet-proxy-definitions} states the active definitions.  Sepsis-3, KDIGO, ISTH DIC, and Berlin ARDS sources provide limited conceptual grounding \cite{singer_2016_sepsis3,kdigo_2012_acute_kidney_injury,taylor_et_al_2001_isth_dic,ranieri_et_al_2012_berlin_ards}.  The implementation does not reproduce those formal definitions, and several clauses remain project specific.
 
 \section{MIMIC Proxy-State Rules and Validation Artifacts}
 \label{sec:clinical-proxy-state-construction:mimic-proxy-state-rules-validation-artifacts}
@@ -91,7 +91,7 @@ MIMIC rules use the same broad score-or-sufficient-condition structure while exp
 \sloppy
 \setlength{\tabcolsep}{3pt}
 \begin{longtable}{@{}L{0.19\linewidth}L{0.29\linewidth}L{0.32\linewidth}L{0.14\linewidth}@{}}
-\caption{Operational MIMIC-III rule-derived proxy-state definitions.  Available evidence depends on summary-CSV, canonical-pickle, or raw-concept input mode.}
+\caption[MIMIC-III rule-derived proxy-state definitions.]{Operational MIMIC-III rule-derived proxy-state definitions.  Available evidence depends on summary-CSV, canonical-pickle, or raw-concept input mode.}
 \label{tab:mimic-proxy-definitions}\\
 \toprule
 Proxy state and construct & Operational evidence & Decision form & Principal boundary \\

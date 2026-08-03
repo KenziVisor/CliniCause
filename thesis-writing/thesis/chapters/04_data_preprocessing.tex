@@ -3,7 +3,7 @@
 
 Preprocessing instantiates the source-specific data contract for each CliniCause resource.  It does not generate synthetic patients or mortality outcomes: it selects, normalizes, aligns, summarizes, masks, imputes, or transforms source-observed measurements and outcomes according to the implemented pipeline.  These operations distinguish source-observed events from extraction choices, cohort restrictions, preprocessing transformations, analysis-ready representations, and the downstream derived labels introduced in Chapter~\ref{chap:clinical-proxy-state-construction}.
 
-The contract is scientifically consequential because it determines which records enter, which measurements are available, how time and absence are represented, which identifiers survive, and which later proxy and causal-analysis objects can be instantiated.  MIMIC-III and PhysioNet 2012 remain separate resources throughout.  Their source-observed measurement, missingness, care-process, and support patterns pass through different extraction and transformation paths, so cross-dataset heterogeneity is a defining feature of the two observational testbeds rather than a preprocessing defect.  Nothing in this chapter authorizes pooling their records or treating similarly named fields as equivalent.
+The contract is scientifically consequential because it determines which records enter, which measurements are available, how time and absence are represented, which identifiers survive, and which later proxy and causal-analysis objects can be instantiated.  MIMIC-III and PhysioNet 2012 remain separate resources throughout.  Their source-recorded measurements, availability and missingness patterns, and care-process traces pass through different extraction and transformation paths; empirical support is assessed only after cohort and representation construction.  This heterogeneity defines the two observational testbeds and does not authorize pooling or treating similarly named fields as equivalent.
 
 \section{PhysioNet 2012 Pipeline}
 \label{sec:data-preprocessing:physionet-2012-pipeline}
@@ -45,7 +45,7 @@ The parent router can bridge contracts by reading a causal \texttt{[ts, oc, ts\_
 
 \begin{table}[htbp]
 \centering
-\caption{Processed artifact contracts used by the causal and STraTS repositories.}
+\caption[Processed artifact contracts.]{Processed artifact contracts used by the causal and STraTS repositories.}
 \label{tab:data-contracts}
 \small
 \begin{tabular}{L{0.20\textwidth}L{0.31\textwidth}L{0.39\textwidth}}

@@ -38,22 +38,6 @@ The causal design crosses two datasets, three estimators, and two sampling condi
 
 Every final run uses a deterministic five-source aggregate: one rule-derived table plus thresholded predictions from STraTS, GRU, GRU-D, and TCN.  The runtime order is graph construction, mixed-source aggregation, mortality prediction, matching, CATE estimation, saved-CATE analysis, and permutations.  CausalPFN completes CATE estimation but its EconML-specific saved-analysis and permutation stages are intentionally skipped, not failed.  Within each run, all prespecified dataset-specific non-chronic proxy exposures are evaluated subject to column, graph-node, binary-value, adjustment, support, and artifact checks; the exposure list is a design commitment rather than a set of causal conclusions.
 
-\begin{table}[htbp]
-\centering
-\caption{Experiment families, populations, and evidential roles.}
-\label{tab:experiment-family-summary}
-\small
-\begin{tabular}{@{}L{0.20\textwidth}L{0.24\textwidth}L{0.25\textwidth}L{0.22\textwidth}@{}}
-\toprule
-Family & Design & Primary output & Evidential role \\
-\midrule
-Prediction & Two datasets $\times$ four learned models & Test metrics and binary/probability exports & Comparison of rule-label learnability; not clinical validation \\
-Causal, original & Two datasets $\times$ three estimators & Matching and model-estimated CATE summaries & Primary forest, secondary linear, exploratory PFN analyses \\
-Causal, downsampled & Same datasets and estimators after outcome-class sampling & Separate matching and CATE summaries & Robustness population only; no pooling or automatic common estimand \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \section{Executed Settings and Provenance Status}
 \label{sec:experimental-design:executed-settings-provenance}
 
@@ -65,7 +49,7 @@ Table~\ref{tab:executed-settings-provenance} separates what the checked archive 
 \sloppy
 \setlength{\tabcolsep}{3pt}
 \begin{longtable}{@{}L{0.19\textwidth}L{0.42\textwidth}L{0.30\textwidth}@{}}
-\caption{Compact specification of executed or execution-supported settings and unresolved lineage.}
+\caption[Executed settings and unresolved lineage.]{Compact specification of executed or execution-supported settings and unresolved lineage.}
 \label{tab:executed-settings-provenance}\\
 \toprule
 Analysis component & Confirmed or execution-supported settings & Unresolved provenance or interpretation boundary \\
@@ -99,7 +83,7 @@ Dedicated propensity distributions, common-support plots, pre/post-match balance
 \section{Permutation or Disruption Checks}
 \label{sec:robustness-sensitivity-validation-design:permutation-checks-reproducibility-validation}
 
-Permutation checks disrupt one relationship while retaining the remaining run structure.  Treatment permutations shuffle only the currently analyzed proxy column; outcome permutations shuffle only the mortality column in a copied outcome object.  The other proxy columns, time-series data, identifiers, graph, configuration, estimator family, and aggregation fields remain fixed as appropriate.  Subprocess and schema failures are recorded rather than silently aggregated, and temporary trial artifacts are removed after summary extraction.  The validated DML records contain ten trials with seed 42 for each dataset--exposure--sampling combination.  These are negative-control-like sanity checks, not formal randomization tests, p-values, proof of calibration, or evidence that the DAG and exposure are valid \cite{sharma_kiciman_2020_dowhy}.  CausalPFN permutations are intentionally absent.
+Permutation checks disrupt one relationship while retaining the remaining run structure.  Treatment permutations shuffle only the currently analyzed proxy column; outcome permutations shuffle only mortality in a copied outcome object.  Other proxy columns, time-series data, identifiers, graph, configuration, estimator family, and aggregation fields remain fixed as appropriate.  Failures are recorded, temporary trial artifacts are removed after summary extraction, and the validated DML records contain ten trials with seed 42 for each dataset--exposure--sampling combination.  These implemented disruption checks are sanity diagnostics, not formal randomization tests, p-values, calibration proof, or evidence that the DAG and exposure are valid.  CausalPFN permutations are intentionally absent.
 
 A response to disrupted exposure or outcome labels tests whether the fitted pipeline distinguishes the observed structure from deliberately broken structure under the implemented procedure.  Even a clear response is a sanity check on pipeline behavior, not causal validation or proof that the original estimate is correctly identified.
 
@@ -124,6 +108,4 @@ The result manifest and compact reproducibility package record available paths, 
 
 \section{Synthesis of the Non-Equivalent Axes}
 
-Each axis asks a different question and supplies a bounded form of evidence.  Construct plausibility asks whether a representation and rationale are inspectable, but cannot establish clinical construct validity.  Proxy recoverability asks whether rule-derived labels are learnable, but cannot establish diagnostic or causal correctness.  Mortality prediction asks whether the representation contains prognostic information, but cannot establish causal relevance.  Cross-estimator sign, rank, and magnitude stability asks whether a pattern depends on one fitted estimator, but cannot establish accuracy, common estimands, or truth.  Clinical-literature comparison asks whether patterns are broadly compatible with heterogeneous external studies, but cannot provide a meta-analysis, external proxy validation, or calibration against causal truth.
-
-Matching and empirical-support diagnostics ask whether usable comparisons are available under the implemented representation, but cannot prove positivity, balance, exchangeability, or identification.  Permutation or disruption checks ask whether deliberately broken labels or outcomes change fitted behavior, but cannot validate the original causal analysis.  Omitted-variable sensitivity asks how conclusions respond to a specified confounding model, but cannot reveal the actual confounding strength or validate the DAG.  Population perturbation asks whether findings depend on the original-versus-downsampled population, but cannot establish external validity or remove selection bias.  Provenance and evidence admission ask which artifacts and claims are traceable, but cannot establish clinical meaning or causal correctness.  Together these axes characterize complementary strengths, discrepancies, and failure modes without producing an evaluation score or a causal answer key.
+The axes remain non-equivalent: plausibility, recoverability, prognostic information, estimator stability, clinical comparison, support, disruption, sensitivity, population perturbation, and provenance each diagnose a bounded aspect of the resource.  As established above, none supplies clinical validation, identification, estimator accuracy, a common estimand, or a causal answer key; Chapter~\ref{chap:results} reports their converging and discrepant findings without combining them into a score.

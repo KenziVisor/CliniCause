@@ -11,19 +11,21 @@ This separation is important because the main exposure variables in the causal s
 
 The LLM has no estimator-time role in this chapter's workflow.  It is not called to inspect patient records, orient edges dynamically, select adjustment variables, or choose estimators during execution.  The active graph scripts define the implemented nodes and edges, and the matching and CATE source code determines the implemented adjustment workflow from those encoded graphs and the columns available in each analysis dataframe.
 
+\begin{landscape}
 \begin{figure}[p]
 \centering
-\includegraphics[width=0.95\textwidth]{physionet_causal_dag.png}
-\caption{Project-specified PhysioNet 2012 DAG used by the causal pipeline.  The active graph source reproduces the archived artifact; arrows encode assumed rather than learned or clinically validated relationships.}
+\includegraphics[width=0.98\linewidth,height=0.78\textwidth,keepaspectratio]{physionet_causal_dag.png}
+\caption[Project-specified PhysioNet 2012 DAG.]{Project-specified PhysioNet 2012 DAG encoded by the active causal-pipeline graph source; arrows are assumed, not learned or clinically validated.}
 \label{fig:physionet-causal-dag}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=0.95\textwidth]{mimic_causal_dag.png}
-\caption{Project-specified MIMIC-III DAG used by the causal pipeline.  The active graph source reproduces the archived artifact; arrows encode assumed rather than learned or clinically validated relationships.}
+\includegraphics[width=0.98\linewidth,height=0.78\textwidth,keepaspectratio]{mimic_causal_dag.png}
+\caption[Project-specified MIMIC-III DAG.]{Project-specified MIMIC-III DAG encoded by the active causal-pipeline graph source; arrows are assumed, not learned or clinically validated.}
 \label{fig:mimic-causal-dag}
 \end{figure}
+\end{landscape}
 
 Both graphs distinguish background variables, proxy states, observed measurements, care processes, missingness or measurement-intensity processes, and the mortality outcome.  Only mapped background and eligible upstream proxy nodes can enter adjustment sets; measurement, care-process, missingness, and outcome nodes remain in the causal hypothesis but are excluded as adjustment candidates.  MIMIC includes richer administrative and care-process structure, whereas PhysioNet uses a smaller background and observation vocabulary.
 
@@ -57,7 +59,7 @@ where \(\mathcal{A}_{\mathrm{allowed}}\) is the set of available graph nodes who
 The preferred helper is the safe expanded adjustment mode.  It removes encoded colliders and their descendants from the full candidate pool, then tests whether the remaining mapped variables block every encoded backdoor path.  If not, a deterministic greedy fallback removes sorted candidates only while path blocking is preserved.  The returned set is inclusion-minimal under that order, not necessarily unique.  The accompanying identifiability flag is therefore an availability diagnostic within the implemented graph, not proof of exchangeability in the clinical population.
 
 \begin{longtable}{@{}L{0.16\textwidth}L{0.25\textwidth}L{0.22\textwidth}L{0.27\textwidth}@{}}
-\caption{Causal assumptions required for interpreting the estimator outputs.}
+\caption[Causal assumptions and interpretation boundaries.]{Causal assumptions required for interpreting the estimator outputs.}
 \label{tab:causal-assumptions}\\
 \toprule
 assumption & methodological requirement & repository support & unresolved limitation \\
@@ -98,14 +100,14 @@ The matching estimator is a deterministic baseline.  For each proxy exposure, th
 
 and the matching summary reports the mean and standard deviation of these matched-pair differences, the number of matched pairs, the match rate, the final allowed Hamming distance, and the observed adjustment columns.  This output is useful as a transparent matched descriptive contrast.  It should not be labeled as an average treatment effect unless the estimand, graph assumptions, overlap, and matching design are later approved for that interpretation.
 
-For model-based heterogeneous effects, the pipeline includes EconML double-machine-learning estimators and an exploratory CausalPFN branch.  The prespecified hierarchy treats CausalForestDML as primary, LinearDML as the secondary comparator, and CausalPFN as exploratory.  Double machine learning estimates nuisance outcome and treatment models before estimating effects from residuals, reducing sensitivity to nuisance-model overfitting under appropriate assumptions \cite{chernozhukov2018dml,oprescu_et_al_2019_econml}.  The LinearDML branch uses random-forest nuisance models with a linear final effect model.  The CausalForestDML branch uses the same nuisance-model family and a causal-forest final stage, drawing on generalized random-forest and causal-forest ideas for heterogeneous treatment effects \cite{wager2018causalforest,athey2019grf}.  This choice is consistent with broader machine-learning work on individualized treatment effects in electronic health records and critical care, while still requiring domain-specific validation \cite{smit_2023_causal_inference_icu_scoping_review,bica_2021_individualized_treatment_effects_ehr_ml,lipkovich_2024_modern_hte_methods,curth_2024_ml_individualized_treatment_effects,iwashyna_2015_hte_critical_care}.
+For heterogeneous-effect modeling, the pipeline includes two EconML DML estimators and an exploratory CausalPFN branch.  CausalForestDML is primary, LinearDML the secondary comparator, and CausalPFN exploratory.  Double machine learning estimates nuisance outcome and treatment models before estimating residualized effects, reducing first-order sensitivity to nuisance-model error under appropriate assumptions \cite{chernozhukov2018dml,oprescu_et_al_2019_econml}.  LinearDML uses random-forest nuisance models with a linear final effect model; CausalForestDML uses the same nuisance family and a causal-forest final stage \cite{wager2018causalforest}.  CausalPFN is a prior-fitted transformer for amortized in-context causal-effect estimation \cite{balazadeh2025causalpfn}.  Its exact historical producing package version and checkpoint are unresolved, and it lacks DML-equivalent uncertainty, sensitivity, and permutation support.  ICU observational-design guidance remains relevant to all three estimators \cite{smit_2023_causal_inference_icu_scoping_review}.
 
 The CATE pipeline saves patient-level CATE values, normalized CATE values, optional 95 percent effect-interval columns when the estimator provides them, feature-importance or coefficient diagnostics when available, model artifacts, and run-level summaries.  In the current source, \(\texttt{mean\_cate}\) is the arithmetic mean of patient-level CATE estimates over the model rows.  It is an aggregate of the fitted model's conditional estimates and should not automatically be described as the study ATE.  The normalized CATE column is computed by dividing CATE by the sample outcome rate when that rate is positive.  It is an implementation-defined rescaling for comparison within this project; it is not a risk ratio, relative risk, or percent reduction.
 
 The effect-modifier matrix \(X\) is selected from configured effect-modifier columns, typically baseline variables plus chronic and inflammation/sepsis proxy states when present.  The adjustment matrix \(W\) is the observed confounder set selected from the DAG helper.  The implementation can allow overlap between \(X\) and \(W\), because configured effect modifiers are not automatically removed from the adjustment set.  This is a source-supported behavior and a remaining methodological limitation.
 
 \begin{longtable}{@{}L{0.18\textwidth}L{0.24\textwidth}L{0.24\textwidth}L{0.24\textwidth}@{}}
-\caption{Implemented causal estimators and interpretation limits.}
+\caption[Implemented causal estimators and interpretation limits.]{Implemented causal estimators and interpretation limits.}
 \label{tab:causal-estimator-methods}\\
 \toprule
 method & implementation summary & main outputs & interpretation boundary \\
@@ -118,7 +120,7 @@ method & implementation summary & main outputs & interpretation boundary \\
 Greedy Hamming matching & Binary adjustment matrix, median thresholding for non-binary covariates, median imputation, nearest available control within allowed Hamming distance, no default control reuse. & Matched pairs, pair effects, match rate, final distance, and per-treatment/global summaries. & Matched descriptive contrast; not automatically ATE or ATT. \\
 LinearDML & EconML \texttt{LinearDML} with random-forest nuisance outcome and treatment models, binary treatment handling, configured \(W\) and \(X\). & Patient-level CATE, optional intervals, coefficients when aligned, model artifact, global summaries. & Model-based heterogeneity estimate under project DAG, nuisance-model, overlap, and proxy-exposure assumptions. \\
 CausalForest\allowbreak DML & EconML \texttt{CausalForestDML} with random-forest nuisance models and a causal-forest final stage. & Patient-level CATE, optional intervals, feature importance, model artifact, global summaries. & Flexible heterogeneity estimate; feature importance is a model diagnostic, not mechanism proof. \\
-CausalPFN & Exploratory branch using deduplicated confounder and effect-modifier features.  It writes CATE CSVs and metadata but skips EconML-specific sensitivity and permutation stages. & Patient-level CATE and normalized CATE; interval columns are unavailable and stored as missing. & Exploratory only; its primary method source, implementation version, uncertainty, and comparable diagnostic support remain unresolved. \\
+CausalPFN & Exploratory branch using deduplicated confounder and effect-modifier features.  It writes CATE CSVs and metadata but skips EconML-specific sensitivity and permutation stages. & Patient-level CATE and normalized CATE; interval columns are unavailable and stored as missing. & Primary method source cited; exact producing package version/checkpoint, uncertainty, and comparable diagnostics remain unresolved. \\
 \bottomrule
 \end{longtable}
 

@@ -1,269 +1,419 @@
-# Testbed Story Alignment — Step 5 Independent Audit and Final Repair
+# Testbed Story Alignment — Step 5 Continuation Implementation and Final Audit
 
-This is an intentional early-stop report. On 2026-08-03, after the baseline audit and mandatory lead planning were complete but before thesis-source editing began, the user requested that Step 5 finish early with a report of what remains. Accordingly, this report records verified findings, completed planning, and every material unfinished gate. It does **not** claim that Step 5 repairs or final validation were completed.
+Status on 2026-08-03: the continuation implementation, two permitted editing passes, clean build, complete 200-dpi page review, and crossed final verification were completed. The resulting 104-page candidate passes the scientific, citation, numerical-freeze, build, protection, Hebrew-rendering, table, and non-DAG figure checks, but it is **not promoted for author review** because two visual defects remain. The tracked 120-page `main.pdf` was therefore deliberately left unchanged.
 
-## 1. Baseline
+Historical record: Part 1 of Step 5 intentionally stopped after the six-role baseline audit and lead planning, before any thesis-source edit, because the user asked for an early report of missing work. That fact is preserved here. This continuation began from the resulting commit and implemented the approved plan rather than repeating the six-role audit.
 
-- Expected HEAD: `eba841dbcb7fc63f89f903e6b94a5be0f46f0f65`.
-- Actual HEAD: `eba841dbcb7fc63f89f903e6b94a5be0f46f0f65` — pass.
+## 1. Continuation baseline and hashes
+
 - Branch: `main`.
-- Initial and pre-report worktree status contained six pre-existing user-owned modifications: `prompt.txt`, three clinical-evidence-supplement CSV files, and the two mortality-voter CSV files. They were not modified by Step 5.
-- The 22-file active-thesis-source baseline manifest and 65-file paper-tree baseline manifest both pass `sha256sum -c` at early stop.
-- Key protected hashes remain:
-  - tracked thesis PDF: `6f25ac51acdcc091518371dcf46d73b43d0e2e4634f3da19e9458ba133c88020`;
-  - root paper source: `db42adca64a66c08152fbc214a6c144857d547700cbc59b079bc5a44301839b6`;
-  - pipeline figure: `15369f2a83ecb9c2a2ba76fc0e1efddd33a6e7934ec0f282e7536ff020b0325a`;
-  - thesis shock figure: `b7d7b3b5f1c52506442d847c99795d4f195f144cf19a7c61478225c64469f295`;
-  - Step 4 derived statistics: `c2efb00f64d901fe1635221ee032155900b7f7ac369ecf0facb56358d88c7aea`.
-- A clean baseline was built at `/tmp/clinicause-step5-baseline.3bg3zw` using XeLaTeX, Biber, XeLaTeX, XeLaTeX. All four commands exited successfully.
-- Clean baseline PDF: 120 A4 pages; SHA-256 `d91a3bce7e7aee5a6701cfbc5b2d640dd3f12e851abd1f49ed9a012c5f776b70`.
-- The clean and tracked PDFs differ in metadata/font-subset bytes, but their extracted layout text and all 120 rendered 200-dpi pages are identical. Extracted-text SHA-256: `0424cc7bcc98bf60afc27543180f9d92e65efcd0f19716f59f944a48af445866`.
-- Baseline page budget: front matter 14; Chapters 1--11 respectively 8, 16, 5, 4, 9, 5, 11, 8, 16, 10, and 3; Appendix 4; bibliography 6; Hebrew cover 1.
-- Baseline citations: 55 unique emitted keys, 94 citation commands, 137 cited-key appearances, and 62 raw bibliography entries.
-- Baseline warnings: one expected `biblatex` Hebrew-localization warning; nine bounded overfull boxes, maximum 9.51868 pt; one visually harmless bibliography underfull box, badness 1019. There are no undefined citations/references or rerun warnings.
+- Continuation HEAD: `3666b39ba21cea53f77f446d028a56b2395bde64`.
+- HEAD subject: `edit thesis step 5 part 1`.
+- Previous scientific baseline: `eba841dbcb7fc63f89f903e6b94a5be0f46f0f65`.
+- The committed boundary from `eba841d...` to `3666b39...` contains only `prompt.txt` and this Step 5 report, exactly as expected.
+- Working-copy `prompt.txt` had materially changed and controlled the continuation. Its SHA-256 was and remains `75463ce8e8f0919febd3dc6534132c1460f62e20dbc07596ab48ac09a65967a1`.
+- No active thesis source, bibliography entry, thesis figure, or tracked thesis PDF had changed before continuation editing began.
+- Reused verified baseline: 120 A4 pages; 55 emitted cited keys; 94 citation commands; 137 cited-key appearances; 62 raw BibTeX entries; six bibliography pages.
+- Baseline tracked thesis PDF: `6f25ac51acdcc091518371dcf46d73b43d0e2e4634f3da19e9458ba133c88020`.
+- Step 4 derived-statistics file: `c2efb00f64d901fe1635221ee032155900b7f7ac369ecf0facb56358d88c7aea`.
+- The six pre-existing user-owned working changes were preserved: `prompt.txt`, three clinical-evidence CSV files, and two mortality-voter CSV files.
 
-## 2. Ultra and Subagent Execution
+## 2. Exactly two read-only subagents
 
-Six independent first-wave roles completed before any thesis-source edit:
+The continuation used exactly two subagents, neither of which edited the repository or spawned another agent.
 
-- A — scientific story, RQ/SRQ alignment, terminology, causal language: `/tmp/step5_wave1_A_science.md`.
-- B — numerical and evidence integrity: `/tmp/step5_wave1_B_numbers.md`.
-- C — redundancy and page budget: `/tmp/step5_wave1_C_redundancy.md`.
-- D — LaTeX/layout audit and individual inspection of all 120 baseline pages: `/tmp/step5_wave1_D_layout.md`.
-- E — Hebrew and administrative audit: `/tmp/step5_wave1_E_hebrew_admin.md`.
-- F — citation minimization, bibliography, and source authority: `/tmp/step5_wave1_F_citations.md`.
+1. Citation/science/numerical confirmation produced `/tmp/step5_continuation_subagent1.md`. It confirmed the conditional 38-key plan, the exact five clinical number/source co-deletions, the CausalPFN source boundary, the corrected evidence taxonomy, and all frozen numerical gates.
+2. Compression/layout/Hebrew confirmation produced `/tmp/step5_continuation_subagent2.md`. It confirmed the safe page reductions, caption/float/orphan/Appendix repairs, both-DAG retention, high-confidence Hebrew edits, and administrative deferrals.
 
-The roles ran in batches under the four-slot concurrency limit. After all six reports returned, the lead created the four required pre-edit documents:
+The same two agents were reused with crossed responsibilities after the final build:
 
-- `/tmp/step5_unified_issue_matrix.md`;
-- `/tmp/step5_chapter_page_budget.md`;
-- `/tmp/step5_citation_retention_matrix.md`;
-- `/tmp/step5_two_pass_compression_plan.md`.
+- the former citation/science reviewer performed the layout/artifact check in `/tmp/step5_final_cross1.md`;
+- the former layout/Hebrew reviewer performed the scientific/citation/freeze check in `/tmp/step5_final_cross2.md`.
 
-Lead resolutions included retaining all three Results figures despite a compression proposal, enlarging rather than compressing the DAGs, selecting the preferred 38-key bibliography rather than the 35-key minimum, and pruning clinical evidence only when its inseparable number/range would also be removed. A supplemental backup citation audit was stopped when the primary F report completed and then became unnecessary under the user's early-stop instruction.
+No replacement or additional subagent was used.
 
-No second-wave verifier was started. That entire wave remains missing. No unavailable utility affected the baseline: XeLaTeX, Biber, qpdf, PDF text/font inspection, and 200-dpi rendering were available.
+## 3. Lead synthesis, accepted findings, and rejected actions
 
-## 3. Independent Findings
+The lead created `/tmp/step5_continuation_matrix.md` before editing. It records issue, early-report section, subagent confirmation, accepted and rejected actions, affected files, estimated page/citation saving, and scientific risk.
 
-Blocking if left unresolved in a final author-review artifact:
+Accepted actions included:
 
-- CausalPFN is implemented but its primary key `balazadeh2025causalpfn` is not cited. The primary source is locally available; only exact producing implementation/version lineage remains unresolved.
-- Chapter 2 line 31 requires the mandated phrase `source-observed mechanisms` and the thesis more broadly must stop classifying representation-induced cohort, proxy prevalence, and support as source-observed.
-- Citation pruning, final build, all-page final rendering, three independent verifier audits, and equality between the validated build and tracked `main.pdf` were not performed.
+- correcting the source-recorded versus representation-defined taxonomy;
+- compressing repeated Introduction, Background, Results, Discussion, and Conclusion prose while preserving canonical detail;
+- deleting four explicitly redundant tables and two orphan closing recaps;
+- shortening LoF/LoT entries through optional captions while retaining full printed captions;
+- retaining all three Results figures and moving the direction figure out of isolated-float placement;
+- retaining both DAGs and placing them landscape without changing their bytes or scientific content;
+- applying the reviewed 38-key citation plan and balanced clinical pruning;
+- citing the primary CausalPFN paper while retaining the unresolved producing-package/version/checkpoint boundary;
+- applying only the high-confidence Hebrew and RTL corrections;
+- removing publication-irrelevant bibliography `note` fields.
 
-Major findings:
+Rejected actions included deletion of any Results figure, deletion/merging of estimator result tables, shrinking or cropping DAGs, changing margins/font/base spacing/paper size, using negative-space tricks, citation-only deletion, selectively favorable clinical pruning, weakening frozen limitations, and inventing institutional wording or metadata.
 
-- The Introduction, Background, Results synthesis, Discussion, and Conclusions repeat substantial material.
-- The bibliography can defensibly move from 55 to 38 emitted keys while retaining all essential primary authorities and balanced clinical evidence.
-- Several claims overstate internal checks as validation, replication, or causal evidence.
-- LoF/LoT spills, two orphan chapter tails, one isolated Results float, and an Appendix spill account for approximately six high-confidence pages.
+One coordinated first editing pass was followed by one permitted local layout-repair pass because the first clean build still had seven overfull boxes. The second pass removed those overfull boxes without changing the 104-page count or citation count. The later all-page review found the two defects in Section 18, but the prompt forbids a third editing pass; no unauthorized third source pass was made.
 
-Moderate findings:
+## 4. Source changes and compression execution
 
-- DAG labels are too small in portrait placement and should be placed landscape at readable width.
-- Hebrew terminology needs several high-confidence repairs and the keyword heading needs explicit RTL treatment.
-- Nine local overfull boxes should be repaired without global typography changes.
+The lead edited only the permitted active thesis sources and bibliography:
 
-Minor findings include publication-irrelevant acquisition notes printed in bibliography entries and inconsistent uses of `validated`, `effect`, and `reusable`.
+- `thesis-writing/literature/metadata/references.bib`;
+- `thesis-writing/thesis/appendices/appendices.tex`;
+- Chapters 1–8, 10–12, excluding Chapter 9 because Results is stored as Chapter 10;
+- English and Hebrew abstracts, keywords, and nomenclature.
 
-False alarms or rejected proposals:
+`thesis-writing/thesis/main.tex` and every figure file remained unchanged. Before this report update, the task source diff was 135 insertions and 614 deletions across 17 files. The deletions are predominantly redundant prose, four duplicate tables, 24 unused bibliography entries, and publication-irrelevant notes.
 
-- All three Results figures are readable and scientifically useful; they should not all be deleted merely because values also appear in tables.
-- Existing landscape longtables, chapter-start spacing, institutional leaves, and baseline font sizes are acceptable.
-- The expected Hebrew-localization warning is non-fatal.
+Structural results:
 
-Deliberately deferred issues require human authority: official title/degree/department wording, names, supervisor approval, dates, signatures, forms, English-thesis authorization, required final page order, acknowledgements, native academic-Hebrew review, and institutional deposit rules.
+- Chapter 3's duplicate final RQ/SRQ recap was removed.
+- Chapter 6's duplicate four-line tail was removed.
+- Chapter 2's duplicate dataset and model-family tables were removed.
+- Chapter 8's duplicate experiment-family table was removed.
+- Results' duplicate two-row population table was removed while retaining all counts in canonical prose.
+- The Appendix boundary was compressed from four pages to three without losing the interface, historical-reproduction, or scientific-validity distinctions.
+- LoF and LoT each fit one page.
+- All three Results figures remain and the direction figure is no longer isolated.
 
-## 4. Scientific Coherence Audit
+## 5. Scientific terminology repair
 
-The baseline contribution hierarchy passes: two dataset-specific observational testbeds are primary; the representation-centered framework is enabling; checked numerical/provenance artifacts are supporting. The main RQ and all five SRQs are present verbatim and aligned with the chapter structure. Chapter 1 contains zero occurrences of `MIMIC-IV`, as required.
+The early-stop report contained the now-corrected contradictory instruction to introduce `source-observed mechanisms`. The working prompt explicitly forbids that phrase, and the working prompt controlled.
 
-Controlled-benchmark complementarity is scientifically sound: controlled benchmarks supply a measurable answer under specified mechanisms, while these observational testbeds expose estimator behavior and fragility under realistic but causally unresolved records. The required repair is terminological precision: source-recorded measurements, availability, covariates, care traces, and outcome must be separated from representation-defined cohort, proxy labels, cutoffs, prevalence, and support.
+The thesis now distinguishes:
 
-The five SRQs remain correctly scoped. SRQ-3 needs one explicit asymmetric answer: proxy recoverability is assessed in both corpora, but mortality relevance is reported only for MIMIC; PhysioNet mortality performance remains withheld. The phrase `five analytical tasks` should be renamed so it is not confused with the five SRQs.
+- source-recorded measurements;
+- measurement availability and missingness patterns;
+- care-process traces;
+- covariates and outcomes;
+- empirical record structure;
 
-The unimplemented Chapter 2 correction is to use `source-observed mechanisms` at line 31 and revise surrounding sentences that overextend `source-observed`. Causal language still needs narrowing from effects/validation/reproducibility to adjusted or model-estimated contrasts, checked artifacts, workflow portability, and the exact evidence class available.
+from representation-defined:
 
-Remaining repetition is concentrated in Chapter 1's background/method/limitation recaps, Chapter 2's catalogs and duplicate tables, Chapter 3 and Chapter 6 orphan tails, Results overview tables, the first half of Discussion, and Conclusions. None was edited because of the early stop.
+- cohort restrictions;
+- proxy definitions and prevalence;
+- temporal cutoffs and aggregation;
+- empirical support after representation construction;
+- DAGs and adjustment assumptions.
 
-## 5. Numerical and Evidence Audit
+Command result: a repository thesis/bibliography search for the exact forbidden phrase returns zero matches. Remaining uses of `source-observed` refer only to records, measurements, outcomes, or the frozen main research-question wording—not to causal mechanisms, representation-induced prevalence, or support.
 
-The independent numerical audit passed without unexplained drift. The frozen cohort/exposure counts remain MIMIC 26,845 with 9 exposures and PhysioNet 7,993 with 10 exposures. Four predictive model families and the one-rule-plus-four-predicted label contract remain unchanged. The MIMIC predictive metrics were checked against Step 4 artifacts; PhysioNet mortality AUROC remains withheld.
+The ambiguous `five analytical tasks` wording was removed and the relevant implementation description now uses `five workflow functions`.
 
-The estimator hierarchy remains Forest primary, Linear secondary, PFN exploratory. All 19/19 Forest--Linear directions agree; all three estimators agree for 18/19, with PhysioNet shock retained as the sole exception. Rank, RMSE, Spearman-correlation, matching, outcome-downsampling, permutation, and sensitivity statements were independently recomputed or traced to admitted Step 4 artifacts. The `|z|>2` permutation rule remains a heuristic flag, not a p-value or formal randomization test. Datasets remain separate; no pooled estimate was introduced. No unified omitted-variable-sensitivity number was inserted.
+## 6. Chapter 2 correction
 
-The clinical-comparison table retains direct citations for every external number in the unchanged baseline. The planned pruning would remove exactly 17.9, 9.1, 8.9, 15.3, and 10.2--21.0 together with their sources, while retaining one cited comparator for renal, hepatic, cardiac, inflammation, shock, coagulation, respiratory, neurologic, and metabolic constructs; global severity would retain no numerical comparator. That pruning was not executed.
+Chapter 2 was reduced from 16 to 10 pages while retaining a genuine comparative literature review. The controlled/semi-synthetic/experimentally anchored spectrum, ICU source roles, irregular-series families, phenotyping/programmatic labeling, bounded LLM design, DAG/DML/forest/overlap/sensitivity authorities, and positioning of the study remain.
 
-All tables, formulas, thresholds, DAG counts, adjustment sets, figures, abstracts, conclusions, and appendix claims remain at their baseline values because no active thesis source was changed.
+The duplicate source-role and model-family tables, named Credence/DragonNet/influence-function examples, named Snorkel and DoWhy equivalence claims, redundant HTE review catalog, and unsupported source-observed-mechanism wording were removed or narrowed together with their direct sources. The revised text explicitly states that controlled resources provide a specified causal answer under constructed mechanisms, whereas CliniCause retains source-recorded empirical structure but exposes researcher-defined representation and unresolved causal truth.
 
-## 6. Compression Plan and Execution
+## 7. Exact `MIMIC-IV` and workflow searches
 
-The unified matrix accepted, but did not execute, these candidates:
+- `rg -n 'MIMIC-IV' thesis-writing/thesis/chapters/01_introduction.tex` returned no match: Chapter 1 count = **0**.
+- `rg -n -i 'five analytical tasks' thesis-writing/thesis --glob '*.tex'` returned no match.
+- `rg -n -i 'source-observed mechanisms' thesis-writing/thesis thesis-writing/literature/metadata/references.bib` returned no match.
 
-| Matrix IDs | Planned action | Planned saving | Citation consequence | Risk | Final action |
-|---|---|---:|---:|---|---|
-| U-01, U-05--U-08 | Repair evidence taxonomy, causal language, SRQ-3 wording, reuse qualification, and CausalPFN authority | 0--1 page | +1 PFN before pruning | Low--medium | Not executed; early stop |
-| U-02--U-04 | Compress Introduction, Background, and Discussion around canonical locations | 7--10 pages | remove repeated appearances and overlapping keys | Medium | Not executed; early stop |
-| U-09--U-11, U-13 | Merge two orphan tails, repair Appendix spill, shorten list captions, and place the direction figure normally | about 6 pages | none | Low | Not executed; early stop |
-| U-14, U-27 | Enlarge DAGs landscape and clear local overfull boxes | 0 pages | none | Low | Not executed; early stop |
-| U-15--U-17, U-19--U-20 | Remove duplicate Background/robustness overviews and compact Results/Chapter 7 repetition | 4--7 pages | fewer repeated appearances | Low--medium | Not executed; early stop |
-| U-21--U-23 | Apply 38-key plan, balanced clinical pruning, and bibliography-note cleanup | 1--2 bibliography pages | net -17 unique keys | Medium | Not executed; early stop |
-| U-24 | High-confidence Hebrew and RTL repairs | 0 pages | none | Medium | Not executed; early stop |
+## 8. Numerical and scientific freeze verification
 
-Rejected candidates remain rejected: U-12 deleting all three Results figures; U-18 merging/deleting estimator tables; U-28 global typography or institutional-page compression. U-25, U-26, and the associated administrative questions remain deferred to humans.
+The complete task diff and the final sources retain all required facts and gates:
 
-The planned first pass targeted approximately 104 pages. A second pass was authorized only if a validated first-pass PDF remained above 108 pages, and would have removed three optional benchmark-context passages/keys before any more aggressive prose reduction. Neither pass occurred.
+- original causal-analysis populations: MIMIC 26,845 and PhysioNet 7,993;
+- analyzed exposures: 9 and 10;
+- four predictive models: STraTS, GRU, GRU-D, and TCN;
+- aggregation: one rule-derived source plus four predicted sources;
+- STraTS leads the archived MIMIC predictive metrics; GRU-D leads PhysioNet;
+- archived proxy-label test AUROC range: 0.867–0.918;
+- MIMIC mortality association: 0.826 logistic and 0.831 MLP; the PhysioNet mortality AUROC remains withheld;
+- estimator hierarchy: CausalForestDML primary, LinearDML secondary, CausalPFN exploratory;
+- Forest–Linear direction agreement: 19/19;
+- all-three direction agreement: 18/19;
+- PhysioNet shock remains the sole all-three sign exception and remains visible across negative DML, slightly positive PFN, positive matching, and a noncommensurate external comparison;
+- within-resource rank/RMSE ranges remain `0.983--1.000` and `1.35--2.57 pp` for MIMIC, and `0.794--0.964` and `1.08--2.04 pp` for PhysioNet;
+- nine-mapping cross-resource Spearman correlation remains 0.533 with shock included and eight shared directions;
+- outcome-downsampling direction stability remains 55/57, with only the two admitted PhysioNet sign changes;
+- permutation totals remain MIMIC 36/36 and PhysioNet 34/40, ten trials and seed 42 per row;
+- `|z|>2` remains a heuristic disruption flag, explicitly not a p-value, formal randomization test, or identification proof;
+- no pooling, unified omitted-variable-sensitivity number, clinical validation, causal answer key, treatment recommendation, or deployment-readiness claim was introduced.
 
-## 7. Page Budget
+No formula line, proxy-threshold row, adjustment-set row, matching definition, sampling definition, DAG node/edge source, or result-figure byte changed. The only scientific-number table edits are the five approved external clinical number/source deletions in Section 12. Four redundant table labels were removed—`tab:background-datasets`, `tab:background-model-families`, `tab:experiment-family-summary`, and `tab:results-analysis-populations`—and no remaining source refers to them. No label was otherwise added or removed; the clean build has no unresolved cross-reference.
 
-Because no thesis source changed and no final build was performed, there is no after-build page budget. The tracked baseline remains 120 pages.
+The two DAG hashes remain:
 
-| Component | Before | Planned target | Validated after |
+- PhysioNet: `67d545d696b480136ee9ed58604d2cd56b406832e7b48d5a67b946f4837be7c2`;
+- MIMIC: `79fa7209166d24a9056753ef785865eb87995b2a363c1b3b5a2bff657fe204d8`.
+
+## 9. Page reductions by component
+
+| Component | Reused baseline | 104-page candidate | Change |
 |---|---:|---:|---:|
-| Front matter | 14 | 12 | Not produced |
-| Chapter 1 | 8 | 7 | Not produced |
-| Chapter 2 | 16 | 12 | Not produced |
-| Chapter 3 | 5 | 4 | Not produced |
-| Chapter 4 | 4 | 4 | Not produced |
-| Chapter 5 | 9 | 9 | Not produced |
-| Chapter 6 | 5 | 4 | Not produced |
-| Chapter 7 | 11 | 11 | Not produced |
-| Chapter 8 | 8 | 7 | Not produced |
-| Results | 16 | 14 | Not produced |
-| Discussion | 10 | 8 | Not produced |
-| Conclusions | 3 | 3 | Not produced |
-| Appendix | 4 | 3 | Not produced |
-| Bibliography | 6 | 5 | Not produced |
-| Hebrew cover | 1 | 1 | Not produced |
-| **Total** | **120** | **104** | **Not produced** |
+| Front matter | 14 | 12 | -2 |
+| Chapter 1 | 8 | 6 | -2 |
+| Chapter 2 | 16 | 10 | -6 |
+| Chapter 3 | 5 | 4 | -1 |
+| Chapter 4 | 4 | 4 | 0 |
+| Chapter 5 | 9 | 9 | 0 |
+| Chapter 6 | 5 | 4 | -1 |
+| Chapter 7 | 11 | 12 | +1 |
+| Chapter 8 | 8 | 7 | -1 |
+| Results | 16 | 15 | -1 |
+| Discussion | 10 | 9 | -1 |
+| Conclusions | 3 | 4 | +1, including the blocker spill |
+| Appendix | 4 | 3 | -1 |
+| Bibliography | 6 | 4 | -2 |
+| Hebrew cover | 1 | 1 | 0 |
+| **Total** | **120** | **104** | **-16** |
 
-The preferred 96--108-page band was not reached. No quality override is asserted because there is no post-edit PDF to evaluate.
+The candidate is within the preferred 96–108 A4-page band. Page count itself is not a blocker. Removing the Conclusion spill would likely yield 103 pages; a readable re-layout or split of the DAGs may add pages but can remain within the allowed band.
 
-## 8. Citation Reduction
+## 10. Citation reduction and exact counts
 
-- Baseline/current unique emitted entries: 55.
-- Planned final unique entries: 38.
-- Actual validated final unique entries: not produced; current source remains 55.
-- Planned reduction: 17/55 = 30.9%; actual reduction: 0%.
-- Baseline/current citation commands: 94; planned 60--64; final not measured.
-- Baseline bibliography: 6 pages; planned 4--5; final not produced.
-- Planned retained roles: two dataset primaries; four predictive-model primaries; DML, forest, EconML, DAG, target-trial, intervention, overlap, and sensitivity authorities; bounded LLM/proxy authorities; three direct benchmark examples; nine direct numerical clinical comparators; one primary CausalPFN source.
-- Planned removed keys: `alaa2019validating`, `anthon2023ploticu`, `arbous2024sepsis`, `athey2019grf`, `bica_2021_individualized_treatment_effects_ehr_ml`, `curth_2024_ml_individualized_treatment_effects`, `essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping`, `iwashyna_2015_hte_critical_care`, `jia2023sepsisaki`, `lipkovich_2024_modern_hte_methods`, `lipton_kale_wetzel_2016_missingness_rnns`, `lorenteros2020myocardial`, `parikh2022validating`, `ratner_et_al_2020_snorkel`, `saha2023ards`, `sharma_kiciman_2020_dowhy`, `shi2019dragonnet`, and `vincent_et_al_1996_sofa`. Each has a claim-level or number-level co-edit in the temporary retention matrix.
-- Planned added key: `balazadeh2025causalpfn`.
-- No three-key cluster is scientifically required after clause-level citation placement, but baseline clusters remain unchanged.
-- Baseline contains 19 keys cited once and seven raw uncited entries. The planned final bibliography would remove six never-used entries and activate CausalPFN, leaving no raw uncited entry.
-- Baseline duplicate-title and duplicate-DOI checks pass.
+| Metric | Baseline | Candidate |
+|---|---:|---:|
+| Citation commands | 94 | 72 |
+| Cited-key appearances | 137 | 97 |
+| Unique cited keys | 55 | 38 |
+| Raw BibTeX entries | 62 | 38 |
+| Biber-emitted entries | 55 | 38 |
+| Bibliography pages | 6 | 4 |
 
-No claim-support confirmation can be issued for a final 38-key thesis because the pruning and final citation audit remain missing.
+The 38 source-cited keys, 38 raw BibTeX keys, and 38 Biber-emitted keys are exact equal sets. There are no raw uncited entries, duplicate normalized titles, duplicate DOIs, undefined citations, or Biber warnings/errors.
 
-## 9. Clinical-Comparison Citation Decisions
+## 11. Every formerly cited key removed
 
-The current table is unchanged. The reviewed but unexecuted plan was:
+Locations below are the former baseline locations. Each deletion was coupled to removal or narrowing of the source-specific claim; no key was merely deleted from a citation cluster.
 
-| Construct | Original comparator(s) | Planned final comparator | Planned removed value/source | Balance and qualification |
-|---|---|---|---|---|
-| Renal | 8.1 Jiang | unchanged | none | Broadly compatible; definitions/horizon differ |
-| Hepatic | 7.4 Yang | unchanged | none | Overlapping but same MIMIC source and narrower threshold |
-| Cardiac | 17.0 Babuin; 17.9 Lorente-Ros | 17.0 Babuin | 17.9/Lorente-Ros | Population/definition caveat retained |
-| Inflammation | 5.0 Shankar-Hari; 9.1 Jia; 8.9 Arbous | 5.0 Shankar-Hari | 9.1/Jia and 8.9/Arbous | MIMIC remains larger/discrepant; horizons differ |
-| Global severity | no defensible comparator | unchanged | none | No corroboration claim |
-| Shock | 11.1 Lamontagne | unchanged | none | Discrepant; different intervention, population, and 90-day horizon |
-| Coagulation | 19.5 Stephan; 15.3 Anthon | 19.5 Stephan | 15.3/Anthon | Strong discrepancy retained |
-| Respiratory | 15.0 Torres; 10.2--21.0 Saha | 15.0 Torres | 10.2--21.0/Saha | Strong discrepancy and noncommensurability retained |
-| Neurologic | 0.9 Klein Klouwenberg | unchanged | none | Delirium/proxy and horizon mismatch retained |
-| Metabolic | 31.0 Gunnerson | unchanged | none | Unadjusted, more severe construct; discrepancy retained |
+| Removed key | All former active locations | Co-edit and retained support |
+|---|---|---|
+| `alaa2019validating` | Ch. 2 line 17 | Deleted the influence-function competition claim; retained Shalit/Gentzel for the bounded evaluation spectrum. |
+| `shi2019dragonnet` | Ch. 2 line 17 | Deleted the ACIC/DragonNet clause; retained the IHDP-style Shalit example. |
+| `parikh2022validating` | Ch. 2 line 25 | Deleted the named Credence example; retained minimum semi-synthetic and experimentally anchored examples. |
+| `athey2019grf` | Ch. 1 line 53; Ch. 2 line 205; Ch. 7 line 101 | Removed generalized-random-forest-specific prose and broad cluster use; retained Wager causal forest, DML, and EconML authorities. |
+| `bica_2021_individualized_treatment_effects_ehr_ml` | Ch. 1 line 53; Ch. 2 line 211; Ch. 7 line 101; Ch. 11 line 77 | Removed the standalone EHR-ITE review claims and broad clusters; retained Smit ICU design guidance and estimator primaries without transferring Bica-specific claims. |
+| `curth_2024_ml_individualized_treatment_effects` | Ch. 2 line 213; Ch. 7 line 101; Ch. 11 line 77 | Deleted generic HTE-review clauses; retained bounded ICU/design and primary estimator support. |
+| `iwashyna_2015_hte_critical_care` | Ch. 2 line 213; Ch. 7 line 101; Ch. 11 line 77 | Deleted trial-HTE-specific recap and clusters; retained explicit thesis limitations and Smit guidance. |
+| `lipkovich_2024_modern_hte_methods` | Ch. 2 line 213; Ch. 7 line 101; Ch. 11 line 77 | Deleted generic HTE-review recap; retained primary DML/forest/EconML and ICU-design support. |
+| `essay_mosier_subbian_2020_acute_respiratory_failure_phenotyping` | Ch. 2 line 140; Ch. 5 line 76 | Deleted the concrete respiratory-phenotyping example; retained Banda for phenotyping and Berlin ARDS for bounded terminology. |
+| `lipton_kale_wetzel_2016_missingness_rnns` | Ch. 1 line 16; Ch. 2 line 40; Ch. 11 line 39 | Narrowed the repeated missingness/model-task claims; retained Sun's review and Che/GRU-D. |
+| `ratner_et_al_2020_snorkel` | Ch. 1 lines 24, 53; Ch. 2 lines 152, 172; Ch. 5 line 15; Ch. 11 line 32 | Removed all named Snorkel/generative-label-model claims; retained Ratner 2016 for programmatic labeling and described the local aggregate as a fixed vote. |
+| `sharma_kiciman_2020_dowhy` | Ch. 2 line 229; Ch. 8 line 102 | Deleted the named DoWhy workflow paragraph/equivalence; the checked local disruption procedure now stands as a bounded sanity diagnostic. |
+| `vincent_et_al_1996_sofa` | Ch. 2 line 146; Ch. 5 line 76 | Removed the sourced SOFA-authority clause; retained the local “not SOFA” boundary plus Sepsis-3, KDIGO, ISTH DIC, and Berlin ARDS authorities. |
+| `lorenteros2020myocardial` | Ch. 10 line 353 | Removed external 17.9 together with the source; retained cardiac 17.0/Babuin. |
+| `jia2023sepsisaki` | Ch. 10 line 354 | Removed external 9.1 together with the source; retained inflammation 5.0/Shankar-Hari and reclassified the row as discrepant. |
+| `arbous2024sepsis` | Ch. 10 line 354 | Removed external 8.9/three-year together with the source; retained 5.0/Shankar-Hari and the discrepancy qualification. |
+| `anthon2023ploticu` | Ch. 10 line 357 | Removed external 15.3 together with the source; retained coagulation 19.5/Stephan. |
+| `saha2023ards` | Ch. 10 line 358 | Removed external 10.2–21.0 together with the source; retained respiratory 15.0/Torres and the noncommensurability caveat. |
 
-The plan removes both broadly compatible extras and discrepant extras while retaining every construct and all interpretation-changing discrepancies. It therefore does not selectively curate corroboration. Because it was not implemented, every original number still has its original direct citation.
+Six never-cited raw entries were also removed because no active prose depended on them: `ding_vanderweele_2016_sensitivity_without_assumptions`, `kent_steyerberg_vanklaveren_2018_personalized_ebm_hte`, `robins_hernan_brumback_2000_msm`, `shukla2019interpolation`, `shukla_marlin_2018_irregular_clinical_timeseries`, and `vanderweele_ding_2017_evalue`.
 
-## 10. Source Changes
+## 12. Clinical-comparison number/source decisions
 
-The only repository file created by this early-stop turn is this report. No file under `thesis-writing/thesis/main.tex`, `frontmatter/**`, `chapters/**`, `appendices/**`, or `thesis-writing/literature/metadata/references.bib` was changed. No table, figure, cross-reference, citation, abstract, or conclusion was edited. No repetition was removed. No material was lost.
+Exactly these five inseparable pairs were removed:
 
-The missing source changes are exactly those summarized in Sections 3, 4, 6, 8, 9, and 11.
+1. cardiac `17.9` / Lorente-Ros;
+2. inflammation `9.1` / Jia;
+3. inflammation `8.9` / Arbous;
+4. coagulation `15.3` / Anthon;
+5. respiratory `10.2--21.0` / Saha.
 
-## 11. Hebrew and Administrative Audit
+Every retained external number still has a direct citation:
 
-Scientific equivalence between the English and Hebrew abstracts passes. Both are under the 500-word limit and their 12 keyword concepts align. Baseline RTL rendering is sound, including mixed Hebrew/Latin/numeric content.
+| Construct | Retained external number/source | Interpretation |
+|---|---|---|
+| Renal | 8.1 / Jiang | Broadly compatible, with definition/horizon caveat. |
+| Hepatic | 7.4 / Yang | Overlapping, but same database and narrower exposure. |
+| Cardiac | 17.0 / Babuin | Broadly compatible in scale; populations/definitions differ. |
+| Inflammation | 5.0 / Shankar-Hari | Lower than both CliniCause ranges; discrepant/contextual. |
+| Global severity | no numerical comparator | No corroboration claim. |
+| Shock | 11.1 / Lamontagne | Discrepant and noncommensurate; PhysioNet exception explicit. |
+| Coagulation | 19.5 / Stephan | Strong discrepancy retained. |
+| Respiratory | 15.0 / Torres | Strong discrepancy and non-equivalent horizon retained. |
+| Neurologic | 0.9 / Klein Klouwenberg | Discrepant and non-equivalent construct. |
+| Metabolic | 31.0 / Gunnerson | Discrepant, narrower/more severe state. |
 
-Unimplemented high-confidence repairs include: standardizing the Hebrew observational-testbed term; replacing a literal counterfactual sentence; improving the terms for omitted confounding, diagnostics, provenance, proxy exposures, contextual clinical-literature comparison, and secondary comparator; and placing the Hebrew keyword heading in explicit RTL context.
+The final balance is three compatible/overlapping rows, six discrepant rows, and one no-comparator row. Pruning was not selectively favorable.
 
-Native academic-Hebrew review remains required. Unresolved institutional actions include authoritative title/name/supervisor/degree/department/date fields, signatures and forms, approval for an English thesis, official page order, acknowledgements requirements, ethics/governance wording, and deposit-format checks. No value was invented.
+## 13. Retained citation roles and CausalPFN
 
-## 12. Bibliography and Source-Authority Audit
+The final 38-key bibliography retains:
 
-The current bibliography remains at 55 emitted keys. Dataset primaries for MIMIC-III and PhysioNet 2012 resolve. Primary or appropriate authorities resolve for the four predictive families, DML, causal forest, EconML, DAG/backdoor reasoning, target-trial reasoning, overlap, and sensitivity. Direct construct sources and every retained clinical number resolve.
+- MIMIC-III and PhysioNet 2012 primaries;
+- STraTS, GRU, GRU-D, and TCN primaries;
+- irregular-series synthesis and bounded MIMIC task-construction context;
+- minimum electronic-phenotyping and programmatic-labeling context;
+- bounded Sepsis-3, KDIGO, ISTH DIC, and Berlin ARDS authorities;
+- bounded medical-LLM and causal-graph-prior authorities;
+- DAG/backdoor, target-trial, well-defined-intervention, and ICU causal-design authorities;
+- DML, causal forest, and EconML authorities;
+- overlap and two omitted-variable-sensitivity authorities;
+- minimum semi-synthetic and experimentally anchored evaluation examples;
+- nine direct clinical-number sources.
 
-The unresolved final-gate issue is that the implemented exploratory CausalPFN family lacks its active primary citation even though `balazadeh2025causalpfn` already exists as a valid raw entry. The correct repair is to cite it while keeping exact producing implementation/version/checkpoint lineage unresolved.
+`balazadeh2025causalpfn` is cited at the first authoritative CausalPFN description in Chapter 2 and again at the estimator introduction in Chapter 7. The thesis now correctly distinguishes a resolved primary method source from unresolved exact historical producing package/implementation version/checkpoint and absent DML-equivalent uncertainty, sensitivity, and permutation diagnostics. CausalPFN remains exploratory in nomenclature, methods, Results, Discussion, and Conclusions.
 
-No exact normalized-title duplicate, near-title duplicate at the audited threshold, or duplicate DOI was found. Seven raw entries are currently uncited. Several rendered `note` fields contain local acquisition/download prose inappropriate for a publication bibliography. The planned 38-key bibliography cleanup and source-to-Biber equality check remain missing.
+## 14. Hebrew and RTL repairs
 
-## 13. Frozen-Content Verification
+High-confidence changes implemented:
 
-At early stop, all 22 active thesis sources and the bibliography match their pre-Step-5 manifest. The 65-file paper tree also matches its manifest. Consequently, frozen tables, formulas, thresholds, DAGs, adjustment sets, estimator hierarchy, figures, labels, citations, abstracts, conclusions, and appendices have no Step 5 drift. The six pre-existing user-modified files remain outside Step 5's edit scope and were preserved.
+- standardized `סביבות מבחן תצפיתיות` in abstract/keywords;
+- replaced the literal counterfactual opening with scientifically equivalent Hebrew;
+- clarified proxy states used as analytical exposures;
+- changed the secondary-estimator wording to `כאומד השוואה משני`;
+- changed “slightly positive” to `חיובי מעט`;
+- changed the clinical comparison to contextual comparison with the clinical literature;
+- made outcome-based downsampling explicit;
+- made omitted-variable confounding explicit;
+- improved diagnostics/provenance wording;
+- placed the Hebrew keyword heading inside an explicit RTL/Hebrew context.
 
-This is a preservation result, not a verification of proposed edits: after implementing the repairs, every frozen-content check would need to be repeated.
+The English and Hebrew abstracts retain the same counts, model/estimator hierarchy, leaders, 19/19 and 18/19 findings, PhysioNet shock exception, clinical balance, downsampling and omitted-confounding boundaries, no-pooling statement, and no clinical/treatment/deployment claim. Rendering passed. This work does not claim native academic-Hebrew approval.
 
-## 14. Final Build
+Remaining human Hebrew/institutional review includes preferred technical register, bidirectional punctuation, exact title/degree/faculty/supervisor wording, and whether the two abstract formats satisfy the current faculty interpretation.
 
-No final build exists. Only the clean baseline build was completed, using:
+## 15. Bibliography cleanup
 
-1. `xelatex -interaction=nonstopmode -halt-on-error main.tex`
-2. `biber main`
-3. `xelatex -interaction=nonstopmode -halt-on-error main.tex`
-4. `xelatex -interaction=nonstopmode -halt-on-error main.tex`
+- Raw entries: 62 → 38.
+- Emitted entries: 55 → 38.
+- Acquisition/download/local-version `note` fields: 0 remaining.
+- All retained entries have author, title, and year; conventional publication types retain venue metadata, and DOI/URL/eprint metadata remains where applicable.
+- No title or DOI duplicate was introduced.
+- Bibliography contracted from six pages to four without smaller bibliography typography.
+- The 200-dpi review found readable entries [1]–[38], acceptable DOI/URL wrapping, and no acquisition-note clutter.
 
-Baseline results were 120 A4 pages, qpdf pass, Biber pass with 55 entries, embedded fonts with no Type 3 fonts, and no unresolved citations/references. A post-edit build path, page count, PDF hash, extracted-text hash, qpdf result, Biber count, final citation/reference result, final font result, and final warning inventory are all missing.
+## 16. Build commands and results
 
-## 15. Visual Review
+The first clean build used `/tmp/clinicause-step5-pass1.DqikwT` and the exact sequence:
 
-Every baseline page was rendered at 200 dpi and inspected individually. Baseline front matter, Hebrew, figures, tables, clinical comparison, bibliography, and cover are readable. The known defects are LoF/LoT spill pages, two orphan chapter tails, one isolated Results float, the Appendix spill, and small DAG labels; no page is clipped or blank.
+1. `xelatex -interaction=nonstopmode -halt-on-error -output-directory=<PASS1_DIR> main.tex`
+2. `biber --input-directory=<PASS1_DIR> --output-directory=<PASS1_DIR> main`
+3. `xelatex -interaction=nonstopmode -halt-on-error -output-directory=<PASS1_DIR> main.tex`
+4. `xelatex -interaction=nonstopmode -halt-on-error -output-directory=<PASS1_DIR> main.tex`
 
-No changed-page review or final all-page render exists because no source changed and no final PDF was built. The planned DAG, caption, float, table, bibliography, and Hebrew repairs therefore have no visual acceptance evidence.
+It produced 104 A4 pages, 38 Biber entries, and PDF SHA-256 `287e0e95ff0928c005317a2127eb967b413f73ad629189900975b85d27a0c5f6`, but still had seven overfull boxes. That verified layout defect justified the one allowed second source pass.
 
-## 16. Independent Verification Wave
+After local line repairs, a new clean candidate was built in `/tmp/clinicause-step5-final.XDNrUB` using the same exact XeLaTeX/Biber/XeLaTeX/XeLaTeX sequence. All commands exited successfully.
 
-- Verifier 1 (scientific/numerical/frozen-content): not run.
-- Verifier 2 (citations/source authority/clinical balance): not run.
-- Verifier 3 (clean build/all-page visual/administrative structure): not run.
-- Repairs made after verification: none.
-- Unresolved concerns: all proposed source edits and all final gates.
-- Final acceptance decision: not accepted because the user requested an early stop before implementation and verification.
+Candidate results:
 
-## 17. Tracked Main PDF
+- PDF: `/tmp/clinicause-step5-final.XDNrUB/main.pdf`;
+- SHA-256: `06fe650bebc366f0f73de83811bc726db3b8a3430b229d6a3ebb99045d67d3a3`;
+- layout-text SHA-256: `7cc24d2688ef27ac24b949160c6b94eab3efb7343bc7197deeec3d962969b14b`;
+- size: 3,209,701 bytes;
+- pages: 104, all A4;
+- Biber: 38 citekeys;
+- undefined citations/references: 0;
+- rerun/duplicate-label/missing-glyph warnings: 0;
+- overfull boxes: 0;
+- `qpdf --check`: pass;
+- fonts: all embedded/subset, no Type 3;
+- expected nonfatal warning: biblatex lacks Hebrew localization;
+- remaining minor warnings: two bibliography underfull lines, badness 1019 and 1668.
 
-- Previous/current hash: `6f25ac51acdcc091518371dcf46d73b43d0e2e4634f3da19e9458ba133c88020`.
-- Previous/current pages: 120.
-- Validated final hash/pages: not produced.
-- Equality with a validated final build: impossible to establish.
-- No PDF or auxiliary file was copied into the thesis tree.
+## 17. Complete 200-dpi visual review
 
-## 18. Protection and Git Status
+All 104 candidate pages were rendered at 200 dpi to `/tmp/clinicause-step5-render.y6TXZJ`; the render set is contiguous `page-001.png` through `page-104.png`. There are 98 portrait renders at 1654×2339 px and six intended landscape renders at 2339×1654 px.
 
-The active-source and paper-tree manifests pass. The paper tree, evidence sources, Step 4 derived-statistics file, and protected figures were not changed by Step 5. Before creation of this report, `git status --short` showed only the six pre-existing user modifications listed in Section 1.
+The lead inspected every page through 13 labeled contact sheets and inspected high-risk pages at native render resolution. Intended rotated pages are 40–41 and 43–44 for the two proxy-definition longtables, and 52–53 for the DAGs. The crossed layout reviewer independently inspected all pages through contact sheets, text/ink-density screening, and native-resolution high-risk views.
 
-The only task-scoped change after this report is one new file: `thesis-writing/logs/testbed_story_alignment_step_5_independent_audit.md`. The post-write task-scoped whitespace check, status check, and both protected-manifest checks pass; no thesis source or tracked PDF appears. The global worktree remains intentionally dirty because of the six user-owned modifications. Nothing was staged, committed, or pushed.
+Passed visual areas:
 
-One transient helper artifact, `references.bib.blg`, was accidentally created during read-only baseline work and immediately deleted; it is absent from the final worktree.
+- title, Hebrew and English abstracts, bilingual keywords, ToC, abbreviations, notation, one-page LoF, and one-page LoT;
+- pipeline and shock figures;
+- both proxy-definition longtables and all other longtables, with continuation headers and no clipping;
+- all three Results figures, including visible PhysioNet shock;
+- clinical-comparison table;
+- three-page Appendix without its former spill;
+- four-page bibliography with readable DOI wrapping;
+- Hebrew cover and RTL ordering;
+- page numbering, captions, list entries, and chapter boundaries other than the Conclusion spill.
 
-## 19. Human Actions Before Submission
+The two failures are recorded in Section 18.
 
-Independent of the unfinished Step 5 implementation, the following human actions remain:
+## 18. Cross-verifier findings and unresolved visual blockers
+
+Crossed scientific/citation/freeze verification: **PASS**. It independently confirmed 72 citation commands, 97 appearances, exact 38/38/38 source/raw/emitted key equality, clean Biber output, zero forbidden-phrase and Chapter-1 `MIMIC-IV` matches, frozen formulas/thresholds/adjustment rows/DAG science, all required results and withheld gates, exact balanced clinical pruning, CausalPFN authority/boundary, English/Hebrew scientific equivalence, and protected hashes.
+
+Crossed layout/artifact verification: **BLOCK** for two independently confirmed defects:
+
+1. **Physical page 96 / logical page 84 is nearly blank.** It contains only page number `84` and `comes.`. Physical page 95 ends with `out-`, splitting the final word `outcomes.` across the page boundary. The raster has only a 685×138 trimmed content box and mean ink/white level 0.999866. This violates the explicit blank/nearly-blank and spill-page gate.
+2. **Both DAGs on physical pages 52–53 remain insufficiently legible.** Landscape placement is unclipped and improves the baseline, but dense latent/observed row labels are approximately 2–3 printed points and visibly collide/concatenate. A reader cannot reliably distinguish every node label at native 200-dpi page rendering. This fails the explicit DAG-readability gate.
+
+All other layout/artifact checks passed. Because the prompt requires both crossed checks to pass and requires every blocker to be resolved, the candidate cannot be accepted or promoted.
+
+## 19. Tracked-PDF equality and promotion gate
+
+- Validated build candidate: 104 pages, SHA-256 `06fe650bebc366f0f73de83811bc726db3b8a3430b229d6a3ebb99045d67d3a3`.
+- Tracked `thesis-writing/thesis/main.pdf`: 120 pages, SHA-256 `6f25ac51acdcc091518371dcf46d73b43d0e2e4634f3da19e9458ba133c88020`.
+- Byte equality: **not established; the files intentionally differ**.
+- Action: the candidate was not copied because the crossed layout gate failed.
+
+Leaving the tracked PDF unchanged is the correct safe outcome for this blocked continuation. A repaired candidate must be rebuilt, completely rerendered, pass both crossed checks, then replace the tracked PDF and be verified byte-identical.
+
+## 20. Protected-file checks
+
+The following established hashes remain unchanged:
+
+- `thesis-writing/CausalDataGeneration.pdf`: `9c7a3473301fcab7a652985ed7f4fbf765a4de197eec53cc7ffe89a5996193f1`;
+- `thesis-writing/aaai27-submission.tex`: `db42adca64a66c08152fbc214a6c144857d547700cbc59b079bc5a44301839b6`;
+- `thesis-writing/supp.pdf`: `a0fa0eca32b043877dbcdb98a357cb8eb4844416c856fe8a748781ac456d72b3`;
+- `thesis-writing/true-figure-1.png`: `15369f2a83ecb9c2a2ba76fc0e1efddd33a6e7934ec0f282e7536ff020b0325a`;
+- Step 4 derived statistics: `c2efb00f64d901fe1635221ee032155900b7f7ac369ecf0facb56358d88c7aea`;
+- complete `paper-aaai` tree aggregate: `8d4255c108c4417d6b21fd3e788f1582e81b6f5e27519d3a115571acf27ca008`.
+
+No thesis figure, code file, dataset, result, checked-evidence record, reproducibility record, Step 1–4 report, paper source, supplement source, or protected PDF acquired a task change.
+
+The five pre-existing user-owned CSV hashes remain:
+
+- DAG-edge evidence: `7fbf8a40ea4bbbc361eadcd7b97ccc051d4228fc5781dc50b4e10168dea5beae`;
+- proxy evidence: `cbf6e94d09b3053d1d9981254fd93d4cd8e682f36bf8f00258c039348fe72f84`;
+- source registry: `5156f9c06da869f13682ab74601e32daca98178c55a8c67218ba0cd401af274b`;
+- MIMIC mortality voters: `7c8800f778189fb8408a9897b831450d6e04b4126c0630fd62574594b859b8bf`;
+- PhysioNet mortality voters: `5bc8028ecbd303fdca5a63b281953cd1afa981726b9e4ec0a06ba924f950d7be`.
+
+## 21. Git status and repository hygiene
+
+Final repository checks are recorded after the report write:
+
+- global `git diff --check`: exit 2 solely because the five preserved user-owned CSVs already contain CRLF/trailing-whitespace lines; those files retain their pre-continuation hashes and were not normalized or edited by Step 5;
+- task-scoped `git diff --check` over this report, the bibliography, and permitted thesis sources: pass;
+- `git diff --stat`: only the six preserved user-owned files, this existing report, the 17 permitted active-source/bibliography files, and no tracked thesis PDF;
+- `git diff --name-only`: no unexpected path;
+- `git status --short`: no unexpected or untracked file;
+- `git diff --cached --name-only`: empty;
+- complete task diff: inspected;
+- staged files: none;
+- commits created: none;
+- pushes performed: none.
+
+The worktree remains intentionally dirty because user-owned changes and the uncommitted Step 5 implementation are present.
+
+## 22. Exact missing repair work
+
+The next authorized repair continuation must do all of the following:
+
+1. Reflow or narrowly shorten the final Closing Perspective sentence so `outcomes.` remains on physical page 95; preserve the complete evidence taxonomy and meaning.
+2. Make every DAG node label reliably readable while preserving the exact frozen node/edge sets. The current image bytes cannot satisfy this at print scale. A collision-free regeneration, layer-wise split with a retained overview, or equivalent readable presentation requires explicit authorization because the current prompt protects existing figure bytes and the two-pass source limit has been exhausted.
+3. Build from a new clean temporary directory using XeLaTeX/Biber/XeLaTeX/XeLaTeX.
+4. Re-run citation, frozen-content, qpdf, font, warning, A4, and protected-hash checks.
+5. Render and inspect every resulting page at 200 dpi, with native inspection of the repaired Conclusion boundary and every DAG label.
+6. Re-run both crossed final checks using the same two roles if available.
+7. Only after both checks pass, copy the repaired candidate to `thesis-writing/thesis/main.pdf`, verify byte identity, and update this report from blocked to the correct readiness marker.
+
+No scientific or citation repair remains outstanding; the remaining blockers are visual/presentation gates plus the consequent tracked-PDF equality gate.
+
+## 23. Human actions before submission
+
+Even after the two visual blockers are repaired, human submission actions remain:
 
 - supervisor scientific approval;
 - native academic-Hebrew review;
-- authoritative administrative fields and institutional page order;
-- ethics and governance wording review;
-- signatures and required forms;
-- English-thesis authorization and final deposit-format checks;
-- resolution or explicit acceptance of incomplete PhysioNet mortality lineage;
-- resolution or explicit acceptance of missing unified omitted-variable-sensitivity lineage;
-- confirmation of the exact producing CausalPFN package/checkpoint/version and diagnostic lineage, if recoverable.
+- authoritative title, author, supervisor, degree, faculty/department, date, signature, and committee-chair fields;
+- current institutional approval for an English thesis and official page order;
+- acknowledgements, ethics/governance, data-use, forms, binding, and deposit-format confirmation;
+- explicit acceptance or recovery of incomplete PhysioNet mortality lineage;
+- explicit acceptance or recovery of the exact producing CausalPFN package/version/checkpoint and diagnostic lineage.
 
-These are submission gates. They do not authorize invention of data or metadata.
+These are submission gates and do not authorize invented values.
 
-## 20. Readiness
+## 24. Final readiness
 
-Step 5 stopped after baseline audit and lead planning. The thesis-source repairs, 38-key citation consolidation, page reduction, final build, final all-page inspection, three independent verifier audits, and tracked-PDF replacement are missing. In addition, the implemented CausalPFN method still lacks its active primary citation. These conditions meet explicit author-review blocker criteria.
+The implementation substantially completed Step 5 and produced a scientifically sound, citation-complete, protected, 104-page candidate. It is not ready for author–supervisor review because the crossed layout verification found a nearly blank Conclusion spill page and unreadable/colliding DAG labels, and the tracked PDF therefore correctly remains the baseline artifact.
 
 BLOCKED BEFORE AUTHOR REVIEW
