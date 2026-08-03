@@ -1,0 +1,37 @@
+\xpginauxfiletrue 
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {4.1}{\ignorespaces Processed artifact contracts.}}{24}{table.58}%
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {5.1}{PhysioNet 2012 rule-derived proxy-state definitions.}}{28}{table.64}%
+\contentsline {table}{\numberline {5.2}{MIMIC-III rule-derived proxy-state definitions.}}{31}{table.66}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\setforeignlanguage {english}
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {7.1}{Causal assumptions and interpretation boundaries.}}{43}{table.77}%
+\contentsline {table}{\numberline {7.2}{Implemented causal estimators and interpretation limits.}}{48}{table.79}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {8.1}{Executed settings and unresolved lineage.}}{52}{table.90}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {9.1}{Archived predictive test performance.}}{58}{table.101}%
+\contentsline {table}{\numberline {9.2}{MIMIC-III CausalForestDML results.}}{60}{table.104}%
+\contentsline {table}{\numberline {9.3}{PhysioNet CausalForestDML results.}}{60}{table.106}%
+\setforeignlanguage {english}
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {9.4}{Original-cohort matching and support summaries.}}{64}{table.109}%
+\contentsline {table}{\numberline {9.5}{Original-cohort Forest and Linear comparison.}}{65}{table.111}%
+\contentsline {table}{\numberline {9.6}{CausalPFN results and DML direction agreement.}}{65}{table.114}%
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {9.7}{\ignorespaces Within-resource original-cohort estimator stability.}}{66}{table.116}%
+\setforeignlanguage {english}
+\contentsline {table}{\numberline {9.8}{Contextual clinical-literature comparison.}}{68}{table.119}%
+\contentsline {table}{\numberline {9.9}{Robustness and diagnostic availability.}}{70}{table.123}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
