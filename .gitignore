@@ -67,10 +67,16 @@ thesis-writing/thesis/*.run.xml
 thesis-writing/thesis/*.toc
 thesis-writing/thesis/*.xdv
 
-# Keep private working documentation local; only the two release PDFs are tracked.
+# Keep private working documentation local; release PDFs and README figures are tracked.
 /docs/*
 !/docs/CliniCause AAAI submission.pdf
 !/docs/CliniCause Thesis BGU.pdf
+!/docs/thesis/
+/docs/thesis/*
+!/docs/thesis/figures/
+/docs/thesis/figures/*
+!/docs/thesis/figures/clinicause_shock_proxy_example.png
+!/docs/thesis/figures/clinicause_testbed_pipeline.png
 
 # Local task instructions must not be published.
 /prompt.txt

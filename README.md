@@ -1,98 +1,86 @@
 # CliniCause
 
-CliniCause is a reproducible research pipeline for causal analysis of irregular clinical time-series data. It combines:
+CliniCause is a research pipeline for constructing and analyzing observational causal-analysis testbeds from irregular ICU time-series data. It links dataset-specific preprocessing and deterministic proxy-state construction with temporal-model prediction, aggregation, graph-guided causal analysis, and run-level provenance records.
 
-- a thesis-oriented preprocessing and latent-tagging workflow in [src/causal-irregular-time-series](src/causal-irregular-time-series)
-- a sequence-model training and prediction workflow in [src/STraTS](src/STraTS)
-- a unified router in [router.py](router.py) that connects both components into one end-to-end run
+## Pipeline
 
-## What this project contains
+![CliniCause design, instantiation, and evaluation pipeline](docs/thesis/figures/clinicause_testbed_pipeline.png)
 
-- [router.py](router.py): orchestrates the full pipeline
-- [SCRIPTS.md](SCRIPTS.md): authoritative integrated script reference
-- [requirements.txt](requirements.txt): one installation entry point for the router and both component directories
-- [src/causal-irregular-time-series](src/causal-irregular-time-series): thesis preprocessing, tagging, decision-tree plotting, and downstream causal analysis
-- [src/STraTS](src/STraTS): model training, evaluation, and prediction export
-- [AGENTS/](AGENTS): repository-wide operational documentation
-- [scripts/](scripts): integrated launch helpers
-- [configs/](configs): protected configuration files
-- [results/](results): protected result artifacts
+The pipeline has three connected stages:
 
-Only `docs/CliniCause AAAI submission.pdf` and `docs/CliniCause Thesis BGU.pdf` are tracked under `docs/`; other local documentation remains private and ignored.
+- **Design:** schema and literature information inform proxy-state and graph proposals; project-selected definitions are encoded as deterministic source code.
+- **Instantiate:** source-specific preprocessing constructs patient-level resources from MIMIC-III and PhysioNet/Computing in Cardiology Challenge 2012 records.
+- **Evaluate:** temporal models predict rule-derived proxy labels, whose normalized and aggregated outputs feed graph-guided causal analyses and diagnostics.
 
-## Requirements
+The LLM-assisted design process uses schema information, not patient records, and is not invoked during pipeline execution or estimation.
 
-Before running the pipeline, make sure you have:
+![Illustrative shock proxy-state construction](docs/thesis/figures/clinicause_shock_proxy_example.png)
 
-- Python 3.9 or newer
-- the two repositories present at the expected locations
-- access to the required raw datasets on the machine where the run will execute
+The proxy states are operational research representations derived from source-recorded measurements and deterministic rules. They are not clinical diagnoses or causal ground truth.
 
-## Setup
+## Repository layout
 
-Create and activate a Python environment, then install dependencies:
+- [run_clinicause.sh](run_clinicause.sh): canonical launcher for the integrated pipeline
+- [router.py](router.py): project-level orchestration
+- [requirements.txt](requirements.txt): project-wide dependency entry point
+- [src/causal-irregular-time-series](src/causal-irregular-time-series): preprocessing, proxy construction, graphs, and causal-analysis code
+- [src/STraTS](src/STraTS): temporal-model training, evaluation, and prediction export
+- [SCRIPTS.md](SCRIPTS.md): launcher variables and integrated script reference
+- [docs/](docs): thesis and supporting project documentation
+
+## Installation
+
+Create and activate the Conda environment, then install the project dependencies from the repository root:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+conda create -n clinicause python=3.10 -y
+conda activate clinicause
+python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-On Windows PowerShell, use:
+The root requirements file includes the dependencies of both component directories.
 
-```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-py -m pip install -r requirements.txt
+## Data access
+
+CliniCause does not distribute MIMIC-III or PhysioNet Challenge 2012 records. Obtain each dataset directly from PhysioNet and comply with its current access, credentialing, data-use, and license requirements. Keep restricted records under the authorized user's control.
+
+By default, the launcher reads raw datasets from:
+
+```text
+data/physionet2012
+data/mimiciii
 ```
 
-## Architecture
-
-```mermaid
-flowchart LR
-    A[Raw clinical data] --> B[Preprocessing]
-    B --> C[Rule-based latent tagging]
-    C --> D[Decision-tree plots]
-    C --> E[Router]
-    E --> F[Prepare STraTS inputs]
-    F --> G[Run STraTS models]
-    G --> H[Collect predictions]
-    H --> I[Normalize voter CSVs]
-    I --> J[Run thesis main]
-    J --> K[Outputs and reports]
-```
-
-## Quick start
-
-### 1. Validate the setup
+To use data stored elsewhere, set absolute paths before launching:
 
 ```bash
-python router.py --dataset both --run-id demo_run --strats-repo-root ./src/STraTS --validate-only
+export PHYSIONET_RAW_DATA_PATH=/absolute/path/to/physionet2012
+export MIMIC_RAW_DATA_PATH=/absolute/path/to/mimiciii
 ```
 
-### 2. Preview the full plan without executing it
+## Run CliniCause
+
+Run commands from the repository root with the Conda environment activated.
+
+### Construct reusable datasets
+
+This preset runs preprocessing, deterministic tagging, temporal-model preparation and prediction, prediction collection and normalization, graph construction, and majority-vote aggregation. It stops before the later causal estimators.
 
 ```bash
-python router.py --dataset both --run-id demo_run --strats-repo-root ./src/STraTS --stages all --dry-run
+STAGES=dataset-extraction bash run_clinicause.sh
 ```
 
-### 3. Run the full pipeline
+### Run the complete pipeline
 
 ```bash
-python router.py \
-  --dataset both \
-  --run-id full_001 \
-  --output-root runs \
-  --thesis-repo-root ./src/causal-irregular-time-series \
-  --strats-repo-root ./src/STraTS \
-  --physionet-raw-data-path /path/to/physionet2012 \
-  --mimic-raw-data-path /path/to/mimiciii \
-  --stages all \
-  --overwrite
+STAGES=all bash run_clinicause.sh
 ```
 
-## Notes
+The default dataset selector is `both`. Set `DATASET=physionet` or `DATASET=mimic` to run one source. The launcher also accepts `OUTPUT_ROOT`, `RUN_ID`, `PHYSIONET_RAW_DATA_PATH`, `MIMIC_RAW_DATA_PATH`, `STRATS_MAX_CONCURRENT`, and `PYTHON_BIN`; see [SCRIPTS.md](SCRIPTS.md) for details.
 
-- The router is designed to be run on a machine that has the datasets available, such as a remote server.
-- The router writes its outputs under the run directory created in the chosen output root.
-- For the full set of supported flags and examples, see [SCRIPTS.md](SCRIPTS.md).
+Outputs are isolated under `runs/<run-id>/`, with separate `physionet/` and `mimic/` directories plus run metadata, resolved configurations, logs, manifests, artifact hashes, and stage receipts.
+
+## Reproducibility scope
+
+The current checkout provides a unified installation and execution interface for reconstructing derived resources from independently obtained source data. It does not redistribute source ICU records, establish clinical construct validity or causal identification, or by itself reproduce every archived thesis result exactly.
