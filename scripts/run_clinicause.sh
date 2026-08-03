@@ -19,9 +19,9 @@ PYTHON_BIN="${PYTHON_BIN:-python}"
 RUN_ID="${RUN_ID:-${CLINICAUSE_RUN_ID:-}}"
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
-PROJECT_ROOT="${SCRIPT_DIR}"
-THESIS_REPO_ROOT="${PROJECT_ROOT}/causal-irregular-time-series"
-STRATS_REPO_ROOT="${PROJECT_ROOT}/STraTS"
+PROJECT_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd -P)"
+THESIS_REPO_ROOT="${PROJECT_ROOT}/src/causal-irregular-time-series"
+STRATS_REPO_ROOT="${PROJECT_ROOT}/src/STraTS"
 ROUTER_PATH="${PROJECT_ROOT}/router.py"
 
 resolve_from_project_root() {
@@ -46,7 +46,7 @@ if [[ -z "${RUN_ID}" ]]; then
 fi
 
 if [[ ! -f "${ROUTER_PATH}" || ! -d "${THESIS_REPO_ROOT}" || ! -d "${STRATS_REPO_ROOT}" ]]; then
-  echo "Error: run_clinicause.sh must remain in the CliniCause repository root." >&2
+  echo "Error: run_clinicause.sh must remain in CliniCause/scripts/." >&2
   exit 1
 fi
 if ! command -v "${PYTHON_BIN}" >/dev/null 2>&1; then

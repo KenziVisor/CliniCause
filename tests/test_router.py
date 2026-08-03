@@ -60,8 +60,8 @@ class RouterParsingTests(unittest.TestCase):
 
     def test_dataset_extraction_fingerprint_child_and_causal_contract(self):
         root = Path(__file__).resolve().parents[1]
-        thesis = root / "causal-irregular-time-series"
-        strats = root / "STraTS"
+        thesis = root / "src" / "causal-irregular-time-series"
+        strats = root / "src" / "STraTS"
         with tempfile.TemporaryDirectory() as temp_dir:
             common = [
                 "--dataset", "both",

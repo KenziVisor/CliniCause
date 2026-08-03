@@ -1,6 +1,6 @@
 from pathlib import Path
 
-path = Path(r'c:\Users\kobik\Desktop\הנדסת מערכות תקשורת\תואר שני\תזה\code\CliniCause\causal-irregular-time-series\src\preprocess_mimic_iii_large.py')
+path = Path(__file__).resolve().parents[1] / "src" / "preprocess_mimic_iii_large.py"
 text = path.read_text(encoding='utf-8')
 lines = text.splitlines()
 start = next(i for i,l in enumerate(lines) if l.strip() == 'return parser.parse_args()')

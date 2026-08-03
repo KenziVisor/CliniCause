@@ -24,8 +24,8 @@ from typing import Any, Callable, Iterable, Sequence
 
 
 WORKSPACE_ROOT = Path(__file__).resolve().parent
-THESIS_REPO_CANDIDATES = [WORKSPACE_ROOT / "causal-irregular-time-series", WORKSPACE_ROOT]
-STRATS_REPO_CANDIDATES = [WORKSPACE_ROOT / "STraTS", WORKSPACE_ROOT.parent / "STraTS"]
+THESIS_REPO_CANDIDATES = [WORKSPACE_ROOT / "src" / "causal-irregular-time-series", WORKSPACE_ROOT]
+STRATS_REPO_CANDIDATES = [WORKSPACE_ROOT / "src" / "STraTS"]
 
 STAGE_ORDER = [
     "preprocessing",

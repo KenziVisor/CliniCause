@@ -16,8 +16,8 @@ This document defines the complete and stable debugging process for the merged `
 
 `CliniCause` was created by combining two projects that had previously worked separately:
 
-- `STraTS/`
-- `causal-irregular-time-series/`
+- `src/STraTS/`
+- `src/causal-irregular-time-series/`
 
 The top-level merged project, including `router.py` and shared configuration or orchestration, may have introduced regressions at the integration boundaries. The working assumption is therefore:
 

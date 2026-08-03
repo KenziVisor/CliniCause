@@ -9,5 +9,5 @@ scikit-learn>=1.0
 matplotlib>=3.0
 seaborn>=0.12
 
--r causal-irregular-time-series/requirements.txt
--r STraTS/requirements.txt
+-r src/causal-irregular-time-series/requirements.txt
+-r src/STraTS/requirements.txt

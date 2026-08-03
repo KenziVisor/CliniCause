@@ -15,8 +15,8 @@ runtime = router
 
 
 ROOT = Path(__file__).resolve().parents[1]
-THESIS = ROOT / "causal-irregular-time-series"
-STRATS = ROOT / "STraTS"
+THESIS = ROOT / "src" / "causal-irregular-time-series"
+STRATS = ROOT / "src" / "STraTS"
 
 
 def write_tree_receipt(tree: Path, args, dataset: str) -> None:

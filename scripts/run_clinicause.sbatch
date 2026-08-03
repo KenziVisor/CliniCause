@@ -60,16 +60,16 @@ date -u
     echo "Python: $(which python)"
     python --version
     echo "CliniCause commit: $(git rev-parse HEAD)"
-    echo "STraTS commit: $(git -C STraTS rev-parse HEAD)"
-    echo "Causal commit: $(git -C causal-irregular-time-series rev-parse HEAD)"
+    echo "STraTS commit: $(git -C src/STraTS rev-parse HEAD)"
+    echo "Causal commit: $(git -C src/causal-irregular-time-series rev-parse HEAD)"
     nvidia-smi || true
 
     python router.py \
       --dataset "${CC_DATASET}" \
       --run-id "${CC_RUN_ID}" \
       --output-root "${CC_OUTPUT_ROOT}" \
-      --thesis-repo-root ./causal-irregular-time-series \
-      --strats-repo-root ./STraTS \
+      --thesis-repo-root ./src/causal-irregular-time-series \
+      --strats-repo-root ./src/STraTS \
       --physionet-raw-data-path /workspace/data/physionet2012 \
       --mimic-raw-data-path /workspace/data/mimiciii \
       --stages "${CC_STAGES}" \

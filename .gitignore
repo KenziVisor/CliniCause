@@ -66,3 +66,11 @@ thesis-writing/thesis/*.out
 thesis-writing/thesis/*.run.xml
 thesis-writing/thesis/*.toc
 thesis-writing/thesis/*.xdv
+
+# Keep private working documentation local; only the two release PDFs are tracked.
+/docs/*
+!/docs/CliniCause AAAI submission.pdf
+!/docs/CliniCause Thesis BGU.pdf
+
+# Local task instructions must not be published.
+/prompt.txt
