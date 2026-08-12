@@ -1,9 +1,7 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import os
-import pickle
-import shutil
 import sys
 from pathlib import Path
 from typing import Iterable
@@ -13,9 +11,9 @@ import pandas as pd
 from tqdm import tqdm
 
 from preprocess_mimic_iii_large_contract import (
+    assert_physionet_compatible_output,
     build_canonical_oc,
     build_canonical_ts,
-    canonicalize_mimic_id_scalar,
     build_ts_ids,
     canonicalize_binary_mortality_series,
     canonicalize_mimic_id_series,
@@ -26,33 +24,11 @@ from preprocess_mimic_iii_large_contract import (
 
 RAW_DATA_PATH = "../mimiciii"
 OUTPUT_PATH = "../data/processed/mimic_iii_ts_oc_ids.pkl"
+TOTAL_STAGES = 10
 
 
 def log_stage(stage: int, message: str) -> None:
-    print(f"[{stage}] {message}", flush=True)
-
-
-def log_memory(label: str) -> None:
-    try:
-        import psutil
-
-        process = psutil.Process(os.getpid())
-        rss = process.memory_info().rss / (1024 * 1024)
-        print(f"[memory] {label}: {rss:.1f} MB")
-    except Exception:
-        pass
-
-
-def ensure_directory(path: Path) -> None:
-    path.mkdir(parents=True, exist_ok=True)
-
-
-def maybe_remove(path: Path) -> None:
-    if path.exists():
-        if path.is_dir() and not path.is_symlink():
-            shutil.rmtree(path)
-        else:
-            path.unlink()
+    print(f"[{stage}/{TOTAL_STAGES}] {message}", flush=True)
 
 
 def normalize_raw_data_path(path: str | Path) -> Path:
@@ -87,7 +63,12 @@ def canonicalize_identifier_column(
     return normalized
 
 
-def normalize_icu_cohort(icu: pd.DataFrame, *, frame_name: str = "icu") -> pd.DataFrame:
+def normalize_icu_cohort(
+    icu: pd.DataFrame,
+    *,
+    frame_name: str = "icu",
+    exclude_missing_timestamps: bool = False,
+) -> pd.DataFrame:
     required_columns = ["ICUSTAY_ID", "HADM_ID", "INTIME", "OUTTIME"]
     missing_columns = [column for column in required_columns if column not in icu.columns]
     if missing_columns:
@@ -103,10 +84,29 @@ def normalize_icu_cohort(icu: pd.DataFrame, *, frame_name: str = "icu") -> pd.Da
         "HADM_ID",
         frame_name=frame_name,
     )
+    if "SUBJECT_ID" in normalized.columns:
+        normalized = canonicalize_identifier_column(
+            normalized,
+            "SUBJECT_ID",
+            frame_name=frame_name,
+        )
+
     normalized["INTIME"] = pd.to_datetime(normalized["INTIME"], errors="raise")
     normalized["OUTTIME"] = pd.to_datetime(normalized["OUTTIME"], errors="raise")
-    if normalized[["INTIME", "OUTTIME"]].isna().any().any():
-        raise ValueError(f"{frame_name} contains missing ICU timestamps.")
+    missing_timestamps = normalized[["INTIME", "OUTTIME"]].isna().any(axis=1)
+    if missing_timestamps.any():
+        missing_count = int(missing_timestamps.sum())
+        if not exclude_missing_timestamps:
+            raise ValueError(
+                f"{frame_name} contains {missing_count} row(s) with missing ICU timestamps."
+            )
+        print(
+            f"      Excluding {missing_count:,} {frame_name} row(s) with missing "
+            "INTIME/OUTTIME; complete ICU intervals are required for event alignment "
+            "and length_of_stay.",
+            flush=True,
+        )
+        normalized = normalized.loc[~missing_timestamps].copy()
 
     normalized = collapse_identical_rows_or_raise(
         normalized,
@@ -156,10 +156,23 @@ def parse_args(argv: Iterable[str] | None = None):
     parser.add_argument("--dataset-config-csv", default=None)
     parser.add_argument("--raw-data-path", default=None)
     parser.add_argument("--output-path", default=None)
-    parser.add_argument("--chunksize", type=int, default=500000)
-    parser.add_argument("--tmp-dir", default=None)
-    parser.add_argument("--keep-intermediates", action="store_true")
-    parser.add_argument("--max-debug-chunks", type=int, default=None)
+    parser.add_argument(
+        "--chunksize",
+        type=int,
+        default=None,
+        help=(
+            "Compatibility option accepted from the CliniCause router. The restored "
+            "historical extractor is in-memory and does not use this value."
+        ),
+    )
+    parser.add_argument(
+        "--tmp-dir",
+        default=None,
+        help=(
+            "Compatibility option accepted from the CliniCause router. The restored "
+            "historical extractor does not create preprocessing shards."
+        ),
+    )
     parser.add_argument(
         "--validate-config-only",
         action="store_true",
@@ -168,341 +181,21 @@ def parse_args(argv: Iterable[str] | None = None):
     return parser.parse_args(list(argv) if argv is not None else None)
 
 
-def maybe_run_validate_config_only(args):
+def maybe_run_validate_config_only(args) -> bool:
     if not args.validate_config_only:
         return False
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from dataset_config import maybe_run_validate_config_only as validate
 
-    validate("src/preprocess_mimic_iii_large.py", fixed_dataset="mimic")
+    validation_argv = [str(Path(__file__).resolve()), "--validate-config-only"]
+    if args.dataset_config_csv is not None:
+        validation_argv.extend(["--dataset-config-csv", args.dataset_config_csv])
+    validate(
+        "src/preprocess_mimic_iii_large.py",
+        fixed_dataset="mimic",
+        argv=validation_argv,
+    )
     return True
-
-
-def iter_csv_chunks(path: Path, usecols: list[str], chunksize: int, max_debug_chunks: int | None = None):
-    count = 0
-    identifier_dtypes = {
-        column: "string"
-        for column in usecols
-        if column in {"ICUSTAY_ID", "HADM_ID"}
-    }
-    chunks = pd.read_csv(
-        path,
-        chunksize=chunksize,
-        usecols=usecols,
-        dtype=identifier_dtypes,
-    )
-    for chunk in tqdm(chunks, desc=f"Reading {path.name}", unit="chunk"):
-        yield chunk
-        count += 1
-        if max_debug_chunks is not None and count >= max_debug_chunks:
-            break
-
-
-def write_pickle_shard(path: Path, frame: pd.DataFrame) -> None:
-    ensure_directory(path.parent)
-    with path.open("wb") as handle:
-        pickle.dump(frame, handle)
-
-
-def read_pickle_shard(path: Path) -> pd.DataFrame:
-    with path.open("rb") as handle:
-        return pickle.load(handle)
-
-
-def stream_filtered_shards(
-    raw_path: Path,
-    usecols: list[str],
-    tmp_dir: Path,
-    stem: str,
-    predicate,
-    chunksize: int,
-    max_debug_chunks: int | None = None,
-) -> list[Path]:
-    shard_dir = tmp_dir / stem
-    ensure_directory(shard_dir)
-    for existing in shard_dir.glob("*.pkl"):
-        existing.unlink()
-
-    shard_paths: list[Path] = []
-    for index, chunk in enumerate(iter_csv_chunks(raw_path, usecols, chunksize, max_debug_chunks=max_debug_chunks), start=0):
-        filtered = predicate(chunk)
-        if filtered is None or filtered.empty:
-            continue
-        shard_path = shard_dir / f"{stem}_{index:05d}.pkl"
-        write_pickle_shard(shard_path, filtered)
-        shard_paths.append(shard_path)
-    return shard_paths
-
-
-def candidate_identifier_membership_mask(
-    series: pd.Series,
-    canonical_ids: set[str],
-) -> pd.Series:
-    """Match lossless IDs while ignoring irrelevant invalid/null raw rows."""
-    membership: list[bool] = []
-    for value in series:
-        try:
-            canonical_id = canonicalize_mimic_id_scalar(
-                value,
-                field_name=str(series.name or "raw candidate identifier"),
-            )
-        except (TypeError, ValueError):
-            membership.append(False)
-            continue
-        membership.append(canonical_id in canonical_ids)
-    return pd.Series(membership, index=series.index, dtype=bool)
-
-
-def build_chartevents_shards(raw_data_path: str | Path, icu: pd.DataFrame, chunksize: int, tmp_dir: Path, max_debug_chunks: int | None = None) -> list[Path]:
-    raw_data_path = normalize_raw_data_path(raw_data_path)
-    icu_ids = set(
-        canonicalize_mimic_id_series(
-            icu["ICUSTAY_ID"],
-            field_name="icu.ICUSTAY_ID",
-        )
-    )
-
-    def predicate(chunk: pd.DataFrame) -> pd.DataFrame:
-        candidate_mask = candidate_identifier_membership_mask(
-            chunk["ICUSTAY_ID"],
-            icu_ids,
-        )
-        filtered = chunk.loc[candidate_mask].copy()
-        filtered = canonicalize_identifier_column(
-            filtered,
-            "ICUSTAY_ID",
-            frame_name="chartevents",
-        )
-        filtered = filtered.loc[filtered["ICUSTAY_ID"].isin(icu_ids)]
-        filtered = canonicalize_identifier_column(
-            filtered,
-            "HADM_ID",
-            frame_name="chartevents",
-        )
-        filtered = filtered.loc[filtered["ERROR"] != 1]
-        filtered = filtered.loc[filtered["CHARTTIME"].notna()]
-        filtered = filtered.loc[~(filtered["VALUE"].isna() & filtered["VALUENUM"].isna())]
-        filtered = filtered.drop(columns=["ERROR"], errors="ignore")
-        filtered["TABLE"] = "chart"
-        return filtered.copy()
-
-    return stream_filtered_shards(
-        raw_data_path / "CHARTEVENTS.csv",
-        ["HADM_ID", "ICUSTAY_ID", "ITEMID", "CHARTTIME", "VALUE", "VALUENUM", "VALUEUOM", "ERROR"],
-        tmp_dir,
-        "chartevents",
-        predicate,
-        chunksize,
-        max_debug_chunks=max_debug_chunks,
-    )
-
-
-def build_labevents_shards(raw_data_path: str | Path, icu: pd.DataFrame, chunksize: int, tmp_dir: Path, max_debug_chunks: int | None = None) -> list[Path]:
-    raw_data_path = normalize_raw_data_path(raw_data_path)
-    hadm_ids = set(
-        canonicalize_mimic_id_series(
-            icu["HADM_ID"],
-            field_name="icu.HADM_ID",
-        )
-    )
-
-    def predicate(chunk: pd.DataFrame) -> pd.DataFrame:
-        candidate_mask = candidate_identifier_membership_mask(
-            chunk["HADM_ID"],
-            hadm_ids,
-        )
-        filtered = chunk.loc[candidate_mask].copy()
-        filtered = canonicalize_identifier_column(
-            filtered,
-            "HADM_ID",
-            frame_name="labevents",
-        )
-        filtered = filtered.loc[filtered["HADM_ID"].isin(hadm_ids)]
-        filtered = filtered.loc[filtered["CHARTTIME"].notna()]
-        filtered = filtered.loc[~(filtered["VALUE"].isna() & filtered["VALUENUM"].isna())]
-        filtered["ICUSTAY_ID"] = pd.NA
-        filtered["TABLE"] = "lab"
-        return filtered.copy()
-
-    return stream_filtered_shards(
-        raw_data_path / "LABEVENTS.csv",
-        ["HADM_ID", "ITEMID", "CHARTTIME", "VALUE", "VALUENUM", "VALUEUOM"],
-        tmp_dir,
-        "labevents",
-        predicate,
-        chunksize,
-        max_debug_chunks=max_debug_chunks,
-    )
-
-
-def build_outputevents_shards(raw_data_path: str | Path, icu: pd.DataFrame, chunksize: int, tmp_dir: Path, max_debug_chunks: int | None = None) -> list[Path]:
-    raw_data_path = normalize_raw_data_path(raw_data_path)
-    icu_ids = set(
-        canonicalize_mimic_id_series(
-            icu["ICUSTAY_ID"],
-            field_name="icu.ICUSTAY_ID",
-        )
-    )
-
-    def predicate(chunk: pd.DataFrame) -> pd.DataFrame:
-        candidate_mask = candidate_identifier_membership_mask(
-            chunk["ICUSTAY_ID"],
-            icu_ids,
-        )
-        filtered = chunk.loc[candidate_mask & chunk["VALUE"].notna()].copy()
-        filtered = canonicalize_identifier_column(
-            filtered,
-            "ICUSTAY_ID",
-            frame_name="outputevents",
-        )
-        filtered = filtered.loc[filtered["ICUSTAY_ID"].isin(icu_ids)]
-        filtered["VALUENUM"] = filtered["VALUE"]
-        filtered["VALUE"] = None
-        filtered["TABLE"] = "output"
-        return filtered.copy()
-
-    return stream_filtered_shards(
-        raw_data_path / "OUTPUTEVENTS.csv",
-        ["ICUSTAY_ID", "ITEMID", "CHARTTIME", "VALUE", "VALUEUOM"],
-        tmp_dir,
-        "outputevents",
-        predicate,
-        chunksize,
-        max_debug_chunks=max_debug_chunks,
-    )
-
-
-def build_inputevents_shards(raw_data_path: str | Path, icu: pd.DataFrame, chunksize: int, tmp_dir: Path, max_debug_chunks: int | None = None) -> tuple[list[Path], list[Path]]:
-    raw_data_path = normalize_raw_data_path(raw_data_path)
-    icu_ids = set(
-        canonicalize_mimic_id_series(
-            icu["ICUSTAY_ID"],
-            field_name="icu.ICUSTAY_ID",
-        )
-    )
-
-    def cv_predicate(chunk: pd.DataFrame) -> pd.DataFrame:
-        candidate_mask = candidate_identifier_membership_mask(
-            chunk["ICUSTAY_ID"],
-            icu_ids,
-        )
-        filtered = chunk.loc[candidate_mask & chunk["AMOUNT"].notna()].copy()
-        filtered = canonicalize_identifier_column(
-            filtered,
-            "ICUSTAY_ID",
-            frame_name="inputevents_cv",
-        )
-        filtered = filtered.loc[filtered["ICUSTAY_ID"].isin(icu_ids)]
-        filtered["TABLE"] = "input_cv"
-        filtered["CHARTTIME"] = pd.to_datetime(filtered["CHARTTIME"])
-        filtered["VALUENUM"] = filtered["AMOUNT"]
-        filtered["VALUEUOM"] = filtered["AMOUNTUOM"]
-        filtered["VALUE"] = None
-        return filtered.copy()
-
-    cv_paths = stream_filtered_shards(
-        raw_data_path / "INPUTEVENTS_CV.csv",
-        ["ICUSTAY_ID", "ITEMID", "CHARTTIME", "AMOUNT", "AMOUNTUOM"],
-        tmp_dir,
-        "inputevents_cv",
-        cv_predicate,
-        chunksize,
-        max_debug_chunks=max_debug_chunks,
-    )
-
-    def mv_predicate(chunk: pd.DataFrame) -> pd.DataFrame:
-        candidate_mask = candidate_identifier_membership_mask(
-            chunk["ICUSTAY_ID"],
-            icu_ids,
-        )
-        filtered = chunk.loc[candidate_mask].copy()
-        filtered = canonicalize_identifier_column(
-            filtered,
-            "ICUSTAY_ID",
-            frame_name="inputevents_mv",
-        )
-        filtered = filtered.loc[filtered["ICUSTAY_ID"].isin(icu_ids)]
-        filtered["TABLE"] = "input_mv"
-        filtered["CHARTTIME"] = pd.to_datetime(filtered["ENDTIME"])
-        filtered["VALUENUM"] = filtered["AMOUNT"]
-        filtered["VALUEUOM"] = filtered["AMOUNTUOM"]
-        filtered["VALUE"] = None
-        return filtered.copy()
-
-    mv_paths = stream_filtered_shards(
-        raw_data_path / "INPUTEVENTS_MV.csv",
-        ["ICUSTAY_ID", "ITEMID", "STARTTIME", "ENDTIME", "AMOUNT", "AMOUNTUOM"],
-        tmp_dir,
-        "inputevents_mv",
-        mv_predicate,
-        chunksize,
-        max_debug_chunks=max_debug_chunks,
-    )
-    return cv_paths, mv_paths
-
-
-def add_feature_rows(frame: pd.DataFrame, fragments: list[pd.DataFrame]) -> None:
-    frame["CHARTTIME"] = pd.to_datetime(frame["CHARTTIME"])
-
-    def append_subset(subset: pd.DataFrame, name: str, lower: float | None = None, upper: float | None = None) -> None:
-        if subset.empty:
-            return
-        subset = subset.copy()
-        subset["NAME"] = name
-        subset["VALUEUOM"] = None
-        subset["VALUE"] = None
-        if lower is not None:
-            subset = subset.loc[(subset["VALUENUM"] >= lower)]
-        if upper is not None:
-            subset = subset.loc[(subset["VALUENUM"] <= upper)]
-        if subset.empty:
-            return
-        fragments.append(subset[["HADM_ID", "ICUSTAY_ID", "CHARTTIME", "VALUENUM", "TABLE", "NAME"]])
-
-    # chart-derived features
-    bp_item_ids = [8368, 220051, 225310, 8555, 8441, 220180, 8502, 8440, 8503, 8504, 8507, 8506, 224643, 227242, 51, 220050, 225309, 6701, 455, 220179, 3313, 3315, 442, 3317, 3323, 3321, 224167, 227243, 52, 220052, 225312, 224, 6702, 224322, 456, 220181, 3312, 3314, 3316, 3322, 3320, 443]
-    bp = frame.loc[frame["ITEMID"].isin(bp_item_ids)]
-    bp = bp.loc[(bp["VALUENUM"] >= 0) & (bp["VALUENUM"] <= 375)]
-    append_subset(bp, "BP")
-
-    chart = frame.loc[frame["TABLE"] == "chart"]
-    gcs_components = {
-        "GCS_eye": [184, 220739],
-        "GCS_motor": [454, 223901],
-        "GCS_verbal": [723, 223900],
-    }
-    for name, item_ids in gcs_components.items():
-        append_subset(chart.loc[chart["ITEMID"].isin(item_ids)], name)
-
-    hr = frame.loc[frame["ITEMID"].isin([211, 220045])]
-    append_subset(hr, "HR", 0, 390)
-
-    rr = frame.loc[frame["ITEMID"].isin([618, 220210, 3603, 224689, 614, 651, 224422, 615, 224690, 619, 224688, 227860, 227918])]
-    append_subset(rr, "RR", 0, 330)
-
-    temp = frame.loc[frame["ITEMID"].isin([3655, 677, 676, 223762, 223761, 678, 679, 3654])]
-    if not temp.empty:
-        temp = temp.copy()
-        temp.loc[temp["ITEMID"].isin([223761, 678, 679, 3654]), "VALUENUM"] = (temp.loc[temp["ITEMID"].isin([223761, 678, 679, 3654]), "VALUENUM"] - 32) * 5 / 9
-        append_subset(temp, "Temperature", 14.2, 47)
-
-    weight = frame.loc[frame["ITEMID"].isin([224639, 226512, 226846, 763, 226531])]
-    if not weight.empty:
-        weight = weight.copy()
-        weight.loc[weight["ITEMID"].isin([226531]), "VALUENUM"] = weight.loc[weight["ITEMID"].isin([226531]), "VALUENUM"] * 0.453592
-        append_subset(weight, "Weight", 0, 300)
-
-    height = frame.loc[frame["ITEMID"].isin([1394, 226707, 226730])]
-    if not height.empty:
-        height = height.copy()
-        height.loc[height["ITEMID"].isin([1394, 226707]), "VALUENUM"] = height.loc[height["ITEMID"].isin([1394, 226707]), "VALUENUM"] * 2.54
-        append_subset(height, "Height", 0, 275)
-
-    fio2 = frame.loc[frame["ITEMID"].isin([3420, 223835, 3422, 189, 727, 190])]
-    if not fio2.empty:
-        fio2 = fio2.copy()
-        fio2.loc[fio2["VALUENUM"] > 1.0, "VALUENUM"] = fio2.loc[fio2["VALUENUM"] > 1.0, "VALUENUM"] / 100
-        append_subset(fio2, "FiO2", 0.2, 1)
 
 
 def validate_icustay_hadm_mapping(icu: pd.DataFrame) -> pd.DataFrame:
@@ -511,34 +204,46 @@ def validate_icustay_hadm_mapping(icu: pd.DataFrame) -> pd.DataFrame:
     if missing_columns:
         raise KeyError(f"ICU mapping is missing required columns: {missing_columns}")
 
-    mapping = canonicalize_identifier_column(
-        icu[["ICUSTAY_ID", "HADM_ID"]],
-        "ICUSTAY_ID",
-        frame_name="ICU mapping",
-    )
-    mapping = canonicalize_identifier_column(
-        mapping,
-        "HADM_ID",
-        frame_name="ICU mapping",
-    )
+    mapping_columns = ["ICUSTAY_ID", "HADM_ID"]
+    if "SUBJECT_ID" in icu.columns:
+        mapping_columns.append("SUBJECT_ID")
+    mapping = icu[mapping_columns].copy()
+    for column in mapping_columns:
+        mapping = canonicalize_identifier_column(
+            mapping,
+            column,
+            frame_name="ICU mapping",
+        )
     try:
         mapping = collapse_identical_rows_or_raise(
             mapping,
             key_columns=["ICUSTAY_ID"],
-            value_columns=["HADM_ID"],
+            value_columns=[column for column in mapping_columns if column != "ICUSTAY_ID"],
             frame_name="ICU mapping",
         )
     except ValueError as error:
         raise ValueError(
-            "ICU mapping contains conflicting duplicate ICUSTAY_ID -> HADM_ID values."
+            "ICU mapping contains conflicting duplicate ICUSTAY_ID mappings."
         ) from error
     return mapping.reset_index(drop=True)
+
+
+def _log_hadm_linkage(source: str, filled_missing: int, replaced_conflicting: int) -> None:
+    if not (filled_missing or replaced_conflicting):
+        return
+    print(
+        f"      {source}: canonical HADM_ID linkage "
+        f"filled_missing={filled_missing:,}; "
+        f"replaced_conflicting={replaced_conflicting:,}; subject_mismatches=0",
+        flush=True,
+    )
 
 
 def link_fragment_hadm_ids(
     frame: pd.DataFrame,
     mapping: pd.DataFrame,
     source: str,
+    diagnostics: dict[str, dict[str, int]] | None = None,
 ) -> pd.DataFrame:
     mapping = validate_icustay_hadm_mapping(mapping)
     linked_input = canonicalize_identifier_column(
@@ -552,10 +257,25 @@ def link_fragment_hadm_ids(
             linked_input,
             "HADM_ID",
             frame_name=source,
+            allow_missing=True,
+        )
+    source_has_subject = "SUBJECT_ID" in linked_input.columns
+    if source_has_subject:
+        if "SUBJECT_ID" not in mapping.columns:
+            raise KeyError(
+                f"{source} contains SUBJECT_ID but the ICU mapping does not."
+            )
+        linked_input = canonicalize_identifier_column(
+            linked_input,
+            "SUBJECT_ID",
+            frame_name=source,
         )
 
+    rename_columns = {"HADM_ID": "_MAPPED_HADM_ID"}
+    if "SUBJECT_ID" in mapping.columns:
+        rename_columns["SUBJECT_ID"] = "_MAPPED_SUBJECT_ID"
     linked = linked_input.merge(
-        mapping.rename(columns={"HADM_ID": "_MAPPED_HADM_ID"}),
+        mapping.rename(columns=rename_columns),
         on="ICUSTAY_ID",
         how="left",
         validate="many_to_one",
@@ -568,72 +288,783 @@ def link_fragment_hadm_ids(
         raise ValueError(
             f"{source} contains {int(unmapped.sum())} row(s) with unmapped ICUSTAY_ID values."
         )
-    if source_has_hadm:
-        conflicts = linked["HADM_ID"] != linked["_MAPPED_HADM_ID"]
-        if conflicts.any():
+    if source_has_subject:
+        subject_mismatches = linked["SUBJECT_ID"] != linked["_MAPPED_SUBJECT_ID"]
+        if subject_mismatches.any():
             raise ValueError(
-                f"{source} contains {int(conflicts.sum())} row(s) whose HADM_ID "
-                "conflicts with the canonical ICU mapping."
+                f"{source} contains {int(subject_mismatches.sum())} row(s) whose "
+                "SUBJECT_ID conflicts with the canonical ICU mapping."
             )
-        return linked.drop(columns=["_MAPPED_HADM_ID"])
 
-    return linked.rename(columns={"_MAPPED_HADM_ID": "HADM_ID"})
-
-
-def collect_event_fragments(chartevents_paths: list[Path], labevents_paths: list[Path], outputevents_paths: list[Path], inputevents_paths: list[Path], icu: pd.DataFrame) -> pd.DataFrame:
-    fragments: list[pd.DataFrame] = []
-    icustay_hadm_mapping = validate_icustay_hadm_mapping(icu)
-    for path in chartevents_paths:
-        frame = read_pickle_shard(path)
-        if frame.empty:
-            continue
-        frame = link_fragment_hadm_ids(frame, icustay_hadm_mapping, "chartevents")
-        add_feature_rows(frame, fragments)
-
-    for path in labevents_paths:
-        frame = read_pickle_shard(path)
-        if frame.empty:
-            continue
-        frame = canonicalize_identifier_column(
-            frame,
-            "HADM_ID",
-            frame_name="labevents",
+    if source_has_hadm:
+        missing_hadm = linked["HADM_ID"].isna()
+        conflicting_hadm = (
+            ~missing_hadm & (linked["HADM_ID"] != linked["_MAPPED_HADM_ID"])
         )
-        frame = canonicalize_identifier_column(
-            frame,
-            "ICUSTAY_ID",
-            frame_name="labevents",
-            allow_missing=True,
+    else:
+        missing_hadm = pd.Series(True, index=linked.index, dtype=bool)
+        conflicting_hadm = pd.Series(False, index=linked.index, dtype=bool)
+
+    filled_missing = int(missing_hadm.sum())
+    replaced_conflicting = int(conflicting_hadm.sum())
+    linked["HADM_ID"] = linked["_MAPPED_HADM_ID"]
+
+    if diagnostics is None:
+        _log_hadm_linkage(source, filled_missing, replaced_conflicting)
+    else:
+        source_counts = diagnostics.setdefault(
+            source,
+            {"filled_missing": 0, "replaced_conflicting": 0},
         )
-        add_feature_rows(frame, fragments)
+        source_counts["filled_missing"] += filled_missing
+        source_counts["replaced_conflicting"] += replaced_conflicting
 
-    for path in outputevents_paths:
-        frame = read_pickle_shard(path)
-        if frame.empty:
-            continue
-        frame = link_fragment_hadm_ids(frame, icustay_hadm_mapping, "outputevents")
-        frame["CHARTTIME"] = pd.to_datetime(frame["CHARTTIME"])
-        frame = frame.loc[(frame["VALUENUM"] >= 0)]
-        if frame.empty:
-            continue
-        frame["NAME"] = "Output"
-        fragments.append(frame[["HADM_ID", "ICUSTAY_ID", "CHARTTIME", "VALUENUM", "TABLE", "NAME"]])
+    helper_columns = [
+        column
+        for column in ["_MAPPED_HADM_ID", "_MAPPED_SUBJECT_ID"]
+        if column in linked.columns
+    ]
+    return linked.drop(columns=helper_columns)
 
-    for path in inputevents_paths:
-        frame = read_pickle_shard(path)
-        if frame.empty:
-            continue
-        frame = link_fragment_hadm_ids(frame, icustay_hadm_mapping, "inputevents")
-        frame["CHARTTIME"] = pd.to_datetime(frame["CHARTTIME"])
-        frame = frame.loc[(frame["VALUENUM"] >= 0)]
-        if frame.empty:
-            continue
-        frame["NAME"] = "Input"
-        fragments.append(frame[["HADM_ID", "ICUSTAY_ID", "CHARTTIME", "VALUENUM", "TABLE", "NAME"]])
 
-    if not fragments:
-        return pd.DataFrame(columns=["HADM_ID", "ICUSTAY_ID", "CHARTTIME", "VALUENUM", "TABLE", "NAME"])
-    return pd.concat(fragments, ignore_index=True)
+def extract_historical_events(raw_data_path: str | Path, icu: pd.DataFrame) -> pd.DataFrame:
+    """Run the full historical in-memory MIMIC event extraction."""
+    # Extract chartevents for icu stays.
+    log_stage(2, "Reading CHARTEVENTS chunks for retained ICU stays")
+    icu_mapping = validate_icustay_hadm_mapping(icu)
+    ch = []
+    for chunk in tqdm(pd.read_csv(os.path.join(raw_data_path,'CHARTEVENTS.csv'),
+                                  chunksize=10000000,
+                    usecols = ['SUBJECT_ID', 'HADM_ID', 'ICUSTAY_ID', 'ITEMID', 'CHARTTIME',
+                               'VALUE', 'VALUENUM', 'VALUEUOM', 'ERROR'],
+                                  dtype={'SUBJECT_ID': 'string', 'HADM_ID': 'string',
+                                         'ICUSTAY_ID': 'string'}),
+                      desc='Reading CHARTEVENTS chunks',
+                      unit='chunk'):
+        chunk = chunk.loc[chunk.ICUSTAY_ID.isin(icu.ICUSTAY_ID)]
+        chunk = chunk.loc[chunk['ERROR']!=1]
+        chunk = chunk.loc[chunk.CHARTTIME.notna()]
+        chunk.drop(columns=['ERROR'], inplace=True)
+        chunk = link_fragment_hadm_ids(chunk, icu_mapping, "CHARTEVENTS")
+        ch.append(chunk)
+    del chunk
+    ch = pd.concat(ch)
+    ch = ch.loc[~(ch.VALUE.isna() & ch.VALUENUM.isna())]
+    ch['TABLE'] = 'chart'
+    print(f"      CHARTEVENTS rows retained: {len(ch):,}")
+
+    # Extract labevents for admissions.
+    log_stage(3, "Reading LABEVENTS for retained admissions")
+    la = pd.read_csv(os.path.join(raw_data_path, 'LABEVENTS.csv'),
+                     usecols = ['HADM_ID', 'ITEMID', 'CHARTTIME',
+                                'VALUE', 'VALUENUM', 'VALUEUOM'],
+                     dtype={'HADM_ID': 'string'})
+    la = la.loc[la.HADM_ID.isin(icu.HADM_ID)]
+    la = la.loc[la.CHARTTIME.notna()]
+    la = la.loc[~(la.VALUE.isna() & la.VALUENUM.isna())]
+    la['ICUSTAY_ID'] = np.nan
+    la['TABLE'] = 'lab'
+    print(f"      LABEVENTS rows retained: {len(la):,}")
+
+    # Extract bp events. Remove outliers. Make sure median
+    # values of CareVue and MetaVision items are close.
+    log_stage(4, "Extracting chart/lab-derived clinical variables")
+    dbp = [8368, 220051, 225310, 8555, 8441, 220180, 8502,
+           8440, 8503, 8504, 8507, 8506, 224643, 227242]
+    sbp = [51, 220050, 225309, 6701, 455, 220179, 3313, 3315,
+           442, 3317, 3323, 3321, 224167, 227243]
+    mbp = [52, 220052, 225312, 224, 6702, 224322, 456, 220181,
+           3312, 3314, 3316, 3322, 3320, 443]
+    ch_bp = ch.loc[ch.ITEMID.isin(dbp+sbp+mbp)]
+    ch_bp = ch_bp.loc[(ch_bp.VALUENUM>=0)&(ch_bp.VALUENUM<=375)]
+    ch_bp.loc[ch_bp.ITEMID.isin(dbp), 'NAME'] = 'DBP'
+    ch_bp.loc[ch_bp.ITEMID.isin(sbp), 'NAME'] = 'SBP'
+    ch_bp.loc[ch_bp.ITEMID.isin(mbp), 'NAME'] = 'MBP'
+    ch_bp['VALUEUOM'] = 'mmHg'
+    ch_bp['VALUE'] = None
+    events = ch_bp.copy()
+    del ch_bp
+
+    # Extract GCS events. Checked for outliers.
+    gcs_eye = [184, 220739]
+    gcs_motor = [454, 223901]
+    gcs_verbal = [723, 223900]
+    ch_gcs = ch.loc[ch.ITEMID.isin(gcs_eye+gcs_motor+gcs_verbal)]
+    ch_gcs.loc[ch_gcs.ITEMID.isin(gcs_eye), 'NAME'] = 'GCS_eye'
+    ch_gcs.loc[ch_gcs.ITEMID.isin(gcs_motor), 'NAME'] = 'GCS_motor'
+    ch_gcs.loc[ch_gcs.ITEMID.isin(gcs_verbal), 'NAME'] = 'GCS_verbal'
+    ch_gcs['VALUEUOM'] = None
+    ch_gcs['VALUE'] = None
+    events = pd.concat([events, ch_gcs])
+    del ch_gcs
+
+    # Extract heart_rate events. Remove outliers.
+    hr = [211, 220045]
+    ch_hr = ch.loc[ch.ITEMID.isin(hr)]
+    ch_hr = ch_hr.loc[(ch_hr.VALUENUM>=0)&(ch_hr.VALUENUM<=390)]
+    ch_hr['NAME'] = 'HR'
+    ch_hr['VALUEUOM'] = 'bpm'
+    ch_hr['VALUE'] = None
+    events = pd.concat([events, ch_hr])
+    del ch_hr
+
+    # Extract respiratory_rate events. Remove outliers.
+    # Checked unit consistency.
+    rr = [618, 220210, 3603, 224689, 614, 651, 224422, 615,
+          224690, 619, 224688, 227860, 227918]
+    ch_rr = ch.loc[ch.ITEMID.isin(rr)]
+    ch_rr = ch_rr.loc[(ch_rr.VALUENUM>=0)&(ch_rr.VALUENUM<=330)]
+    ch_rr['NAME'] = 'RR'
+    ch_rr['VALUEUOM'] = 'brpm'
+    ch_rr['VALUE'] = None
+    events = pd.concat([events, ch_rr])
+    del ch_rr
+
+    # Extract temperature events. Convert F to C. Remove outliers.
+    temp_c = [3655, 677, 676, 223762]
+    temp_f = [223761, 678, 679, 3654]
+    ch_temp_c = ch.loc[ch.ITEMID.isin(temp_c)]
+    ch_temp_f = ch.loc[ch.ITEMID.isin(temp_f)]
+    ch_temp_f.VALUENUM = (ch_temp_f.VALUENUM-32)*5/9
+    ch_temp = pd.concat([ch_temp_c, ch_temp_f])
+    del ch_temp_c
+    del ch_temp_f
+    ch_temp = ch_temp.loc[(ch_temp.VALUENUM>=14.2)&(ch_temp.VALUENUM<=47)]
+    ch_temp['NAME'] = 'Temperature'
+    ch_temp['VALUEUOM'] = 'C'
+    ch_temp['VALUE'] = None
+    events = pd.concat([events, ch_temp])
+    del ch_temp
+
+    # Extract weight events. Convert lb to kg. Remove outliers.
+    we_kg = [224639, 226512, 226846, 763]
+    we_lb = [226531]
+    ch_we_kg = ch.loc[ch.ITEMID.isin(we_kg)]
+    ch_we_lb = ch.loc[ch.ITEMID.isin(we_lb)]
+    ch_we_lb.VALUENUM = ch_we_lb.VALUENUM * 0.453592
+    ch_we = pd.concat([ch_we_kg, ch_we_lb])
+    del ch_we_kg
+    del ch_we_lb
+    ch_we = ch_we.loc[(ch_we.VALUENUM>=0)&(ch_we.VALUENUM<=300)]
+    ch_we['NAME'] = 'Weight'
+    ch_we['VALUEUOM'] = 'kg'
+    ch_we['VALUE'] = None
+    events = pd.concat([events, ch_we])
+    del ch_we
+
+    # Extract height events. Convert in to cm.
+    he_in = [1394, 226707]
+    he_cm = [226730]
+    ch_he_in = ch.loc[ch.ITEMID.isin(he_in)]
+    ch_he_cm = ch.loc[ch.ITEMID.isin(he_cm)]
+    ch_he_in.VALUENUM = ch_he_in.VALUENUM * 2.54
+    ch_he = pd.concat([ch_he_in, ch_he_cm])
+    del ch_he_in
+    del ch_he_cm
+    ch_he = ch_he.loc[(ch_he.VALUENUM>=0)&(ch_he.VALUENUM<=275)]
+    ch_he['NAME'] = 'Height'
+    ch_he['VALUEUOM'] = 'cm'
+    ch_he['VALUE'] = None
+    events = pd.concat([events, ch_he])
+    del ch_he
+
+    # Extract fio2 events. Convert % to fraction. Remove outliers.
+    fio2 = [3420, 223835, 3422, 189, 727, 190]
+    ch_fio2 = ch.loc[ch.ITEMID.isin(fio2)]
+    idx = ch_fio2.VALUENUM>1.0
+    ch_fio2.loc[idx, 'VALUENUM'] = ch_fio2.loc[idx, 'VALUENUM'] / 100
+    ch_fio2 = ch_fio2.loc[(ch_fio2.VALUENUM>=0.2)&(ch_fio2.VALUENUM<=1)]
+    ch_fio2['NAME'] = 'FiO2'
+    ch_fio2['VALUEUOM'] = None
+    ch_fio2['VALUE'] = None
+    events = pd.concat([events, ch_fio2])
+    del ch_fio2
+
+    # Extract capillary refill rate events. Convert to binary.
+    cr = [3348, 115, 8377, 224308, 223951]
+    ch_cr = ch.loc[ch.ITEMID.isin(cr)]
+    ch_cr = ch_cr.loc[~(ch_cr.VALUE=='Other/Remarks')]
+    idx = (ch_cr.VALUE=='Normal <3 Seconds')|(ch_cr.VALUE=='Normal <3 secs')
+    ch_cr.loc[idx, 'VALUENUM'] = 0
+    idx = (ch_cr.VALUE=='Abnormal >3 Seconds')|(ch_cr.VALUE=='Abnormal >3 secs')
+    ch_cr.loc[idx, 'VALUENUM'] = 1
+    ch_cr['VALUEUOM'] = None
+    ch_cr['NAME'] = 'CRR'
+    events = pd.concat([events, ch_cr])
+    del ch_cr
+
+    # Extract glucose events. Remove outliers.
+    gl_bl = [225664, 1529, 811, 807, 3745, 50809]
+    gl_wb = [226537]
+    gl_se = [220621, 50931]
+
+    ev_blgl = pd.concat((ch.loc[ch.ITEMID.isin(gl_bl)], la.loc[la.ITEMID.isin(gl_bl)]))
+    ev_blgl = ev_blgl.loc[(ev_blgl.VALUENUM>=0)&(ev_blgl.VALUENUM<=2200)]
+    ev_blgl['NAME'] = 'Glucose (Blood)'
+    ev_wbgl = pd.concat((ch.loc[ch.ITEMID.isin(gl_wb)], la.loc[la.ITEMID.isin(gl_wb)]))
+    ev_wbgl = ev_wbgl.loc[(ev_wbgl.VALUENUM>=0)&(ev_wbgl.VALUENUM<=2200)]
+    ev_wbgl['NAME'] = 'Glucose (Whole Blood)'
+    ev_segl = pd.concat((ch.loc[ch.ITEMID.isin(gl_se)], la.loc[la.ITEMID.isin(gl_se)]))
+    ev_segl = ev_segl.loc[(ev_segl.VALUENUM>=0)&(ev_segl.VALUENUM<=2200)]
+    ev_segl['NAME'] = 'Glucose (Serum)'
+
+    ev_gl = pd.concat((ev_blgl, ev_wbgl, ev_segl))
+    del ev_blgl, ev_wbgl, ev_segl
+    ev_gl['VALUEUOM'] = 'mg/dL'
+    ev_gl['VALUE'] = None
+    events = pd.concat([events, ev_gl])
+    del ev_gl
+
+    # Extract bilirubin events. Remove outliers.
+    br_to = [50885]
+    br_di = [50883]
+    br_in = [50884]
+    ev_br = pd.concat((ch.loc[ch.ITEMID.isin(br_to+br_di+br_in)],
+                       la.loc[la.ITEMID.isin(br_to+br_di+br_in)]))
+    ev_br = ev_br.loc[(ev_br.VALUENUM>=0)&(ev_br.VALUENUM<=66)]
+    ev_br.loc[ev_br.ITEMID.isin(br_to), 'NAME'] = 'Bilirubin (Total)'
+    ev_br.loc[ev_br.ITEMID.isin(br_di), 'NAME'] = 'Bilirubin (Direct)'
+    ev_br.loc[ev_br.ITEMID.isin(br_in), 'NAME'] = 'Bilirubin (Indirect)'
+    ev_br['VALUEUOM'] = 'mg/dL'
+    ev_br['VALUE'] = None
+    events = pd.concat([events, ev_br])
+    del ev_br
+
+    # Extract intubated events.
+    itb = [50812]
+    la_itb = la.loc[la.ITEMID.isin(itb)]
+    idx = (la_itb.VALUE=='INTUBATED')
+    la_itb.loc[idx, 'VALUENUM'] = 1
+    idx = (la_itb.VALUE=='NOT INTUBATED')
+    la_itb.loc[idx, 'VALUENUM'] = 0
+    la_itb['VALUEUOM'] = None
+    la_itb['NAME'] = 'Intubated'
+    events = pd.concat([events, la_itb])
+    del la_itb
+
+    # Extract multiple events. Remove outliers.
+    o2sat = [834, 50817, 8498, 220227, 646, 220277]
+    sod = [50983, 50824]
+    pot = [50971, 50822]
+    mg = [50960]
+    po4 = [50970]
+    ca_total = [50893]
+    ca_free = [50808]
+    wbc = [51301, 51300]
+    hct = [50810, 51221]
+    hgb = [51222, 50811]
+    cl = [50902, 50806]
+    bic = [50882, 50803]
+    alt = [50861]
+    alp = [50863]
+    ast = [50878]
+    alb = [50862]
+    lac = [50813]
+    ld = [50954]
+    usg = [51498]
+    ph_ur = [51491, 51094, 220734, 1495, 1880, 1352, 6754, 7262]
+    ph_bl = [50820]
+    po2 = [50821]
+    pco2 = [50818]
+    tco2 = [50804]
+    be = [50802]
+    monos = [51254]
+    baso = [51146]
+    eos = [51200]
+    neuts = [51256]
+    lym_per = [51244, 51245]
+    lym_abs = [51133]
+    pt = [51274]
+    ptt = [51275]
+    inr = [51237]
+    agap = [50868]
+    bun = [51006]
+    cr_bl = [50912]
+    cr_ur = [51082]
+    mch = [51248]
+    mchc = [51249]
+    mcv = [51250]
+    rdw = [51277]
+    plt = [51265]
+    rbc = [51279]
+
+    features = {'O2 Saturation': [o2sat, [0,100], '%'],
+                'Sodium': [sod, [0,250], 'mEq/L'],
+                'Potassium': [pot, [0,15], 'mEq/L'],
+                'Magnesium': [mg, [0,22], 'mg/dL'],
+                'Phosphate': [po4, [0,22], 'mg/dL'],
+                'Calcium Total': [ca_total, [0,40], 'mg/dL'],
+                'Calcium Free': [ca_free, [0,10], 'mmol/L'],
+                'WBC': [wbc, [0,1100], 'K/uL'],
+                'Hct': [hct, [0,100], '%'],
+                'Hgb': [hgb, [0,30], 'g/dL'],
+                'Chloride': [cl, [0,200], 'mEq/L'],
+                'Bicarbonate': [bic, [0,66], 'mEq/L'],
+                'ALT': [alt, [0,11000], 'IU/L'],
+                'ALP': [alp, [0,4000], 'IU/L'],
+                'AST': [ast, [0,22000], 'IU/L'],
+                'Albumin': [alb, [0,10], 'g/dL'],
+                'Lactate': [lac, [0,33], 'mmol/L'],
+                'LDH': [ld, [0,35000], 'IU/L'],
+                'SG Urine': [usg, [0,2], ''],
+                'pH Urine': [ph_ur, [0,14], ''],
+                'pH Blood': [ph_bl, [0,14], ''],
+                'PO2': [po2, [0,770], 'mmHg'],
+                'PCO2': [pco2, [0,220], 'mmHg'],
+                'Total CO2': [tco2, [0,65], 'mEq/L'],
+                'Base Excess': [be, [-31, 28], 'mEq/L'],
+                'Monocytes': [monos, [0,100], '%'],
+                'Basophils': [baso, [0,100], '%'],
+                'Eoisinophils': [eos, [0,100], '%'],
+                'Neutrophils': [neuts, [0,100], '%'],
+                'Lymphocytes': [lym_per, [0,100], '%'],
+                'Lymphocytes (Absolute)': [lym_abs, [0,25000], '#/uL'],
+                'PT': [pt, [0,150], 'sec'],
+                'PTT': [ptt, [0,150], 'sec'],
+                'INR': [inr, [0,150], ''],
+                'Anion Gap': [agap, [0,55], 'mg/dL'],
+                'BUN': [bun, [0,275], 'mEq/L'],
+                'Creatinine Blood': [cr_bl, [0,66], 'mg/dL'],
+                'Creatinine Urine': [cr_ur, [0,650], 'mg/dL'],
+                'MCH': [mch, [0,50], 'pg'],
+                'MCHC': [mchc, [0,50], '%'],
+                'MCV': [mcv, [0,150], 'fL'],
+                'RDW': [rdw, [0,37], '%'],
+                'Platelet Count': [plt, [0,2200], 'K/uL'],
+                'RBC': [rbc, [0,14], 'm/uL']
+                }
+
+    for feature_index, (k, v) in enumerate(features.items(), start=1):
+        print(f"      [chart/lab feature {feature_index}/{len(features)}] {k}")
+        ev_k = pd.concat((ch.loc[ch.ITEMID.isin(v[0])], la.loc[la.ITEMID.isin(v[0])]))
+        ev_k = ev_k.loc[(ev_k.VALUENUM>=v[1][0])&(ev_k.VALUENUM<=v[1][1])]
+        ev_k['NAME'] = k
+        ev_k['VALUEUOM'] = v[2]
+        ev_k['VALUE'] = None
+        assert (ev_k.VALUENUM.isna().sum()==0)
+        events = pd.concat([events, ev_k])
+    del ev_k
+    print(f"      Rows accumulated after chart/lab extraction: {len(events):,}")
+
+    # Free some memory.
+    del ch, la
+
+    # Extract outputevents.
+    log_stage(5, "Reading OUTPUTEVENTS and extracting output variables")
+    oe = pd.read_csv(os.path.join(raw_data_path,'OUTPUTEVENTS.csv'),
+                     usecols = ['ICUSTAY_ID', 'ITEMID', 'CHARTTIME', 'VALUE', 'VALUEUOM'],
+                     dtype={'ICUSTAY_ID': 'string'})
+    oe = oe.loc[oe.VALUE.notna()]
+    oe['VALUENUM'] = oe.VALUE
+    oe.VALUE = None
+    oe = oe.loc[oe.ICUSTAY_ID.isin(icu.ICUSTAY_ID)]
+    oe['TABLE'] = 'output'
+
+    # Extract information about output items from D_ITEMS.csv.
+    items = pd.read_csv(os.path.join(raw_data_path,'D_ITEMS.csv'),
+                        usecols=['ITEMID', 'LABEL', 'ABBREVIATION', 'UNITNAME', 'PARAM_TYPE'])
+    items.loc[items.LABEL.isna(), 'LABEL'] = ''
+    items.LABEL = items.LABEL.str.lower()
+    oeitems = oe[['ITEMID']].drop_duplicates()
+    oeitems = oeitems.merge(items, on='ITEMID', how='left')
+
+    # Extract multiple events. Replace outliers with median.
+    uf = [40286]
+    keys = ['urine', 'foley', 'void', 'nephrostomy', 'condom', 'drainage bag']
+    cond = pd.concat([oeitems.LABEL.str.contains(k) for k in keys], axis=1).any(axis='columns')
+    ur = list(oeitems.loc[cond].ITEMID)
+    keys = ['stool', 'fecal', 'colostomy', 'ileostomy', 'rectal']
+    cond = pd.concat([oeitems.LABEL.str.contains(k) for k in keys], axis=1).any(axis='columns')
+    st = list(oeitems.loc[cond].ITEMID)
+    ct = list(oeitems.loc[oeitems.LABEL.str.contains('chest tube')].ITEMID) + [226593, 226590, 226591, 226595, 226592]
+    gs = [40059, 40052, 226576, 226575, 226573, 40051, 226630]
+    ebl = [40064, 226626, 40491, 226629]
+    em = [40067, 226571, 40490, 41015, 40427]
+    jp = list(oeitems.loc[oeitems.LABEL.str.contains('jackson')].ITEMID)
+    res = [227510, 227511, 42837, 43892, 44909, 44959]
+    pre = [40060, 226633]
+
+    features = {'Ultrafiltrate': [uf, [0,7000],'mL'],
+                'Urine': [ur, [0,2500], 'mL'],
+                'Stool': [st, [0,4000], 'mL'],
+                'Chest Tube': [ct, [0,2500], 'mL'],
+                'Gastric': [gs, [0,4000], 'mL'],
+                'EBL': [ebl, [0,10000], 'mL'],
+    #             'Pre-admission': [pre, [0,13000], 'mL'], # Repeated by mistake.
+                'Emesis': [em, [0,2000], 'mL'],
+                'Jackson-Pratt': [jp, [0,2000], 'ml'],
+                'Residual': [res, [0, 1050], 'mL'],
+                'Pre-admission Output': [pre, [0, 13000], 'ml']
+                }
+
+    for feature_index, (k, v) in enumerate(features.items(), start=1):
+        print(f"      [output feature {feature_index}/{len(features)}] {k}")
+        ev_k = oe.loc[oe.ITEMID.isin(v[0])]
+        ind = (ev_k.VALUENUM>=v[1][0])&(ev_k.VALUENUM<=v[1][1])
+        med = ev_k.VALUENUM.loc[ind].median()
+        ev_k.loc[~ind, 'VALUENUM'] = med
+        ev_k['NAME'] = k
+        ev_k['VALUEUOM'] = v[2]
+        events = pd.concat([events, ev_k])
+    del ev_k
+    print(f"      Rows accumulated after output extraction: {len(events):,}")
+
+    # Extract CV and MV inputevents.
+    log_stage(6, "Reading INPUTEVENTS tables and splitting long MetaVision intervals")
+    ie_cv = pd.read_csv(os.path.join(raw_data_path,'INPUTEVENTS_CV.csv'),
+        usecols = ['ICUSTAY_ID', 'ITEMID', 'CHARTTIME',
+                   'AMOUNT', 'AMOUNTUOM'],
+        dtype={'ICUSTAY_ID': 'string'})
+    ie_cv['TABLE'] = 'input_cv'
+    ie_cv = ie_cv.loc[ie_cv.AMOUNT.notna()]
+    ie_cv = ie_cv.loc[ie_cv.ICUSTAY_ID.isin(icu.ICUSTAY_ID)]
+    ie_cv.CHARTTIME = pd.to_datetime(ie_cv.CHARTTIME)
+
+    ie_mv = pd.read_csv(os.path.join(raw_data_path,'INPUTEVENTS_MV.csv'),
+        usecols = ['ICUSTAY_ID', 'ITEMID', 'STARTTIME', 'ENDTIME',
+                   'AMOUNT', 'AMOUNTUOM'],
+        dtype={'ICUSTAY_ID': 'string'})
+    ie_mv = ie_mv.loc[ie_mv.ICUSTAY_ID.isin(icu.ICUSTAY_ID)]
+
+    # Split MV intervals hourly.
+    ie_mv.STARTTIME = pd.to_datetime(ie_mv.STARTTIME)
+    ie_mv.ENDTIME = pd.to_datetime(ie_mv.ENDTIME)
+    ie_mv['TD'] = ie_mv.ENDTIME - ie_mv.STARTTIME
+    new_ie_mv = ie_mv.loc[ie_mv.TD<=pd.Timedelta(1,'h')].drop(columns=['STARTTIME', 'TD'])
+    ie_mv = ie_mv.loc[ie_mv.TD>pd.Timedelta(1,'h')]
+    new_rows = []
+    for _,row in tqdm(
+            ie_mv.iterrows(),
+            total=len(ie_mv),
+            desc='Splitting long MV intervals',
+            unit='row'):
+        icuid, iid, amo, uom, stm, td = row.ICUSTAY_ID, row.ITEMID, row.AMOUNT, row.AMOUNTUOM, row.STARTTIME, row.TD
+        td = td.total_seconds()/60
+        num_hours = td // 60
+        hour_amount = 60*amo/td
+        for i in range(1,int(num_hours)+1):
+            new_rows.append([icuid, iid, stm+pd.Timedelta(i,'h'), hour_amount, uom])
+        rem_mins = td % 60
+        if rem_mins>0:
+            new_rows.append([icuid, iid, row['ENDTIME'], rem_mins*amo/td, uom])
+    new_rows = pd.DataFrame(new_rows, columns=['ICUSTAY_ID', 'ITEMID', 'ENDTIME', 'AMOUNT', 'AMOUNTUOM'])
+    new_ie_mv = pd.concat((new_ie_mv, new_rows))
+    ie_mv = new_ie_mv.copy()
+    del new_ie_mv
+    ie_mv['TABLE'] = 'input_mv'
+    ie_mv.rename(columns={'ENDTIME':'CHARTTIME'}, inplace=True)
+
+    # Combine CV and MV inputevents.
+    ie = pd.concat((ie_cv, ie_mv))
+    del ie_cv, ie_mv
+    ie.rename(columns={'AMOUNT':'VALUENUM', 'AMOUNTUOM':'VALUEUOM'}, inplace=True)
+    events.CHARTTIME = pd.to_datetime(events.CHARTTIME)
+    print(f"      Combined input-event rows retained: {len(ie):,}")
+
+    # Convert mcg->mg, L->ml.
+    ind = (ie.VALUEUOM=='mcg')
+    ie.loc[ind, 'VALUENUM'] = ie.loc[ind, 'VALUENUM']*0.001
+    ie.loc[ind, 'VALUEUOM'] = 'mg'
+    ind = (ie.VALUEUOM=='L')
+    ie.loc[ind, 'VALUENUM'] = ie.loc[ind, 'VALUENUM']*1000
+    ie.loc[ind, 'VALUEUOM'] = 'ml'
+
+    # Extract Vasopressin events. Remove outliers.
+    vaso = [30051, 222315]
+    ev_vaso = ie.loc[ie.ITEMID.isin(vaso)]
+    ind1 = (ev_vaso.VALUENUM==0)
+    ind2 = ev_vaso.VALUEUOM.isin(['U','units'])
+    ind3 = (ev_vaso.VALUENUM>=0)&(ev_vaso.VALUENUM<=400)
+    ind = ((ind2&ind3)|ind1)
+    med = ev_vaso.VALUENUM.loc[ind].median()
+    ev_vaso.loc[~ind, 'VALUENUM'] = med
+    ev_vaso['VALUEUOM'] = 'units'
+    ev_vaso['NAME'] = 'Vasopressin'
+    events = pd.concat([events, ev_vaso])
+    del ev_vaso
+
+    # Extract Vancomycin events. Convert dose,g to mg. Remove outliers.
+    vanc = [225798]
+    ev_vanc = ie.loc[ie.ITEMID.isin(vanc)]
+    ind = ev_vanc.VALUEUOM.isin(['mg'])
+    ev_vanc.loc[ind, 'VALUENUM'] = ev_vanc.loc[ind, 'VALUENUM']*0.001
+    ev_vanc['VALUEUOM'] = 'g'
+    ind = (ev_vanc.VALUENUM>=0)&(ev_vanc.VALUENUM<=8)
+    med = ev_vanc.VALUENUM.loc[ind].median()
+    ev_vanc.loc[~ind, 'VALUENUM'] = med
+    ev_vanc['NAME'] = 'Vacomycin'
+    events = pd.concat([events, ev_vanc])
+    del ev_vanc
+
+    # Extract Calcium Gluconate events. Convert units. Remove outliers.
+    cagl = [30023, 221456, 227525, 42504, 43070, 45699, 46591, 44346, 46291]
+    ev_cagl = ie.loc[ie.ITEMID.isin(cagl)]
+    ind = ev_cagl.VALUEUOM.isin(['mg'])
+    ev_cagl.loc[ind, 'VALUENUM'] = ev_cagl.loc[ind, 'VALUENUM']*0.001
+    ind1 = (ev_cagl.VALUENUM==0)
+    ind2 = ev_cagl.VALUEUOM.isin(['mg', 'gm', 'grams'])
+    ind3 = (ev_cagl.VALUENUM>=0)&(ev_cagl.VALUENUM<=200)
+    ind = (ind2&ind3)|ind1
+    med = ev_cagl.VALUENUM.loc[ind].median()
+    ev_cagl.loc[~ind, 'VALUENUM'] = med
+    ev_cagl['VALUEUOM'] = 'g'
+    ev_cagl['NAME'] = 'Calcium Gluconate'
+    events = pd.concat([events, ev_cagl])
+    del ev_cagl
+
+    # Extract Furosemide events. Remove outliers.
+    furo = [30123, 221794, 228340]
+    ev_furo = ie.loc[ie.ITEMID.isin(furo)]
+    ind1 = (ev_furo.VALUENUM==0)
+    ind2 = (ev_furo.VALUEUOM=='mg')
+    ind3 = (ev_furo.VALUENUM>=0)&(ev_furo.VALUENUM<=250)
+    ind = ind1|(ind2&ind3)
+    med = ev_furo.VALUENUM.loc[ind].median()
+    ev_furo.loc[~ind, 'VALUENUM'] = med
+    ev_furo['VALUEUOM'] = 'mg'
+    ev_furo['NAME'] = 'Furosemide'
+    events = pd.concat([events, ev_furo])
+    del ev_furo
+
+    # Extract Famotidine events. Remove outliers.
+    famo = [225907]
+    ev_famo = ie.loc[ie.ITEMID.isin(famo)]
+    ind1 = (ev_famo.VALUENUM==0)
+    ind2 = (ev_famo.VALUEUOM=='dose')
+    ind3 = (ev_famo.VALUENUM>=0)&(ev_famo.VALUENUM<=1)
+    ind = ind1|(ind2&ind3)
+    med = ev_famo.VALUENUM.loc[ind].median()
+    ev_famo.loc[~ind, 'VALUENUM'] = med
+    ev_famo['VALUEUOM'] = 'dose'
+    ev_famo['NAME'] = 'Famotidine'
+    events = pd.concat([events, ev_famo])
+    del ev_famo
+
+    # Extract Piperacillin events. Convert units. Remove outliers.
+    pipe = [225893, 225892]
+    ev_pipe = ie.loc[ie.ITEMID.isin(pipe)]
+    ind1 = (ev_pipe.VALUENUM==0)
+    ind2 = (ev_pipe.VALUEUOM=='dose')
+    ind3 = (ev_pipe.VALUENUM>=0)&(ev_pipe.VALUENUM<=1)
+    ind = ind1|(ind2&ind3)
+    med = ev_pipe.VALUENUM.loc[ind].median()
+    ev_pipe.loc[~ind, 'VALUENUM'] = med
+    ev_pipe['VALUEUOM'] = 'dose'
+    ev_pipe['NAME'] = 'Piperacillin'
+    events = pd.concat([events, ev_pipe])
+    del ev_pipe
+
+    # Extract Cefazolin events. Convert units. Remove outliers.
+    cefa = [225850]
+    ev_cefa = ie.loc[ie.ITEMID.isin(cefa)]
+    ind1 = (ev_cefa.VALUENUM==0)
+    ind2 = (ev_cefa.VALUEUOM=='dose')
+    ind3 = (ev_cefa.VALUENUM>=0)&(ev_cefa.VALUENUM<=2)
+    ind = ind1|(ind2&ind3)
+    med = ev_cefa.VALUENUM.loc[ind].median()
+    ev_cefa.loc[~ind, 'VALUENUM'] = med
+    ev_cefa['VALUEUOM'] = 'dose'
+    ev_cefa['NAME'] = 'Cefazolin'
+    events = pd.concat([events, ev_cefa])
+    del ev_cefa
+
+    # Extract Fiber events. Remove outliers.
+    fibe = [225936, 30166, 30073, 227695, 30088, 225928, 226051,
+            226050, 226048, 45381, 45597, 227699, 227696, 44218,
+            45406, 44675, 226049, 44202, 45370, 227698, 226027,
+            42106, 43994, 45865, 44318, 42091, 44699, 44010, 43134,
+            44045, 43088, 42641, 45691, 45515, 45777, 42663, 42027,
+            44425, 45657, 45775, 44631, 44106, 42116, 44061, 44887,
+            42090, 42831, 45541, 45497, 46789, 44765, 42050]
+    ev_fibe = ie.loc[ie.ITEMID.isin(fibe)]
+    ind1 = (ev_fibe.VALUENUM==0)
+    ind2 = (ev_fibe.VALUEUOM=='ml')
+    ind3 = (ev_fibe.VALUENUM>=0)&(ev_fibe.VALUENUM<=1600)
+    ind = ind1|(ind2&ind3)
+    med = ev_fibe.VALUENUM.loc[ind].median()
+    ev_fibe.loc[~ind, 'VALUENUM'] = med
+    ev_fibe['NAME'] = 'Fiber'
+    ev_fibe['VALUEUOM'] = 'ml'
+    events = pd.concat([events, ev_fibe])
+    del ev_fibe
+
+    # Extract Pantoprazole events. Remove outliers.
+    pant = [225910, 40549, 41101, 41583, 44008, 40700, 40550]
+    ev_pant = ie.loc[ie.ITEMID.isin(pant)]
+    ind = (ev_pant.VALUENUM>0)
+    ev_pant.loc[ind, 'VALUENUM'] = 1
+    ind = (ev_pant.VALUENUM>=0)
+    med = ev_pant.VALUENUM.loc[ind].median()
+    ev_pant.loc[~ind, 'VALUENUM'] = med
+    ev_pant['NAME'] = 'Pantoprazole'
+    ev_pant['VALUEUOM'] = 'dose'
+    events = pd.concat([events, ev_pant])
+    del ev_pant
+
+    # Extract Magnesium Sulphate events. Remove outliers.
+    masu = [222011, 30027, 227524]
+    ev_masu = ie.loc[ie.ITEMID.isin(masu)]
+    ind = (ev_masu.VALUEUOM=='mg')
+    ev_masu.loc[ind, 'VALUENUM'] = ev_masu.loc[ind, 'VALUENUM']*0.001
+    ind1 = (ev_masu.VALUENUM==0)
+    ind2 = ev_masu.VALUEUOM.isin(['gm', 'grams', 'mg'])
+    ind3 = (ev_masu.VALUENUM>=0)&(ev_masu.VALUENUM<=125)
+    ind = ind1|(ind2&ind3)
+    med = ev_masu.VALUENUM.loc[ind].median()
+    ev_masu.loc[~ind, 'VALUENUM'] = med
+    ev_masu['VALUEUOM'] = 'g'
+    ev_masu['NAME'] = 'Magnesium Sulphate'
+    events = pd.concat([events, ev_masu])
+    del ev_masu
+
+    # Extract Potassium Chloride events. Remove outliers.
+    poch = [30026, 225166, 227536]
+    ev_poch = ie.loc[ie.ITEMID.isin(poch)]
+    ind1 = (ev_poch.VALUENUM==0)
+    ind2 = ev_poch.VALUEUOM.isin(['mEq', 'mEq.'])
+    ind3 = (ev_poch.VALUENUM>=0)&(ev_poch.VALUENUM<=501)
+    ind = ind1|(ind2&ind3)
+    med = ev_poch.VALUENUM.loc[ind].median()
+    ev_poch.loc[~ind, 'VALUENUM'] = med
+    ev_poch['VALUEUOM'] = 'mEq'
+    ev_poch['NAME'] = 'KCl'
+    events = pd.concat([events, ev_poch])
+    del ev_poch
+
+    # Extract multiple events. Remove outliers.
+    log_stage(7, "Extracting medication and infusion variables from input events")
+    mida = [30124, 221668]
+    prop = [30131, 222168]
+    albu25 = [220862, 30009]
+    albu5 = [220864, 30008]
+    ffpl = [30005, 220970]
+    lora = [30141, 221385]
+    mosu = [30126, 225154]
+    game = [30144, 225799]
+    lari = [30021, 225828]
+    milr = [30125, 221986]
+    crys = [30101, 226364, 30108, 226375]
+    hepa = [30025, 225975, 225152]
+    prbc = [30001, 225168, 30104, 226368, 227070]
+    poin = [30056, 226452, 30109, 226377]
+    neos = [30128, 221749, 30127]
+    pigg = [226089, 30063]
+    nigl = [30121, 222056, 30049]
+    nipr = [30050, 222051]
+    meto = [225974]
+    nore = [30120, 221906, 30047]
+    coll = [30102, 226365, 30107, 226376]
+    hyzi = [221828]
+    gtfl = [226453, 30059]
+    hymo = [30163, 221833]
+    fent = [225942, 30118, 221744, 30149]
+    inre = [30045, 223258, 30100]
+    inhu = [223262]
+    ingl = [223260]
+    innp = [223259]
+    nana = [30140]
+    d5wa = [30013, 220949]
+    doth = [30015, 225823, 30060, 225825, 220950, 30016,
+            30061, 225827, 225941, 30160, 220952, 30159,
+            30014, 30017, 228142, 228140, 45360, 228141,
+            41550]
+    nosa = [225158, 30018]
+    hans = [30020, 225159]
+    stwa = [225944, 30065]
+    frwa = [30058, 225797, 41430, 40872, 41915, 43936,
+            41619, 42429, 44492, 46169, 42554]
+    solu = [225943]
+    dopa = [30043, 221662]
+    epin = [30119, 221289, 30044]
+    amio = [30112, 221347, 228339, 45402]
+    tpnu = [30032, 225916, 225917, 30096]
+    msbo = [227523]
+    pcbo = [227522]
+    prad = [30054, 226361]
+
+    features = {'Midazolam': [mida, [0, 500], 'mg'],
+                'Propofol': [prop, [0, 12000], 'mg'],
+                'Albumin 25%': [albu25, [0, 750], 'ml'],
+                'Albumin 5%': [albu5, [0, 1300], 'ml'],
+                'Fresh Frozen Plasma': [ffpl, [0, 33000], 'ml'],
+                'Lorazepam': [lora, [0, 300], 'mg'],
+                'Morphine Sulfate': [mosu, [0, 4000], 'mg'],
+                'Gastric Meds': [game, [0, 7000], 'ml'],
+                'Lactated Ringers': [lari, [0, 17000], 'ml'],
+                'Milrinone': [milr, [0, 50], 'ml'],
+                'OR/PACU Crystalloid': [crys, [0, 22000], 'ml'],
+                'Packed RBC': [prbc, [0, 17250], 'ml'],
+                'PO intake': [poin, [0, 11000], 'ml'],
+                'Neosynephrine': [neos, [0, 1200], 'mg'],
+                'Piggyback': [pigg, [0, 1000], 'ml'],
+                'Nitroglycerine': [nigl, [0, 350], 'mg'],
+                'Nitroprusside': [nipr, [0, 430], 'mg'],
+                'Metoprolol': [meto, [0, 151], 'mg'],
+                'Norepinephrine': [nore, [0, 80], 'mg'],
+                'Colloid': [coll, [0, 20000], 'ml'],
+                'Hydralazine': [hyzi, [0, 80], 'mg'],
+                'GT Flush': [gtfl, [0, 2100], 'ml'],
+                'Hydromorphone': [hymo, [0, 125], 'mg'],
+                'Fentanyl': [fent, [0, 20], 'mg'],
+                'Insulin Regular': [inre, [0, 1500], 'units'],
+                'Insulin Humalog': [inhu, [0, 340], 'units'],
+                'Insulin largine': [ingl, [0, 150], 'units'],
+                'Insulin NPH': [innp, [0, 100], 'units'],
+                'Unknown': [nana, [0, 1100], 'ml'],
+                'D5W': [d5wa, [0,11000], 'ml'],
+                'Dextrose Other': [doth, [0,4000], 'ml'],
+                'Normal Saline': [nosa, [0, 11000], 'ml'],
+                'Half Normal Saline': [hans, [0, 2000], 'ml'],
+                'Sterile Water': [stwa, [0, 10000], 'ml'],
+                'Free Water': [frwa, [0, 2500], 'ml'],
+                'Solution': [solu, [0, 1500], 'ml'],
+                'Dopamine': [dopa, [0, 1300], 'mg'],
+                'Epinephrine': [epin, [0, 100], 'mg'],
+                'Amiodarone': [amio, [0, 1200], 'mg'],
+                'TPN': [tpnu, [0, 1600], 'ml'],
+                'Magnesium Sulfate (Bolus)': [msbo, [0, 250], 'ml'],
+                'KCl (Bolus)': [pcbo, [0, 500], 'ml'],
+                'Pre-admission Intake': [prad, [0, 30000], 'ml']
+                }
+
+    for feature_index, (k, v) in enumerate(features.items(), start=1):
+        print(f"      [input feature {feature_index}/{len(features)}] {k}")
+        ev_k = ie.loc[ie.ITEMID.isin(v[0])]
+        ind = (ev_k.VALUENUM>=v[1][0])&(ev_k.VALUENUM<=v[1][1])
+        med = ev_k.VALUENUM.loc[ind].median()
+        ev_k.loc[~ind, 'VALUENUM'] = med
+        ev_k['NAME'] = k
+        ev_k['VALUEUOM'] = v[2]
+        events = pd.concat([events, ev_k])
+    del ev_k
+    print(f"      Rows accumulated after medication/input extraction: {len(events):,}")
+
+    # Extract heparin events. (Missed earlier.)
+    ev_k = ie.loc[ie.ITEMID.isin(hepa)]
+    ind1 = ev_k.VALUEUOM.isin(['U', 'units'])
+    ind2 = (ev_k.VALUENUM>=0)&(ev_k.VALUENUM<=25300)
+    ind = (ind1&ind2)
+    med = ev_k.VALUENUM.loc[ind].median()
+    ev_k.loc[~ind, 'VALUENUM'] = med
+    ev_k['NAME'] = 'Heparin'
+    ev_k['VALUEUOM'] = 'units'
+    events = pd.concat([events, ev_k])
+    del ev_k
+
+    # Extract weight events from MV inputevents.
+    ie_mv = pd.read_csv(os.path.join(raw_data_path,'INPUTEVENTS_MV.csv'),
+                        usecols = ['ICUSTAY_ID', 'STARTTIME', 'PATIENTWEIGHT'],
+                        dtype={'ICUSTAY_ID': 'string'})
+    ie_mv = ie_mv.drop_duplicates()
+    ie_mv = ie_mv.loc[ie_mv.ICUSTAY_ID.isin(icu.ICUSTAY_ID)]
+    ie_mv.rename(columns={'STARTTIME':'CHARTTIME', 'PATIENTWEIGHT':'VALUENUM'}, inplace=True)
+    ie_mv = ie_mv.loc[(ie_mv.VALUENUM>=0)&(ie_mv.VALUENUM<=300)]
+    ie_mv['VALUEUOM'] = 'kg'
+    ie_mv['NAME'] = 'Weight'
+    events = pd.concat([events, ie_mv])[['HADM_ID', 'ICUSTAY_ID', 'CHARTTIME', 'VALUENUM', 'TABLE', 'NAME']]
+    del ie_mv
+
+    return events
 
 
 def assign_missing_icustays(events: pd.DataFrame, icu: pd.DataFrame) -> pd.DataFrame:
@@ -648,6 +1079,7 @@ def assign_missing_icustays(events: pd.DataFrame, icu: pd.DataFrame) -> pd.DataF
         events,
         "HADM_ID",
         frame_name="events",
+        allow_missing=True,
     )
     events = canonicalize_identifier_column(
         events,
@@ -682,31 +1114,18 @@ def assign_missing_icustays(events: pd.DataFrame, icu: pd.DataFrame) -> pd.DataF
             f"events contains {ambiguous_rows} row(s) matching multiple ICU stays."
         )
 
+    unresolved_count = int(events["ICUSTAY_ID"].isna().sum())
+    if unresolved_count:
+        print(
+            f"      events: excluded {unresolved_count:,} row(s) without a unique "
+            "ICU interval match",
+            flush=True,
+        )
     resolved = events.loc[events["ICUSTAY_ID"].notna()].copy()
     if resolved.empty:
         return resolved
 
-    mapping = validate_icustay_hadm_mapping(icu)
-    checked = resolved.merge(
-        mapping.rename(columns={"HADM_ID": "_MAPPED_HADM_ID"}),
-        on="ICUSTAY_ID",
-        how="left",
-        validate="many_to_one",
-    )
-    if len(checked) != len(resolved):
-        raise AssertionError("ICU assignment validation changed the event row count.")
-    unmapped = checked["_MAPPED_HADM_ID"].isna()
-    if unmapped.any():
-        raise ValueError(
-            f"events contains {int(unmapped.sum())} row(s) with unmapped ICUSTAY_ID values."
-        )
-    conflicts = checked["HADM_ID"] != checked["_MAPPED_HADM_ID"]
-    if conflicts.any():
-        raise ValueError(
-            f"events contains {int(conflicts.sum())} row(s) whose HADM_ID "
-            "conflicts with the canonical ICU mapping."
-        )
-    return checked.drop(columns=["_MAPPED_HADM_ID"])
+    return link_fragment_hadm_ids(resolved, icu, "events")
 
 
 def build_canonical_payload(
@@ -766,82 +1185,73 @@ def build_canonical_payload(
     return ts, oc, ts_ids
 
 
-def main(argv: Iterable[str] | None = None):
-    global RAW_DATA_PATH, OUTPUT_PATH
-    args = parse_args(argv)
-    if maybe_run_validate_config_only(args):
-        return
+def run_preprocessing(
+    raw_data_path: str | Path,
+    output_path: str | Path,
+) -> tuple[pd.DataFrame, pd.DataFrame, list[str]]:
+    raw_data_path = normalize_raw_data_path(raw_data_path)
+    output_path = Path(output_path).expanduser()
 
-    RAW_DATA_PATH = normalize_raw_data_path(args.raw_data_path or RAW_DATA_PATH)
-    OUTPUT_PATH = args.output_path or OUTPUT_PATH
     print("=== Starting MIMIC-III preprocessing ===")
-    print(f"Raw data root: {os.path.abspath(RAW_DATA_PATH)}")
-    print(f"Output artifact: {os.path.abspath(OUTPUT_PATH)}")
-    print(f"Chunksize: {args.chunksize}")
-    print(f"Temporary directory: {args.tmp_dir or 'auto'}")
-    print(f"Keep intermediates: {bool(args.keep_intermediates)}")
-    if args.max_debug_chunks is not None:
-        print(f"Max debug chunks: {args.max_debug_chunks}")
-
-    tmp_dir = Path(args.tmp_dir or os.path.join(os.path.dirname(OUTPUT_PATH) or ".", "preprocess_mimic_tmp"))
-    if tmp_dir.exists():
-        maybe_remove(tmp_dir)
-    ensure_directory(tmp_dir)
-    log_memory("before load")
+    print(f"Raw data root: {raw_data_path}")
+    print(f"Output artifact: {output_path.resolve()}")
 
     log_stage(1, "Loading ICU stays and patient demographics")
     icu = pd.read_csv(
-        os.path.join(RAW_DATA_PATH, "ICUSTAYS.csv"),
+        os.path.join(raw_data_path, "ICUSTAYS.csv"),
         usecols=["SUBJECT_ID", "HADM_ID", "ICUSTAY_ID", "INTIME", "OUTTIME"],
-        dtype={"HADM_ID": "string", "ICUSTAY_ID": "string"},
+        dtype={"SUBJECT_ID": "string", "HADM_ID": "string", "ICUSTAY_ID": "string"},
     )
-    icu = normalize_icu_cohort(icu, frame_name="ICUSTAYS")
+    validate_icustay_hadm_mapping(icu)
+    icu = normalize_icu_cohort(
+        icu,
+        frame_name="ICUSTAYS",
+        exclude_missing_timestamps=True,
+    )
 
-    pat = pd.read_csv(
-        os.path.join(RAW_DATA_PATH, "PATIENTS.csv"),
+    patients = pd.read_csv(
+        os.path.join(raw_data_path, "PATIENTS.csv"),
         usecols=["SUBJECT_ID", "DOB", "DOD", "GENDER"],
+        dtype={"SUBJECT_ID": "string"},
     )
-    pat = collapse_identical_rows_or_raise(
-        pat,
+    patients = canonicalize_identifier_column(
+        patients,
+        "SUBJECT_ID",
+        frame_name="PATIENTS",
+    )
+    patients = collapse_identical_rows_or_raise(
+        patients,
         key_columns=["SUBJECT_ID"],
         value_columns=["DOB", "DOD", "GENDER"],
         frame_name="PATIENTS",
     )
     icu_row_count = len(icu)
-    icu = icu.merge(pat, on="SUBJECT_ID", how="left", validate="many_to_one")
+    icu = icu.merge(patients, on="SUBJECT_ID", how="left", validate="many_to_one")
     if len(icu) != icu_row_count:
         raise AssertionError("The patient-demographics join changed the ICU cohort row count.")
+    icu["INTIME"] = pd.to_datetime(icu["INTIME"], errors="raise")
     icu["DOB"] = pd.to_datetime(icu["DOB"], errors="raise")
-    icu["AGE"] = icu["INTIME"].map(lambda x: x.year) - icu["DOB"].map(lambda x: x.year)
+    # Historical cohort rule: integer calendar-year difference, intentionally not
+    # birthday-adjusted so the selected adult cohort matches commit 4880a914.
+    icu["AGE"] = icu["INTIME"].dt.year - icu["DOB"].dt.year
     icu = icu.loc[icu["AGE"] >= 18].copy()
     if icu.empty:
-        raise ValueError("No adult ICU stays remain after demographic filtering.")
+        raise ValueError("No adult ICU stays remain after historical age filtering.")
     print(f"      Adult ICU stays retained: {len(icu):,}")
-    log_memory("after ICU/patient load")
 
-    log_stage(2, "Reading CHARTEVENTS shards")
-    chartevents_paths = build_chartevents_shards(RAW_DATA_PATH, icu, args.chunksize, tmp_dir, args.max_debug_chunks)
-    log_stage(3, "Reading LABEVENTS shards")
-    labevents_paths = build_labevents_shards(RAW_DATA_PATH, icu, args.chunksize, tmp_dir, args.max_debug_chunks)
-    log_stage(4, "Reading OUTPUTEVENTS shards")
-    outputevents_paths = build_outputevents_shards(RAW_DATA_PATH, icu, args.chunksize, tmp_dir, args.max_debug_chunks)
-    log_stage(5, "Reading INPUTEVENTS shards")
-    inputevents_cv_paths, inputevents_mv_paths = build_inputevents_shards(RAW_DATA_PATH, icu, args.chunksize, tmp_dir, args.max_debug_chunks)
-    log_memory("after shard filtering")
+    events = extract_historical_events(raw_data_path, icu)
 
-    log_stage(6, "Extracting event fragments")
-    events = collect_event_fragments(chartevents_paths, labevents_paths, outputevents_paths, inputevents_cv_paths + inputevents_mv_paths, icu)
-    print(f"      Rows accumulated after shard extraction: {len(events):,}")
-
-    log_stage(7, "Aligning events to ICU stays")
+    log_stage(8, "Aligning events to ICU stays and building relative admission timelines")
+    events["CHARTTIME"] = pd.to_datetime(events["CHARTTIME"], errors="raise")
     events = assign_missing_icustays(events, icu)
     if events.empty:
         raise ValueError("No events could be assigned to an ICU stay.")
 
+    icu = icu.loc[icu["ICUSTAY_ID"].isin(events["ICUSTAY_ID"])].copy()
     event_row_count = len(events)
-    events = events.merge(
-        icu[["HADM_ID", "ICUSTAY_ID", "INTIME"]],
-        on=["HADM_ID", "ICUSTAY_ID"],
+    events = events.drop(columns=["HADM_ID"]).merge(
+        icu[["ICUSTAY_ID", "INTIME"]],
+        on="ICUSTAY_ID",
         how="left",
         validate="many_to_one",
     )
@@ -850,15 +1260,13 @@ def main(argv: Iterable[str] | None = None):
     events["rel_charttime"] = (
         events["CHARTTIME"] - events["INTIME"]
     ).dt.total_seconds() // 60
-    if events["rel_charttime"].isna().any():
-        raise ValueError("Some events could not be aligned to an ICU admission time.")
-    events = events.drop(columns=["INTIME"])
+    events = events.drop(columns=["INTIME", "CHARTTIME"])
 
     icu = icu.loc[
         (icu["OUTTIME"] - icu["INTIME"]) >= pd.Timedelta(24, "h")
     ].copy()
     admissions = pd.read_csv(
-        os.path.join(RAW_DATA_PATH, "ADMISSIONS.csv"),
+        os.path.join(raw_data_path, "ADMISSIONS.csv"),
         usecols=["HADM_ID", "DEATHTIME", "HOSPITAL_EXPIRE_FLAG"],
         dtype={"HADM_ID": "string"},
     )
@@ -876,31 +1284,47 @@ def main(argv: Iterable[str] | None = None):
         ((icu["DEATHTIME"] - icu["INTIME"]) >= pd.Timedelta(24, "h"))
         | icu["DEATHTIME"].isna()
     ].copy()
-    events = events.loc[events["ICUSTAY_ID"].isin(set(icu["ICUSTAY_ID"]))]
-    events = events.loc[events["rel_charttime"] < 24 * 60].copy()
-    if events.empty:
-        raise ValueError("No events remain after the canonical 24-hour cohort filters.")
-    final_icu = icu.loc[icu["ICUSTAY_ID"].isin(set(events["ICUSTAY_ID"]))].copy()
-    if final_icu.empty:
-        raise ValueError("The canonical MIMIC ICU cohort must not be empty.")
 
+    first_day_stays = events.loc[
+        events["rel_charttime"] < 24 * 60, "ICUSTAY_ID"
+    ]
+    final_icu = icu.loc[icu["ICUSTAY_ID"].isin(first_day_stays)].copy()
+    events = events.loc[events["ICUSTAY_ID"].isin(final_icu["ICUSTAY_ID"])].copy()
+    if final_icu.empty or events.empty:
+        raise ValueError("The historical 24-hour MIMIC cohort must not be empty.")
     print(f"      Events retained after timeline alignment: {len(events):,}")
     print(f"      ICU stays retained after cohort filters: {len(final_icu):,}")
 
-    log_stage(8, "Building canonical ts/oc payload")
+    log_stage(9, "Canonicalizing extracted events into PhysioNet-style ts/oc tables")
     ts, oc, ts_ids = build_canonical_payload(events, final_icu, admissions)
+    assert_physionet_compatible_output(ts, oc, ts_ids)
 
-    log_stage(9, "Validating and saving the processed MIMIC artifact")
-    os.makedirs(os.path.dirname(OUTPUT_PATH) or ".", exist_ok=True)
-    temp_output = Path(OUTPUT_PATH).with_suffix(".tmp.pkl")
-    serialize_processed_output(ts, oc, ts_ids, str(temp_output))
-    if temp_output.exists():
-        shutil.move(str(temp_output), OUTPUT_PATH)
+    log_stage(10, "Validating and saving the processed MIMIC artifact")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    serialize_processed_output(ts, oc, ts_ids, str(output_path))
+    print(
+        f"Saved processed MIMIC artifact to: {output_path.resolve()} | "
+        f"ts rows={len(ts):,} | oc rows={len(oc):,} | stays={len(ts_ids):,}"
+    )
+    return ts, oc, ts_ids
 
-    print(f"Saved processed MIMIC artifact to: {os.path.abspath(OUTPUT_PATH)} | ts rows={len(ts):,} | oc rows={len(oc):,} | stays={len(ts_ids):,}")
 
-    if not args.keep_intermediates:
-        maybe_remove(tmp_dir)
+def main(argv: Iterable[str] | None = None) -> None:
+    args = parse_args(argv)
+    if maybe_run_validate_config_only(args):
+        return
+    if args.chunksize is not None and args.chunksize <= 0:
+        raise ValueError("--chunksize must be positive when provided.")
+    if args.chunksize is not None or args.tmp_dir is not None:
+        print(
+            "Compatibility note: --chunksize/--tmp-dir are ignored by the restored "
+            "historical in-memory MIMIC preprocessor.",
+            flush=True,
+        )
+    run_preprocessing(
+        args.raw_data_path or RAW_DATA_PATH,
+        args.output_path or OUTPUT_PATH,
+    )
 
 
 if __name__ == "__main__":

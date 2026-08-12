@@ -8,8 +8,9 @@ from pathlib import Path
 from typing import Any
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SRC_DIR = REPO_ROOT / "src"
+COMPONENT_ROOT = Path(__file__).resolve().parents[1]
+WORKSPACE_ROOT = Path(__file__).resolve().parents[3]
+SRC_DIR = COMPONENT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
@@ -30,8 +31,8 @@ from dataset_config import (  # noqa: E402
 
 
 CONFIGS = {
-    "physionet": REPO_ROOT / "configs" / "physionet-global-variables.csv",
-    "mimic": REPO_ROOT / "configs" / "mimic-global-variables.csv",
+    "physionet": WORKSPACE_ROOT / "configs" / "physionet-global-variables.csv",
+    "mimic": WORKSPACE_ROOT / "configs" / "mimic-global-variables.csv",
 }
 
 DATASET_SCRIPTS = {
@@ -222,7 +223,7 @@ def print_table(rows: list[dict[str, str]]) -> None:
 
 
 def main() -> int:
-    docs_path = REPO_ROOT / "docs" / "global-variables-parameters.txt"
+    docs_path = WORKSPACE_ROOT / "docs" / "global-variables-parameters.txt"
     docs_text = docs_path.read_text(encoding="utf-8") if docs_path.exists() else ""
 
     rows: list[dict[str, str]] = []

@@ -7,6 +7,7 @@ import pytest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+WORKSPACE_ROOT = ROOT.parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from dataset_config import (  # noqa: E402
@@ -69,7 +70,7 @@ def test_config_identity_rejects_swapped_dataset_files(
     requested_dataset: str,
     config_filename: str,
 ) -> None:
-    config_path = ROOT / "configs" / config_filename
+    config_path = WORKSPACE_ROOT / "configs" / config_filename
     with pytest.raises(ValueError, match="DATASET_NAME.*requested dataset"):
         load_dataset_config(requested_dataset, config_path)
 

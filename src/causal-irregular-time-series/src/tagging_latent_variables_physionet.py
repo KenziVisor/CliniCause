@@ -1,6 +1,7 @@
 import argparse
 import pickle
 import sys
+import os
 from pathlib import Path
 
 if "--validate-config-only" in sys.argv:

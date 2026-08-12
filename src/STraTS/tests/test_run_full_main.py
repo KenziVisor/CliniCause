@@ -65,12 +65,12 @@ class RunFullMainContractTests(unittest.TestCase):
 
     def test_each_supported_scope_selects_exact_datasets(self):
         cases = {
-            "physionet": (11, {"physionet_2012"}),
-            "mimic": (11, {"mimic_iii"}),
-            "both": (22, {"physionet_2012", "mimic_iii"}),
-            "physionet,mimic": (22, {"physionet_2012", "mimic_iii"}),
-            "mimic,physionet": (22, {"physionet_2012", "mimic_iii"}),
-            None: (22, {"physionet_2012", "mimic_iii"}),
+            "physionet": (9, {"physionet_2012"}),
+            "mimic": (9, {"mimic_iii"}),
+            "both": (18, {"physionet_2012", "mimic_iii"}),
+            "physionet,mimic": (18, {"physionet_2012", "mimic_iii"}),
+            "mimic,physionet": (18, {"physionet_2012", "mimic_iii"}),
+            None: (18, {"physionet_2012", "mimic_iii"}),
         }
         for scope, (expected_count, expected_datasets) in cases.items():
             with self.subTest(scope=scope):
@@ -126,14 +126,13 @@ class RunFullMainContractTests(unittest.TestCase):
                 "models/gru",
                 "models/grud",
                 "models/tcn",
-                "models/sand",
             },
         )
 
         init_commands = [command for command in commands if "--init_ckpt_path" in command]
         restore_commands = [command for command in commands if "--restore_ckpt_path" in command]
         self.assertEqual(len(init_commands), 1)
-        self.assertEqual(len(restore_commands), 5)
+        self.assertEqual(len(restore_commands), 4)
         self.assertNotIn("--restore_ckpt_path", init_commands[0])
         prediction_paths = {
             Path(option_value(command, "--save_pred_csv_path")).relative_to(output_root).as_posix()
@@ -146,7 +145,6 @@ class RunFullMainContractTests(unittest.TestCase):
                 "predictions/gru.csv",
                 "predictions/grud.csv",
                 "predictions/tcn.csv",
-                "predictions/sand.csv",
             },
         )
 
@@ -165,7 +163,7 @@ class RunFullMainContractTests(unittest.TestCase):
             model = option_value(command, "--model_type")
             seeds_by_model.setdefault(model, set()).add(option_value(command, "--seed"))
         self.assertTrue(all(len(seeds) == 1 for seeds in seeds_by_model.values()))
-        self.assertEqual(len({next(iter(seeds)) for seeds in seeds_by_model.values()}), 5)
+        self.assertEqual(len({next(iter(seeds)) for seeds in seeds_by_model.values()}), 4)
 
     def test_explicitly_empty_roots_and_provenance_fail_before_model_calls(self):
         cases = {

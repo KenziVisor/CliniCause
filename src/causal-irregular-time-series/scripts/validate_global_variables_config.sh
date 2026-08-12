@@ -3,6 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+WORKSPACE_ROOT="$(cd "${REPO_ROOT}/../.." && pwd)"
 
 CONDA_EXE="${CONDA_EXE:-/home/kobik/miniconda3/bin/conda}"
 if [[ ! -x "${CONDA_EXE}" ]]; then
@@ -31,8 +32,8 @@ run_one() {
   fi
 }
 
-PHYSIONET_CONFIG="configs/physionet-global-variables.csv"
-MIMIC_CONFIG="configs/mimic-global-variables.csv"
+PHYSIONET_CONFIG="${WORKSPACE_ROOT}/configs/physionet-global-variables.csv"
+MIMIC_CONFIG="${WORKSPACE_ROOT}/configs/mimic-global-variables.csv"
 
 run_one "both" "scripts/validate_global_variables_config.py" \
   scripts/validate_global_variables_config.py

@@ -75,6 +75,7 @@ resolve_output_dir() {
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
+WORKSPACE_ROOT="$(cd "$REPO_ROOT/../.." && pwd -P)"
 
 DATASET=""
 LATENT_TAGS_DIR=""
@@ -146,10 +147,10 @@ done
 
 case "$DATASET" in
   physionet)
-    : "${DATASET_CONFIG_CSV:=$REPO_ROOT/configs/physionet-global-variables.csv}"
+    : "${DATASET_CONFIG_CSV:=$WORKSPACE_ROOT/configs/physionet-global-variables.csv}"
     ;;
   mimic)
-    : "${DATASET_CONFIG_CSV:=$REPO_ROOT/configs/mimic-global-variables.csv}"
+    : "${DATASET_CONFIG_CSV:=$WORKSPACE_ROOT/configs/mimic-global-variables.csv}"
     ;;
   *)
     die "--dataset must be either 'physionet' or 'mimic'"

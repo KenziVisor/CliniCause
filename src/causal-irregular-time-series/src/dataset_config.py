@@ -158,6 +158,10 @@ def repo_root() -> Path:
     return Path(__file__).resolve().parents[1]
 
 
+def workspace_root() -> Path:
+    return repo_root().parents[1]
+
+
 def _normalize_dataset(dataset: str) -> str:
     normalized = str(dataset).strip().lower()
     if normalized not in DATASET_CHOICES:
@@ -173,7 +177,7 @@ def default_config_path(dataset: str) -> Path:
         "physionet": "physionet-global-variables.csv",
         "mimic": "mimic-global-variables.csv",
     }[dataset]
-    return repo_root() / "configs" / filename
+    return workspace_root() / "configs" / filename
 
 
 def _context_message(dataset: str, config_csv_path: str | Path, key: str) -> str:

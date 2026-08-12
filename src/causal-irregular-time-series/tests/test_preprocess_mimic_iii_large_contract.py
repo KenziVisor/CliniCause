@@ -249,6 +249,31 @@ def test_output_assertion_rejects_duplicate_outcome_ids() -> None:
         assert_physionet_compatible_output(ts, duplicate_oc, ["101"])
 
 
+@pytest.mark.parametrize(
+    ("column", "value", "message"),
+    [
+        ("minute", 0.5, "integer minutes"),
+        ("minute", np.inf, "finite"),
+        ("variable", None, "missing variable"),
+        ("value", np.nan, "finite"),
+        ("value", np.inf, "finite"),
+    ],
+)
+def test_canonical_ts_rejects_incomplete_or_lossy_event_values(
+    column: str,
+    value: object,
+    message: str,
+) -> None:
+    events = pd.DataFrame(
+        {"ts_id": [101], "minute": [0], "variable": ["HR"], "value": [80.0]}
+    )
+    events[column] = events[column].astype("object")
+    events.loc[0, column] = value
+
+    with pytest.raises(ValueError, match=message):
+        build_canonical_ts(events)
+
+
 def test_unique_id_frame_collapses_only_exact_semantic_duplicates() -> None:
     frame = pd.DataFrame(
         {"ts_id": ["10", "10.0"], "LAT_A": [1, 1]}

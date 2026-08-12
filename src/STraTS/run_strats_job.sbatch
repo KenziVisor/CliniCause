@@ -10,10 +10,12 @@
 
 set -e
 
-cd /truenas/home/kenzikob/STraTS
+COMPONENT_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+
+cd "${COMPONENT_ROOT}"
 
 apptainer exec --nv \
-  --bind /truenas/home/kenzikob/STraTS:/workspace \
+  --bind "${COMPONENT_ROOT}:/workspace" \
   /truenas/sif_images/pytorch_cuda12.6_ngc_conda_vscode.sif \
   bash -lc '
     cd /workspace

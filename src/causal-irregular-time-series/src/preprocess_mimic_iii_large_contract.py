@@ -240,9 +240,24 @@ def build_canonical_ts(events_df: pd.DataFrame) -> pd.DataFrame:
 
     ts = events_df.loc[:, CANONICAL_TS_COLUMNS].copy()
     ts["ts_id"] = canonicalize_mimic_id_series(ts["ts_id"], field_name="events_df.ts_id")
-    ts["minute"] = pd.to_numeric(ts["minute"], errors="raise").astype(int)
+    minute = pd.to_numeric(ts["minute"], errors="raise")
+    minute_values = minute.to_numpy(dtype=float)
+    if not np.isfinite(minute_values).all():
+        raise ValueError("events_df.minute must contain finite values.")
+    if not np.equal(minute_values, np.floor(minute_values)).all():
+        raise ValueError("events_df.minute must contain integer minutes.")
+    ts["minute"] = minute.astype("int64")
+
+    if ts["variable"].isna().any():
+        raise ValueError("events_df contains missing variable names.")
     ts["variable"] = ts["variable"].astype(str)
-    ts["value"] = pd.to_numeric(ts["value"], errors="raise").astype(float)
+    if ts["variable"].str.strip().eq("").any():
+        raise ValueError("events_df contains empty variable names.")
+
+    value = pd.to_numeric(ts["value"], errors="raise")
+    if not np.isfinite(value.to_numpy(dtype=float)).all():
+        raise ValueError("events_df.value must contain finite values.")
+    ts["value"] = value.astype(float)
 
     # Match the PhysioNet artifact's clean, duplicate-free long format.
     ts = ts.groupby(["ts_id", "minute", "variable"], as_index=False, sort=True)["value"].mean()

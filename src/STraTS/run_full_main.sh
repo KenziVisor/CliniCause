@@ -108,12 +108,10 @@ PHYSIONET_STRATS_SEED="$(derive_seed "$PHYSIONET_DATASET_SEED" 1)"
 PHYSIONET_GRU_SEED="$(derive_seed "$PHYSIONET_DATASET_SEED" 3)"
 PHYSIONET_GRUD_SEED="$(derive_seed "$PHYSIONET_DATASET_SEED" 4)"
 PHYSIONET_TCN_SEED="$(derive_seed "$PHYSIONET_DATASET_SEED" 5)"
-PHYSIONET_SAND_SEED="$(derive_seed "$PHYSIONET_DATASET_SEED" 6)"
 MIMIC_STRATS_SEED="$(derive_seed "$MIMIC_DATASET_SEED" 1)"
 MIMIC_GRU_SEED="$(derive_seed "$MIMIC_DATASET_SEED" 3)"
 MIMIC_GRUD_SEED="$(derive_seed "$MIMIC_DATASET_SEED" 4)"
 MIMIC_TCN_SEED="$(derive_seed "$MIMIC_DATASET_SEED" 5)"
-MIMIC_SAND_SEED="$(derive_seed "$MIMIC_DATASET_SEED" 6)"
 
 run_model() {
   local model_seed="$1"
@@ -160,9 +158,6 @@ run_physionet_pipeline() {
   run_model "$PHYSIONET_TCN_SEED" \
     --model_type tcn --num_layers 6 --hid_dim 64 --kernel_size 4 \
     --dropout 0.2 --lr 5e-4 --output_dir "$models/tcn"
-  run_model "$PHYSIONET_SAND_SEED" \
-    --model_type sand --num_layers 4 --r 24 --M 12 --hid_dim 64 \
-    --dropout 0.2 --lr 5e-4 --output_dir "$models/sand"
 
   run_model "$PHYSIONET_STRATS_SEED" \
     --model_type strats --hid_dim 64 --num_layers 2 --num_heads 16 \
@@ -185,12 +180,6 @@ run_physionet_pipeline() {
     --dropout 0.2 --lr 5e-4 \
     --restore_ckpt_path "$models/tcn/checkpoint_best.bin" \
     --output_dir "$models/tcn" --save_pred_csv_path "$predictions/tcn.csv" \
-    --predict_split all --max_epochs 0 --validate_after 0
-  run_model "$PHYSIONET_SAND_SEED" \
-    --model_type sand --num_layers 4 --r 24 --M 12 --hid_dim 64 \
-    --dropout 0.2 --lr 5e-4 \
-    --restore_ckpt_path "$models/sand/checkpoint_best.bin" \
-    --output_dir "$models/sand" --save_pred_csv_path "$predictions/sand.csv" \
     --predict_split all --max_epochs 0 --validate_after 0
 }
 
@@ -222,9 +211,6 @@ run_mimic_pipeline() {
   run_model "$MIMIC_TCN_SEED" \
     --model_type tcn --num_layers 4 --hid_dim 128 --kernel_size 4 \
     --dropout 0.2 --lr 5e-4 --output_dir "$models/tcn"
-  run_model "$MIMIC_SAND_SEED" \
-    --model_type sand --num_layers 4 --r 24 --M 12 --hid_dim 64 \
-    --dropout 0.2 --lr 5e-4 --output_dir "$models/sand"
 
   run_model "$MIMIC_STRATS_SEED" \
     --model_type strats --hid_dim 64 --num_layers 2 --num_heads 16 \
@@ -247,12 +233,6 @@ run_mimic_pipeline() {
     --dropout 0.2 --lr 5e-4 \
     --restore_ckpt_path "$models/tcn/checkpoint_best.bin" \
     --output_dir "$models/tcn" --save_pred_csv_path "$predictions/tcn.csv" \
-    --predict_split all --max_epochs 0 --validate_after 0
-  run_model "$MIMIC_SAND_SEED" \
-    --model_type sand --num_layers 4 --r 24 --M 12 --hid_dim 64 \
-    --dropout 0.2 --lr 5e-4 \
-    --restore_ckpt_path "$models/sand/checkpoint_best.bin" \
-    --output_dir "$models/sand" --save_pred_csv_path "$predictions/sand.csv" \
     --predict_split all --max_epochs 0 --validate_after 0
 }
 

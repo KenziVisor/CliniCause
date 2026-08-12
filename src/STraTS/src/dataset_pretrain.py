@@ -9,7 +9,6 @@ from dataset import (
 )
 from split_contract import (
     require_ids_present,
-    require_no_excluded_indices,
     validate_split_contract,
 )
 import os
@@ -110,12 +109,40 @@ class PretrainDataset(Dataset):
         # remove any samples with single timestamp
         self.timestamps = [np.array(sorted(list(set(x)))[:-1]) for x in self.times]
         self.timestamps = [x[x>=720] for x in self.timestamps] # atleast 12 hrs
-        delete = [i for i in range(self.N) if len(self.timestamps[i])==0]
-        require_no_excluded_indices(
-            unsup_ts_ids, delete,
-            'Pretraining forecast-window eligibility',
+        delete = [i for i in range(self.N) if len(self.timestamps[i]) == 0]
+        delete_set = set(delete)
+
+        if delete:
+            excluded_ids = [unsup_ts_ids[i] for i in delete]
+            args.logger.write(
+                'Excluding '
+                + str(len(excluded_ids))
+                + ' train/validation IDs from self-supervised pretraining '
+                + 'because they have no eligible forecast window: '
+                + str(excluded_ids[:10])
+            )
+
+        self.splits = {
+            name: [index for index in indices if index not in delete_set]
+            for name, indices in self.splits.items()
+        }
+
+        if not self.splits['train']:
+            raise ValueError(
+                'No training participants remain after pretraining '
+                'forecast-window eligibility filtering.'
+            )
+
+        if not self.splits['val']:
+            raise ValueError(
+                'No validation participants remain after pretraining '
+                'forecast-window eligibility filtering.'
+            )
+
+        self.train_cycler = CycleIndex(
+            self.splits['train'],
+            args.train_batch_size,
         )
-        self.train_cycler = CycleIndex(self.splits['train'], args.train_batch_size)
         self.V = args.V
         self.max_obs = args.max_obs
 
